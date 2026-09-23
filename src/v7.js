@@ -135,7 +135,7 @@ export class V7{
   <div id="v7-windows"></div>
   <canvas id="v7-fx" aria-hidden="true"></canvas>
   <div id="v7-season-banner" hidden></div>`);
-  document.body.insertAdjacentHTML('beforeend',`<div id="v7-rotate" hidden><div><div class="v7-phone">▯</div><b>请把手机横过来</b><small>本游戏为横屏设计 · 旋转后自动继续</small><button id="v7-rotate-go">全屏横屏游玩</button></div></div>`);
+  document.body.insertAdjacentHTML('beforeend',`<div id="v7-rotate" hidden><div><div class="v7-phone"><svg viewBox="0 0 40 70" width="46" height="80" fill="none" stroke="currentColor" stroke-width="3"><rect x="3" y="3" width="34" height="64" rx="6"/><circle cx="20" cy="58" r="3"/></svg></div><b>请把手机横过来</b><small>本游戏为横屏设计 · 旋转后自动继续</small><button id="v7-rotate-go">全屏横屏游玩</button></div></div>`);
   this.fx=$('v7-fx');this.fxc=this.fx.getContext('2d');
   $('v7-rotate-go').addEventListener('click',()=>this.lockLandscape());
   this.bindTips();this.bindDrag();
