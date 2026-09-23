@@ -3,6 +3,7 @@ import {glyph} from './life-ui.js';
 import {escape as safe,icon} from './ui.js';
 import {CLASSES,getCity,owns,beginRest,finishRest,restActivity,UNLOCK_MILESTONES,nextUnlock,activateNoble} from './life-core.js';
 import {makeOffer,markPeak} from './engine.js';
+import {pitchesFor,takePitch,pitchDone,pitchResult,bandFor} from './rest-pitch.js';
 import {getAuctionLot,getNobleItem,getDecoration,AUCTION_LOTS,NOBLE_ITEMS,DECORATIONS} from './catalog.js';
 import {worth,lateTier,TIERS_LATE,FACTIONS,ensureEstate,reconcile,billQuote,restDue,pendingEvent,eventView,resolveEvent,acknowledgeEvent,securityOdds,hireGuards,activeGuards,healthRisk,medicalOptions,buyMedical,regions,currentRegion,enterRegion,luxuries,consumeLuxury,PERKS,initLegacy,buyPerk,collectLegacy,buyDecoration} from './endgame-core.js';
 const $=id=>document.getElementById(id);
@@ -93,12 +94,43 @@ export class LifeUI extends JourneyUI{
   const tag=ev.kind==='health'?'♥':ev.kind==='security'?'◇':ev.kind==='luxury'?'✦':ev.kind==='tax'?'§':ev.kind==='scandal'?'!':FACTIONS.find(f=>f.id===ev.faction)?.symbol||'↗';
   this.c.open('world-event','','',`<div class="event-dialog ${ev.kind} ${ev.resolved?'resolved':''}"><div class="event-dialog-top"><span>${safe(v.tag)}</span><small>${getCity(this.s).name}</small></div><div class="event-dialog-symbol">${tag}</div><h2 id="modal-title">${safe(v.title)}</h2><p>${safe(v.body)}</p>${ev.kind==='health'?`<div class="health-slots">${Array.from({length:this.e.maxHealth},(_,i)=>`<span class="${i<this.e.health?'alive':'spent'}">♥</span>`).join('')}<small>衰退 ${ev.risk}%</small></div>`:''}${ev.resolved?`${result?.delta?`<div class="event-cash ${result.delta<0?'loss':''}">${result.delta>0?'+':'−'}${money(Math.abs(result.delta))}</div>`:''}<button class="primary" data-action="life-event-ack" data-value="${ev.id}">${this.s.ended?'进入人生结算':'记下了，继续 →'}</button>`:`<div class="dialog-choices">${v.choices.map(o=>`<button data-action="life-event-choice" data-value="${ev.id}:${o.id}" ${o.cost>0&&o.cost>=this.s.cash?'disabled':''}><div><strong>${safe(o.label)}</strong><b>${o.cost?money(o.cost):'不预付'}</b></div><span>${safe(o.detail)}</span>${o.penalty?`<small>后果可能扣除 ${money(o.penalty)}</small>`:''}</button>`).join('')}</div><div class="event-dialog-foot">现金 ${money(this.s.cash)} · 每个选择只结算一次</div>`}</div>`,{custom:true,noClose:true});
  }
- renderRest(){const s=this.s,r=s.life.rest;if(!r)return;const d=$('game-dock'),c=CLASSES[r.class],pending=pendingEvent(s),due=restDue(r),q=r.bill||billQuote(s);d.dataset.kind='rest';const activities=r.activities.filter(x=>!x.instant),instant=r.activities.find(x=>x.instant);
+ renderRest(){const s=this.s,r=s.life.rest;if(!r)return;const d=$('game-dock'),c=CLASSES[r.class],pending=pendingEvent(s),due=restDue(r),q=r.bill||billQuote(s);d.dataset.kind='rest';$('game').dataset.restClass=String(r.class);const activities=r.activities.filter(x=>!x.instant),instant=r.activities.find(x=>x.instant);const crest=this.classCrest(r.class);
   const tile=a=>`<article class="rest-choice"><span>${({drink:'☕',read:'▤',stretch:'↟',massage:'✦',lounge:'☀',sleep:'☾',toast:'♧'})[a.pose]}</span><div><strong>${safe(a.name)}</strong><small>减少 ${Math.floor(a.seconds/60)} 分 ${a.seconds%60} 秒</small></div>${btn('activity',a.used?'已体验':short(a.price),a.id,a.used||s.cash<=a.price||r.remaining<=0||!!pending)}</article>`;
-  d.innerHTML=`<div class="rest-compact-title"><span>休息 / ${c.name}</span><button data-action="life-status" aria-label="查看完整身家与账单">ⓘ</button></div><h1>${r.paid?'让身体跟上你的野心。':'先付账单，再谈人生。'}</h1><div class="rest-worth"><span>当前总身家 <b>${short(worth(s))}</b></span><span>可用现金 <b>${short(s.cash)}</b></span></div><div class="rest-progress-head"><span id="rest-status">${r.paid?'正在恢复':'账单未支付'}</span><strong id="rest-clock">${clock(r.remaining)}</strong></div><div class="rest-track" role="progressbar" aria-label="休息进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="rest-fill"></i></div>
+  d.innerHTML=`${crest}<div class="rest-compact-title"><span>休息 / ${c.name}</span><button data-action="life-status" aria-label="查看完整身家与账单">ⓘ</button></div><h1>${r.paid?'让身体跟上你的野心。':'先付账单，再谈人生。'}</h1><div class="rest-worth"><span>当前总身家 <b>${short(worth(s))}</b></span><span>可用现金 <b>${short(s.cash)}</b></span></div><div class="rest-progress-head"><span id="rest-status">${r.paid?'正在恢复':'账单未支付'}</span><strong id="rest-clock">${clock(r.remaining)}</strong></div><div class="rest-track" role="progressbar" aria-label="休息进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="rest-fill"></i></div>
   ${!r.paid?`${this.receipt(q,true)}<p class="bill-footnote">固定阶级生活费 + 单列休息服务费；账单入休后锁定，额外活动自愿另付。现金不足须结算本局。</p>${pending?btn('open-event','先处理休息事件 →','',false,'primary'):btn('pay',s.cash<=due?'无法支付 · 结算本局':`支付 ${short(due)} · 开始恢复`,'',false,'primary')}`:`<div id="rest-ready" ${r.remaining>0?'hidden':''}>${btn('finish',`领取 ${s.life.energyCap} 体力，继续出发 →`,'',!!pending,'primary')}</div><div id="rest-options" ${r.remaining<=0?'hidden':''}>${activities.slice(0,2).map(tile).join('')}<div class="rest-bottom-buttons">${btn('rest-all','更多休息活动')}${lateTier(s)>=3?btn('medical','医疗 / 延寿'):''}</div>${instant?btn('instant',`立即恢复 · ${short(instant.price)}`,instant.id,s.cash<=instant.price||!!pending,'instant-button'):''}</div>`}
-  <div class="rest-view-buttons">${[0,1,2].map((i)=>btn('camera',['人物','全景','侧面'][i],i,false,r.camera===i?'selected':'')).join('')}</div>`;
+  <div class="rest-view-buttons">${[0,1,2].map((i)=>btn('camera',['人物','全景','侧面'][i],i,false,r.camera===i?'selected':'')).join('')}</div>${r.paid?this.pitchBoard():''}`;
   this.paintRest();this.paintNews();this.c.fit();
+ }
+ // Each class pays for a different life; the receipt should look like that life.
+ classCrest(cls){
+  const crests=[
+   {g:'🥟',t:'路边摊与合租房',s:'BASIC LIVING / 生存开销'},
+   {g:'🍱',t:'便当、月票与旧公寓',s:'WORKING CLASS / 工薪开销'},
+   {g:'🍲',t:'餐厅、健身房与两房',s:'MIDDLE CLASS / 中产开销'},
+   {g:'🥂',t:'私厨、会员与市景公寓',s:'AFFLUENT / 富裕开销'},
+   {g:'🛎️',t:'管家、司机与私人楼层',s:'MAGNATE / 大人物开销'},
+   {g:'🏛️',t:'庄园、机组与常驻团队',s:'PRIVATE CAPITAL / 私人资本开销'}
+  ];
+  const c=crests[Math.min(crests.length-1,Math.max(0,cls))];
+  return `<div class="rest-crest"><span class="rc-glyph">${c.g}</span><div>${safe(c.t)}<small>${c.s}</small></div></div>`;
+ }
+ // People come to you during rest with deals. Variety scales with wealth.
+ pitchBoard(){
+  const s=this.s,list=pitchesFor(s);
+  if(!list.length)return '';
+  const rows=list.map(p=>{
+   const done=pitchDone(s,p.id),res=done?pitchResult(s,p.id):null;
+   const poor=s.cash<=p.cost;
+   return `<button class="pitch-card" data-rarity="${p.rarity}" data-action="life-pitch" data-value="${p.id}" ${done||poor?'disabled':''}>
+    <span class="pc-face" style="--pc-color:${p.color}">${p.glyph}</span>
+    <div><span class="pc-who">${safe(p.who)} · ${safe(p.type)}</span><h4>${safe(p.title)}</h4><p class="pc-line">${safe(res?(res.won?'成了。'+p.note:'这次没成。'+p.note):p.line)}</p></div>
+    <div class="pc-terms">
+     ${res
+      ?`<span class="${res.delta>=0?'pc-gain':'pc-cost'}">${res.delta>=0?'+':'−'}${money(Math.abs(res.delta))}</span><span>已结算</span>`
+      :`<span class="pc-cost">投入 ${money(p.cost)}</span><span class="pc-gain">成功 ${money(p.payout)}</span><span>${p.p}% 成功</span>${poor?'<span>现金不足</span>':''}`}
+    </div>
+   </button>`;}).join('');
+  return `<div class="rest-section-title" style="margin-top:18px">休息时，有人来找你谈生意</div><div class="pitch-board">${rows}</div><p class="life-note">每个提案在本次休息只能谈一次，结果立即结算并写入存档，刷新不会重抽。</p>`;
  }
  paintRest(){const r=this.s.life.rest;if(!r||!$('rest-clock'))return;$('rest-clock').textContent=clock(r.remaining);const pct=r.paid?(1-r.remaining/r.duration)*100:0;$('rest-fill').style.width=pct+'%';$('rest-fill').parentElement.setAttribute('aria-valuenow',Math.round(pct));$('rest-status').textContent=!r.paid?'账单未支付':r.remaining<=0?'恢复完成':'离线也会继续恢复';if($('rest-ready'))$('rest-ready').hidden=r.remaining>0;if($('rest-options'))$('rest-options').hidden=r.remaining<=0;}
  openRestAll(){const r=this.s.life.rest;if(!r?.paid)return;this.c.open('rest-activities','休息，换一种方式。','活动消耗游戏币，缩短剩余计时。',`<div class="rest-all-grid">${r.activities.filter(a=>!a.instant).map(a=>`<article><h3>${safe(a.name)}</h3><p>减少 ${Math.floor(a.seconds/60)} 分 ${a.seconds%60} 秒</p>${btn('rest-do',a.used?'已体验':money(a.price),a.id,a.used||r.remaining<=0||this.s.cash<=a.price)}</article>`).join('')}</div>`);}
@@ -282,7 +314,12 @@ export class LifeUI extends JourneyUI{
   `);
  }
  openSecurity(){const s=this.s,e=this.e,o=securityOdds(s);this.c.open('security','有钱以后，安全也有账单。','谨慎降低遇险率，强硬提高反抗率但更容易被盯上。',`<div class="security-summary"><b>休息抢劫触发约 ${o.robbery.toFixed(0)}%</b><span>基础躲避 ${o.dodge.toFixed(0)}% · 绕路额外 +15%，上限 97%</span></div><div class="security-levels">${[0,1,2,3].map(level=>{const cost=level>e.guards?[0,100000,1000000,10000000][level]-[0,100000,1000000,10000000][e.guards]:0;return btn('guards',`<strong>${['不雇佣','随行护卫','专业小队','私人安保团'][level]}</strong><span>${e.guards===level?'已选':cost?'聘用差价 '+money(cost):'调整不退费用'} · 基础每次休息 ${money([0,35000,350000,3500000][level])}</span>`,`${level}:${e.stance}`,lateTier(s)<3||!!s.life.rest||s.life.travel||s.cash<=cost,e.guards===level?'selected':'');}).join('')}</div><h3>你的意志</h3><div class="stance-choices">${[['cautious','低调绕行','抢劫触发 −6%，躲避 +8%；工资 ×1.4'],['balanced','正常随行','标准概率与工资'],['assertive','公开威慑','抢劫触发 +5%，反抗 +14%；更引人注意']].map(([id,name,desc])=>btn('guards',`<strong>${name}</strong><span>${desc}</span>`,e.guards+':'+id,lateTier(s)<3||!!s.life.rest||!!s.life.travel,e.stance===id?'selected':'')).join('')}</div><p>跌回 $100,000 总身家以下，安保暂时停用且不收工资。所有概率都是游戏规则，不是真实安全建议。</p>`);}
- openFactions(){const t=lateTier(this.s);this.c.open('factions','财富让你被更多人看见。','关系不是永久资产，会随每次选择变化。',`<div class="faction-list">${FACTIONS.map(f=>`<article class="${t<f.at?'locked':''}"><b>${f.symbol}</b><div><h3>${f.name}</h3><p>${t<f.at?'尚未达到当前财富门槛':this.e.relations[f.id]<=-35?'敌对：可能触发惩罚':this.e.relations[f.id]>=35?'友好：可能触发馈赠':'观望：支持与拒绝都会留下记录'}</p><div class="relation-line"><i style="left:${(this.e.relations[f.id]+100)/2}%"></i></div></div><strong>${this.e.relations[f.id]>0?'+':''}${this.e.relations[f.id]}</strong></article>`).join('')}</div><p>派系会在街道和休息事件中提出请求。地下帮派严重敌对可能暗杀；议政署敌对会带来冻结与罚款，不是每个派系都使用相同惩罚。</p>`);}
+ openFactions(){const t=lateTier(this.s),e=this.e;
+  const state=v=>v<=-35?{k:'敌对',d:'可能触发惩罚事件'}:v<=-10?{k:'紧张',d:'他们对你有意见'}:v>=35?{k:'友好',d:'可能带来馈赠与机会'}:v>=10?{k:'友善',d:'愿意多聊两句'}:{k:'观望',d:'支持与拒绝都会被记住'};
+  this.c.open('factions','财富让你被更多人看见。','关系不是永久资产，每次选择都会推动这条线。',
+  `<div class="faction-bars">${FACTIONS.map(f=>{const v=e.relations[f.id]||0,locked=t<f.at,st=state(v);
+   return `<article${locked?' style="opacity:.5"':''}><span class="fb-glyph">${f.symbol}</span><div><span class="fb-name">${f.name}</span><div class="fb-track"><i style="left:calc(${(v+100)/2}% - 3px)"></i></div><small>${locked?'尚未达到财富门槛，暂不互动':st.k+' · '+st.d}</small></div><span class="fb-value ${v<0?'neg':''}">${v>0?'+':''}${v}</span></article>`;}).join('')}</div>
+  <p>打招呼、城市故事与休息事件都会推动关系。地下帮派严重敌对可能出现暗杀，议政署敌对带来冻结与罚款；不同派系的惩罚方式并不相同。</p>`);}
  openRegions(){this.c.open('regions',getCity(this.s).name+'，还有更高的一层。','更高门槛、更高税率，也有当地专属项目。',`<div class="region-grid">${regions(this.s.life.city).map((z,i)=>`<article><span>0${i+1} / ${i?'WEALTH DISTRICT':'THE STREET'}</span><h3>${z.name}</h3><p>${z.at?'总身家门槛 '+short(z.at*100):'没有财富门槛'}<br>区域税率系数 ×${z.tax} · 项目风险 +${z.risk}</p>${btn('region',this.e.region===z.id?'当前所在':worth(this.s)<z.at*100?'尚未开放':'进入该区域',z.id,worth(this.s)<z.at*100||this.e.region===z.id)}</article>`).join('')}</div><p>当前：${currentRegion(this.s).name}。跌破区域门槛会自动回到普通街区。高空 / 轨道区域是虚构后期地点，不代表现实设施。</p>`);}
  openMedical(){this.c.open('medical','时间，开始变得很贵。',`健康 ${this.e.health}/${this.e.maxHealth} · 下一次衰退概率 ${healthRisk(this.s,true)}%`, `<div class="medical-list">${medicalOptions(this.s).map(o=>`<article><h3>${o.name}</h3><p>${o.desc}</p><span>门槛 ${short(o.min*100)} · 本次 ${short(o.cost)}</span>${btn('medical-buy','购买疗程',o.id,worth(this.s)<o.min*100||this.s.cash<=o.cost||o.id==='care'&&this.e.health>=this.e.maxHealth||!!pendingEvent(this.s))}</article>`).join('')}</div><p>累计购买会让下一次医疗更贵。不能在事件结果锁定后临时改写抽签；延寿不等于永生，也不能复活已死亡角色。</p>`);}
  openLuxury(){this.c.open('luxury',getCity(this.s).name+'的昂贵回忆。','不生息、不变现，只留下奢侈点。',`<div class="luxury-list">${luxuries(this.s).map(i=>`<article><span>EXCLUSIVE / ${getCity(this.s).name}</span><h3>${i.name}</h3><p>${short(i.price)} → <b>${i.points} 奢侈点</b></p><small>当前总身家门槛 ${short(i.at*100)}</small>${btn('luxury-buy',this.e.luxuries.includes(i.id)?'本局已消费':'消费并留下回忆',i.id,!i.available||this.s.cash<=i.price||!!this.s.life.rest||!!this.s.life.travel)}</article>`).join('')}</div><p>本局待结算：${this.e.luxuryEarned} 点。人生结束后进入转世账户，每个项目本局只消费一次。</p>`);}
@@ -293,7 +330,7 @@ export class LifeUI extends JourneyUI{
  menuExtras(){const t=lateTier(this.s),curTheme=this.c.meta().theme||'minimalist',themeNames={minimalist:'极简黑白',imperial:'帝国鎏金',cyber:'赛博霓虹',swiss:'瑞士现代'};return super.menuExtras()+`<section class="capital-menu"><div class="life-eyebrow">LIFE HAS CONSEQUENCES / 人生的后半程</div><div class="capital-menu-grid">${btn('status','身家与下期账单')}${btn('mechanisms','财富机制蓝图')}${btn('theme-picker','重新选择界面布局')}${btn('decorations','金边UI装饰与美化 (+LP)')}${btn('legacy','转世事务所 · '+(this.c.meta().legacy?.points||0)+' LP')}${t>=2?btn('factions','派系关系'):''}${t>=3?btn('security','雇佣保镖 / 安保姿态')+btn('medical','健康 / 昂贵延寿'):''}${t>=4?btn('regions','城市深层区域'):''}${t>=5?btn('luxury','地区奢侈消费'):''}${btn('textures','财富配色与贴图：'+(this.c.meta().wealthTextures?'开启':'关闭'))}</div><p>功能按当前总身家启停。最贫穷阶段没有额外常驻面板；必要的健康与账单只在休息弹窗出现。</p></section>`;}
  tick(){super.tick();if(this.c.started?.()===false)return;const now=performance.now();if(now<this.nextLateTick)return;this.nextLateTick=now+300;if(pendingEvent(this.s)&&!this.c.modal?.()&&!this.c.busy?.()&&(!this.s.ended||pendingEvent(this.s)?.resolved))this.openEvent();}
  async handle(a,v){
-  const actions=['culture','open-event','event-choice','event-ack','status','security','guards','factions','regions','region','medical','medical-buy','luxury','luxury-buy','legacy','perk','skin','textures','rest-all','rest-do','news','activate-noble','show-medals','mechanisms','theme-picker','theme-switch','decorations','buy-deco','equip-deco','prompt-rest','confirm-start-rest'];
+  const actions=['culture','open-event','event-choice','event-ack','status','security','guards','factions','regions','region','medical','medical-buy','luxury','luxury-buy','legacy','perk','skin','textures','rest-all','rest-do','pitch','news','activate-noble','show-medals','mechanisms','theme-picker','theme-switch','decorations','buy-deco','equip-deco','prompt-rest','confirm-start-rest'];
   if(!a.startsWith('life-')||!actions.includes(a.slice(5)))return super.handle(a,v);
   try{switch(a.slice(5)){
    case 'culture':this.contextExpanded=!this.contextExpanded;this.paintContext();break;
@@ -307,6 +344,11 @@ export class LifeUI extends JourneyUI{
    case 'luxury-buy':{const o=luxuries(this.s).find(x=>x.id===v);this.c.confirm('这笔钱不会再回来。',`消费 ${money(o.price)} 获得 ${o.points} 奢侈点，不增加资产与现金收益。`,()=>{try{consumeLuxury(this.s,v);this.persist();this.c.renderDock();this.openLuxury();}catch(e){this.c.toast(e.message);}});break;}
    case 'legacy':this.openLegacy(false);break;case 'perk':this.purchasePerk(v);break;case 'skin':this.chooseSkin(v);break;
    case 'textures':this.c.meta().wealthTextures=!this.c.meta().wealthTextures;this.c.save();this.renderHud();document.querySelectorAll('[data-action="life-textures"]').forEach(b=>b.textContent='财富配色与贴图：'+(this.c.meta().wealthTextures?'开启':'关闭'));this.c.toast('财富贴图与配色已'+(this.c.meta().wealthTextures?'开启':'关闭')+'，布局不会改变。');break;
+   case 'pitch':{const s2=this.s;try{const before=s2.cash;const res=takePitch(s2,v);
+     this.c.cash?.(s2.cash-before,document.querySelector(`[data-action="life-pitch"][data-value="${v}"]`)||$('game-dock'));
+     markPeak(s2);this.persist();this.renderRest();
+     this.c.toast(res.won?`${res.title} 成了！收到 ${money(res.gain)}`:`${res.title} 没能做成，投入的 ${money(res.cost)} 没有回来。`);
+    }catch(e){this.c.toast(e.message);}break;}
    case 'rest-all':this.openRestAll();break;case 'rest-do':restActivity(this.s,Number(v));this.persist();this.renderRest();this.openRestAll();break;
    case 'news':{const el=$('world-news');this.c.open('news','世界的另一面。','这些是会影响下一轮项目的虚构游戏新闻。',`<h3>${safe(el.querySelector('h3')?.textContent||'市场平稳')}</h3><p>${safe(el.querySelector('p')?.textContent||'')}</p>`);break;}
    case 'activate-noble':{const item=activateNoble(this.s,v);this.persist();this.openStatus();this.c.toast(`📜 贵族特权令已生效！下一站已强制指定为：${item?.name?.pair?.[1]||item?.name||'指定地点'}`);break;}
