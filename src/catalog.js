@@ -99,6 +99,7 @@ export const NOBLE_ITEMS = [
  { id: 'noble-tech', name: pair('DeepTech Incubator Key','深潜科技特批函'), price: 80000, at: 500000, icon: 'lab', desc: pair('Designate the next block as a frontier laboratory with breakthrough odds.','指派下一站为前沿科技实验室，大幅增加高倍率技术突破概率。'), targetOffer: 'tech' }
 ];
 
+// Auction price/upkeep below are already integer cents (legacy core contract).
 export const AUCTION_LOTS = [
  { id: 'auc-davinci', name: pair('Da Vinci Codex Folio','《达·芬奇手稿珍罕残卷》'), price: 50000000, points: 25, upkeep: 25000, medal: '📜', desc: pair('Authentic renaissance parchment. Converts cash into permanent Reincarnation Points.','文艺复兴真迹孤品。现金全额化作转世点，永久点亮荣誉勋章墙。'), tier: 4 },
  { id: 'auc-watch', name: pair('Titanic Gold Chronometer','《泰坦尼克号金质天文怀表》'), price: 120000000, points: 60, upkeep: 60000, medal: '⏱️', desc: pair('Salvaged deep-sea gold chronometer marking the frozen moment of history.','深海打捞的纯金精密怀表，凝固历史终章的流金见证。'), tier: 4 },

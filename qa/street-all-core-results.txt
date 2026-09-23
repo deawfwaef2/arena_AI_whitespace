@@ -6,219 +6,224 @@ TAP version 13
 # Subtest: new life: $100, 200 stamina, five health slots, zero risk
 ok 1 - new life: $100, 200 stamina, five health slots, zero risk
   ---
-  duration_ms: 6.542928
+  duration_ms: 4.238518
   ...
 # Subtest: net worth counts cash, assets, outfits, utilities and escrow once
 ok 2 - net worth counts cash, assets, outfits, utilities and escrow once
   ---
-  duration_ms: 1.216996
+  duration_ms: 0.63906
   ...
 # Subtest: current wealth, not peak, controls tiers, guards, services, regions
 ok 3 - current wealth, not peak, controls tiers, guards, services, regions
   ---
-  duration_ms: 1.133478
+  duration_ms: 0.638957
   ...
 # Subtest: every threshold advances, immediately dropping one cent regresses
 ok 4 - every threshold advances, immediately dropping one cent regresses
   ---
-  duration_ms: 3.635244
+  duration_ms: 2.396235
   ...
 # Subtest: rest bill freezes; payment decreases current worth, not peak
 ok 5 - rest bill freezes; payment decreases current worth, not peak
   ---
-  duration_ms: 47.764822
+  duration_ms: 16.191909
   ...
 # Subtest: unaffordable mandatory bill kills, no public aid escape
 ok 6 - unaffordable mandatory bill kills, no public aid escape
   ---
-  duration_ms: 0.88695
+  duration_ms: 0.875423
   ...
 # Subtest: pending rest choices block paying; chance advances one point each rest
 ok 7 - pending rest choices block paying; chance advances one point each rest
   ---
-  duration_ms: 0.787235
+  duration_ms: 0.881554
   ...
 # Subtest: health roll and result survive serialization; no duplicate hit
 ok 8 - health roll and result survive serialization; no duplicate hit
   ---
-  duration_ms: 1.783985
+  duration_ms: 1.531628
   ...
 # Subtest: health exhaustion kills and persists death cause and result
 ok 9 - health exhaustion kills and persists death cause and result
   ---
-  duration_ms: 0.891765
+  duration_ms: 0.859983
   ...
 # Subtest: three compliance choices cost 4.5%, reward 6% only once
 ok 10 - three compliance choices cost 4.5%, reward 6% only once
   ---
-  duration_ms: 0.691751
+  duration_ms: 0.685418
   ...
 # Subtest: scandal refusal deducts 14%, hostile fine death records remaining cash
 ok 11 - scandal refusal deducts 14%, hostile fine death records remaining cash
   ---
-  duration_ms: 0.977471
+  duration_ms: 1.042642
   ...
 # Subtest: tax agreement does not double-charge; refusal removes tax and hurts state
 ok 12 - tax agreement does not double-charge; refusal removes tax and hurts state
   ---
-  duration_ms: 1.044178
+  duration_ms: 1.271969
   ...
 # Subtest: security policy changes probabilities; robbery loses 22%; assassination kills
 ok 13 - security policy changes probabilities; robbery loses 22%; assassination kills
   ---
-  duration_ms: 0.599041
+  duration_ms: 0.640981
   ...
 # Subtest: luxury only consumes wealth and awards life points; one purchase per item
 ok 14 - luxury only consumes wealth and awards life points; one purchase per item
   ---
-  duration_ms: 0.656532
+  duration_ms: 0.710952
   ...
 # Subtest: legacy settles once, unlock prices deducted once, perks apply next life
 ok 15 - legacy settles once, unlock prices deducted once, perks apply next life
   ---
-  duration_ms: 1.721874
+  duration_ms: 1.395705
   ...
 # Subtest: medical treatments charge money and restore health or reduce risk
 ok 16 - medical treatments charge money and restore health or reduce risk
   ---
-  duration_ms: 0.54509
+  duration_ms: 0.687477
   ...
 # Subtest: old unpaid rest save gains one locked bill and one health event, not per reload
 ok 17 - old unpaid rest save gains one locked bill and one health event, not per reload
   ---
-  duration_ms: 1.78941
+  duration_ms: 1.81956
   ...
 # Subtest: old paid rest is not charged again and gets no retroactive health draw
 ok 18 - old paid rest is not charged again and gets no retroactive health draw
   ---
-  duration_ms: 1.313506
+  duration_ms: 1.178643
   ...
 # Subtest: acknowledged street event remains valid after future rest filters queue
 ok 19 - acknowledged street event remains valid after future rest filters queue
   ---
-  duration_ms: 0.94935
+  duration_ms: 0.95473
   ...
 # Subtest: 96 local projects have valid catalog and implemented model IDs; gated draw
 ok 20 - 96 local projects have valid catalog and implemented model IDs; gated draw
   ---
-  duration_ms: 2.102997
+  duration_ms: 2.103354
   ...
 # Subtest: seeded multi-life smoke keeps finite cents, valid saves and regression
 ok 21 - seeded multi-life smoke keeps finite cents, valid saves and regression
   ---
-  duration_ms: 80.474212
+  duration_ms: 74.694464
   ...
 # Subtest: health deterioration grows by one point until natural 100% ceiling
 ok 22 - health deterioration grows by one point until natural 100% ceiling
   ---
-  duration_ms: 0.290478
+  duration_ms: 0.254839
   ...
 # Subtest: Milestone unlock progression: nextUnlock and checkNewUnlocks
 ok 23 - Milestone unlock progression: nextUnlock and checkNewUnlocks
   ---
-  duration_ms: 5.936958
+  duration_ms: 5.731832
   ...
 # Subtest: Auction system: bidding, LV points, medals, and upkeep
 ok 24 - Auction system: bidding, LV points, medals, and upkeep
   ---
-  duration_ms: 1.00086
+  duration_ms: 0.95793
   ...
 # Subtest: Auction system: passing an auction adds to missedAuctions
 ok 25 - Auction system: passing an auction adds to missedAuctions
   ---
-  duration_ms: 0.581913
+  duration_ms: 0.512
   ...
 # Subtest: Noble items: privilege summons overrides upcoming destination
 ok 26 - Noble items: privilege summons overrides upcoming destination
   ---
-  duration_ms: 0.862138
+  duration_ms: 0.667651
   ...
 # Subtest: Outfits: LV bonus and upkeep integration
 ok 27 - Outfits: LV bonus and upkeep integration
   ---
-  duration_ms: 0.461652
+  duration_ms: 0.44158
   ...
 # Subtest: UI Cosmetics: purchase, LV bonus, upkeep, and equipping
 ok 28 - UI Cosmetics: purchase, LV bonus, upkeep, and equipping
   ---
-  duration_ms: 0.657201
+  duration_ms: 0.550481
   ...
 # Subtest: old save migrates without resetting wealth or page
 ok 29 - old save migrates without resetting wealth or page
   ---
-  duration_ms: 5.830061
+  duration_ms: 5.54264
   ...
 # Subtest: hire charges cents once and prohibits duplicates
 ok 30 - hire charges cents once and prohibits duplicates
   ---
-  duration_ms: 0.915522
+  duration_ms: 0.884385
   ...
 # Subtest: local talents require current city, wealth and cash
 ok 31 - local talents require current city, wealth and cash
   ---
-  duration_ms: 0.421834
+  duration_ms: 0.394938
   ...
 # Subtest: guide actually reduces forward stamina usage
 ok 32 - guide actually reduces forward stamina usage
   ---
-  duration_ms: 1.078321
+  duration_ms: 1.002428
   ...
 # Subtest: merchant bonus does not change old quote and affects later offers
 ok 33 - merchant bonus does not change old quote and affects later offers
   ---
-  duration_ms: 0.494393
+  duration_ms: 0.454152
   ...
 # Subtest: analyst bonus composes with dual review and remains valid on reload
 ok 34 - analyst bonus composes with dual review and remains valid on reload
   ---
-  duration_ms: 1.058909
+  duration_ms: 0.981641
   ...
 # Subtest: maintenance includes wages and steward discount without reducing tax
 ok 35 - maintenance includes wages and steward discount without reducing tax
   ---
-  duration_ms: 0.631623
+  duration_ms: 0.557712
   ...
 # Subtest: rest locks wages and prohibits hire/dismiss, no wage evasion
 ok 36 - rest locks wages and prohibits hire/dismiss, no wage evasion
   ---
-  duration_ms: 2.405756
+  duration_ms: 2.230324
   ...
 # Subtest: dismiss stops fees, removes effect, does not refund
 ok 37 - dismiss stops fees, removes effect, does not refund
   ---
-  duration_ms: 0.510819
+  duration_ms: 0.576534
   ...
 # Subtest: greeting costs energy and blocks repeats, alters faction not cash
 ok 38 - greeting costs energy and blocks repeats, alters faction not cash
   ---
-  duration_ms: 0.502302
+  duration_ms: 0.55502
   ...
 # Subtest: diplomat amplifies greeting, medic reduces risk
 ok 39 - diplomat amplifies greeting, medic reduces risk
   ---
-  duration_ms: 0.296475
+  duration_ms: 0.284779
   ...
 # Subtest: thoughts depend on wealth and relationships
 ok 40 - thoughts depend on wealth and relationships
   ---
-  duration_ms: 0.449226
+  duration_ms: 0.471629
   ...
 # Subtest: progress uses consecutive thresholds rather than total proportion
 ok 41 - progress uses consecutive thresholds rather than total proportion
   ---
-  duration_ms: 0.283538
+  duration_ms: 0.309972
   ...
 # Subtest: three-person limit and unknown imported IDs are sanitized
 ok 42 - three-person limit and unknown imported IDs are sanitized
   ---
-  duration_ms: 0.427014
+  duration_ms: 0.450216
   ...
-1..42
-# tests 42
+# Subtest: legacy auction object migrates to ID and rejects missing lots
+ok 43 - legacy auction object migrates to ID and rejects missing lots
+  ---
+  duration_ms: 0.639747
+  ...
+1..43
+# tests 43
 # suites 0
-# pass 42
+# pass 43
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 459.461295
+# duration_ms 415.755605

@@ -159,7 +159,7 @@ function bidAuction(){
     <button class="primary" data-action="close">${L('COLLECT & WALK ON','收藏珍宝，继续前行')}${icon('arrow')}</button>
    </div>
   `,{custom:true});
-  checkMilestoneCelebration();
+  // Buying a lot reduces wealth; do not replace the auction receipt with an unrelated unlock dialog.
  }catch(e){toast(e.message);}
 }
 function passAuction(){

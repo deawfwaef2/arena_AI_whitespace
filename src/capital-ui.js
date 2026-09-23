@@ -50,8 +50,8 @@ export class LifeUI extends JourneyUI{
    bar.innerHTML=`<div class="milestone-bar-inner"><span class="milestone-icon">🔓</span><span class="milestone-title">${Math.round(next.progress*100)}% · ${safe(nextTitle)}</span><span class="milestone-target">${money(next.at*100,true)}</span><div class="milestone-track"><i style="width:${pct.toFixed(0)}%"></i></div></div>`;
    bar.title=`当前身家 ${money(w)} / 解锁门槛 ${money(next.at*100)}。点击查看完整机制蓝图`;
   }else{
-   bar.innerHTML=`<div class="milestone-bar-inner maxed"><span class="milestone-icon">👑</span><span class="milestone-title">全机制已激活 · 巅峰资本家</span></div>`;
-   bar.title='所有核心机制均已解锁！点击查看图谱';
+   bar.innerHTML=`<div class="milestone-bar-inner maxed"><span class="milestone-icon">👑</span><span class="milestone-title">核心门槛已达成 · 查看机制</span></div>`;
+   bar.title='核心门槛均已达到，需购买的商品仍单独付费。点击查看图谱';
   }
  }
  renderMedalsTray(){
