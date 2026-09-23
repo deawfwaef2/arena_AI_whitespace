@@ -143,8 +143,8 @@ export class LifeUI{
     case 'theme':if(owns(s,'ui')){s.life.modern=!s.life.modern;this.persist();this.c.toast(s.life.modern?'已启用 Atelier 现代界面。':'已切回原有基础界面。');}break;
     case 'soundscape':if(owns(s,'music')){const modes=['auto','city','class'];s.life.soundscape=modes[(modes.indexOf(s.life.soundscape)+1)%3];this.persist();this.c.toast('音乐管家已切换为：'+{auto:'自适应',city:'按城市',class:'按阶层'}[s.life.soundscape]);}break;
     case 'interest':this.c.open('interest','让时间，产生一点回响。','计息账户 / 虚拟收益',`<div class="interest-hero">${glyph('bank')}<strong>${(dailyRate(s)*100).toFixed(1)}%<small>/ DAY</small></strong></div><p>当前现金 ${cash(s.cash)}。按此余额，离线 1 天可获得约 ${cash(Math.floor(s.cash*dailyRate(s)))}。</p><p>每次重新打开游戏按离线时长结算，最长累计 7 天。收益只计算现金，不计算建筑、服装或商品价值，不复利。少于 1 分钟不结算。</p>${this.income?`<div class="panel-notice">最近一次离线收益：+${cash(this.income.delta)}</div>`:''}`);break;
-    case 'pay':payRest(s);this.persist();this.renderRest();break;
-    case 'aid':payRest(s,true);this.persist();this.renderRest();break;
+    case 'pay':{const before=s.cash;payRest(s);this.c.cash?.(s.cash-before,document.getElementById('game-dock'));this.persist();this.renderRest();break;}
+    case 'aid':{const before=s.cash;payRest(s,true);this.c.cash?.(s.cash-before,document.getElementById('game-dock'));this.persist();this.renderRest();break;}
     case 'activity':{const a=restActivity(s,Number(v));this.persist();this.renderRest();this.c.toast(`${a.name} · 已减少 ${Math.floor(a.seconds/60)} 分钟${a.seconds%60?`${a.seconds%60} 秒`:''}`);break;}
     case 'instant':{const r=s.life.rest,a=r?.activities.find(x=>x.id===Number(v));if(!r?.paid||!a?.instant||r.remaining<=0)break;this.c.confirm('立即完成本次休息？',`支付 ${cash(a.price)} 游戏币购买「${a.name}」，剩余休息计时立即归零。不会使用真钱。`,()=>{try{if(this.s!==s||s.life.rest!==r)throw Error('当前假期已变更。');restActivity(s,a.id);this.persist();this.renderRest();this.c.toast('休息已立即完成。领取 '+s.life.energyCap+' 体力就能继续出发。');}catch(e){this.c.toast(e.message);}});break;}
     case 'preview':{const r=s.life.rest,a=r?.activities.find(x=>x.id===Number(v));if(a){r.pose=a.pose;r.lastActivity='预览：'+a.name;this.c.world.setRest(r);this.renderHud();this.c.save();}break;}

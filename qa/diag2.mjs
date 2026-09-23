@@ -1,0 +1,15 @@
+import {chromium} from '@playwright/test';
+import {newRun,markPeak} from '../src/engine.js';
+const browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
+const c=await browser.newContext({viewport:{width:390,height:844}});
+const run=newRun();run.cash=10000;run.life.energy=200;markPeak(run);
+await c.addInitScript(seed=>{localStorage.setItem('upshift-save-v3',JSON.stringify(seed));},{version:3,run,meta:{layout:'street',music:false,sound:false,low:true,motion:true}});
+const p=await c.newPage();p.setDefaultTimeout(15000);
+await p.goto('http://127.0.0.1:8080/',{waitUntil:'load',timeout:120000});
+await p.locator('[data-action="onboard-play"]').click();
+await p.locator('#start-screen').waitFor({state:'hidden'});
+await p.waitForTimeout(2500);
+const els=await p.evaluate(()=>{const out=[];document.querySelectorAll('#app *').forEach(e=>{const r=e.getBoundingClientRect();if(r.width<8||r.height<8)return;const cs=getComputedStyle(e);const dark=c=>{const m=c.match(/[\d.]+/g);return m&&m.length>=3&&+m[0]<80&&+m[1]<80&&+m[2]<80&&(m.length<4||+m[3]>0.5);};
+if(dark(cs.backgroundColor)||dark(cs.borderTopColor)&&parseFloat(cs.borderTopWidth)>1)out.push({t:e.tagName,id:e.id,cls:e.className.toString().slice(0,50),rect:[Math.round(r.x),Math.round(r.y),Math.round(r.width),Math.round(r.height)],bg:cs.backgroundColor,bw:cs.borderTopWidth,bc:cs.borderTopColor});});return out;});
+console.log(JSON.stringify(els));
+await browser.close();

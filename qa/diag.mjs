@@ -1,0 +1,14 @@
+import {chromium} from '@playwright/test';
+import {newRun,markPeak} from '../src/engine.js';
+const browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
+const c=await browser.newContext({viewport:{width:390,height:844}});
+const run=newRun();run.cash=200000000;run.life.energy=200;markPeak(run);
+await c.addInitScript(seed=>{localStorage.setItem('upshift-save-v3',JSON.stringify(seed));},{version:3,run,meta:{layout:'street',music:false,sound:false,low:true,motion:true}});
+const p=await c.newPage();p.setDefaultTimeout(15000);p.on('pageerror',e=>console.log('PAGEERROR',e.message));
+await p.goto('http://127.0.0.1:8080/',{waitUntil:'load',timeout:120000});
+await p.locator('[data-action="onboard-play"]').click();
+await p.locator('#start-screen').waitFor({state:'hidden'});
+await p.waitForTimeout(2000);
+const els=await p.evaluate(()=>{const out=[];document.querySelectorAll('#game *').forEach(e=>{const r=e.getBoundingClientRect();if(r.width<10||r.height<10)return;const cs=getComputedStyle(e);if(r.x<300&&r.right>180&&r.y<300&&r.bottom>230)out.push({t:e.tagName,id:e.id,cls:e.className.toString().slice(0,60),rect:[Math.round(r.x),Math.round(r.y),Math.round(r.width),Math.round(r.height)],bg:cs.backgroundColor,bd:cs.border,z:cs.zIndex});});return out;});
+console.log(JSON.stringify(els,null,1));
+await browser.close();
