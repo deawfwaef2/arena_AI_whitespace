@@ -6,7 +6,7 @@ import {ensureEstate,initLegacy,applyLegacy,collectLegacy,endLife,worth,lateTier
 import {playObituary,obituaryArt,getSatiricalEpitaph} from './obituary.js';
 import {Onboarding} from './onboarding.js';
 import {LifeUI} from './capital-ui.js';
-import {initLife,stakeBounds,owns,tickRest,UNLOCK_MILESTONES,nextUnlock,checkNewUnlocks} from './life-core.js';
+import {initLife,stakeBounds,owns,tickRest,UNLOCK_MILESTONES,nextUnlock,checkNewUnlocks,getCity} from './life-core.js';
 import {ASSETS,OUTFITS,PROJECTS,RARITIES,TIERS,EFFECTS,SPECIALS,CHALLENGES,getAsset,getOutfit,getProject,getRarity,getSpecial,getChallenge,getAuctionLot,getNobleItem,AUCTION_LOTS,NOBLE_ITEMS} from './catalog.js';
 import {newRun,validateRun,invest,next,purchaseAsset,purchaseOutfit,netWorth,assetValue,tier,prestige,bankrupt,markPeak,moneyInt,MAX_CENTS,DEFAULT_RATES,createBots,makeOffer,payout,quote,requiredStake,acceptChallenge,advanceTime,checkChallenge} from './engine.js';
 import {Platform} from './platform.js';
@@ -78,6 +78,14 @@ function renderHud(){
  $('swipe-cue').querySelector('span').textContent=visit?L('ESTATE TOUR · SWIPE TO CONTINUE','资产参观 · 右滑继续'):L('SWIPE RIGHT TO WALK ON','向右滑动，继续前行');
  $('game').dataset.prestige=prestige(run);$('game').dataset.wealth=tier(run);$('game').dataset.finish=finishStyle();$('game').classList.toggle('ended',run.ended);const k=run.offer.type==='asset'?getAsset(run.offer.asset).model:run.offer.project;const biome=['ocean','marina','island','beach','resort'].includes(k)?'coast':['solar','greenhouse','vineyard','cottage'].includes(k)?'nature':['rocket','spaceport','cloud','lab'].includes(k)?'future':['manor','palace','castle'].includes(k)?'royal':'city';$('game').dataset.biome=biome;renderChallengeHud();lifeUI?.renderHud();designUI?.refresh();streetUI?.refresh();prosperityUI?.refresh();musicMode();
 }
+const RARITY_STARS={common:1,uncommon:2,rare:3,epic:4,legendary:5,mythic:6};
+const CATEGORY_GLYPH={项目:'📋',街头:'🍜',餐饮:'🍜',科技:'💡',地产:'🏢',文化:'🎭',物流:'🚚',金融:'🏦',制造:'⚙️',旅游:'🧳',农业:'🌾',医疗:'🏥',时尚:'👗',娱乐:'🎬'};
+// Rarity and category used to be a tiny pill; players asked for it to be unmissable.
+function rarityBanner(rarityId,rarityName,categoryText,cityName){
+ const stars=RARITY_STARS[rarityId]||1;
+ const glyph=Object.keys(CATEGORY_GLYPH).find(k=>String(categoryText||'').includes(k));
+ return `<div class="rarity-banner"><span class="rb-rarity"><span class="rb-star">${'★'.repeat(stars)}</span>${safe(rarityName)}</span>${categoryText?`<span class="rb-type">${glyph?CATEGORY_GLYPH[glyph]:'◈'} ${safe(categoryText)}</span>`:''}${cityName?`<span class="rb-city">${safe(cityName)}</span>`:''}</div>`;
+}
 function header(pill,title,type='info'){return `<div class="dock-header"><span class="kind-pill">${icon(type)}${safe(pill)}</span><button class="rules-button" data-action="rules">${icon('info')}${L('RULES','规则')}</button></div><h1>${safe(title)}</h1>`;}
 function actions(label,action,{disabled=false,danger=false,gold=false,purple=false,solo=false}={}){return `<div class="action-row ${solo?'solo':''}">${solo?'':`<button class="pass-button" data-action="next" ${busy?'disabled':''}>${L('PASS','跳过')}${icon('arrow')}</button>`}<button class="primary ${danger?'danger':''} ${gold?'gold':''} ${purple?'purple':''}" id="primary-action" data-action="${action}" ${disabled||busy||run.ended?'disabled':''}>${label}${icon('arrow')}</button></div>`;}
 function renderDock(){if(streetUI?.interceptDock())return;if(lifeUI?.interceptDock())return;renderDockBase();lifeUI?.afterDock();fitDock();}
@@ -90,7 +98,9 @@ function renderDockBase(){
  const result=run.lastResult,q=quote(run,stake),displayStake=o.settled&&result?result.stake:stake;
  d.style.setProperty('--rarity',special?.color||r.color);d.style.setProperty('--stake',(run.cash?stake/run.cash*100:0)+'%');
  const odds=good=>`<div class="odds-box ${good?'':'loss'} ${o.settled&&!busy?(result?.won===good?'selected':'unselected'):''}"><div class="chance-line"><strong>${good?o.p:Number((100-o.p).toFixed(2))}%</strong><span>${good?L('WIN','成功'):L('LOSE','失败')}</span>${icon(good?'up':'risk')}</div><div class="amount" id="${good?'win':'lose'}-amount">${good?signed(payout(displayStake,o.up)-displayStake):'−'+money(o.settled&&result?Math.abs(result.won?(special?.lossScope==='wallet'?result.cashAfterBet-result.profit:displayStake):result.profit):q.loss,true)}</div><div class="outcome-meta">${good?`${L('Return','返还')} ×${o.up.toFixed(2)}`:special?.lossScope==='wallet'?L('ALL CASH GONE','全部现金归零'):L('Entire stake lost','投入本金全部亏掉')}</div></div>`;
- let inner=header(special?text(special.short):text(r.name),special?text(special.name):text(p.name),special?'fire':'coin');
+ d.dataset.rarity=o.rarity||'common';
+ let inner=header(special?text(special.short):text(r.name),special?text(special.name):text(p.name),special?'fire':'coin')
+  +rarityBanner(special?'legendary':o.rarity,special?'特殊合约':text(r.name),o.category||o.localName||'',getCity(run)?.name||'');
  if(busy){inner+=`<div class="resolving"><div class="rolling-coins"><i></i><i></i><i></i></div>${L('Your outcome is landing…','正在揭晓结果…')}</div>`+actions(L('REVEALING…','揭晓中…'),'invest',{disabled:true,solo:true});d.innerHTML=inner;fitDock();return;}
  inner+=`<div class="odds-grid">${odds(true)}${odds(false)}</div>`;
  if(o.settled&&result){inner+=`<div class="result-panel ${result.profit<0?'negative':''}"><div class="result-label">${icon(result.won?'sparkle':'risk')}${result.won?L('NICE MOVE!','漂亮！'):result.lossScope==='wallet'?L('WIPED OUT!','全仓清零！'):L('STAKE LOST','本次投入已亏损')}</div><div class="result-amount">${signed(result.profit)}</div><p class="result-explain">${L('Cash remaining: ','剩余现金：')}${money(run.cash,true)}</p></div>`+actions(L('NEXT STOP','前往下一站'),'next',{solo:true});}

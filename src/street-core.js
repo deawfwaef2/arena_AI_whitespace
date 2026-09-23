@@ -28,5 +28,25 @@ const names=['小周','夏树','安娜','陈宇','罗伊','艾文','米洛','阿
 const factions=[['people','平民社群'],['tech','科技联盟'],['industry','工业联合'],['capital','资本公会'],['state','地区议政署'],['underworld','地下帮派']];
 const ranks=[['生存',8000],['工薪',180000],['中产',3800000],['富裕',62000000],['大人物',180000000]];
 export function passer(s,i){const n=(s.page*7+i*13+Object.keys(CITY_STREET).indexOf(s.life.city))>>>0;const rank=ranks[(i+s.page)%ranks.length],f=factions[(i+s.page)%factions.length];return {id:`${s.life.city}:${s.page}:${i}`,name:names[(i+s.page)%names.length],origin:i%3===0?regions[(i+s.page)%6]:({taipei:'台北',tokyo:'东京',singapore:'新加坡',newyork:'纽约',monaco:'摩纳哥',vegas:'拉斯维加斯'})[s.life.city],cash:rank[1]+n*113,rank:rank[0],faction:f[0],factionName:f[1],color:[0x7c9e89,0xb39a7b,0x929eb8,0xa6818e,0x789ca3,0xb6aa77][i%6]};}
+// Short, glanceable remarks. These now float over the street instead of sitting in a bubble box.
+export const QUIPS={
+ poor:['这人看着和我一样，刚起步吧。','$100 也能翻身？看他怎么走。','早市的味道，今天也一样。','我以前也是从一条街开始的。','别急，慢慢来。'],
+ rising:['他好像最近赚了点。','听说那边的项目回报不错。','这条街最近热闹了。','有点本事，但还没站稳。','再赌大一点就危险了。'],
+ rich:['那位是真的有钱。','听说他一单能吃下整条街。','有钱人也得吃早饭。','排面是排面，风险是风险。','我要是有他那点运气就好了。'],
+ friendly:['嘿，又见到你了！','你上次帮的忙，我记着。','我们这边的人都认你。','需要帮手就说一声。'],
+ hostile:['哼，我们那边可不欢迎他。','上次的事还没算完。','离他远点比较好。','看他走过去我就来气。'],
+ envy:['凭什么他这么顺？','运气好罢了。','这世道…'],
+ kind:['祝他今天顺利。','愿意分一点给别人的人不多。','慢慢走，别摔着。']
+};
+export function quip(s,n,w,rng=Math.random){
+ const relation=s.estate?.relations?.[n.faction]||0;
+ let pool;
+ if(relation<=-20)pool=QUIPS.hostile;
+ else if(relation>=20)pool=QUIPS.friendly;
+ else if(w>=10000000)pool=rng()<.35?QUIPS.envy:QUIPS.rich;
+ else if(w>=100000)pool=QUIPS.rising;
+ else pool=rng()<.3?QUIPS.kind:QUIPS.poor;
+ return {text:pool[Math.floor(rng()*pool.length)],tone:pool===QUIPS.hostile||pool===QUIPS.envy?'neg':pool===QUIPS.friendly||pool===QUIPS.kind?'pos':''};
+}
 export function opinion(s,n,w){const relation=s.estate?.relations?.[n.faction]||0;if(relation<=-20)return '上次的立场还没谈拢，先保持距离吧。';if(relation>=20)return '是熟悉的朋友。钱多钱少，都愿意聊聊。';if(w<n.cash*.35)return '他还在起步吧。我也记得第一笔积蓄。';if(w>n.cash*3)return '看起来做成了些事，不知道愿不愿意听我说。';return '身家和我差不多，也许有共同的话题。';}
 export function greet(s,n){if(s.ended||s.life.rest||s.life.travel||s.life.energy<1)throw Error('现在需要先休息。');const key=`${s.page}:${n.id}`;const list=Array.isArray(s.life.greetings)?s.life.greetings:[];if(list.includes(key))throw Error('这站已经和这位路人聊过了。');if(list.filter(k=>k.startsWith(s.page+':')).length>=5)throw Error('这站聊得够久了，去下一条街吧。');const bonus=hasCrew(s,'diplomat')?4:2;s.life.greetings=[...list,key].slice(-20);s.life.energy--;s.estate.relations[n.faction]=Math.min(100,(s.estate.relations[n.faction]||0)+bonus);return bonus;}
