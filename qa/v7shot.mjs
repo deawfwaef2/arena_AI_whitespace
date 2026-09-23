@@ -10,6 +10,7 @@ async function shot(name,{cash=100,energy=200,width=1280,height=800,mobile=false
  await c.addInitScript(seed=>{localStorage.setItem('upshift-save-v3',JSON.stringify(seed));},{version:3,run,meta:{layout:'street',music:false,sound:false,low:true,motion:true}});
  const p=await c.newPage();p.setDefaultTimeout(9000);p.on('pageerror',e=>errors.push(name+': '+e.message));p.on('console',m=>{if(m.type()==='error')errors.push(name+' console: '+m.text().slice(0,200));});
  try{await p.goto('http://127.0.0.1:8080/',{waitUntil:'load',timeout:120000});
+  await p.locator('#v8-intro [data-l="zh"]').click({timeout:60000});await p.locator('.v8i-skip').click();await p.waitForTimeout(900);
   await p.locator('[data-action="onboard-play"]').click({timeout:20000});await p.waitForTimeout(2200);
   if(after)await after(p);
  }catch(e){errors.push(name+' STEP: '+e.message.split('\n')[0]);}

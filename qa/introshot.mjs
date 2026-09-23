@@ -1,0 +1,10 @@
+import {chromium} from '@playwright/test';
+const b=await chromium.launch({args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+const p=await (await b.newContext({viewport:{width:1280,height:720}})).newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));
+await p.goto('http://127.0.0.1:8080/',{timeout:120000});await p.waitForSelector('#v8-intro [data-l]',{timeout:60000});await p.screenshot({path:'qa/i1.png'});
+await p.click('#v8-intro [data-l="zh"]');await p.waitForTimeout(900);await p.screenshot({path:'qa/i2.png'});
+await p.waitForTimeout(5000);await p.screenshot({path:'qa/i3.png'});
+await p.waitForTimeout(4200);await p.screenshot({path:'qa/i4.png'});
+await p.waitForTimeout(6500);await p.screenshot({path:'qa/i5.png'});
+await p.click('#v8i-go');await p.waitForTimeout(1500);await p.screenshot({path:'qa/i6.png'});
+console.log(errs);await b.close();
