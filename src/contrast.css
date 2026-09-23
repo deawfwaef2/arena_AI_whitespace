@@ -424,33 +424,119 @@ body[data-motion='off'] .unlock-continue{animation:none}
  20%{transform:translateX(-9px)}40%{transform:translateX(8px)}
  60%{transform:translateX(-5px)}80%{transform:translateX(3px)}100%{transform:translateX(0)}}
 
-/* ---------- next-tier chip 定位 ---------- */
-#app #next-tier-chip{left:28px;top:150px;max-width:310px}
-#app[data-compact='true'] #next-tier-chip{
- left:16px;right:74px;top:136px;max-width:none;padding:7px 11px;min-height:42px;font-size:12px}
-#app[data-compact='true'] #next-tier-chip b{font-size:14px}
-#app[data-compact='true'] #next-tier-chip small{font-size:10px}
-#app[data-compact='true'] #next-tier-chip .ntc-icon{font-size:18px}
-/* 解锁进度条挪到底部左侧，给 chip 让位 */
+/* ============================================================
+   HUD 轨道：用真实文档流排布，元素之间永远不会重叠。
+   上轨 #hud-rail（现金下方），下轨 #hud-rail-bottom（投资卡上方）。
+   ============================================================ */
+#hud-rail{
+ position:absolute;z-index:13;display:flex;flex-direction:column;gap:9px;
+ left:24px;top:104px;width:342px;align-items:stretch;pointer-events:none;
+}
+#hud-rail>*{pointer-events:auto}
+#hud-rail-bottom{
+ position:absolute;z-index:12;display:flex;flex-direction:column;gap:10px;
+ left:24px;bottom:24px;width:342px;align-items:flex-start;pointer-events:none;
+}
+#hud-rail-bottom>*{pointer-events:auto}
+
+/* 轨道内成员统一取消各自的绝对定位 */
+#app #hud-rail #wallet-bill,
+#app #hud-rail #energy-ribbon,
+#app #hud-rail #next-tier-chip,
+#app #hud-rail #game-navigation,
+#app #hud-rail-bottom #city-panorama,
+#app #hud-rail-bottom #milestone-progress-bar{
+ position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+ width:100%!important;max-width:none!important;margin:0!important;translate:none!important;zoom:1!important;
+}
+#app #hud-rail #wallet-bill{
+ border:2px solid #b9c9a5!important;border-radius:13px!important;padding:9px 14px!important;
+ min-height:52px!important;display:flex!important;align-items:center;justify-content:space-between;gap:12px;
+ background:linear-gradient(135deg,#fffdf1,#f2f7e6)!important;box-shadow:0 4px 0 #4b653c1c!important;
+}
+#app #hud-rail #wallet-bill span{display:flex!important;align-items:baseline;gap:8px;font-size:14px!important;white-space:nowrap}
+#app #hud-rail #wallet-bill b{white-space:nowrap}
+#app #hud-rail #wallet-bill small{text-align:right;font-size:12px!important;line-height:1.45!important;flex:0 0 auto}
+#app #hud-rail #energy-ribbon{border-radius:13px!important;padding:9px 13px!important}
+#app #hud-rail #game-navigation{display:flex!important;flex-wrap:wrap!important;gap:8px!important}
+#app #hud-rail #game-navigation button{flex:1 1 auto;min-width:0}
+#app #hud-rail-bottom #city-panorama{
+ width:322px!important;height:164px!important;flex:0 0 auto;
+}
+#app[data-wealth='poor'] #hud-rail-bottom #city-panorama{display:none!important}
+#app #hud-rail-bottom #milestone-progress-bar{max-height:none!important;flex:0 0 auto}
+#app .street-identity{position:absolute!important;left:26px!important;top:104px!important;display:none!important}
+#app .street-sign{display:none!important}
+#app #wealth-badges{right:470px!important;top:30px!important;left:auto!important}
+
+/* ---- 手机 ---- */
+@media(max-width:759px){
+ /* 手机：所有 HUD 进上轨，用真实流排列，底部完全留给投资卡 */
+ #hud-rail{left:12px;right:12px;top:78px;width:auto;gap:6px;
+  max-height:calc(100dvh - var(--dock-height, 330px) - 96px);flex-wrap:nowrap}
+ #hud-rail-bottom{display:none}
+ #app #hud-rail #wallet-bill{min-height:42px!important;padding:6px 12px!important}
+ #app #hud-rail #wallet-bill span{font-size:13px!important}
+ #app #hud-rail #wallet-bill b{font-size:17px!important}
+ #app #hud-rail #wallet-bill small{font-size:10px!important}
+ #app #hud-rail #energy-ribbon{padding:5px 11px!important}
+ #app #hud-rail #energy-ribbon>div:first-child{font-size:12px!important}
+ #app #hud-rail .energy-ribbon-track{height:7px!important;margin-top:4px!important}
+ #app #hud-rail #next-tier-chip{min-height:42px!important;padding:5px 11px!important;font-size:12px;gap:8px}
+ #app #hud-rail #next-tier-chip b{font-size:13px!important}
+ #app #hud-rail #next-tier-chip small{font-size:10px!important}
+ #app #hud-rail #next-tier-chip .ntc-icon{font-size:17px}
+ /* 功能按钮：单行横向滚动，不再换行吃掉两倍高度 */
+ #app #hud-rail #game-navigation{
+  flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;
+  scrollbar-width:none;gap:6px!important;padding-bottom:1px}
+ #app #hud-rail #game-navigation::-webkit-scrollbar{display:none}
+ #app #hud-rail #game-navigation button{
+  flex:0 0 auto!important;min-height:42px!important;min-width:0!important;width:auto!important;
+  padding:7px 12px!important;font-size:13px!important;white-space:nowrap}
+ #app #hud-rail #game-navigation button span{display:inline!important}
+ /* 全景与解锁进度并排成一行 */
+ #app #hud-rail #city-panorama{
+  position:absolute!important;left:auto!important;right:0!important;top:auto!important;
+  bottom:0!important;width:118px!important;height:62px!important;margin:0!important;z-index:2}
+ #app[data-wealth='rich'] #hud-rail #city-panorama{width:134px!important;height:70px!important}
+ #app #hud-rail #city-panorama:after{display:none}
+ #app #hud-rail #milestone-progress-bar{
+  position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+  width:calc(100% - 128px)!important;margin:0!important;
+  min-height:56px!important;max-height:64px!important;padding:7px 11px!important;
+  display:flex!important;align-items:center;gap:9px;overflow:hidden}
+ #app[data-wealth='rich'] #hud-rail #milestone-progress-bar{width:calc(100% - 144px)!important}
+ #app[data-wealth='poor'] #hud-rail #milestone-progress-bar{width:100%!important}
+ #app #hud-rail .milestone-kicker{display:none!important}
+ #app #hud-rail .milestone-title{font-size:13px!important;line-height:1.3!important}
+ #app #hud-rail .milestone-target{font-size:11px!important}
+ #app #hud-rail .unlock-emblem{flex:0 0 auto}
+ /* 投资卡收紧，保证上方轨道有空间 */
+ #app[data-compact='true'] #game .game-dock{max-height:44dvh!important}
+ #app #wealth-badges{left:auto!important;right:12px!important;top:auto!important;
+  bottom:calc(var(--dock-height, 330px) + 14px)!important;width:144px!important;z-index:11}
+}
+/* 矮屏：优先保投资卡 */
+@media(max-height:660px){
+ #app #hud-rail-bottom #city-panorama{display:none!important}
+}
+@media(max-height:560px){
+ #app #hud-rail #next-tier-chip{display:none!important}
+ #app #hud-rail #energy-ribbon{display:none!important}
+}
+
+/* ---- 解锁进度条与门槛牌的配色（对比度） ---- */
 #app #game #milestone-progress-bar{
- position:absolute!important;left:28px!important;top:auto!important;bottom:26px!important;
- width:300px!important;margin:0!important;z-index:12;
  border:2px solid #b9c9a5!important;background:#fffdf2f2!important;color:#1f3d2c!important;
- box-shadow:0 5px 0 #4b653c1f,0 8px 22px #23391f1c!important;
+ box-shadow:0 5px 0 #4b653c1f,0 8px 22px #23391f1c!important;z-index:12;
 }
 #app #game .milestone-title{color:#173327!important;font-size:16px!important;font-weight:800!important}
 #app #game .milestone-kicker{color:#5f7548!important;font-size:12px!important;font-weight:700}
 #app #game .milestone-target{color:#3d5a47!important;font-size:13px!important}
 #app #game .milestone-target b{color:#8c3a2e!important;font-weight:800}
 #app #game .milestone-track{background:#dde3cf!important;height:9px!important;border-radius:9px}
-#app #game .milestone-track i{background:linear-gradient(90deg,#6c9a5d,#a7c46a)!important}
-/* 全景在进度条上方 */
-#app #game .city-panorama{bottom:104px!important}
-#app[data-wealth='rich'] #game .city-panorama{bottom:104px!important}
-#app[data-compact='true'] #game #milestone-progress-bar{
- left:12px!important;right:12px!important;width:auto!important;
- bottom:calc(var(--dock-height, 330px) + 12px)!important;top:auto!important;margin:0!important}
-#app[data-compact='true'] #game .city-panorama{
- bottom:calc(var(--dock-height, 330px) + 68px)!important}
-/* 桌面：街名牌不要压到进度条 */
-#app .street-sign{bottom:auto!important;top:206px!important;left:28px!important}
+#app #game .milestone-track i{background:linear-gradient(90deg,#6c9a5d,#a7c46a)!important;border-radius:9px}
+#app #next-tier-chip{position:absolute}
+#app #wallet-bill{max-width:100%}
+
