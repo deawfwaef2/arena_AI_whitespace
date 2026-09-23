@@ -96,7 +96,7 @@ export class LifeUI extends JourneyUI{
  renderRest(){const s=this.s,r=s.life.rest;if(!r)return;const d=$('game-dock'),c=CLASSES[r.class],pending=pendingEvent(s),due=restDue(r),q=r.bill||billQuote(s);d.dataset.kind='rest';const activities=r.activities.filter(x=>!x.instant),instant=r.activities.find(x=>x.instant);
   const tile=a=>`<article class="rest-choice"><span>${({drink:'☕',read:'▤',stretch:'↟',massage:'✦',lounge:'☀',sleep:'☾',toast:'♧'})[a.pose]}</span><div><strong>${safe(a.name)}</strong><small>减少 ${Math.floor(a.seconds/60)} 分 ${a.seconds%60} 秒</small></div>${btn('activity',a.used?'已体验':short(a.price),a.id,a.used||s.cash<=a.price||r.remaining<=0||!!pending)}</article>`;
   d.innerHTML=`<div class="rest-compact-title"><span>休息 / ${c.name}</span><button data-action="life-status" aria-label="查看完整身家与账单">ⓘ</button></div><h1>${r.paid?'让身体跟上你的野心。':'先付账单，再谈人生。'}</h1><div class="rest-worth"><span>当前总身家 <b>${short(worth(s))}</b></span><span>可用现金 <b>${short(s.cash)}</b></span></div><div class="rest-progress-head"><span id="rest-status">${r.paid?'正在恢复':'账单未支付'}</span><strong id="rest-clock">${clock(r.remaining)}</strong></div><div class="rest-track" role="progressbar" aria-label="休息进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="rest-fill"></i></div>
-  ${!r.paid?`<div class="bill-lines"><span>生活维护 <b>${short(r.maintenance)}</b></span>${q.companions?`<span>其中随从工资 <b>${short(q.companions)}</b></span>`:''}<span>地区税费 <b>${short(r.tax)}</b></span><span>安保 / 管理 / 减免 <b>${r.extra<0?'−':''}${short(Math.abs(r.extra||0))}</b></span><strong>本次合计 <b>${short(due)}</b></strong></div><p class="bill-footnote">税基为入休时总身家 ${short(q.worth)}；资产不重复计算，税单入休后锁定。现金不足即结束本局，不再自动救助。</p>${pending?btn('open-event','先处理休息事件 →','',false,'primary'):btn('pay',s.cash<=due?'无法支付 · 结算本局':`支付 ${short(due)} · 开始恢复`,'',false,'primary')}`:`<div id="rest-ready" ${r.remaining>0?'hidden':''}>${btn('finish',`领取 ${s.life.energyCap} 体力，继续出发 →`,'',!!pending,'primary')}</div><div id="rest-options" ${r.remaining<=0?'hidden':''}>${activities.slice(0,2).map(tile).join('')}<div class="rest-bottom-buttons">${btn('rest-all','更多休息活动')}${lateTier(s)>=3?btn('medical','医疗 / 延寿'):''}</div>${instant?btn('instant',`立即恢复 · ${short(instant.price)}`,instant.id,s.cash<=instant.price||!!pending,'instant-button'):''}</div>`}
+  ${!r.paid?`${this.receipt(q,true)}<p class="bill-footnote">固定阶级生活费 + 单列休息服务费；账单入休后锁定，额外活动自愿另付。现金不足须结算本局。</p>${pending?btn('open-event','先处理休息事件 →','',false,'primary'):btn('pay',s.cash<=due?'无法支付 · 结算本局':`支付 ${short(due)} · 开始恢复`,'',false,'primary')}`:`<div id="rest-ready" ${r.remaining>0?'hidden':''}>${btn('finish',`领取 ${s.life.energyCap} 体力，继续出发 →`,'',!!pending,'primary')}</div><div id="rest-options" ${r.remaining<=0?'hidden':''}>${activities.slice(0,2).map(tile).join('')}<div class="rest-bottom-buttons">${btn('rest-all','更多休息活动')}${lateTier(s)>=3?btn('medical','医疗 / 延寿'):''}</div>${instant?btn('instant',`立即恢复 · ${short(instant.price)}`,instant.id,s.cash<=instant.price||!!pending,'instant-button'):''}</div>`}
   <div class="rest-view-buttons">${[0,1,2].map((i)=>btn('camera',['人物','全景','侧面'][i],i,false,r.camera===i?'selected':'')).join('')}</div>`;
   this.paintRest();this.paintNews();this.c.fit();
  }
@@ -136,21 +136,22 @@ export class LifeUI extends JourneyUI{
    <h3>${s.life.rest?'已锁定的本次账单':'下次休息预估'}</h3>
    <div class="capital-ledger">
     <div><span>生活维护（含随从工资 ${money(q.companions||0)}）</span><b>${money(q.maintenance)}</b></div>
-    <div><span>地区税 · ${(q.rate*100).toFixed(2)}%</span><b>${money(s.life.rest?.tax??q.tax)}</b></div>
+    <div><span>${q.version===6?'固定阶级规则 · 无资产比例税':'旧版锁定地区税'}</span><b>${money(s.life.rest?.tax??q.tax)}</b></div>
     <div><span>保镖工资</span><b>${money(q.guards)}</b></div>
-    <div><span>管理费用</span><b>${money(q.management)}</b></div>
+    <div><span>休息时间服务费</span><b>${money(q.timeFee||0)}</b></div>
     <div><span>转世减免</span><b>−${money(q.credit)}</b></div>
     <div class="total"><span>合计</span><b>${money(s.life.rest?restDue(s.life.rest):q.total)}</b></div>
    </div>
    ${medalsHtml}
    ${noblesHtml}
-   <h3>健康 ${'♥'.repeat(e.health)}${'♡'.repeat(e.maxHealth-e.health)}</h3>
+   ${this.receipt(q,!!s.life.rest)}<h3>健康 ${'♥'.repeat(e.health)}${'♡'.repeat(e.maxHealth-e.health)}</h3>
    <p>已经休息 ${e.age} 次。下一次衰退概率 ${healthRisk(s,true)}%；每次休息 +1 个百分点，抽中减少 1 格，归零死亡。</p>
    <h3>当前可用机制</h3>
    <p>${[['基础投资与休息',0],['城市通行与商品',1],['社群交往',2],['安保 / 地区税 / 康复',3],['财务风波 / 多派系',4],['当地奢侈消费 / 延寿',5],['工业特区',6],['主权特区',7],['细胞更新',8],['云端区域',9],['极限财富压力',10]].map(([name,at])=>`<span class="mechanism-token ${t>=at?'active':''}">${t>=at?'✓':'🔒'} ${name}</span>`).join('')}</p>
    <p>机制按当前总身家而非历史最高身家启停。跌回低身家后高级功能暂时停用；回升后恢复。</p>
   `);
  }
+ receipt(q,locked=false){const symbol={home:'⌂',cup:'♨',car:'▰',clock:'◷',crew:'♟',guard:'♜',gem:'◇',shirt:'♧',frame:'▣',discount:'−'};const rows=[...(q.lineItems||[{icon:'home',name:'旧版已锁定生活维护',amount:q.baseMaintenance||q.maintenance}]),{icon:'clock',name:'10 分钟休息服务',amount:q.timeFee||0},{icon:'crew',name:'随从维护工资',amount:q.companions||0},{icon:'guard',name:'保镖工资',amount:q.guards||0},{icon:'gem',name:'收藏托管',amount:q.auctionUpkeep||0},{icon:'shirt',name:'衣物保养',amount:q.outfitUpkeep||0},{icon:'frame',name:'装饰维护',amount:q.decoUpkeep||0},{icon:'discount',name:'管家与前世减免',amount:-(q.crewDiscount||0)-(q.credit||0)}].filter(x=>x.amount!==0);return `<section class="lifestyle-receipt"><div class="receipt-head"><span>✦ ${locked?'已锁定账单':'你的生活，有了新的规格'}</span><b>${TIERS_LATE[q.tier||0].name}阶级</b></div><div class="receipt-rule">${q.version===6?`阶级门槛 ${short(q.classFloor)} × 30%${q.classFloor?'':'（生存基础 $8）'}`:'沿用进入休息时的旧版锁定金额'}</div><div class="receipt-items">${rows.map((r,i)=>`<article style="--receipt-delay:${i*70}ms"><span class="receipt-icon">${symbol[r.icon]}</span><div><b>${safe(r.name)}</b><small>${r.icon==='clock'?'单列时间服务费 · 非按秒扣款':r.icon==='crew'?'每次休息结算，解雇后停止':'本周期固定费用'}</small></div><strong>${r.amount<0?'−':''}${short(Math.abs(r.amount))}</strong></article>`).join('')}</div><div class="receipt-total"><span>本次合计</span><strong>${short(q.total)}</strong></div>${q.version===6?`<p class="receipt-floor">阶级保有门槛 <b>${short(q.classFloor)}</b><br>支付后仍保级，当前需现金 <b>${short(q.keepCash)}</b><small>已扣除所持非现金资产；现金不足总账单会结束本局。</small></p>`:''}</section>`;}
  promptRest(){
   const s=this.s;if(s.life.rest){this.c.close();this.c.renderDock();return;}if(s.life.travel){this.c.toast('请先抵达目的地，再安排休息。');return;}if(s.ended)return;if(s.offer.pendingStake){this.c.toast('请先完成项目交割，再安排休息。');return;}
   const quote=billQuote(s);
@@ -164,20 +165,7 @@ export class LifeUI extends JourneyUI{
       <p>${s.life.energy<=0?'体力已经耗尽，需要休整后继续前行。':'可以提前休整，但仍须支付账单并经历体检。'}</p>
      </div>
     </div>
-    <div class="confirm-rest-quote">
-     <div class="quote-title">📋 本期预计休整账单明细</div>
-     <div class="quote-row"><span>基础生活与住所维护</span><b>${money(quote.baseMaintenance)}</b></div>
-     ${quote.companions>0?`<div class="quote-row"><span>人才随从工资</span><b>${money(quote.companions)}</b></div>`:''}
-     ${quote.crewDiscount>0?`<div class="quote-row"><span>管家基础维护减免</span><b>−${money(quote.crewDiscount)}</b></div>`:''}
-     ${quote.management>0?`<div class="quote-row"><span>资产管理费</span><b>${money(quote.management)}</b></div>`:''}
-     ${quote.credit>0?`<div class="quote-row"><span>转世账单减免</span><b>−${money(quote.credit)}</b></div>`:''}
-     ${quote.outfitUpkeep>0?`<div class="quote-row"><span>高级服装与外表保养</span><b>${money(quote.outfitUpkeep)}</b></div>`:''}
-     ${quote.decoUpkeep>0?`<div class="quote-row"><span>金边UI装饰每期保养</span><b>${money(quote.decoUpkeep)}</b></div>`:''}
-     ${quote.guards>0?`<div class="quote-row"><span>随行安保团队工资</span><b>${money(quote.guards)}</b></div>`:''}
-     ${quote.auctionUpkeep>0?`<div class="quote-row"><span>绝版拍卖孤品托管费</span><b>${money(quote.auctionUpkeep)}</b></div>`:''}
-     ${quote.tax>0?`<div class="quote-row"><span>所在城市与区域税款</span><b>${money(quote.tax)}</b></div>`:''}
-     <div class="quote-row total"><span>预计账单合计</span><strong>${money(quote.total)}</strong></div>
-    </div>
+    ${this.receipt(quote,false)}
     <div class="confirm-rest-warning">
      <strong>⚠️ 休息须知：</strong>
      <span>进入休整时锁定账单，处理事件后由你确认支付，同时进行身体周期健康审查（当前衰退概率 ${healthRisk(s,true)}%）；必须结清账单方可满血出发。</span>

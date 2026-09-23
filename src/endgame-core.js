@@ -46,16 +46,20 @@ export const activeGuards=s=>lateTier(s)>=3?(s.estate?.guards||0):0;
 export function securityOdds(s){const e=s.estate||ensureEstate(s),tier=lateTier(s),g=activeGuards(s),hostile=Math.max(0,-e.relations.underworld),z=currentRegion(s);return {robbery:clamp(8+tier*2+hostile*.18+z.risk-g*6+(e.stance==='cautious'?-6:e.stance==='assertive'?5:0),2,65),dodge:clamp(12+g*23+(e.perks.includes('instinct')?5:0)+(e.stance==='cautious'?8:e.stance==='assertive'?14:0),5,97),assassination:clamp((hostile-35)*.5+tier+z.risk-g*3,0,60)};}
 export function guardSalary(s){const g=activeGuards(s);return Math.round([0,35000,350000,3500000][g]*(s.estate?.stance==='cautious'?1.4:1));}
 export function billQuote(s,{restNumber=(s.life?.restCount||0)+1}={}){
- const n=worth(s),tier=lateTier(s),klass=Math.min(5,[0,1,2,3,4,4,5,5,5,5,5][tier]),city=s.life?.city||'taipei',fee={taipei:.7,tokyo:1.1,vegas:1.05,singapore:1.2,newyork:1.6,monaco:2.1}[city],region=currentRegion(s);
- const baseMaintenance=Math.floor([8,35,180,1500,12000,250000][klass]*100*fee*(tier>=3?1+Math.min(restNumber*.01,1):1));
+ const n=worth(s),tier=lateTier(s),klass=Math.min(5,[0,1,2,3,4,4,5,5,5,5,5][tier]),region=currentRegion(s);
+ const classFloor=TIERS_LATE[tier].at*100;
+ const baseMaintenance=classFloor?Math.floor(classFloor*.30):800;
+ const timeFee=classFloor?Math.floor(classFloor*.03):200;
+ const housing=Math.floor(baseMaintenance*.5),meals=Math.floor(baseMaintenance*.3);
+ const lineItems=[{icon:'home',name:['街边旅舍床位','单人租屋','城市公寓','花园别墅','空中套房','私人庄园'][klass],amount:housing},{icon:'cup',name:['热汤与便餐','日常三餐','品质餐食','主厨餐桌','私人主厨','庄园宴饮'][klass],amount:meals},{icon:'car',name:['公交与洗衣','通勤与衣物护理','专车与家政','管家与出行','专属生活服务','庄园礼宾团队'][klass],amount:baseMaintenance-housing-meals}];
  const auctionUpkeep=(s.estate?.auctionMedals||[]).reduce((sum,id)=>{const a=getAuctionLot(id);return sum+(a?.upkeep||0);},0);
  const outfitUpkeep=(s.outfits||[]).reduce((sum,id)=>{const o=getOutfit(id);return sum+(o?.upkeep||0);},0);
  const decoUpkeep=(s.decorations||[]).reduce((sum,id)=>{const d=getDecoration(id);return sum+(d?.upkeep||0);},0);
  const companions=crewWages(s),crewDiscount=hasCrew(s,'steward')?Math.floor(baseMaintenance*.15):0;
  const maintenance=baseMaintenance-crewDiscount+auctionUpkeep+outfitUpkeep+decoUpkeep+companions;
- const rate=Math.min(.58,TIERS_LATE[tier].tax*region.tax),tax=Math.floor(n*rate),guards=guardSalary(s),management=tier>=5?Math.floor(n*.001*(tier-3)):0;
- const before=maintenance+tax+guards+management,credit=s.estate?.perks?.includes('reserve')&&restNumber===1?Math.min(3000,before):0;
- return {worth:n,cash:s.cash,tier,class:klass,maintenance,baseMaintenance,companions,crewDiscount,auctionUpkeep,outfitUpkeep,decoUpkeep,tax,guards,management,credit,rate,region:region.name,total:cents(before-credit),restNumber};
+ const rate=0,tax=0,guards=guardSalary(s),management=0;
+ const before=maintenance+tax+guards+management+timeFee,credit=s.estate?.perks?.includes('reserve')&&restNumber===1?Math.min(3000,before):0;
+ return {version:6,classFloor,keepCash:Math.max(1,classFloor-(n-s.cash))+cents(before-credit),timeFee,lineItems,worth:n,cash:s.cash,tier,class:klass,maintenance,baseMaintenance,companions,crewDiscount,auctionUpkeep,outfitUpkeep,decoUpkeep,tax,guards,management,credit,rate,region:region.name,total:cents(before-credit),restNumber};
 }
 export function availableAuctionLot(s){
  const e=ensureEstate(s),tier=lateTier(s);
@@ -79,11 +83,11 @@ export function passAuctionLot(s,lotId){
 }
 function addEvent(s,kind,data={}){const ev={id:uid(),kind,city:s.life.city,base:worth(s),tier:lateTier(s),resolved:false,ack:false,stage:0,...data};s.estate.queue.push(ev);s.estate.queue=s.estate.queue.filter(x=>!x.ack).slice(-20);return ev;}
 export const pendingEvent=s=>s.estate?.queue?.find(e=>!e.ack)||null;
-export function prepareRest(s,r,rng=Math.random){const e=ensureEstate(s);e.age++;const bill=billQuote(s,{restNumber:s.life.restCount});Object.assign(r,{maintenance:bill.maintenance,tax:bill.tax,extra:bill.guards+bill.management-bill.credit,bill,paid:false});
+export function prepareRest(s,r,rng=Math.random){const e=ensureEstate(s);e.age++;const bill=billQuote(s,{restNumber:s.life.restCount});Object.assign(r,{maintenance:bill.maintenance,tax:bill.tax,extra:bill.guards+bill.management+(bill.timeFee||0)-bill.credit,bill,paid:false});
  addEvent(s,'health',{risk:healthRisk(s),roll:rng()*100});
- if(bill.tier>=3)addEvent(s,'tax',{tax:bill.tax,region:bill.region});
- if(bill.tier>=4&&rng()<Math.min(1,.3+(bill.tier-4)*.15))addEvent(s,'scandal',{chapter:'账外风波'});
- if(bill.tier>=3){const odds=securityOdds(s);if(e.relations.underworld<=-40&&rng()*100<odds.assassination)addEvent(s,'security',{threat:'assassination',odds,roll:rng()*100});else if(rng()*100<odds.robbery)addEvent(s,'security',{threat:'robbery',odds,roll:rng()*100});}
+ if(bill.tax>0)addEvent(s,'tax',{tax:bill.tax,region:bill.region});
+ // Fixed-fee rest no longer generates proportional scandal charges; existing saved events remain resolvable.
+
  const friends=FACTIONS.filter(f=>f.at<=bill.tier&&e.relations[f.id]>=35);if(friends.length&&rng()<.25)addEvent(s,'windfall',{faction:friends[Math.floor(rng()*friends.length)].id});
  return bill;
 }

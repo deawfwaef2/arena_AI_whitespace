@@ -1,5 +1,6 @@
+import {createRegionalStory,REGIONAL_STORIES} from './regional-stories.js';
 import {hasCrew} from './street-core.js';
-import {worth,ensureEstate,endLife,streetEvent} from './endgame-core.js';
+import {worth,lateTier,ensureEstate,endLife,streetEvent} from './endgame-core.js';
 import {DISTRICTS,districtOffer,LOCAL_PROJECTS} from './city-content.js';
 import {initLife,markLife,goodsValue,decorateOffer,useEnergy,assertFree,stakeBounds,owns,ITEMS,eligible} from './life-core.js';
 import {RARITIES,PROJECTS,ASSETS,OUTFITS,TIERS,SPECIALS,CHALLENGES,getAsset,getOutfit,getSpecial,getChallenge,getAuctionLot} from './catalog.js';
@@ -45,6 +46,7 @@ export function makeOffer(s,options={},rng=random){
  if(!forced&&s.life.district)return districtOffer(s,rng);
  if(!forced&&!s.activeChallenge&&worth(s)>=25000&&s.page>2&&s.page-(s.life.lastMarketPage||0)>=3&&(rng()<.13||s.page-(s.life.lastMarketPage||s.life.marketEligibleAt||s.page)>12)){s.life.lastMarketPage=s.page;return {id:uid(),type:'talent-market',city:s.life.city,rarity:'rare',settled:false};}
  if(worth(s)>=25000)s.life.marketEligibleAt??=s.page;
+ if(!forced&&!s.activeChallenge&&s.page>2&&s.life.energy>=8&&s.page-(s.life.lastStoryPage||0)>=3&&rng()<.12){s.life.lastStoryPage=s.page;return createRegionalStory(s,lateTier(s),rng);}
  if(!forced){const encounter=streetEvent(s,rng);if(encounter)return encounter;}
  if(!forced&&!s.activeChallenge&&s.page>3&&s.life.energy>25&&rng()<.045)return {id:uid(),type:'district-gate',city:s.life.city,district:s.life.city,rarity:'epic',settled:false};
  if(!forced&&!s.activeChallenge&&s.page>2&&rng()<.06)return {id:uid(),type:'interlude',city:s.life.city,scene:rng()<.5?'bridge':['waterfront','park','alley'][Math.floor(rng()*3)],rarity:'common',settled:false};
@@ -132,6 +134,7 @@ export function validateRun(input,{imported=false}={}){
  else if(o.type==='world-event'){if(!s.estate.queue.some(e=>e.id===o.eventId))throw Error('Missing event');}
  else if(o.type==='interlude'){if(!['bridge','waterfront','park','alley'].includes(o.scene))throw Error('Invalid interlude');}
  else if(o.type==='auction'){if(o.auction&&typeof o.auction==='object')o.auction=o.auction.id;if(!getAuctionLot(o.auction))throw Error('Invalid auction');}
+ else if(o.type==='regional-story'){if(!REGIONAL_STORIES[o.city]||o.city!==s.life.city||!Number.isInteger(o.story?.band)||o.story.band<0||o.story.band>2||!Number.isFinite(o.story.roll)||o.story.roll<0||o.story.roll>=1)throw Error('Invalid regional story');}
  else if(o.type==='talent-market'){if(o.city!==s.life.city)throw Error('Invalid talent market');}
  else if(o.type==='clinic'){}
  else throw Error('Invalid offer');o.settled=!!o.settled;

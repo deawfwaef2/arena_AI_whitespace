@@ -163,6 +163,7 @@ function enrichBlock(root,city){
 }
 
 function makePlot(offer,lang='en'){
+ if(offer.type==='regional-story')return eventPlot({type:'interlude',scene:['park','waterfront','alley'][offer.story?.band||0],city:offer.city});
  if(offer.type==='world-event')return eventPlot({type:'interlude',scene:'alley',city:offer.city});
  if(['district-gate','district-task','interlude'].includes(offer.type))return eventPlot(offer);
  const root=new T.Group();const project=offer.type==='project'?getProject(offer.project):null,asset=offer.type==='asset'?getAsset(offer.asset):null;
