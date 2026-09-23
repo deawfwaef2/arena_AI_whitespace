@@ -41,7 +41,10 @@ export class V9{
   const resting=!!s.life.rest;if(resting&&this.prevRest===false)this.onRestStart();this.prevRest=resting;
   this.lastTier=t;this.flush();}
  flush(){if(!this.queue.length||this.c.modal()||this.c.busy()||!this.c.started())return;const q=this.queue.shift();this.queue=this.queue.filter(x=>!(x.k===q.k&&x.t===q.t));if(q.k==='reclaim')this.showReclaim(q);else if(q.k==='story'){if(!C.st(this.s).story.seen.includes(q.t))this.showStory(q.t);}}
- tick(now){if(now<this.nextTick)return;this.nextTick=now+300;this.flush();}
+ tick(now){if(now<this.nextTick)return;this.nextTick=now+300;this.flush();this.guardModal(now);this.guardDock();}
+ /* safety net: a story/modal or dock that renders without any clickable choice gets a continue button */
+ guardModal(now){const m=$('modal');if(!m||m.hidden){this.emptySince=0;return;}const card=$('modal-card');if(!card)return;const btns=[...card.querySelectorAll('button,[data-action]')].filter(b=>b.offsetParent&&!b.disabled&&b.id!=='modal-close');if(btns.length){this.emptySince=0;return;}if(!this.emptySince){this.emptySince=now;return;}if(now-this.emptySince<1200||card.querySelector('.v9-rescue'))return;card.insertAdjacentHTML('beforeend',`<button class="v9-choice gold wide v9-rescue" data-action="close">${img('check')}<b>${this.T('继续','Continue')}</b></button>`);}
+ guardDock(){const s=this.s;if(!this.c.started()||s.life.rest||s.life.travel||s.ended||this.c.modal()||this.c.busy())return;const d=$('game-dock');if(!d||d.hidden)return;const btns=[...d.querySelectorAll('button,[data-action]')].filter(b=>b.offsetParent&&!b.disabled);if(btns.length||d.querySelector('.v9-rescue'))return;d.insertAdjacentHTML('beforeend',`<button class="v9-next v9-rescue" data-action="next">${img('compass','v9-ic sm')}<span>${this.T('继续前行','Keep going')}</span></button>`);}
 
  /* ---------- frame with identity objects ---------- */
  paintFrame(rank,started){const f=$('v9-frame');f.hidden=!started;f.dataset.rank=rank;const key=rank+(this.zh?'z':'e');if(f.dataset.key===key)return;f.dataset.key=key;
