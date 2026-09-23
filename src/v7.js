@@ -251,6 +251,7 @@ export class V7{
   d.classList.toggle('v7-draggable',isWindow);d.classList.toggle('v7-window',isWindow);d.dataset.v7kind=kind;
   if(isWindow&&!d.querySelector(':scope>.v7-handle')){const title={rest:'☾ 休息阶段',['world-event']:'⚑ 街头事件',['regional-story']:'✺ 城市故事',['talent-market']:'⌂ 人才市场',['district-gate']:'◆ 地区限定',['district-task']:'◆ 地区活动',interlude:'… 途中'}[kind]||'◇ 事件';d.insertAdjacentHTML('afterbegin',`<div class="v7-handle"><span>${title}</span><em>拖动移动 ⠿</em></div>`);}
   if(kind==='rest')this.ensureGames();else this.closeGames();
+  if(!d.querySelector(':scope>.v8-deal'))d.classList.remove('v8-wide');
   if(!isWindow)this.enhanceDeal(d);
  }
  decorateModal(){const card=$('modal-card');if(!card)return;this.resetPos(card);card.classList.add('v7-draggable');const head=card.querySelector('.modal-head');if(head&&!head.classList.contains('v7-handle'))head.classList.add('v7-handle');else if(!head&&!card.querySelector(':scope>.v7-handle'))card.insertAdjacentHTML('afterbegin','<div class="v7-handle v7-handle-thin"><em>拖动移动 ⠿</em></div>');}

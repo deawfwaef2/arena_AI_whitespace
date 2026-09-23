@@ -202,3 +202,4 @@ body[data-v7phone='yes'] #app[data-v7='on'] #v7-money strong[data-len]{font-size
 .v7-g-icon .v8-mg{width:64px;height:64px}
 .v7-g-target .v8-mg{width:56px;height:56px}
 .v7-g-card span .v8-mg{width:78%;height:78%;margin:auto}
+#game .game-dock[data-v7deal] h1:before{content:none!important}

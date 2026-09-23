@@ -7,16 +7,18 @@ const c=await b.newContext({viewport:{width:1280,height:800}});
 const run=newRun();run.cash=3000000;markPeak(run);if(run.offer.type==='project'){run.offer.v7delay='short';run.offer.v7seen=1;}
 await c.addInitScript(seed=>{if(!localStorage.getItem('upshift-save-v3'))localStorage.setItem('upshift-save-v3',JSON.stringify(seed));},{version:3,run,meta:{music:false,sound:false,low:true}});
 const p=await c.newPage();p.on('pageerror',e=>errors.push(e.message));
-await p.goto('http://127.0.0.1:8080/',{timeout:120000});await p.locator('[data-action="onboard-play"]').click();await p.waitForTimeout(2000);
+await p.goto('http://127.0.0.1:8080/',{timeout:120000});await p.locator('#v8-intro [data-l="zh"]').click({timeout:60000});await p.locator('.v8i-skip').click();await p.waitForTimeout(900);await p.locator('[data-action="onboard-play"]').click();await p.waitForTimeout(2000);
 const S=()=>p.evaluate(()=>JSON.parse(localStorage.getItem('upshift-save-v3')).run);
 const A=async(a,v)=>{await p.evaluate(([a,v])=>{const b=[...document.querySelectorAll(`button[data-action="${a}"]${v!=null?`[data-value="${v}"]`:''}`)].find(b=>b.offsetParent!==null&&!b.disabled);if(!b)throw Error('no button '+a);b.click();},[a,v]);await p.waitForTimeout(900);};
-// knob
-const k=await p.locator('#v7-knob').boundingBox();await p.mouse.move(k.x+k.width/2,k.y+k.height/2);await p.mouse.down();await p.mouse.move(k.x+k.width*.95,k.y+k.height*.5,{steps:5});await p.mouse.up();
-log('knob value',await p.inputValue('#stake-input'),'pct',await p.textContent('#v7-knob-pct'));
+// slider (replaces knob)
+const r=await p.locator('#stake-range').boundingBox();await p.mouse.click(r.x+r.width*.6,r.y+r.height/2);await p.waitForTimeout(300);
+log('slider value',await p.inputValue('#stake-input'),'go label',await p.textContent('#v7-go-amt'),'odds above go',await p.evaluate(()=>document.querySelector('.v8-odds').getBoundingClientRect().bottom<=document.getElementById('v7-go').getBoundingClientRect().top+40));
+log('status strip',await p.textContent('#v8-status'));log('goals',await p.textContent('#v8-goals'));
 const before=(await S()).cash;await A('v7-delay-invest');let s=await S();
 log('signed contracts',s.life.v7.delayed.length,'cash drop',(before-s.cash)/100,'windows',await p.locator('.v7-contract').count());
 // worth includes locked money
 log('worth label',await p.textContent('#v7-money-sub'));
+await p.waitForTimeout(800);await p.screenshot({path:'qa/flow-signed.png'});log('contract box',JSON.stringify(await p.evaluate(()=>{const e=document.querySelector('.v7-contract');if(!e)return null;const r=e.getBoundingClientRect();return [r.x,r.y,r.width,r.height,getComputedStyle(e).display,getComputedStyle(e).opacity,getComputedStyle(document.getElementById('v7-windows')).zIndex]})),'dock opacity',await p.evaluate(()=>getComputedStyle(document.getElementById('game-dock')).opacity));log('dock html',(await p.evaluate(()=>document.getElementById('game-dock').innerText)).slice(0,300));
 // rest -> mini-game -> finish -> season changes + contract matures
 await A('next');await p.waitForTimeout(1500);
 await p.evaluate(()=>{});s=await S();
@@ -33,7 +35,7 @@ await A('life-finish').catch(e=>log('finish err',e.message));await p.waitForTime
 log('season',s.life.v7.season,'weather',s.life.v7.weather,'contract left',s.life.v7.delayed[0]?.left,'banner',await p.locator('#v7-season-banner').isVisible());
 const c1=s.cash;await A('v7-cash',s.life.v7.delayed[0].id);await p.waitForTimeout(800);s=await S();log('cashed', s.life.v7.delayed.length===0,'delta',(s.cash-c1)/100);
 // toggle
-await A('v7-toggle','headphones');s=await S();log('toggle headphones',s.life.v7.toggles.headphones,await p.evaluate(()=>document.getElementById('app').dataset.fxBeat));
+await A('v7-toggle','headphones');s=await S();log('toggle headphones (default on → off)',s.life.v7.toggles.headphones,await p.evaluate(()=>document.getElementById('app').dataset.fxBeat));
 // crossroads
 await p.evaluate(()=>{});
 for(let i=0;i<8&&!(await p.locator('#v7-cross').count());i++){await A('next').catch(()=>{});await p.waitForTimeout(1500);}
