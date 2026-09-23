@@ -1,3 +1,4 @@
+import {StreetUI} from './street-ui.js';
 import {installRedesign,applyLayout} from './redesign.js';
 import {ensureEstate,initLegacy,applyLegacy,collectLegacy,endLife,worth,lateTier,TIERS_LATE,availableAuctionLot,bidAuctionLot,passAuctionLot,healthRisk,medicalOptions,buyMedical} from './endgame-core.js';
 import {playObituary,obituaryArt,getSatiricalEpitaph} from './obituary.js';
@@ -16,7 +17,7 @@ async function main(){
 const $=id=>document.getElementById(id),safe=escape;
 const CONFIG=window.UPSHIFT_CONFIG||{allowDeveloperMode:true,crazygames:{enabled:'auto'}};
 const SAVE_KEY='upshift-save-v3';
-let lifeUI,onboarding,designUI;let started=false;
+let lifeUI,onboarding,designUI,streetUI;let started=false;
 $('app').innerHTML=shell;
 const platform=new Platform(CONFIG);await platform.init();
 const defaults={lang:'zh',theme:'minimalist',layout:'journal',device:'desktop',scale:1,sound:true,music:true,volume:.28,musicMode:'auto',motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,low:false,name:'',records:[],bots:[],runCount:1};
@@ -51,7 +52,7 @@ function queueChallenge(event){if(event&&!pendingChallenge.some(x=>x.id===event.
 function clock(){const now=performance.now(),elapsed=now-lastClock;lastClock=now;if(started&&!modalType&&!visit&&!document.hidden&&!adPlaying&&!run.ended&&!run.life?.rest&&!run.life?.travel){const event=advanceTime(run,elapsed);if(event)queueChallenge(event);}return now;}
 function pause(){lastClock=performance.now();world.paused=!started||!!modalType||adPlaying||run.ended||!!run.life?.rest||!!run.life?.travel;world.sceneSuspended=!!modalType||adPlaying||run.ended||!started;music.setDucked(!!modalType||!!visit||run.ended);platform.play(started&&!modalType&&!visit&&!run.ended&&!adPlaying&&!run.life?.rest&&!run.life?.travel);renderChallengeHud();}
 function validAction(){if(!started)return false;clock();if(run.life?.rest||run.life?.travel){renderDock();return false;}if(run.ended){showGameOver();return false;}if(pendingChallenge.length&&!busy&&!modalType){showChallengeResult(pendingChallenge.shift());return false;}return true;}
-function pulseClock(now){clock();lifeUI?.tick();renderChallengeHud();if(run.activeChallenge&&now-lastSave>1000)save();if(started&&!busy&&!modalType&&!adPlaying){if(run.ended&&!lifeUI?.hasPendingDeath())showGameOver();else if(pendingChallenge.length)showChallengeResult(pendingChallenge.shift());}requestAnimationFrame(pulseClock);}
+function pulseClock(now){clock();lifeUI?.tick();streetUI?.tick(now);renderChallengeHud();if(run.activeChallenge&&now-lastSave>1000)save();if(started&&!busy&&!modalType&&!adPlaying){if(run.ended&&!lifeUI?.hasPendingDeath())showGameOver();else if(pendingChallenge.length)showChallengeResult(pendingChallenge.shift());}requestAnimationFrame(pulseClock);}
 function renderChallengeHud(){
  const halted=modalType||visit||run.life?.rest||run.life?.travel;const a=run.activeChallenge,h=$('challenge-hud');h.hidden=!a;$('game').classList.toggle('has-challenge',!!a);
  if(!a){lastClockPaint='';return;}
@@ -72,7 +73,7 @@ function renderHud(){
  }
  $('test-badge').hidden=!run.unranked;$('test-badge').textContent=L('TEST RUN · NO OFFICIAL SCORE','测试局 · 不提交正式分数');
  $('swipe-cue').querySelector('span').textContent=visit?L('ESTATE TOUR · SWIPE TO CONTINUE','资产参观 · 右滑继续'):L('SWIPE RIGHT TO WALK ON','向右滑动，继续前行');
- $('game').dataset.prestige=prestige(run);$('game').dataset.wealth=tier(run);$('game').dataset.finish=finishStyle();$('game').classList.toggle('ended',run.ended);const k=run.offer.type==='asset'?getAsset(run.offer.asset).model:run.offer.project;const biome=['ocean','marina','island','beach','resort'].includes(k)?'coast':['solar','greenhouse','vineyard','cottage'].includes(k)?'nature':['rocket','spaceport','cloud','lab'].includes(k)?'future':['manor','palace','castle'].includes(k)?'royal':'city';$('game').dataset.biome=biome;renderChallengeHud();lifeUI?.renderHud();designUI?.refresh();musicMode();
+ $('game').dataset.prestige=prestige(run);$('game').dataset.wealth=tier(run);$('game').dataset.finish=finishStyle();$('game').classList.toggle('ended',run.ended);const k=run.offer.type==='asset'?getAsset(run.offer.asset).model:run.offer.project;const biome=['ocean','marina','island','beach','resort'].includes(k)?'coast':['solar','greenhouse','vineyard','cottage'].includes(k)?'nature':['rocket','spaceport','cloud','lab'].includes(k)?'future':['manor','palace','castle'].includes(k)?'royal':'city';$('game').dataset.biome=biome;renderChallengeHud();lifeUI?.renderHud();designUI?.refresh();streetUI?.refresh();musicMode();
 }
 function header(pill,title,type='info'){return `<div class="dock-header"><span class="kind-pill">${icon(type)}${safe(pill)}</span><button class="rules-button" data-action="rules">${icon('info')}${L('RULES','规则')}</button></div><h1>${safe(title)}</h1>`;}
 function actions(label,action,{disabled=false,danger=false,gold=false,purple=false,solo=false}={}){return `<div class="action-row ${solo?'solo':''}">${solo?'':`<button class="pass-button" data-action="next" ${busy?'disabled':''}>${L('PASS','跳过')}${icon('arrow')}</button>`}<button class="primary ${danger?'danger':''} ${gold?'gold':''} ${purple?'purple':''}" id="primary-action" data-action="${action}" ${disabled||busy||run.ended?'disabled':''}>${label}${icon('arrow')}</button></div>`;}
@@ -174,10 +175,10 @@ function checkMilestoneCelebration(){
    <div class="milestone-celebrate-dialog">
     <div class="milestone-ribbon">✦ NEW MECHANISM UNLOCKED · 新机制达成 ✦</div>
     <div class="milestone-symbol-badge">${icon(m.icon||'crown')}</div>
-    <h2 id="modal-title">机制解锁：${safe(m.title)}</h2>
+    <h2 id="modal-title">机制解锁：${safe(newly.map(x=>x.title).join(' · '))}</h2>
     <div class="milestone-req">达成身家门槛：${money(m.at*100,true)}</div>
-    <p class="milestone-info">${safe(m.desc)}</p>
-    <div class="milestone-notice"><strong>全新规则已生效</strong><span>随着阶层跃升，城市街头将解锁对应的专属奇遇、功能建筑与商业特权！</span></div>
+    <p class="milestone-info">${newly.map(x=>safe(x.desc)).join('<br>')}</p>
+    <div class="milestone-notice"><strong>新入口已开放</strong><span>入口与购买资格已开放；需要购买的通行证、随从等仍须支付各自费用。</span></div>
     <button class="primary" data-action="close">${L('ENTER THE STREET','领略新机制，继续前行')}${icon('arrow')}</button>
    </div>
   `,{custom:true});
@@ -365,6 +366,7 @@ document.addEventListener('click',async e=>{
  if(a.startsWith('dev-')&&!CONFIG.allowDeveloperMode)return;
  if(adPlaying)return;if(busy&&!['music-toggle','sound-toggle'].includes(a))return;
  music.unlock();effects.unlock();
+ if(streetUI?.handle(a,v))return;
  if(await lifeUI.handle(a,v))return;
  switch(a){
  case 'readability':meta.largeText=!meta.largeText;$('app').dataset.largeText=String(!!meta.largeText);save();showSettings();break;
@@ -467,7 +469,7 @@ document.addEventListener('change',async e=>{
  if(e.target.id==='import-file'){const file=e.target.files?.[0];if(!file)return;try{if(file.size>512000)throw Error('Too large');const json=JSON.parse(await file.text());run=validateRun(json.run||json,{imported:true});lifeUI.loaded();Object.assign(dev,{force:null,...DEFAULT_RATES,speed:1});pendingChallenge=[];visit=null;devChanged();world.setOffer(run.offer);forceClose();renderHud();renderDock();if(run.ended&&!lifeUI?.hasPendingDeath())showGameOver();toast(L('Imported as a TEST run.','已作为 TEST 测试局导入。'));}catch{toast(L('Invalid v2/v3 save. Your current run is unchanged.','无效 v2/v3 存档，当前进度未改变。'));}}
 });
 document.addEventListener('pointerdown',()=>{music.unlock();effects.unlock();},{passive:true});
-$('game').addEventListener('pointerdown',e=>{if(!started||e.button!==0||busy||modalType||run.ended||run.life?.rest||run.life?.travel||e.target.closest('button,input,select,textarea,label,summary,details,.game-dock,.city-panorama,.project-context,.ui-tools'))return;swipe={id:e.pointerId,x:e.clientX,y:e.clientY,start:performance.now(),dx:0};$('game').setPointerCapture(e.pointerId);});
+$('game').addEventListener('pointerdown',e=>{if(!started||e.button!==0||busy||modalType||run.ended||run.life?.rest||run.life?.travel||e.target.closest('button,input,select,textarea,label,summary,details,.game-dock,.city-panorama,.project-context,.ui-tools,.world-person'))return;swipe={id:e.pointerId,x:e.clientX,y:e.clientY,start:performance.now(),dx:0};$('game').setPointerCapture(e.pointerId);});
 $('game').addEventListener('pointermove',e=>{if(!swipe||e.pointerId!==swipe.id)return;const dx=e.clientX-swipe.x,dy=e.clientY-swipe.y;if(dx>5&&Math.abs(dx)>Math.abs(dy)){swipe.dx=dx;world.setDrag(Math.min(1.3,dx/130));e.preventDefault();}});
 $('game').addEventListener('pointerup',e=>{if(!swipe||e.pointerId!==swipe.id)return;const s=swipe;swipe=null;world.setDrag(0);if(s.dx>52||(s.dx>24&&s.dx/(performance.now()-s.start)>.5))nextOffer();});
 $('game').addEventListener('pointercancel',()=>{swipe=null;world.setDrag(0);});
@@ -492,7 +494,7 @@ platform.onAuth=()=>{try{const data=JSON.parse(platform.load(SAVE_KEY)||'null');
 if(CONFIG.allowDeveloperMode)window.upshift=Object.freeze({version:'3.1.0',snapshot:()=>JSON.parse(JSON.stringify({run,meta,dev,busy,music:music.status(),platform:{status:platform.status,storage:platform.storageMode}})),openDeveloper:showDeveloper});
 if(!run.ended)pendingChallenge=run.challengeLog.filter(e=>!e.seen&&e.reason!=='bankruptcy').slice().reverse();
 lifeUI=new LifeUI({run:()=>run,meta:()=>meta,modal:()=>modalType,busy:()=>busy,motion:()=>meta.motion,onDeath:showGameOver,started:()=>started,confirm:confirmDialog,visiting:()=>!!visit,save,refresh:()=>{refreshStyle();renderHud();pause();},renderDock,fit:fitDock,toast,world,platform,open:openModal,close:forceClose,next:nextOffer,invest:doInvest,buyOutfit,outfit:getOutfit,devEnabled:()=>!!CONFIG.allowDeveloperMode});
-designUI=installRedesign({run:()=>run,meta:()=>meta,world});preferences();refreshStyle();renderHud();renderDock();save();platform.ready();platform.context(run);pause();$('loading')?.remove();onboarding=new Onboarding({run:()=>run,meta:()=>meta,world,save,legacyOpen:()=>lifeUI.openLegacy(true),legacyBuy:id=>lifeUI.purchasePerk(id),legacySkin:id=>lifeUI.chooseSkin(id),close:forceClose,unlock:()=>{music.unlock();effects.unlock();},block:value=>{started=!value;pause();},enter:()=>{renderHud();renderDock();world.resize();pause();if(run.ended&&!lifeUI?.hasPendingDeath())showGameOver();}});onboarding.show();requestAnimationFrame(pulseClock);setInterval(renderMusicStatus,900);
+designUI=installRedesign({run:()=>run,meta:()=>meta,world});streetUI=new StreetUI({run:()=>run,started:()=>started,modal:()=>modalType,busy:()=>busy,world,save,refresh:()=>{refreshStyle();renderHud();renderDock();},open:openModal,close:forceClose,confirm:confirmDialog,toast});preferences();refreshStyle();renderHud();renderDock();save();platform.ready();platform.context(run);pause();$('loading')?.remove();onboarding=new Onboarding({run:()=>run,meta:()=>meta,world,save,legacyOpen:()=>lifeUI.openLegacy(true),legacyBuy:id=>lifeUI.purchasePerk(id),legacySkin:id=>lifeUI.chooseSkin(id),close:forceClose,unlock:()=>{music.unlock();effects.unlock();},block:value=>{started=!value;pause();},enter:()=>{renderHud();renderDock();world.resize();pause();if(run.ended&&!lifeUI?.hasPendingDeath())showGameOver();}});onboarding.show();requestAnimationFrame(pulseClock);setInterval(renderMusicStatus,900);
 if(platform.storageMode==='session')setTimeout(()=>toast(L('Preview mode: progress lasts for this session.','预览模式：进度仅保存在本次会话。')),1700);
 }
 main().catch(error=>{console.error(error);const loading=document.getElementById('loading');if(loading)loading.innerHTML='<div><strong>Last $100</strong><small>Loading was interrupted. Reload to try again.</small></div>';});

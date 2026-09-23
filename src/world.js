@@ -1,5 +1,5 @@
 import {localModel,eventPlot} from './local-models.js';
-import {peopleProject,animatePerson,disposeGroup} from './people.js';
+import {peopleProject,animatePerson,disposeGroup,person} from './people.js';
 import {buildRestScene,setRestPose,resizeRest,animateRest,activityMiniature,disposeRest} from './rest-world.js';
 import {CITY_DATA,classIndex} from './life-core.js';
 import * as T from 'three';
@@ -271,12 +271,29 @@ export class World{
   if(this.restStage){resizeRest(this.restStage,w,h,this.restAngle||0);return;}
   const desktop=w>=760;
   const dock=document.getElementById('game-dock');
-  let foot=desktop?h*.73:Math.max(h*.49,h-(dock?.getBoundingClientRect().height||h*.36)-32);let f=desktop?12.2:12.8;if(this.titleMode){f=11;foot=h*.74;}
+  let foot=desktop?h*.73:Math.max(h*.49,h-(dock?.getBoundingClientRect().height||h*.36)-32);let f=desktop?12.2:15.5;if(this.titleMode){f=11;foot=h*.74;}
   this.frustum=f;const c=this.camera;c.left=-f*w/h/2;c.right=f*w/h/2;c.top=f/2;c.bottom=-f/2;
   c.position.set(8,8.7,13);c.position.applyAxisAngle(new T.Vector3(0,1,0),this.blockAngle||0);c.lookAt(0,.8,0);c.updateProjectionMatrix();c.updateMatrixWorld(true);
   const p=new T.Vector3(this.actor?.root.position.x??-1.65,.18,this.actor?.root.position.z??2.2).project(c),cx=(p.x+1)*w/2,cy=(1-p.y)*h/2;
   const dx=this.titleMode?w*.38:w*.34;
   const up=new T.Vector3(0,1,0).applyQuaternion(c.quaternion),right=new T.Vector3(1,0,0).applyQuaternion(c.quaternion);c.position.addScaledVector(up,-(cy-foot)/h*f);c.position.addScaledVector(right,(cx-dx)/w*(f*w/h));c.updateMatrixWorld(true);
+ }
+ setStreetCast(people,crew,market){
+  if(this.fallback)return;const key=JSON.stringify([people.map(p=>p.id),crew.map(p=>p.id),market]);if(this.streetCastKey===key)return;this.streetCastKey=key;
+  if(this.streetCast)disposeGroup(this.streetCast);this.streetCast=new T.Group();this.scene.add(this.streetCast);this.streetActors=[];
+  const positions=[[-4.4,2.1],[2.8,1.9],[-3.5,-.4],[4.8,-1.4],[-.5,4.5],[-5.8,4.2]];
+  people.forEach((n,i)=>{const a=person({color:n.color,scale:.70+(i%2)*.06,hat:i%3===0});a.root.position.set(positions[i][0],.05,positions[i][1]);this.streetCast.add(a.root);this.streetActors.push({a,id:'npc-'+i,base:positions[i],i,kind:'npc'});});
+  const boss=person({color:0xa18e68,scale:.8});boss.root.position.set(1.1,.08,1.35);this.streetCast.add(boss.root);this.streetActors.push({a:boss,id:'manager',kind:'manager'});
+  crew.forEach((n,i)=>{const a=person({color:n.color,scale:.77,hat:n.id==='guide'});this.streetCast.add(a.root);this.streetActors.push({a,id:'crew-'+n.id,i,kind:'crew'});});
+  if(market){const booth=new T.Group();booth.position.set(-5.2,0,-.65);box(booth,1.35,.75,.75,0x729b80,0,.4,0);box(booth,1.65,.12,1.0,0xe7ce92,0,1.55,0);for(const x of [-.65,.65])box(booth,.05,1.5,.05,0x887d59,x,.78,0);label(booth,'TALENT',1.05,.28,0,1.30,.45,'#305747','#fff2c9');this.streetCast.add(booth);this.streetMarket=booth;}else this.streetMarket=null;
+ }
+ updateStreetCast(t,dt){
+  if(!this.streetCast)return;this.streetCast.visible=!this.titleMode&&!this.restStage&&!this.travelTime;this.streetCast.rotation.y=this.blockAngle||0;
+  const localHero=this.actor.root.position.clone().applyAxisAngle(new T.Vector3(0,1,0),-(this.blockAngle||0));
+  for(const p of this.streetActors){const a=p.a;if(p.kind==='npc'&&this.motion){const phase=t*.25+p.i*1.9;a.root.position.x=p.base[0]+Math.sin(phase)*1.25;a.root.rotation.y=Math.cos(phase)>0?1.45:-1.45;for(let j=0;j<2;j++){a.legs[j].root.rotation.x=Math.sin(t*4+p.i+j*Math.PI)*.28;a.arms[j].root.rotation.x=-Math.sin(t*4+p.i+j*Math.PI)*.2;}}else if(p.kind==='crew'){a.root.position.set(localHero.x-1.15-p.i*.7,.05,localHero.z+.65+(p.i%2)*.65);a.root.rotation.y=.1;animatePerson(a,t,this.motion);}else animatePerson(a,t,this.motion);}
+  this.streetCast.updateMatrixWorld(true);const rect=this.container.getBoundingClientRect();const points=this.streetActors.map(p=>{const v=new T.Vector3(0,2.3,0);p.a.root.localToWorld(v);v.project(this.camera);return {id:p.id,x:rect.left+(v.x+1)*rect.width/2,y:rect.top+(1-v.y)*rect.height/2,visible:this.streetCast.visible&&v.z>-1&&v.z<1};});
+  if(this.streetMarket){const v=new T.Vector3(0,1.8,0);this.streetMarket.localToWorld(v);v.project(this.camera);points.push({id:'market',x:rect.left+(v.x+1)*rect.width/2,y:rect.top+(1-v.y)*rect.height/2,visible:this.streetCast.visible});}
+  this.onStreetPositions?.(points);
  }
  setTitle(value){this.titleMode=value;this.resize();}
  setRest(rest){
@@ -537,7 +554,7 @@ export class World{
   }
   for(const root of [this.plot,this.incoming])root?.traverse(o=>{if(o.userData.billboard){const q=this.billboardParentQ??=new T.Quaternion();o.parent.getWorldQuaternion(q);o.quaternion.copy(q.invert()).multiply(this.camera.quaternion);}});
   if(this.plot){const p=new T.Vector3(.4,3.2,-.1);p.applyMatrix4(this.plot.matrixWorld);p.project(this.camera);const rect=this.container.getBoundingClientRect();this.onProjectPosition(rect.left+(p.x+1)*rect.width/2,rect.top+(1-p.y)*rect.height/2);}
-  this.renderer.render(this.scene,this.camera);this.fps=1/Math.max(rawDt,.001);
+  this.updateStreetCast(t,dt);this.renderer.render(this.scene,this.camera);this.fps=1/Math.max(rawDt,.001);
   const p=this.actor.root.position.clone();p.y+=3.05;p.project(this.camera);const rect=this.container.getBoundingClientRect();this.onHeroPosition(rect.left+(p.x+1)*rect.width/2,rect.top+(1-p.y)*rect.height/2);
  }
 }

@@ -1,3 +1,4 @@
+import {crewWages,hasCrew} from './street-core.js';
 import {getAsset,getOutfit,getAuctionLot,getDecoration,AUCTION_LOTS,DECORATIONS} from './catalog.js';
 // All money is integer cents. New risks are fictional, not financial/medical claims.
 export const MONEY_CAP=900000000000000;
@@ -40,7 +41,7 @@ export function collectLegacy(s,meta){if(!s.ended)return;const e=ensureEstate(s)
 export function buyPerk(meta,id){const l=initLegacy(meta),p=PERKS.find(x=>x.id===id);if(!p||l.unlocks.includes(id))throw Error('已解锁或不存在的转世内容。');if(l.points<p.cost)throw Error('奢侈点不足。消费当地奢侈品后，在人生结算时入账。');l.points-=p.cost;l.unlocks.push(id);return p;}
 export function endLife(s,cause){if(s.ended)return;const e=ensureEstate(s);e.death={cause,worth:worth(s),cash:s.cash,peak:s.peak,age:e.age,page:s.page,at:Date.now()};s.ended=true;s.activeChallenge=null;s.life.rest=null;s.life.travel=null;s.life.district=null;}
 export function reconcile(s){const e=s.estate||ensureEstate(s);if(worth(s)<currentRegion(s).at*100)e.region='street';s.life.currentWorth=worth(s);return lateTier(s);}
-export function healthRisk(s,next=false){return clamp((s.estate?.age||0)+(next?1:0)-(s.estate?.riskReduction||0),0,100);}
+export function healthRisk(s,next=false){return clamp((s.estate?.age||0)+(next?1:0)-(s.estate?.riskReduction||0)-(hasCrew(s,'medic')?3:0),0,100);}
 export const activeGuards=s=>lateTier(s)>=3?(s.estate?.guards||0):0;
 export function securityOdds(s){const e=s.estate||ensureEstate(s),tier=lateTier(s),g=activeGuards(s),hostile=Math.max(0,-e.relations.underworld),z=currentRegion(s);return {robbery:clamp(8+tier*2+hostile*.18+z.risk-g*6+(e.stance==='cautious'?-6:e.stance==='assertive'?5:0),2,65),dodge:clamp(12+g*23+(e.perks.includes('instinct')?5:0)+(e.stance==='cautious'?8:e.stance==='assertive'?14:0),5,97),assassination:clamp((hostile-35)*.5+tier+z.risk-g*3,0,60)};}
 export function guardSalary(s){const g=activeGuards(s);return Math.round([0,35000,350000,3500000][g]*(s.estate?.stance==='cautious'?1.4:1));}
@@ -50,10 +51,11 @@ export function billQuote(s,{restNumber=(s.life?.restCount||0)+1}={}){
  const auctionUpkeep=(s.estate?.auctionMedals||[]).reduce((sum,id)=>{const a=getAuctionLot(id);return sum+(a?.upkeep||0);},0);
  const outfitUpkeep=(s.outfits||[]).reduce((sum,id)=>{const o=getOutfit(id);return sum+(o?.upkeep||0);},0);
  const decoUpkeep=(s.decorations||[]).reduce((sum,id)=>{const d=getDecoration(id);return sum+(d?.upkeep||0);},0);
- const maintenance=baseMaintenance+auctionUpkeep+outfitUpkeep+decoUpkeep;
+ const companions=crewWages(s),crewDiscount=hasCrew(s,'steward')?Math.floor(baseMaintenance*.15):0;
+ const maintenance=baseMaintenance-crewDiscount+auctionUpkeep+outfitUpkeep+decoUpkeep+companions;
  const rate=Math.min(.58,TIERS_LATE[tier].tax*region.tax),tax=Math.floor(n*rate),guards=guardSalary(s),management=tier>=5?Math.floor(n*.001*(tier-3)):0;
  const before=maintenance+tax+guards+management,credit=s.estate?.perks?.includes('reserve')&&restNumber===1?Math.min(3000,before):0;
- return {worth:n,cash:s.cash,tier,class:klass,maintenance,baseMaintenance,auctionUpkeep,outfitUpkeep,decoUpkeep,tax,guards,management,credit,rate,region:region.name,total:cents(before-credit),restNumber};
+ return {worth:n,cash:s.cash,tier,class:klass,maintenance,baseMaintenance,companions,crewDiscount,auctionUpkeep,outfitUpkeep,decoUpkeep,tax,guards,management,credit,rate,region:region.name,total:cents(before-credit),restNumber};
 }
 export function availableAuctionLot(s){
  const e=ensureEstate(s),tier=lateTier(s);

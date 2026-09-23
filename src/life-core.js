@@ -1,3 +1,4 @@
+import {normalizeCrew,applyCrewOffer} from './street-core.js';
 import {worth,lateTier,activeItem,ensureEstate,reconcile,billQuote,prepareRest,settleBill,currentRegion,healthRisk,availableAuctionLot} from './endgame-core.js';
 import {pickLocal,localById,DISTRICTS,NEWS,districtOffer} from './city-content.js';
 // UPSHIFT v3 • all amounts in integer cents; no real money.
@@ -42,7 +43,7 @@ export const classIndex=s=>CLASSES.reduce((i,c,n)=>worth(s)/100>=c.at?n:i,0);
 export const goodsValue=s=>(s.life?.items||[]).reduce((n,id)=>n+(ITEMS.find(i=>i.id===id)?.price||0)*100,0);
 export function initLife(s){
  const old=s.life||{};s.life={version:4,energy:MAX_ENERGY,energyCap:MAX_ENERGY,city:'taipei',items:[],seenWorth:s.peak||s.cash,rest:null,travel:null,filter:false,modern:true,soundscape:'auto',lastSeen:Date.now(),restCount:0,restLog:[],...old};
- const l=s.life;const oldCap=Number(old.energyCap)||(old.energy!==undefined?100:MAX_ENERGY);l.energyCap=Math.max(200,Math.min(400,Math.floor((Number(old.energyCap)||200)/50)*50));l.energy=Math.max(0,Math.min(l.energyCap,Math.round((Number(l.energy)||0)*l.energyCap/oldCap)));l.version=5;if(l.district&&!DISTRICTS[l.district.city])l.district=null;if(!NEWS.some(n=>n.id===l.news?.id))l.news=null;l.items=[...new Set((Array.isArray(l.items)?l.items:[]).filter(id=>ITEMS.some(i=>i.id===id)))];l.city=CITY_DATA.some(c=>c.id===l.city)?l.city:'taipei';l.seenWorth=cents(Math.max(l.seenWorth||0,s.cash||0,s.peak||0));l.lastSeen=Math.min(Date.now(),Math.max(0,Number(l.lastSeen)||Date.now()));
+ normalizeCrew(s);const l=s.life;const oldCap=Number(old.energyCap)||(old.energy!==undefined?100:MAX_ENERGY);l.energyCap=Math.max(200,Math.min(400,Math.floor((Number(old.energyCap)||200)/50)*50));l.energy=Math.max(0,Math.min(l.energyCap,Math.round((Number(l.energy)||0)*l.energyCap/oldCap)));l.version=5;if(l.district&&!DISTRICTS[l.district.city])l.district=null;if(!NEWS.some(n=>n.id===l.news?.id))l.news=null;l.items=[...new Set((Array.isArray(l.items)?l.items:[]).filter(id=>ITEMS.some(i=>i.id===id)))];l.city=CITY_DATA.some(c=>c.id===l.city)?l.city:'taipei';l.seenWorth=cents(Math.max(l.seenWorth||0,s.cash||0,s.peak||0));l.lastSeen=Math.min(Date.now(),Math.max(0,Number(l.lastSeen)||Date.now()));
  if(l.rest&&(!Number.isFinite(l.rest.remaining)||!Array.isArray(l.rest.activities)||!CLASSES[l.rest.class]))l.rest=null;
  if(l.travel&&(!CITY_DATA.some(c=>c.id===l.travel.to)||!Number.isFinite(l.travel.arriveAt)))l.travel=null;
  if(l.rest){const r=l.rest;r.class=Math.max(0,Math.min(5,Math.floor(r.class)));r.remaining=Math.max(0,Math.min(900000,Number(r.remaining)||0));r.duration=r.aid?900000:600000;r.maintenance=cents(r.maintenance);r.tax=cents(r.tax);r.total=cents(r.total);r.ads=Math.max(0,Math.min(3,Math.floor(r.ads||0)));r.paid=!!r.paid;r.lastTick=Number.isFinite(r.lastTick)&&r.lastTick>0?r.lastTick:Date.now();r.id=Number(r.id)||Date.now();r.camera=Math.max(0,Math.min(2,Math.floor(Number(r.camera)||0)));r.pose=['drink','read','stretch','massage','sleep','lounge','toast'].includes(r.pose)?r.pose:null;r.lastActivity=String(r.lastActivity||'').replace(/[<>&"']/g,'').slice(0,50);if(!r.activityVersion){const extra=CLASSES[r.class].acts.map(([name,price,seconds,pose,instant],i)=>({id:i,name,price:Math.round(price*100*(getCity(s).fee||1)),seconds,pose,instant:!!instant,used:false}));r.activities=extra.map((a,i)=>i<r.activities.length?{...a,...r.activities[i],pose:a.pose,instant:a.instant}:a);r.activityVersion=2;}r.activities=r.activities.slice(0,7).map((a,i)=>({id:i,name:String(a.name||'休息活动').replace(/[<>&"']/g,''),price:cents(a.price),seconds:Math.max(0,Math.min(900,Number(a.seconds)||0)),pose:['drink','read','stretch','massage','sleep','lounge','toast'].includes(a.pose)?a.pose:'lounge',instant:!!a.instant,used:!!a.used}));}
@@ -89,6 +90,7 @@ export function decorateOffer(s,o,rng=Math.random,forced=false){
  if(o.event){o.p=Math.max(15,Math.min(97,o.p+(city.bonus||0)));o.up=Math.round((o.up+(city.mult||0))*100)/100;}
  const region=currentRegion(s);o.region=region.id;o.regionName=region.name;if(region.id!=='street'){o.p=Math.max(18,o.p-region.risk);o.up=Math.round((o.up+region.risk*.13)*100)/100;if(rank==='elite')o.minStake=Math.max(o.minStake,Math.floor(region.at*100*.002));}
  const news=NEWS.find(n=>n.id===s.life.news?.id);if(news&&news.city===city.id){o.p=Math.max(15,Math.min(95,o.p+news.bonus));o.up=Math.round((o.up+news.mult)*100)/100;o.newsTitle=news.title;}
+ applyCrewOffer(s,o);
  if(rank!=='street'&&['tokyo','newyork'].includes(city.id)){
   o.stages=[city.id==='tokyo'?88:91,Math.min(99,Math.round(o.p/(city.id==='tokyo'?.88:.91)))];o.p=Number((o.stages[0]*o.stages[1]/100).toFixed(2));o.complex='dual';
  }
@@ -155,8 +157,8 @@ export const MECHANISMS=[
 export function upgradeEnergy(s){assertFree(s);if(s.life.energyCap>=400)throw Error('体力上限已经达到 400。');const step=(s.life.energyCap-200)/50,cost=[150000,400000,1000000,2500000][step];if(s.cash<=cost)throw Error('现金不足，升级后需保留至少 $0.01。');s.cash-=cost;s.life.energyCap+=50;s.life.energy=Math.min(s.life.energyCap,s.life.energy+50);return cost;}
 
 export const UNLOCK_MILESTONES=[
- {id:'tips',at:250,name:'街头伙伴与打赏',title:'街头伙伴与打赏',icon:'sparkle',desc:'街头偶遇更多路人伙伴，结交人脉，获得偶遇激励与探索声望！'},
- {id:'passport',at:500,name:'世界通行证与跨城出行',title:'世界通行证与跨城出行',icon:'globe',desc:'开放跨城交通与大地图，迈向世界六大国际都市！'},
+ {id:'tips',at:250,name:'街头人脉与人才市场',title:'街头人脉与人才市场',icon:'sparkle',desc:'场景里的人才市场开门，可付费签约随从；点击随从查看能力、工资与解雇。路人好感影响其思想评价。'},
+ {id:'passport',at:500,name:'世界通行证与跨城出行',title:'世界通行证与跨城出行',icon:'globe',desc:'城市全景在主画面展开，解锁旅行和身家入口。跨城仍需到沿途商店购买 $350 世界通行证。'},
  {id:'radio',at:1500,name:'城市资讯电台',title:'城市资讯电台',icon:'radio',desc:'解锁商业电台横条，实时播报当地事件、涨跌情报与政策红利！'},
  {id:'atlas',at:3000,name:'机制图谱与UI缩放',title:'机制图谱与UI缩放',icon:'hex',desc:'解锁全机制观测图谱，并开启界面缩放自由调节！'},
  {id:'showdown',at:5000,name:'特殊对赌合约',title:'特殊对赌合约',icon:'fire',desc:'解锁硬币对决、极速合约等高风险高回报玩法！'},

@@ -1,3 +1,4 @@
+import {hasCrew} from './street-core.js';
 import {worth,ensureEstate,endLife,streetEvent} from './endgame-core.js';
 import {DISTRICTS,districtOffer,LOCAL_PROJECTS} from './city-content.js';
 import {initLife,markLife,goodsValue,decorateOffer,useEnergy,assertFree,stakeBounds,owns,ITEMS,eligible} from './life-core.js';
@@ -50,7 +51,7 @@ export function makeOffer(s,options={},rng=random){
  else o=makeBaseOffer(s,options,rng);
  return decorateOffer(s,o,rng,forced);
 }
-export function next(s,opts={},rng=random){assertFree(s);if(s.offer.pendingStake)throw Error('请先完成交割。');if(s.life.energy<=0)throw Error('体力耗尽，请进入假期。');useEnergy(s,5);s.life.steps=(s.life.steps||0)+1;if(s.ended)throw Error('Run ended');s.page++;s.offer=makeOffer(s,opts,rng);s.lastResult=null;return s.offer;}
+export function next(s,opts={},rng=random){assertFree(s);if(s.offer.pendingStake)throw Error('请先完成交割。');if(s.life.energy<=0)throw Error('体力耗尽，请进入假期。');useEnergy(s,hasCrew(s,'guide')?4:5);s.life.steps=(s.life.steps||0)+1;if(s.ended)throw Error('Run ended');s.page++;s.offer=makeOffer(s,opts,rng);s.lastResult=null;return s.offer;}
 export function requiredStake(s){return s.offer.type==='special'?Math.max(1,Math.floor(s.cash*s.offer.ratio)):null;}
 export function quote(s,stake){
  const o=s.offer;if(!['project','special'].includes(o.type))throw Error('Not an investment');
