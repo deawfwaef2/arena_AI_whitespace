@@ -1,0 +1,41 @@
+{
+  "results": [
+    {
+      "name": "poor UI: visible progress, no external columns, responsive bounds and offline file",
+      "status": "PASS"
+    },
+    {
+      "name": "market hire → persistent crew → click follower → fire confirmation",
+      "status": "PASS"
+    },
+    {
+      "name": "phone market and entourage remain accessible, panorama restored to main world",
+      "status": "PASS"
+    },
+    {
+      "name": "NPC greet changes relationship once, contextual manager has readable local dialog",
+      "status": "PASS"
+    },
+    {
+      "name": "backup export and restore retain companions and are key-free",
+      "status": "PASS"
+    },
+    {
+      "name": "rest confirmation displays wages, can settle health and pay bill",
+      "status": "PASS"
+    },
+    {
+      "name": "different cities: local projects, local hiring and rich screen",
+      "status": "PASS"
+    },
+    {
+      "name": "auction: readable names, cents match displayed price, points and next action",
+      "status": "PASS"
+    },
+    {
+      "name": "network-blocked production HTML: load, start and invest with zero page errors",
+      "status": "PASS"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,9 @@
+PASS poor UI: visible progress, no external columns, responsive bounds and offline file
+PASS market hire → persistent crew → click follower → fire confirmation
+PASS phone market and entourage remain accessible, panorama restored to main world
+PASS NPC greet changes relationship once, contextual manager has readable local dialog
+PASS backup export and restore retain companions and are key-free
+PASS rest confirmation displays wages, can settle health and pay bill
+PASS different cities: local projects, local hiring and rich screen
+PASS auction: readable names, cents match displayed price, points and next action
+PASS network-blocked production HTML: load, start and invest with zero page errors

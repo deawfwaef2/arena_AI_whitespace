@@ -31,3 +31,22 @@
 - 用户拒绝旧「城市手账 / 夜行剧场 / 财富控制台」的分栏布局；本轮转为单一沉浸街景。
 - 参考 ZIP 已从用户提供的 Drive 下载，需检查其中 UI 结构，不执行不明脚本。
 - 旧游戏已有 six-city 内容、财富阶段、维护账单和解锁机制，应复用而非另造简化演示游戏。
+
+## 最新可玩版本：5.0 沉浸街头（2026-09-23）
+- 根 HTML 已多次打包并推送，GitHub Pages 与本机 HTML 的 SHA-256 已核对一致。仍用原 upshift-save-v3，本轮未改存储键。
+- 实际主界面只保留 street 布局，旧 journal/theater/console 设置在 applyLayout 中迁移。不要恢复用户拒绝的分栏布局。
+- UI：`src/redesign.js/.css`，上下文人物/市场/随从：`src/street-ui.js`；纯规则：`src/street-core.js`；3D 角色和锚点：`src/world.js`。
+- 人才最多 3 人。guide 前进耗能 4；merchant 普通街头倍率 +0.10；analyst 普通项目概率 +3（双重尽调前应用）；producer 普通倍率 +0.15；steward 基础维护 −15%；diplomat 打招呼关系 +4；medic 健康风险 −3%。不改当前已生成项目条款。
+- 招募资格按当前总身家；工资每次休息计入 maintenance，其中 companions 为明细，不要再次加到总账单。休息锁账后不能招募/解雇。
+- 拍卖 AUCTION_LOTS 的 price/upkeep 是美分，**不同于普通资产 price 的美元参考数值**。显示不能再乘 100；奖励字段是 points。旧 auction 对象已兼容迁移成 id。
+- 思想气泡每 9 秒固定选择一次，不能每帧根据当前可见标签改选，否则会出现布局振荡。人物标签 hover 后位置固定，保证点击。
+- 构建：`npm ci && npm run checkpoint`。测试：`npm test`；浏览器：先 `npm start`，再 `node qa/street-browser.mjs`，需 Playwright Chromium 和系统依赖。
+- 最后验证：43 项逻辑测试、9 组 Chromium 浏览器回归全部通过；file:// 拦截全部 HTTP(S) 请求后依然可开局投资，网络请求为 0，页面错误为 0。
+- 截图及完整报告见 `STREET-REPORT.md` 和 `qa/street-final-*.png`。
+
+## 下一轮优先关注
+- 让用户评价实际手机的场景可见面积、标签密度、投资卡位置，不擅自加回整排常驻选项。
+- 当前同时显示的行人标签为手机 1–2 个、桌面 2–4 个，场景实际人物更多；这是有意防遮挡，不是缺失数据。
+- 区域差异复用原 6 城/72 项本地内容，本轮增强卡片强调色、项目经理和当地人才。进一步独立城市建筑造型/更多事件属于后续美术与内容迭代。
+- 当前自动验证仅 Chromium，未声称经过真机 iOS/Safari、Android 低端机、全数后期随机事件长时压力测试。真机反馈后继续调整。
+- 单文件约 32 MiB，内置音频/字体/图片，无外部请求；初次加载成本高于拆分在线版，不要为了减文件体积破坏离线要求。

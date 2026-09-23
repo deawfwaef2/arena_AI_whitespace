@@ -1,3 +1,8 @@
+> **当前版本：5.0 沉浸街头**
+> 直接下载根目录 `index.html`，双击后点开始游戏。
+> 下一位模型编程前必须先读 [HANDOFF.md](HANDOFF.md)。本轮变更、验证和截图见 [STREET-REPORT.md](STREET-REPORT.md)。
+> 下方旧文档中的三布局/界面预览说明已被本轮单一画内沉浸布局取代。
+
 # Last $100: Swipe to Rich
 ## 3.1 · 财富与代价 / Windows 局域网版
 
