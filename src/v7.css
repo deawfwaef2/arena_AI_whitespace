@@ -450,3 +450,4 @@ body[data-v7phone='yes'] .v7-deal-right .stake-money{display:flex;align-items:ce
 body[data-v7phone='yes'] .v7-deal-right .stake-money input{font-size:18px!important;width:100%!important}
 body[data-v7phone='yes'] .v7-go{width:80px!important;height:80px!important}
 body[data-v7phone='yes'] .v7-go span{font-size:13px!important}
+#game .game-dock>.v7-handle{grid-column:1/-1!important;width:auto!important}
