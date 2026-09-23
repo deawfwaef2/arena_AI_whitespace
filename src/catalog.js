@@ -81,15 +81,33 @@ export const EFFECTS={
  sovereign:pair('The complete sovereign look: crown, aura, entourage.','完整帝王排面：王冠、光环与随行礼宾。')
 };
 export const OUTFITS=[
- {id:'plain',name:pair('White canvas','纯白起点'),price:0,color:'#f5f5f0',trim:'#e0e5df',kind:'plain'},
- {id:'mint',name:pair('Fresh start','薄荷新生'),price:35,color:'#a9d5b2',trim:'#faf5e8',kind:'tee'},
- {id:'street',name:pair('Streetwear','街头漫步'),price:180,color:'#9fadd2',trim:'#edece7',kind:'hoodie'},
- {id:'jacket',name:pair('Weekend jacket','周末夹克'),price:650,color:'#bf8e76',trim:'#f9efdf',kind:'jacket'},
- {id:'suit',name:pair('Tailored suit','定制西装'),price:3200,color:'#35474d',trim:'#e7e6dc',kind:'suit'},
- {id:'ivory',name:pair('Ivory evening','象牙白礼服'),price:12000,color:'#e7e1ce',trim:'#5a5b54',kind:'suit'},
- {id:'gold',name:pair('Golden age','鎏金时代'),price:85000,color:'#d4b461',trim:'#fbecd1',kind:'gold'},
- {id:'cyber',name:pair('Future royalty','未来贵族'),price:450000,color:'#4d3f6f',trim:'#83fff0',kind:'cyber'},
- {id:'sovereign',name:pair('The sovereign','万众之上'),price:3500000,color:'#ede3c6',trim:'#e7bd55',kind:'royal'}
+ {id:'plain',name:pair('White canvas','纯白起点'),price:0,color:'#f5f5f0',trim:'#e0e5df',kind:'plain',lvPoints:0,upkeep:0},
+ {id:'mint',name:pair('Fresh start','薄荷新生'),price:35,color:'#a9d5b2',trim:'#faf5e8',kind:'tee',lvPoints:0.02,upkeep:0},
+ {id:'street',name:pair('Streetwear','街头漫步'),price:180,color:'#9fadd2',trim:'#edece7',kind:'hoodie',lvPoints:0.05,upkeep:0},
+ {id:'jacket',name:pair('Weekend jacket','周末夹克'),price:650,color:'#bf8e76',trim:'#f9efdf',kind:'jacket',lvPoints:0.12,upkeep:0},
+ {id:'suit',name:pair('Tailored suit','定制西装'),price:3200,color:'#35474d',trim:'#e7e6dc',kind:'suit',lvPoints:0.35,upkeep:500},
+ {id:'ivory',name:pair('Ivory evening','象牙白礼服'),price:12000,color:'#e7e1ce',trim:'#5a5b54',kind:'suit',lvPoints:0.80,upkeep:1500},
+ {id:'gold',name:pair('Golden age','鎏金时代'),price:85000,color:'#d4b461',trim:'#fbecd1',kind:'gold',lvPoints:2.5,upkeep:8000},
+ {id:'cyber',name:pair('Future royalty','未来贵族'),price:450000,color:'#4d3f6f',trim:'#83fff0',kind:'cyber',lvPoints:8.0,upkeep:35000},
+ {id:'sovereign',name:pair('The sovereign','万众之上'),price:3500000,color:'#ede3c6',trim:'#e7bd55',kind:'royal',lvPoints:30.0,upkeep:200000}
+];
+
+export const NOBLE_ITEMS = [
+ { id: 'noble-luxury', name: pair('Noble Luxury Summons','贵族黑金导引信'), price: 15000, at: 100000, icon: 'gem', desc: pair('Summon a secret luxury boutique or rare auction on the next block.','以贵族特权信笺命令下一街区开放稀世奢侈品店或孤品拍卖会！'), targetOffer: 'auction' },
+ { id: 'noble-bank', name: pair('Swiss Banker Charter','私人银行特许令'), price: 25000, at: 150000, icon: 'bank', desc: pair('Designate the next block as an elite financial venture with enhanced returns.','指引下一站为高净值金融银行项目，返还倍率提升。'), targetOffer: 'bank' },
+ { id: 'noble-clinic', name: pair('Royal Medical Summons','皇家疗养预约函'), price: 40000, at: 250000, icon: 'bolt', desc: pair('Summon a private royal rejuvenation clinic to restore health and reduce decay risk.','调集皇家医疗团队设立专属疗养站，恢复健康并降低衰退风险。'), targetOffer: 'clinic' },
+ { id: 'noble-tech', name: pair('DeepTech Incubator Key','深潜科技特批函'), price: 80000, at: 500000, icon: 'lab', desc: pair('Designate the next block as a frontier laboratory with breakthrough odds.','指派下一站为前沿科技实验室，大幅增加高倍率技术突破概率。'), targetOffer: 'tech' }
+];
+
+export const AUCTION_LOTS = [
+ { id: 'auc-davinci', name: pair('Da Vinci Codex Folio','《达·芬奇手稿残卷》'), price: 50000000, points: 25, upkeep: 25000, medal: '📜', desc: pair('Authentic renaissance parchment. Converts cash into permanent Reincarnation Points.','文艺复兴真迹孤品。现金全额化作转世点，永久点亮荣誉勋章墙。'), tier: 4 },
+ { id: 'auc-watch', name: pair('Titanic Gold Chronometer','《泰坦尼克号金质天文怀表》'), price: 120000000, points: 60, upkeep: 60000, medal: '⏱️', desc: pair('Salvaged deep-sea gold chronometer marking the frozen moment of history.','深海打捞的纯金精密怀表，凝固历史终章的流金见证。'), tier: 4 },
+ { id: 'auc-mars', name: pair('Mars Sector 01 Deed','《火星第一勘探区永久地契》'), price: 350000000, points: 180, upkeep: 180000, medal: '🪐', desc: pair('Physical parchment charter granting permanent mineral rights to Martian Sector 1.','星际拓荒时代的原初物理地契，附赠密封火星土壤样本。'), tier: 5 },
+ { id: 'auc-sapphire', name: pair('Sovereign Azure Sapphire','《海蓝帝国主权蓝宝石》'), price: 1000000000, points: 500, upkeep: 500000, medal: '💎', desc: pair('Flawless 880-carat royal gemstone that adorned historic coronation sceptres.','重达 880 克拉的未切割纯净蓝宝石，铭刻古老王朝荣光。'), tier: 5 },
+ { id: 'auc-meteorite', name: pair('Orion Meteorite Seal','《猎户座陨铁雕刻黑金印章》'), price: 3000000000, points: 1500, upkeep: 1500000, medal: '🔱', desc: pair('Cold-forged deep space meteorite signet embodying absolute financial supremacy.','深空陨铁冷锻而成的传世印玺，触感冰冷，彰显绝对资本统治力。'), tier: 6 },
+ { id: 'auc-dyson', name: pair('Dyson Ring Charter','《近地轨道戴森光环冠名权》'), price: 10000000000, points: 5000, upkeep: 5000000, medal: '☀️', desc: pair('Golden registry certificate permanently inscribed into the solar satellite ring.','人类恒星能源奇迹的初代主导者冠名勋章，永久铭刻于太阳轨道。'), tier: 6 },
+ { id: 'auc-quantum', name: pair('Quantum Core Key','《原初量子算力核心密钥》'), price: 30000000000, points: 16000, upkeep: 15000000, medal: '⚛️', desc: pair('Superconducting gold-platinum key controlling foundational planetary compute.','掌控全球核心算力中枢的纯金实体密钥芯片，通往数字永生。'), tier: 7 },
+ { id: 'auc-emperor', name: pair('Augustus Gold Laurel','《古罗马奥古斯都纯金桂冠》'), price: 100000000000, points: 50000, upkeep: 50000000, medal: '👑', desc: pair('Millennium-old golden imperial laurel wreath representing the zenith of power.','千年前帝国权杖之巅的纯金桂冠，至高威严与永恒权力的最终象征。'), tier: 7 }
 ];
 export const TIERS=[
  {at:0,name:pair('Street level','白手起家'),line:pair('Little money.\nBig possibilities.','小小本金。\n无限可能。'),color:'#bcdf9b'},
@@ -104,6 +122,8 @@ export const getAsset=id=>ASSETS.find(a=>a.id===id);
 export const getOutfit=id=>OUTFITS.find(a=>a.id===id)||OUTFITS[0];
 export const getRarity=id=>RARITIES.find(r=>r.id===id)||RARITIES[0];
 export const getProject=id=>PROJECTS.find(p=>p.id===id)||PROJECTS[0];
+export const getAuctionLot=id=>AUCTION_LOTS.find(a=>a.id===id)||null;
+export const getNobleItem=id=>NOBLE_ITEMS.find(n=>n.id===id)||null;
 
 // Explicit special rules, never applied silently to ordinary investments.
 export const SPECIALS=[

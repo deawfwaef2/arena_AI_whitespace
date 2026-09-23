@@ -128,6 +128,8 @@ export function validateRun(input,{imported=false}={}){
  else if(['district-gate','district-task'].includes(o.type)){if(!DISTRICTS[o.district]||o.city!==s.life.city)throw Error('Invalid district');if(o.type==='district-task'&&(!Number.isInteger(o.task)||o.task<0||o.task>=DISTRICTS[o.district].tasks.length||!s.life.district))throw Error('Invalid district task');}
  else if(o.type==='world-event'){if(!s.estate.queue.some(e=>e.id===o.eventId))throw Error('Missing event');}
  else if(o.type==='interlude'){if(!['bridge','waterfront','park','alley'].includes(o.scene))throw Error('Invalid interlude');}
+ else if(o.type==='auction'){if(!o.auction)throw Error('Invalid auction');}
+ else if(o.type==='clinic'){}
  else throw Error('Invalid offer');o.settled=!!o.settled;
  if(s.activeChallenge){const a=s.activeChallenge;if(!CHALLENGES.some(c=>c.id===a.kind)||!['wealth','streak'].includes(a.metric))throw Error('Invalid active challenge');for(const k of ['durationMs','remainingMs','target','reward','penalty','minStake','progress'])if(!Number.isFinite(a[k])||a[k]<0||a[k]>MAX_CENTS)throw Error('Invalid active challenge');if(a.remainingMs>a.durationMs||a.durationMs>600000)throw Error('Invalid timer');}
  if(s.lastResult&&(!Number.isFinite(s.lastResult.profit)||!Number.isFinite(s.lastResult.returned)))s.lastResult=null;

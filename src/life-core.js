@@ -1,4 +1,4 @@
-import {worth,lateTier,activeItem,ensureEstate,reconcile,billQuote,prepareRest,settleBill,currentRegion,healthRisk} from './endgame-core.js';
+import {worth,lateTier,activeItem,ensureEstate,reconcile,billQuote,prepareRest,settleBill,currentRegion,healthRisk,availableAuctionLot} from './endgame-core.js';
 import {pickLocal,localById,DISTRICTS,NEWS,districtOffer} from './city-content.js';
 // UPSHIFT v3 • all amounts in integer cents; no real money.
 export const MAX_ENERGY=200;
@@ -21,6 +21,10 @@ export const ITEMS=[
  {id:'car',name:'二手旅行轿车',en:'Touring car',price:18000,at:25000,icon:'car',desc:'开启低级项目过滤；右滑自动跨过低级项目，每一站照常消耗体力。短途交通更便宜。'},
  {id:'music',name:'私人音乐管家',en:'Music concierge',price:35000,at:50000,icon:'music',desc:'城市配乐免费自动切换；购买后可选择休息阶段的 6 种财富阶层配乐。'},
  {id:'fund',name:'收益增益凭证',en:'Yield certificate',price:100000,at:200000,icon:'growth',desc:'需要计息账户。离线现金日利率从 1% 提高到 1.5%。',requires:'deposit'},
+ {id:'noble-luxury',name:'贵族黑金导引信',en:'Noble luxury summons',price:15000,at:100000,icon:'gem',desc:'贵族特权令：调集商会专员，命令下一街区直达稀世拍卖会或名品店！'},
+ {id:'noble-bank',name:'私人银行特许令',en:'Swiss banker charter',price:25000,at:150000,icon:'bank',desc:'贵族特权令：指派下一站为高净值金融银行项目，返还倍率提升。'},
+ {id:'noble-clinic',name:'皇家疗养预约函',en:'Royal clinic reservation',price:40000,at:250000,icon:'bolt',desc:'贵族特权令：调集皇家专属医疗康复团队设立专属疗养站，恢复健康！'},
+ {id:'noble-tech',name:'深潜科技特批函',en:'DeepTech incubator key',price:80000,at:500000,icon:'lab',desc:'贵族特权令：指引下一站为前沿量子实验室，高倍率技术突破几率大涨。'},
  {id:'vault',name:'滨海托管信托',en:'Marina trust',price:250000,at:500000,icon:'gem',desc:'新加坡限定，需要计息账户。再提高日利率 0.5 个百分点。',requires:'deposit',city:'singapore'},
  {id:'jet',name:'私人航空会员',en:'Private aviation',price:800000,at:2000000,icon:'plane',desc:'摩纳哥限定。解锁私人包机交通，所有目的地 5 秒抵达。',city:'monaco'}
 ];
@@ -53,7 +57,25 @@ export function assertFree(s){initLifeIfNeeded(s);if(s.life.rest||s.life.travel)
 export function markLife(s){initLifeIfNeeded(s);s.life.seenWorth=Math.max(s.life.seenWorth,s.cash,s.peak||0);reconcile(s);}
 export function stakeBounds(s){const o=s.offer;return {min:o.minStake||1,max:Math.min(s.cash,o.maxStake??LIMIT)};}
 export function decorateOffer(s,o,rng=Math.random,forced=false){
- initLifeIfNeeded(s);o.city=s.life.city;if(o.type==='shop'){
+ initLifeIfNeeded(s);o.city=s.life.city;
+ if(s.life?.summonTarget){
+  const target=s.life.summonTarget;s.life.summonTarget=null;
+  if(target==='auction'){
+   const lot=availableAuctionLot(s);
+   if(lot){o.type='auction';o.auction=lot;return o;}
+  }else if(target==='bank'){
+   o.type='project';o.project='cloud';o.localName='苏黎世私人离岸金库';o.up=3.6;o.p=75;o.grade='elite';return o;
+  }else if(target==='clinic'){
+   o.type='clinic';o.localName='皇家私家康复诊疗所';return o;
+  }else if(target==='tech'){
+   o.type='project';o.project='lab';o.localName='先驱量子深潜实验室';o.up=5.2;o.p=68;o.grade='elite';return o;
+  }
+ }
+ if(worth(s)>=100000000&&rng()<.16&&o.type==='project'&&!forced){
+  const lot=availableAuctionLot(s);
+  if(lot&&rng()<.38){o.type='auction';o.auction=lot;return o;}
+ }
+ if(o.type==='shop'){
   const available=ITEMS.filter(i=>!s.life.items.includes(i.id)&&eligible(s,i)&&(!i.city||i.city===s.life.city));
   o.utilities=available.sort(()=>rng()-.5).slice(0,3).map(i=>i.id);return o;
  }
@@ -72,6 +94,13 @@ export function decorateOffer(s,o,rng=Math.random,forced=false){
  }
  if(rank!=='street'&&city.id==='singapore'){o.complex='delivery';o.delay=20000;}
  return o;
+}
+export function activateNoble(s,itemId){
+ assertFree(s);
+ if(!owns(s,itemId))throw Error('未持有该项贵族特权道具。');
+ const targetMap={'noble-luxury':'auction','noble-bank':'bank','noble-clinic':'clinic','noble-tech':'tech'};
+ s.life.summonTarget=targetMap[itemId]||'auction';
+ return ITEMS.find(i=>i.id===itemId);
 }
 export function buyUtility(s,id){
  assertFree(s);const item=ITEMS.find(i=>i.id===id);
@@ -124,3 +153,43 @@ export const MECHANISMS=[
 ];
 
 export function upgradeEnergy(s){assertFree(s);if(s.life.energyCap>=400)throw Error('体力上限已经达到 400。');const step=(s.life.energyCap-200)/50,cost=[150000,400000,1000000,2500000][step];if(s.cash<=cost)throw Error('现金不足，升级后需保留至少 $0.01。');s.cash-=cost;s.life.energyCap+=50;s.life.energy=Math.min(s.life.energyCap,s.life.energy+50);return cost;}
+
+export const UNLOCK_MILESTONES=[
+ {id:'tips',at:250,name:'街头伙伴与打赏',icon:'sparkle',desc:'街头偶遇更多路人伙伴，结交人脉，获得偶遇激励与探索声望！'},
+ {id:'passport',at:500,name:'世界通行证与跨城出行',icon:'globe',desc:'开放跨城交通与大地图，迈向世界六大国际都市！'},
+ {id:'radio',at:1500,name:'城市资讯电台',icon:'radio',desc:'解锁商业电台横条，实时播报当地事件、涨跌情报与政策红利！'},
+ {id:'atlas',at:3000,name:'机制图谱与UI缩放',icon:'hex',desc:'解锁全机制观测图谱，并开启界面缩放自由调节！'},
+ {id:'showdown',at:5000,name:'特殊对赌合约',icon:'fire',desc:'解锁硬币对决、极速合约等高风险高回报玩法！'},
+ {id:'advanced',at:10000,name:'中产阶层与高级项目',icon:'diamond',desc:'开启中产精致界面，解锁多轮双重审核的高级复合项目！'},
+ {id:'filter',at:25000,name:'二手轿车与项目过滤',icon:'car',desc:'开启低级项目智能过滤，右滑自动跳过微小项目，直奔核心机会！'},
+ {id:'music',at:50000,name:'私人音乐管家与阶层原声',icon:'music',desc:'自选各城市定制配乐与各阶层专属环境原声音效！'},
+ {id:'affluence',at:100000,name:'富裕阶层与私人保镖安保',icon:'crown',desc:'解锁鎏金奢华界面！雇佣私人保镖团队，制定防身与和解策略！'},
+ {id:'noble',at:500000,name:'贵族特权与专属地点导航令',icon:'estate',desc:'解锁贵族特权令，可指定下一站出现奢侈品店、银行或科技中心！'},
+ {id:'auction',at:1000000,name:'稀世孤品拍卖行与转世勋章墙',icon:'gem',desc:'参与不可复现的独家奢侈品拍卖，现金直接转为永久转世点数，点亮荣誉勋章墙！'}
+];
+
+export function nextUnlock(s){
+ const w=worth(s)/100;
+ const locked=UNLOCK_MILESTONES.filter(m=>w<m.at);
+ if(!locked.length)return {milestone:null,progress:1,current:w,target:w};
+ const m=locked[0];
+ const prevIdx=UNLOCK_MILESTONES.indexOf(m)-1;
+ const prevAt=prevIdx>=0?UNLOCK_MILESTONES[prevIdx].at:0;
+ const progress=Math.max(0,Math.min(1,(w-prevAt)/(m.at-prevAt)));
+ return {milestone:m,progress,current:w,target:m.at};
+}
+
+export function checkNewUnlocks(s){
+ initLifeIfNeeded(s);
+ const l=s.life;
+ l.seenMilestones=Array.isArray(l.seenMilestones)?l.seenMilestones:[];
+ const w=worth(s)/100;
+ const newlyUnlocked=[];
+ for(const m of UNLOCK_MILESTONES){
+   if(w>=m.at&&!l.seenMilestones.includes(m.id)){
+     l.seenMilestones.push(m.id);
+     newlyUnlocked.push(m);
+   }
+ }
+ return newlyUnlocked;
+}
