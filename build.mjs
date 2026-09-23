@@ -7,6 +7,7 @@ const folder=production?'build/production':'build/development';
 const audio={}; // Only playable city and rest-class tracks are embedded.
 for(const score of JSON.parse(await fs.readFile('assets/music/CITY-CREDITS.json','utf8')))audio[score.id]='data:audio/mpeg;base64,'+(await fs.readFile('assets/music/'+score.id+'.mp3')).toString('base64');
 const art={};for(const city of ['taipei','tokyo','vegas','singapore','newyork','monaco','luxury-texture','ivory-texture','ui-taipei','ui-tokyo','ui-vegas','ui-singapore','ui-newyork','ui-monaco','logo','cg-poor','cg-rich'])art[city]='data:image/webp;base64,'+(await fs.readFile('assets/art/'+city+'.webp')).toString('base64');
+for(const f of await fs.readdir('assets/art/mg'))if(f.endsWith('.webp'))art['mg-'+f.replace('.webp','')]='data:image/webp;base64,'+(await fs.readFile('assets/art/mg/'+f)).toString('base64');
 const scores=JSON.parse(await fs.readFile('assets/music/ORIGINAL-SCORES.json','utf8'));for(const score of scores)audio[score.id]='data:audio/mpeg;base64,'+(await fs.readFile('assets/music/'+score.id+'.mp3')).toString('base64');
 const licenses='RECORDED MUSIC\n'+await fs.readFile('assets/music/MUSIC-LICENSES.md','utf8')+'\nTHREE.JS\n'+await fs.readFile('assets/THREE-LICENSE.txt','utf8')+'\nSPACE GROTESK\n'+await fs.readFile('assets/SPACE-GROTESK-LICENSE.txt','utf8');
 const result=await build({entryPoints:['src/app.js'],bundle:true,minify:true,format:'iife',target:['es2020'],write:false,legalComments:'eof'});
