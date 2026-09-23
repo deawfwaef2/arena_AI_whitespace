@@ -204,8 +204,8 @@ function makePlot(offer,lang='en'){
  for(const x of [-6.4,-.45,6.3]){cyl(root,.07,.09,.57,0x809f9b,x,.39,3.05,9);cyl(root,.078,.079,.045,0xe8dabb,x,.58,3.05,9);}
  box(root,4.4,.13,2.95,0xc7d2c9,.4,.092,-.12);
  const exhibit=new T.Group();exhibit.position.set(.4,.17,-.12);root.add(exhibit);
- if(offer.type==='shop'){
-  model(exhibit,'fashion',0xe9c4d2);label(exhibit,'STREET / STYLE',2.4,.4,0,1.53,1.08,'#946887','#fff9ee');
+ if(['shop','talent-market'].includes(offer.type)){
+  model(exhibit,'fashion',0xe9c4d2);label(exhibit,offer.type==='talent-market'?'TALENT / HOUSE':'STREET / STYLE',2.4,.4,0,1.53,1.08,'#946887','#fff9ee');
   const rail=new T.Group();exhibit.add(rail);rail.position.set(-1.7,0,1.18);for(const x of [-.55,.55]){cyl(rail,.025,.025,1.42,0x738294,x,.75,0,8);box(rail,.35,.04,.31,0x77848e,x,.1,0);}box(rail,1.2,.04,.04,0x738294,0,1.43,0);for(let i=0;i<3;i++){const shirt=box(rail,.27,.39,.075,[0xb6d7af,0xa0bce5,0xe4b6a1][i],-.4+i*.4,1.06,0);box(rail,.36,.13,.085,[0xb6d7af,0xa0bce5,0xe4b6a1][i],-.4+i*.4,1.24,0);}
  }else if(special){
   const bk=new T.Group();exhibit.add(bk);bk.position.set(.2,0,-.3);model(bk,special.scene,new T.Color(color));bk.scale.setScalar(.77);
@@ -271,7 +271,7 @@ export class World{
   if(this.restStage){resizeRest(this.restStage,w,h,this.restAngle||0);return;}
   const desktop=w>=760;
   const dock=document.getElementById('game-dock');
-  let foot=desktop?h*.73:Math.max(h*.49,h-(dock?.getBoundingClientRect().height||h*.36)-32);let f=desktop?12.2:15.5;if(this.titleMode){f=11;foot=h*.74;}
+  let foot=desktop?h*.73:Math.max(h*.40,(dock?.getBoundingClientRect().top-this.container.getBoundingClientRect().top||h*.62)-20);let f=desktop?12.2:15.5;if(this.titleMode){f=11;foot=h*.74;}
   this.frustum=f;const c=this.camera;c.left=-f*w/h/2;c.right=f*w/h/2;c.top=f/2;c.bottom=-f/2;
   c.position.set(8,8.7,13);c.position.applyAxisAngle(new T.Vector3(0,1,0),this.blockAngle||0);c.lookAt(0,.8,0);c.updateProjectionMatrix();c.updateMatrixWorld(true);
   const p=new T.Vector3(this.actor?.root.position.x??-1.65,.18,this.actor?.root.position.z??2.2).project(c),cx=(p.x+1)*w/2,cy=(1-p.y)*h/2;
@@ -282,16 +282,16 @@ export class World{
   if(this.fallback)return;const key=JSON.stringify([people.map(p=>p.id),crew.map(p=>p.id),market]);if(this.streetCastKey===key)return;this.streetCastKey=key;
   if(this.streetCast)disposeGroup(this.streetCast);this.streetCast=new T.Group();this.scene.add(this.streetCast);this.streetActors=[];
   const positions=[[-4.4,2.1],[2.8,1.9],[-3.5,-.4],[4.8,-1.4],[-.5,4.5],[-5.8,4.2]];
-  people.forEach((n,i)=>{const a=person({color:n.color,scale:.70+(i%2)*.06,hat:i%3===0});a.root.position.set(positions[i][0],.05,positions[i][1]);this.streetCast.add(a.root);this.streetActors.push({a,id:'npc-'+i,base:positions[i],i,kind:'npc'});});
-  const boss=person({color:0xa18e68,scale:.8});boss.root.position.set(1.1,.08,1.35);this.streetCast.add(boss.root);this.streetActors.push({a:boss,id:'manager',kind:'manager'});
-  crew.forEach((n,i)=>{const a=person({color:n.color,scale:.77,hat:n.id==='guide'});this.streetCast.add(a.root);this.streetActors.push({a,id:'crew-'+n.id,i,kind:'crew'});});
+  people.forEach((n,i)=>{const a=person({color:n.color,scale:1.02+(i%2)*.05,hat:i%3===0});a.root.position.set(positions[i][0],.05,positions[i][1]);this.streetCast.add(a.root);this.streetActors.push({a,id:'npc-'+i,base:positions[i],i,kind:'npc'});});
+  const boss=person({color:0xa18e68,scale:1.12});boss.root.position.set(1.1,.08,1.35);this.streetCast.add(boss.root);this.streetActors.push({a:boss,id:'manager',kind:'manager'});
+  crew.forEach((n,i)=>{const a=person({color:n.color,scale:1.08,hat:n.id==='guide'});this.streetCast.add(a.root);this.streetActors.push({a,id:'crew-'+n.id,i,kind:'crew'});});
   if(market){const booth=new T.Group();booth.position.set(-5.2,0,-.65);box(booth,1.35,.75,.75,0x729b80,0,.4,0);box(booth,1.65,.12,1.0,0xe7ce92,0,1.55,0);for(const x of [-.65,.65])box(booth,.05,1.5,.05,0x887d59,x,.78,0);label(booth,'TALENT',1.05,.28,0,1.30,.45,'#305747','#fff2c9');this.streetCast.add(booth);this.streetMarket=booth;}else this.streetMarket=null;
  }
  updateStreetCast(t,dt){
   if(!this.streetCast)return;this.streetCast.visible=!this.titleMode&&!this.restStage&&!this.travelTime;this.streetCast.rotation.y=this.blockAngle||0;
   const localHero=this.actor.root.position.clone().applyAxisAngle(new T.Vector3(0,1,0),-(this.blockAngle||0));
   for(const p of this.streetActors){const a=p.a;if(p.kind==='npc'&&this.motion){const walking=t%12<4,step=Math.floor(t/12)*4+Math.min(t%12,4),phase=step*.25+p.i*1.9;a.root.position.x=p.base[0]+Math.sin(phase)*1.25;a.root.rotation.y=Math.cos(phase)>0?1.45:-1.45;for(let j=0;j<2;j++){a.legs[j].root.rotation.x=walking?Math.sin(t*4+p.i+j*Math.PI)*.28:0;a.arms[j].root.rotation.x=walking?-Math.sin(t*4+p.i+j*Math.PI)*.2:0;}}else if(p.kind==='crew'){a.root.position.set(localHero.x-1.15-p.i*.7,.05,localHero.z+.65+(p.i%2)*.65);a.root.rotation.y=.1;animatePerson(a,t,this.motion);}else animatePerson(a,t,this.motion);}
-  this.streetCast.updateMatrixWorld(true);const rect=this.container.getBoundingClientRect();const points=this.streetActors.map(p=>{const v=new T.Vector3(0,2.3,0);p.a.root.localToWorld(v);v.project(this.camera);return {id:p.id,x:rect.left+(v.x+1)*rect.width/2,y:rect.top+(1-v.y)*rect.height/2,visible:this.streetCast.visible&&v.z>-1&&v.z<1};});
+  this.streetCast.updateMatrixWorld(true);const rect=this.container.getBoundingClientRect();const points=this.streetActors.map(p=>{const v=new T.Vector3(0,2.55,0);p.a.root.localToWorld(v);v.project(this.camera);return {id:p.id,x:rect.left+(v.x+1)*rect.width/2,y:rect.top+(1-v.y)*rect.height/2,visible:this.streetCast.visible&&v.z>-1&&v.z<1};});
   if(this.streetMarket){const v=new T.Vector3(0,1.8,0);this.streetMarket.localToWorld(v);v.project(this.camera);points.push({id:'market',x:rect.left+(v.x+1)*rect.width/2,y:rect.top+(1-v.y)*rect.height/2,visible:this.streetCast.visible});}
   this.onStreetPositions?.(points);
  }

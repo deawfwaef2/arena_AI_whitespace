@@ -47,7 +47,7 @@ export class LifeUI extends JourneyUI{
   if(next){
    const nextTitle=next.title||next.name||'新机制';
    const pct=Math.max(0,Math.min(100,next.progress*100));
-   bar.innerHTML=`<div class="milestone-bar-inner"><span class="milestone-icon">🔓</span><span class="milestone-title">${Math.round(next.progress*100)}% · ${safe(nextTitle)}</span><span class="milestone-target">${money(next.at*100,true)}</span><div class="milestone-track"><i style="width:${pct.toFixed(0)}%"></i></div></div>`;
+   bar.innerHTML=`<span class="unlock-emblem">${icon(next.icon||'sparkle')}</span><div class="milestone-bar-inner"><span class="milestone-kicker">下一张人生通行证 · ${Math.round(pct)}%</span><strong class="milestone-title">${safe(nextTitle)}</strong><div class="milestone-track"><i style="width:${pct.toFixed(1)}%"></i></div><span class="milestone-target">身家 ${short(w)} / ${short(next.at*100)} <b>还差 ${short(Math.max(0,next.at*100-w))}</b></span></div>`;
    bar.title=`当前身家 ${money(w)} / 解锁门槛 ${money(next.at*100)}。点击查看完整机制蓝图`;
   }else{
    bar.innerHTML=`<div class="milestone-bar-inner maxed"><span class="milestone-icon">👑</span><span class="milestone-title">核心门槛已达成 · 查看机制</span></div>`;

@@ -43,6 +43,8 @@ export function makeOffer(s,options={},rng=random){
  const forced=!!(options.project||options.rarity||options.asset||options.shop||options.special||options.challenge);
  let o;
  if(!forced&&s.life.district)return districtOffer(s,rng);
+ if(!forced&&!s.activeChallenge&&worth(s)>=25000&&s.page>2&&s.page-(s.life.lastMarketPage||0)>=3&&(rng()<.13||s.page-(s.life.lastMarketPage||s.life.marketEligibleAt||s.page)>12)){s.life.lastMarketPage=s.page;return {id:uid(),type:'talent-market',city:s.life.city,rarity:'rare',settled:false};}
+ if(worth(s)>=25000)s.life.marketEligibleAt??=s.page;
  if(!forced){const encounter=streetEvent(s,rng);if(encounter)return encounter;}
  if(!forced&&!s.activeChallenge&&s.page>3&&s.life.energy>25&&rng()<.045)return {id:uid(),type:'district-gate',city:s.life.city,district:s.life.city,rarity:'epic',settled:false};
  if(!forced&&!s.activeChallenge&&s.page>2&&rng()<.06)return {id:uid(),type:'interlude',city:s.life.city,scene:rng()<.5?'bridge':['waterfront','park','alley'][Math.floor(rng()*3)],rarity:'common',settled:false};
@@ -130,6 +132,7 @@ export function validateRun(input,{imported=false}={}){
  else if(o.type==='world-event'){if(!s.estate.queue.some(e=>e.id===o.eventId))throw Error('Missing event');}
  else if(o.type==='interlude'){if(!['bridge','waterfront','park','alley'].includes(o.scene))throw Error('Invalid interlude');}
  else if(o.type==='auction'){if(o.auction&&typeof o.auction==='object')o.auction=o.auction.id;if(!getAuctionLot(o.auction))throw Error('Invalid auction');}
+ else if(o.type==='talent-market'){if(o.city!==s.life.city)throw Error('Invalid talent market');}
  else if(o.type==='clinic'){}
  else throw Error('Invalid offer');o.settled=!!o.settled;
  if(s.activeChallenge){const a=s.activeChallenge;if(!CHALLENGES.some(c=>c.id===a.kind)||!['wealth','streak'].includes(a.metric))throw Error('Invalid active challenge');for(const k of ['durationMs','remainingMs','target','reward','penalty','minStake','progress'])if(!Number.isFinite(a[k])||a[k]<0||a[k]>MAX_CENTS)throw Error('Invalid active challenge');if(a.remainingMs>a.durationMs||a.durationMs>600000)throw Error('Invalid timer');}
