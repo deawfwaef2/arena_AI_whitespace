@@ -274,7 +274,7 @@ export class World{
   const dock=document.getElementById('game-dock');
   let foot=desktop?h*.73:Math.max(h*.40,(dock?.getBoundingClientRect().top-this.container.getBoundingClientRect().top||h*.62)-20);let f=desktop?12.2:15.5;if(this.titleMode){f=11;foot=h*.74;}
   this.frustum=f;const c=this.camera;c.left=-f*w/h/2;c.right=f*w/h/2;c.top=f/2;c.bottom=-f/2;
-  c.position.set(8,8.7,13);c.position.applyAxisAngle(new T.Vector3(0,1,0),this.blockAngle||0);c.lookAt(0,.8,0);c.updateProjectionMatrix();c.updateMatrixWorld(true);
+  c.position.set(8,8.7,13);c.position.applyAxisAngle(new T.Vector3(0,1,0),(this.blockAngle||0)+(this.cameraOrbit||0));c.lookAt(0,.8,0);c.updateProjectionMatrix();c.updateMatrixWorld(true);
   const p=new T.Vector3(this.actor?.root.position.x??-1.65,.18,this.actor?.root.position.z??2.2).project(c),cx=(p.x+1)*w/2,cy=(1-p.y)*h/2;
   const dx=this.titleMode?w*.38:w*.34;
   const up=new T.Vector3(0,1,0).applyQuaternion(c.quaternion),right=new T.Vector3(1,0,0).applyQuaternion(c.quaternion);c.position.addScaledVector(up,-(cy-foot)/h*f);c.position.addScaledVector(right,(cx-dx)/w*(f*w/h));c.updateMatrixWorld(true);
@@ -347,7 +347,7 @@ export class World{
   this.corner={
     from:this.blockAngle||0,
     start:performance.now(),
-    duration:1250
+    duration:2200
   };
   return new Promise(resolve=>this.corner.resolve=resolve);
  }
@@ -439,10 +439,11 @@ export class World{
     const settleEase=settle*settle*(3-2*settle);
     this.cornerFacing=T.MathUtils.lerp(walkHeading, newBlockHeading, settleEase);
     this.blockAngle=c.from+(Math.PI/2)*ease;
+    this.cameraOrbit=Math.sin(Math.PI*p)*.68;
     this.resize(true);
     if(p===1){
       const resolve=c.resolve;
-      this.corner=null;
+      this.corner=null;this.cameraOrbit=0;
       this.justTurned=true;
       this.blockAngle=c.from+Math.PI/2;
       this.actor.root.position.copy(this.streetPoint(-1.65,2.2));

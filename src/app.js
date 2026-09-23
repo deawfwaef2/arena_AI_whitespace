@@ -1,3 +1,4 @@
+import {ProsperityUI} from './prosperity.js';
 import {StreetUI} from './street-ui.js';
 import {installRedesign,applyLayout} from './redesign.js';
 import {ensureEstate,initLegacy,applyLegacy,collectLegacy,endLife,worth,lateTier,TIERS_LATE,availableAuctionLot,bidAuctionLot,passAuctionLot,healthRisk,medicalOptions,buyMedical} from './endgame-core.js';
@@ -17,7 +18,7 @@ async function main(){
 const $=id=>document.getElementById(id),safe=escape;
 const CONFIG=window.UPSHIFT_CONFIG||{allowDeveloperMode:true,crazygames:{enabled:'auto'}};
 const SAVE_KEY='upshift-save-v3';
-let lifeUI,onboarding,designUI,streetUI;let started=false;
+let lifeUI,onboarding,designUI,streetUI,prosperityUI;let started=false;
 $('app').innerHTML=shell;
 const platform=new Platform(CONFIG);await platform.init();
 const defaults={lang:'zh',theme:'minimalist',layout:'journal',device:'desktop',scale:1,sound:true,music:true,volume:.28,musicMode:'auto',motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,low:false,name:'',records:[],bots:[],runCount:1};
@@ -52,7 +53,7 @@ function queueChallenge(event){if(event&&!pendingChallenge.some(x=>x.id===event.
 function clock(){const now=performance.now(),elapsed=now-lastClock;lastClock=now;if(started&&!modalType&&!visit&&!document.hidden&&!adPlaying&&!run.ended&&!run.life?.rest&&!run.life?.travel){const event=advanceTime(run,elapsed);if(event)queueChallenge(event);}return now;}
 function pause(){lastClock=performance.now();world.paused=!started||!!modalType||adPlaying||run.ended||!!run.life?.rest||!!run.life?.travel;world.sceneSuspended=!!modalType||adPlaying||run.ended||!started;music.setDucked(!!modalType||!!visit||run.ended);platform.play(started&&!modalType&&!visit&&!run.ended&&!adPlaying&&!run.life?.rest&&!run.life?.travel);renderChallengeHud();}
 function validAction(){if(!started)return false;clock();if(run.life?.rest||run.life?.travel){renderDock();return false;}if(run.ended){showGameOver();return false;}if(pendingChallenge.length&&!busy&&!modalType){showChallengeResult(pendingChallenge.shift());return false;}return true;}
-function pulseClock(now){clock();lifeUI?.tick();streetUI?.tick(now);renderChallengeHud();if(run.activeChallenge&&now-lastSave>1000)save();if(started&&!busy&&!modalType&&!adPlaying){if(run.ended&&!lifeUI?.hasPendingDeath())showGameOver();else if(pendingChallenge.length)showChallengeResult(pendingChallenge.shift());}requestAnimationFrame(pulseClock);}
+function pulseClock(now){clock();lifeUI?.tick();streetUI?.tick(now);prosperityUI?.tick(now);renderChallengeHud();if(run.activeChallenge&&now-lastSave>1000)save();if(started&&!busy&&!modalType&&!adPlaying){if(run.ended&&!lifeUI?.hasPendingDeath())showGameOver();else if(pendingChallenge.length)showChallengeResult(pendingChallenge.shift());}requestAnimationFrame(pulseClock);}
 function renderChallengeHud(){
  const halted=modalType||visit||run.life?.rest||run.life?.travel;const a=run.activeChallenge,h=$('challenge-hud');h.hidden=!a;$('game').classList.toggle('has-challenge',!!a);
  if(!a){lastClockPaint='';return;}
@@ -73,7 +74,7 @@ function renderHud(){
  }
  $('test-badge').hidden=!run.unranked;$('test-badge').textContent=L('TEST RUN · NO OFFICIAL SCORE','测试局 · 不提交正式分数');
  $('swipe-cue').querySelector('span').textContent=visit?L('ESTATE TOUR · SWIPE TO CONTINUE','资产参观 · 右滑继续'):L('SWIPE RIGHT TO WALK ON','向右滑动，继续前行');
- $('game').dataset.prestige=prestige(run);$('game').dataset.wealth=tier(run);$('game').dataset.finish=finishStyle();$('game').classList.toggle('ended',run.ended);const k=run.offer.type==='asset'?getAsset(run.offer.asset).model:run.offer.project;const biome=['ocean','marina','island','beach','resort'].includes(k)?'coast':['solar','greenhouse','vineyard','cottage'].includes(k)?'nature':['rocket','spaceport','cloud','lab'].includes(k)?'future':['manor','palace','castle'].includes(k)?'royal':'city';$('game').dataset.biome=biome;renderChallengeHud();lifeUI?.renderHud();designUI?.refresh();streetUI?.refresh();musicMode();
+ $('game').dataset.prestige=prestige(run);$('game').dataset.wealth=tier(run);$('game').dataset.finish=finishStyle();$('game').classList.toggle('ended',run.ended);const k=run.offer.type==='asset'?getAsset(run.offer.asset).model:run.offer.project;const biome=['ocean','marina','island','beach','resort'].includes(k)?'coast':['solar','greenhouse','vineyard','cottage'].includes(k)?'nature':['rocket','spaceport','cloud','lab'].includes(k)?'future':['manor','palace','castle'].includes(k)?'royal':'city';$('game').dataset.biome=biome;renderChallengeHud();lifeUI?.renderHud();designUI?.refresh();streetUI?.refresh();prosperityUI?.refresh();musicMode();
 }
 function header(pill,title,type='info'){return `<div class="dock-header"><span class="kind-pill">${icon(type)}${safe(pill)}</span><button class="rules-button" data-action="rules">${icon('info')}${L('RULES','规则')}</button></div><h1>${safe(title)}</h1>`;}
 function actions(label,action,{disabled=false,danger=false,gold=false,purple=false,solo=false}={}){return `<div class="action-row ${solo?'solo':''}">${solo?'':`<button class="pass-button" data-action="next" ${busy?'disabled':''}>${L('PASS','跳过')}${icon('arrow')}</button>`}<button class="primary ${danger?'danger':''} ${gold?'gold':''} ${purple?'purple':''}" id="primary-action" data-action="${action}" ${disabled||busy||run.ended?'disabled':''}>${label}${icon('arrow')}</button></div>`;}
@@ -168,19 +169,20 @@ function passAuction(){
  run.offer.settled=true;save();toast(L('Lot passed. It will not appear again this run.','已放弃举牌，该藏品本局不再出现。'));nextOffer();
 }
 function checkMilestoneCelebration(){
+ if(modalType||busy||!started)return;
  const newly=checkNewUnlocks(run);
  if(newly.length){
   save();
-  const m=newly[0];effects.tone('win',4);effects.burst(innerWidth/2,innerHeight*.4,6,'#ffd700');world.celebrate();platform.celebrate();
+  const bar=$('milestone-progress-bar');bar.classList.add('surge');setTimeout(()=>bar.classList.remove('surge'),2000);const m=newly[0];effects.tone('win',4);effects.burst(innerWidth/2,innerHeight*.4,6,'#ffd700');world.celebrate();platform.celebrate();
   openModal('milestone-celebrate','','',`
-   <div class="milestone-celebrate-dialog">
-    <div class="milestone-ribbon">✦ NEW MECHANISM UNLOCKED · 新机制达成 ✦</div>
+   <div class="milestone-celebrate-dialog unlock-theater">
+    <div class="unlock-rays" aria-hidden="true"></div><div class="unlock-orbit" aria-hidden="true">✦　·　✧　·　✦</div>
+    <div class="milestone-ribbon">你的世界，向外展开了一圈</div>
     <div class="milestone-symbol-badge">${icon(m.icon||'crown')}</div>
-    <h2 id="modal-title">机制解锁：${safe(newly.map(x=>x.title).join(' · '))}</h2>
-    <div class="milestone-req">达成身家门槛：${money(m.at*100,true)}</div>
-    <p class="milestone-info">${newly.map(x=>safe(x.desc)).join('<br>')}</p>
-    <div class="milestone-notice"><strong>新入口已开放</strong><span>入口与购买资格已开放；需要购买的通行证、随从等仍须支付各自费用。</span></div>
-    <button class="primary" data-action="close">${L('ENTER THE STREET','领略新机制，继续前行')}${icon('arrow')}</button>
+    <span class="unlock-word">UNLOCKED</span><h2 id="modal-title">${newly.length>1?'连锁解锁 ×'+newly.length:safe(m.title)}</h2>
+    <div class="unlock-cards">${newly.map((x,i)=>`<article style="--unlock-delay:${350+i*100}ms"><span>${icon(x.icon||'sparkle')}</span><div><b>${safe(x.title)}</b><small>身家门槛 ${money(x.at*100,true)}</small><p>${safe(x.desc)}</p></div><strong>✓</strong></article>`).join('')}</div>
+    <p class="unlock-footnote">新入口与购买资格已开放。需要购买的物品仍须付费，风险不会因升级而消失。</p>
+    <button class="primary unlock-continue" data-action="close">收下这份新人生，继续 →</button>
    </div>
   `,{custom:true});
  }
@@ -218,21 +220,23 @@ function buyAsset(){if(busy||modalType||!validAction()||run.offer.type!=='asset'
 function buyOutfit(id){if(busy||!validAction())return;if(!run.outfits.includes(id)&&!lifeUI.beforeNext())return;const o=getOutfit(id);const apply=()=>{try{purchaseOutfit(run,id);save();refreshStyle();renderHud();renderDock();effects.tone('buy');if(run.ended){forceClose();showGameOver();}else if(modalType==='wardrobe')showWardrobe();else sceneMessage(L('NEW LOOK. SAME ODDS.','新外观，不改胜率。'));}catch{toast(L('Buy new outfits only at a roadside shop.','新服装只能在路边遇到的商店购买。'));}};if(!run.outfits.includes(id)&&run.cash===o.price*100)confirmDialog(L('Spend your last dollar?','要花光最后的现金吗？'),L('Zero cash means bankruptcy and all outfits are cleared.','现金归零就会破产，所有服装也会清空。'),apply);else apply();}
 function startChallenge(){if(busy||modalType||!validAction()||!lifeUI.beforeNext())return;try{acceptChallenge(run);save();renderHud();renderDock();effects.tone('rare');sceneMessage(L('CLOCK IS TICKING. LET’S GO!','倒计时开始，出发！'));musicMode();}catch{toast(L('Finish the active challenge before accepting another.','请先完成当前挑战，再接受新挑战。'));}}
 
+let modalSerial=0,modalClosing=false,modalCloseTimer=null;
 function openModal(type,title,subtitle,body,{wide=false,noClose=false,custom=false}={}){
- if(busy)return;clock();if(!modalType)returnFocus=document.activeElement;modalType=type;$('modal').hidden=false;$('game').inert=true;
+ if(busy)return;clearTimeout(modalCloseTimer);modalClosing=false;modalSerial++;$('modal').dataset.kind=type;clock();if(!modalType)returnFocus=document.activeElement;modalType=type;$('modal').hidden=false;$('game').inert=true;
  const card=$('modal-card');card.className='modal-card'+(type==='gameover'?' dead-card':'');card.style.maxWidth=wide?'870px':'';
  if(type==='menu')body+=`<div class="onboard-menu-actions"><button class="small-button" data-action="onboard-tour">重看快速教程</button><button class="small-button" data-action="onboard-home">返回开始界面</button></div>`;if(type==='developer')body+=`<div class="life-dev-tools"><button class="small-button" data-action="life-dev-rest">测试：进入假期</button><button class="small-button" data-action="life-dev-ready">测试：完成计时</button><button class="small-button" data-action="life-dev-goods">测试：获得全部机制商品</button></div>`;
  card.innerHTML=custom?body:`<div class="modal-head"><div><span class="modal-eyebrow">${L('Last $100 · PAUSED','Last $100 · 已暂停')}</span><h2 id="modal-title">${safe(title)}</h2><p>${safe(subtitle)}</p></div>${noClose?'':`<button class="modal-close" data-action="close" aria-label="${L('Close','关闭')}">${icon('close')}</button>`}</div>${body}`;
  if(type==='rules'&&run.offer.type==='project'){const o=run.offer;card.querySelector('.modal-head')?.insertAdjacentHTML('afterend',`<div class="panel-notice">项目下限 ${money(o.minStake||1)}；${o.maxStake>=MAX_CENTS?'不设玩法上限（系统上限 9 万亿美元）':'上限 '+money(o.maxStake||50000)}。${o.stages?'必须连续通过两轮审核：'+o.stages.join('% × ')+'%，综合 '+o.p+'%。':''}${o.delay?'投入后锁定 20 秒，刷新不会重抽结果。':''}</div>`);}
- card.getAnimations().forEach(a=>a.cancel());if(meta.motion)card.animate([{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{duration:230,easing:'ease-out'});pause();requestAnimationFrame(()=>card.querySelector('button:not(:disabled),input,select')?.focus());
+ card.getAnimations().forEach(a=>a.cancel());if(meta.motion)card.animate([{opacity:0,transform:type==='milestone-celebrate'?'translateY(50px) scale(.78)':'translateY(25px) scale(.97)'},{opacity:1,transform:'translateY(0) scale(1)'}],{duration:type==='milestone-celebrate'?850:400,easing:'cubic-bezier(.18,.85,.25,1)',fill:'backwards'});pause();requestAnimationFrame(()=>card.querySelector('button:not(:disabled),input,select')?.focus());
 }
-function closeModal(force=false){if(adPlaying&&!force)return;if(!modalType&&!force)return;if((modalType==='gameover'||modalType==='world-event'||modalType==='legacy'&&!started)&&!force)return;modalType=null;confirmCallback=null;$('modal').hidden=true;$('game').inert=!started;pause();returnFocus?.focus?.();}
+function closeModal(force=false){if(adPlaying&&!force)return;if(!modalType&&!force)return;if((modalType==='gameover'||modalType==='world-event'||modalType==='legacy'&&!started)&&!force)return;const serial=modalSerial;const finish=()=>{if(serial!==modalSerial)return;modalClosing=false;modalType=null;confirmCallback=null;$('modal').hidden=true;$('game').inert=!started;pause();returnFocus?.focus?.();};if(force||!meta.motion){clearTimeout(modalCloseTimer);finish();return;}if(modalClosing)return;modalClosing=true;$('modal-card').animate([{opacity:1,transform:'translateY(0) scale(1)'},{opacity:0,transform:'translateY(30px) scale(.95)'}],{duration:320,easing:'ease-in',fill:'forwards'});modalCloseTimer=setTimeout(finish,330);}
+
 const forceClose=()=>closeModal(true);
 function confirmDialog(title,message,callback){openModal('confirm',title,message,`<div class="button-row"><button class="small-button" data-action="close">${L('CANCEL','取消')}</button><button class="small-button danger" data-action="confirm">${L('YES, CONTINUE','确认继续')}</button></div>`);confirmCallback=callback;}
 function showCashRisk(q,callback){openModal('risk-confirm',L('Your entire wallet is on the line.','这次押上的是全部现金。'),L('This is NOT an ordinary investment.','这不是普通投资规则。'),`<div class="confirm-risk">${L('You only put in ','你投入 ')}<strong>${money(q.stake,true)}</strong>${L(', but failure takes ALL of your ','，但失败会清空全部 ')}<strong>${money(run.cash,true)}</strong>${L(' cash, including the money you did not invest.',' 现金，包括没有投入的钱。')}</div><div class="danger-amount">${L('LOSE → $0','失败 → $0')}</div><p class="small-rule">${L('Bankruptcy removes every building and outfit. This run ends.','破产会清空所有建筑和服装，本局结束。')}</p><div class="button-row"><button class="small-button" data-action="close">${L('NO, GO BACK','返回')}</button><button class="small-button danger" data-action="confirm">${L('I ACCEPT THE RISK','确认承担全部风险')}</button></div>`);confirmCallback=callback;}
 function showChallengeResult(e){
  if(!e)return;if(run.ended){showGameOver();return;}e.seen=true;const savedEvent=run.challengeLog.find(x=>x.id===e.id);if(savedEvent)savedEvent.seen=true;save();musicMode();renderHud();renderDock();
- const r=focusRect();effects.tone(e.won?'win':'loss',e.won?4:0);if(e.won){effects.burst(r.left+r.width*.45,r.top+r.height*.6,5,'#c6afff');world.celebrate();platform.celebrate();checkMilestoneCelebration();}else world.fail();
+ const r=focusRect();effects.tone(e.won?'win':'loss',e.won?4:0);if(e.won){effects.burst(r.left+r.width*.45,r.top+r.height*.6,5,'#c6afff');world.celebrate();platform.celebrate();}else world.fail();
  platform.submit(run).catch(()=>{});
  openModal('challenge-result','','',`<div class="challenge-result ${e.won?'':'failed'}"><div class="success-symbol" style="${e.won?'':'background:#f9e4df;color:#b6746a;border-color:#e9c3b9'}">${icon(e.won?'rank':'timer')}</div><div class="modal-eyebrow">${safe(text(getChallenge(e.kind).name))}</div><h2 id="modal-title">${e.won?L('YOU BEAT THE CLOCK!','你赢下了对赌！'):L('TIME IS UP.','时间到。')}</h2><div class="large-delta">${signed(e.delta)}</div><p>${e.won?L('Bonus paid into your cash.','奖励已经计入现金余额。'):L('The agreed penalty has been deducted.','已扣除接受挑战时约定的惩罚金额。')}</p><p>${L('Cash now: ','当前现金：')}<strong>${money(run.cash,true)}</strong></p><button class="primary" data-action="close">${L('KEEP GOING','继续前进')}${icon('arrow')}</button></div>`,{custom:true});
 }
@@ -366,7 +370,7 @@ document.addEventListener('click',async e=>{
  if(a==='life-theme-picker'){onboarding?.handle('onboard-home');return;}if(onboarding?.handle(a,v))return;if(!started)return;
  if(a.startsWith('dev-')&&!CONFIG.allowDeveloperMode)return;
  if(adPlaying)return;if(busy&&!['music-toggle','sound-toggle'].includes(a))return;
- music.unlock();effects.unlock();
+ music.unlock();effects.unlock();effects.tone('tap');if(meta.motion){button.animate([{scale:1},{scale:.95},{scale:1}],{duration:220,easing:'ease-out'});const ripple=document.createElement('i');ripple.className='button-ripple';button.append(ripple);setTimeout(()=>ripple.remove(),600);}
  if(streetUI?.handle(a,v))return;
  if(await lifeUI.handle(a,v))return;
  switch(a){
@@ -495,7 +499,7 @@ platform.onAuth=()=>{try{const data=JSON.parse(platform.load(SAVE_KEY)||'null');
 if(CONFIG.allowDeveloperMode)window.upshift=Object.freeze({version:'3.1.0',snapshot:()=>JSON.parse(JSON.stringify({run,meta,dev,busy,music:music.status(),platform:{status:platform.status,storage:platform.storageMode}})),openDeveloper:showDeveloper});
 if(!run.ended)pendingChallenge=run.challengeLog.filter(e=>!e.seen&&e.reason!=='bankruptcy').slice().reverse();
 lifeUI=new LifeUI({run:()=>run,meta:()=>meta,modal:()=>modalType,busy:()=>busy,motion:()=>meta.motion,onDeath:showGameOver,started:()=>started,confirm:confirmDialog,visiting:()=>!!visit,save,refresh:()=>{refreshStyle();renderHud();pause();},renderDock,fit:fitDock,toast,world,platform,open:openModal,close:forceClose,next:nextOffer,invest:doInvest,buyOutfit,outfit:getOutfit,devEnabled:()=>!!CONFIG.allowDeveloperMode});
-designUI=installRedesign({run:()=>run,meta:()=>meta,world});streetUI=new StreetUI({run:()=>run,started:()=>started,modal:()=>modalType,busy:()=>busy,world,save,fit:fitDock,refresh:()=>{refreshStyle();renderHud();renderDock();},open:openModal,close:forceClose,confirm:confirmDialog,toast});preferences();refreshStyle();renderHud();renderDock();save();platform.ready();platform.context(run);pause();$('loading')?.remove();onboarding=new Onboarding({run:()=>run,meta:()=>meta,world,save,legacyOpen:()=>lifeUI.openLegacy(true),legacyBuy:id=>lifeUI.purchasePerk(id),legacySkin:id=>lifeUI.chooseSkin(id),close:forceClose,unlock:()=>{music.unlock();effects.unlock();},block:value=>{started=!value;pause();},enter:()=>{renderHud();renderDock();world.resize();pause();if(run.ended&&!lifeUI?.hasPendingDeath())showGameOver();}});onboarding.show();requestAnimationFrame(pulseClock);setInterval(renderMusicStatus,900);
+designUI=installRedesign({run:()=>run,meta:()=>meta,world});streetUI=new StreetUI({run:()=>run,started:()=>started,modal:()=>modalType,busy:()=>busy,world,save,fit:fitDock,refresh:()=>{refreshStyle();renderHud();renderDock();},open:openModal,close:forceClose,confirm:confirmDialog,toast});prosperityUI=new ProsperityUI({run:()=>run,started:()=>started,motion:()=>meta.motion,blocked:()=>busy||!!modalType||adPlaying||!!run.life.rest||!!run.life.travel,unlock:checkMilestoneCelebration,feedback:up=>{effects.tone(up?'rare':'loss',4);if(up){const r=$('game').getBoundingClientRect();effects.burst(r.width*.45,170,6,'#dbbb66');world.celebrate();}}});preferences();refreshStyle();renderHud();renderDock();save();platform.ready();platform.context(run);pause();$('loading')?.remove();onboarding=new Onboarding({run:()=>run,meta:()=>meta,world,save,legacyOpen:()=>lifeUI.openLegacy(true),legacyBuy:id=>lifeUI.purchasePerk(id),legacySkin:id=>lifeUI.chooseSkin(id),close:forceClose,unlock:()=>{music.unlock();effects.unlock();},block:value=>{started=!value;pause();},enter:()=>{renderHud();renderDock();world.resize();pause();if(run.ended&&!lifeUI?.hasPendingDeath())showGameOver();}});onboarding.show();requestAnimationFrame(pulseClock);setInterval(renderMusicStatus,900);
 if(platform.storageMode==='session')setTimeout(()=>toast(L('Preview mode: progress lasts for this session.','预览模式：进度仅保存在本次会话。')),1700);
 }
 main().catch(error=>{console.error(error);const loading=document.getElementById('loading');if(loading)loading.innerHTML='<div><strong>Last $100</strong><small>Loading was interrupted. Reload to try again.</small></div>';});
