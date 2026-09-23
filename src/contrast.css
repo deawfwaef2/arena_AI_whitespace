@@ -540,3 +540,26 @@ body[data-motion='off'] .unlock-continue{animation:none}
 #app #next-tier-chip{position:absolute}
 #app #wallet-bill{max-width:100%}
 
+
+/* ---------- 弹窗必须完全不透明，否则背景 3D 会透过来吃掉文字 ---------- */
+#app #modal-card{
+ background:linear-gradient(#fffdf4,#fbf7e8)!important;
+ backdrop-filter:none!important;
+}
+#app #modal-card .modal-head p{color:#46614e!important;font-size:15px!important}
+#app #modal-card .modal-eyebrow{color:#7a8a52!important}
+#app #modal-card .companion-note,
+#app #modal-card .life-note,
+#app #modal-card .bill-footnote{
+ color:#3f5a48!important;background:#eef2e4;border:1px solid #c6d3b4;
+ border-radius:10px;padding:11px 13px;
+}
+#app #modal-card .companion-profile .life-button{
+ background:#f6dfd8!important;color:#8a3226!important;border:2px solid #cf9e93!important;
+}
+#app #modal-card .companion-profile .life-button:disabled{background:#eceade!important;color:#7c8478!important;border-color:#c8cdbd!important}
+/* 关闭按钮更清楚 */
+#app #modal-card .modal-close{
+ background:#e6ecd8!important;color:#1f4030!important;border:2px solid #b7c7a4!important;
+ min-width:48px!important;min-height:48px!important;
+}
