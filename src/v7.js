@@ -4,6 +4,8 @@
 import {worth,lateTier,TIERS_LATE,billQuote} from './endgame-core.js';
 import {getCity,CLASSES} from './life-core.js';
 import {escape as safe} from './ui.js';
+import {liquid,liquidTier,tierLabel} from './v9-core.js';
+import {owns} from './life-core.js';
 
 const $=id=>document.getElementById(id);
 const fmt=(c,compact=true)=>{const d=c/100;if(compact&&Math.abs(d)>=1e6){const u=[[1e12,'万亿'],[1e8,'亿'],[1e4,'万']].find(([v])=>Math.abs(d)>=v);const n=d/u[0];return '$'+(n>=100?Math.round(n).toString():n.toFixed(2).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1'))+u[1];}return '$'+d.toLocaleString('en-US',{minimumFractionDigits:Math.abs(d)<1000&&d%1?2:0,maximumFractionDigits:Math.abs(d)<1000?2:0});};
@@ -95,6 +97,9 @@ export const MECHS=[
  {id:'vault',at:100000000,slot:'top',kind:'hover',g:'vault',name:'家族金库',desc:'live-vault',deco:true},
  {id:'crown',at:1000000000,slot:'top',kind:'toggle',g:'crown',name:'无形王冠',desc:'开：金钱牌上戴一顶王冠。装饰。',fx:'crown',deco:true}
 ];
+const ITEM_REQ={travel:'passport',radio:'radio',filter:'car',music:'music',atlas:'hex'};
+const EN_NAMES={rest:'Rest',settings:'Settings',bill:'Bills',talent:'Contacts',headphones:'Headphones',travel:'Travel',status:'Net worth',ledger:'Ledger',radio:'Radio',chain:'Gold chain',atlas:'Atlas',showdown:'Showdowns',neon:'Neon sign',advanced:'Elite deals',champagne:'Champagne',filter:'Car filter',music:'Music butler',driver:'Chauffeur',security:'Security',factions:'Factions',painting:'Paintings',cigar:'Cigar lounge',regions:'Private zones',medals:'Honours',yacht:'Yacht badge',jet:'Private jet',vault:'Family vault',crown:'Crown'};
+for(const m of MECHS){if(ITEM_REQ[m.id])m.item=ITEM_REQ[m.id];m.quiet=!!m.deco||m.kind==='hover';m.slot=m.quiet?'top':'bottom';}
 const GATES=[...new Set(MECHS.map(m=>m.at))].sort((a,b)=>a-b);
 
 /* ---------- seasons, weather, class-flavoured news ---------- */
@@ -168,7 +173,7 @@ export class V7{
  get s(){return this.c.run();}
  st(){const l=this.s.life;if(!l.v7||typeof l.v7!=='object')l.v7={};const v=l.v7;v.season=clamp(Math.floor(Number(v.season)||0),0,3);v.year=clamp(Math.floor(Number(v.year)||1),1,9999);if(!v.weather||!WEATHER[SEASONS[v.season].id].some(w=>w[0]===v.weather))v.weather=this.rollWeather(v.season);v.toggles=v.toggles&&typeof v.toggles==='object'?v.toggles:{};v.seen=Array.isArray(v.seen)?v.seen:[];v.delayed=Array.isArray(v.delayed)?v.delayed.filter(d=>d&&Number.isSafeInteger(d.stake)).slice(0,6):[];v.district=v.district&&DISTRICTS[this.s.life.city]?.some(d=>d[0]===v.district.name)?v.district:null;v.mg=v.mg&&typeof v.mg==='object'?v.mg:{};return v;}
  rollWeather(season){const list=WEATHER[SEASONS[season].id],tot=list.reduce((n,w)=>n+w[3],0);let r=Math.random()*tot;for(const w of list){r-=w[3];if(r<=0)return w[0];}return list[0][0];}
- rank(){return Math.min(5,lateTier(this.s));}
+ rank(){return Math.min(5,liquidTier(this.s));}
  isPhone(){return matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<700;}
  async lockLandscape(quiet){try{if(!document.fullscreenElement&&document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen({navigationUI:'hide'});}catch{}try{await screen.orientation?.lock?.('landscape');}catch{if(!quiet)this.c.toast('浏览器不允许自动旋转，请手动把手机横过来。');}this.layout();}
  layout(){const phone=this.isPhone()||(innerHeight<=500&&innerWidth>innerHeight);document.body.dataset.v7phone=phone?'yes':'no';const portrait=this.isPhone()&&innerHeight>innerWidth;$('v7-rotate').hidden=!portrait;this.fx.width=innerWidth;this.fx.height=innerHeight;}
@@ -176,14 +181,14 @@ export class V7{
  /* ---------- main refresh (called from renderHud) ---------- */
  refresh(){try{this.paint();}catch(e){console.error('v7',e);}}
  paint(){
-  const s=this.s;if(!s?.life)return;const v=this.st(),app=$('app'),game=$('game'),started=this.c.started(),w=worth(s),rank=this.rank();
+  const s=this.s;if(!s?.life)return;const v=this.st(),app=$('app'),game=$('game'),started=this.c.started(),w=liquid(s),rank=this.rank();
   app.dataset.v7='on';app.dataset.v7rank=rank;game.dataset.v7rank=rank;game.dataset.season=SEASONS[v.season].id;game.dataset.weather=v.weather;
-  for(const m of MECHS)if(m.fx)app.dataset['fx'+m.fx[0].toUpperCase()+m.fx.slice(1)]=this.unlocked(m)&&v.toggles[m.id]!==false?'on':'off';
+  for(const m of MECHS)if(m.fx)app.dataset['fx'+m.fx[0].toUpperCase()+m.fx.slice(1)]=this.unlocked(m)&&(m.deco||v.toggles[m.id]!==false)?'on':'off';
   $('v7-hud').hidden=!started;$('v7-hud').dataset.rest=s.life.rest?'yes':'no';
   // money
   $('v7-money-value').textContent=fmt(s.cash);$('v7-money-value').dataset.len=Math.min(12,fmt(s.cash).length);$('v7-money-value').title=fmt(s.cash,false);
   $('v7-money-label').textContent=['口袋里的钱','工资卡余额','可用资金','流动资产','私人账户','家族资本'][rank];
-  const q=s.life.rest?.bill||billQuote(s);$('v7-money-sub').innerHTML=`<span>${TIERS_LATE[lateTier(s)].name}</span><span>身家 ${fmt(w)}</span>`;
+  const q=s.life.rest?.bill||billQuote(s);const EN=document.getElementById('app').dataset.v9lang==='en';const due=q.total,ok=s.cash>due;$('v7-money-sub').innerHTML=`<span class="v9-tiername">${tierLabel(s,EN?'en':'zh')}</span>${rank>=1?`<span class="v9-upkeep ${ok?'ok':'bad'}" title="${EN?'Class upkeep due at next rest':'下次休息的阶级维护费'}">${EN?'Upkeep':'维护费'} ${fmt(due)} ${ok?'✓':'✗'}</span>`:''}${rank>=2?`<span>${EN?'Net worth':'身家'} ${fmt(worth(s))}</span>`:''}`;
   // clock
   const se=SEASONS[v.season],we=WEATHER[se.id].find(x=>x[0]===v.weather)||WEATHER[se.id][0];
   const temp=Math.round(se.t[0]+(se.t[1]-se.t[0])*((v.weather.length*7+v.year*3+v.season)%10)/10)-(['rain','storm','snow','blizzard','fog'].includes(v.weather)?3:0);
@@ -202,16 +207,18 @@ export class V7{
   // seen-state for reclaim animation
   this.lastWorth=w;
  }
- unlocked(m){return worth(this.s)>=m.at*100;}
- iconMarkup(m,state){const v=this.st();const on=m.kind==='toggle'?(v.toggles[m.id]!==false?'on':'off'):'';return `<button class="v7-mech k-${m.kind} ${state}" data-mech="${m.id}" data-kind="${m.kind}" ${m.kind==='click'?`data-action="${m.action}"`:m.kind==='toggle'?`data-action="v7-toggle" data-value="${m.id}"`:'tabindex="0"'} data-on="${on}" aria-label="${safe(m.name)}"><span class="v7-mech-face">${glyph(m.g)}</span><span class="v7-mech-name">${safe(m.name)}</span>${m.kind==='toggle'?'<i class="v7-switch"></i>':m.kind==='hover'?'<i class="v7-eye">i</i>':''}</button>`;}
+ unlocked(m){return liquid(this.s)>=m.at*100;}
+ needsBuy(m){return m.item&&!owns(this.s,m.item);}
+ iconMarkup(m,state){const v=this.st();const en=$('app').dataset.v9lang==='en',nm=en?EN_NAMES[m.id]||m.name:m.name;const sealed=this.needsBuy(m);const kind=m.deco?'hover':m.kind;const on=kind==='toggle'?(v.toggles[m.id]!==false?'on':'off'):'';return `<button class="v7-mech k-${kind} ${state} ${sealed?'v9-sealed':''} ${m.quiet?'v9-quiet':''}" data-mech="${m.id}" data-kind="${kind}" ${sealed?'data-action="v9-sealed" data-value="'+m.id+'"':kind==='click'?`data-action="${m.action}"`:kind==='toggle'?`data-action="v7-toggle" data-value="${m.id}"`:'tabindex="0"'} data-on="${on}" aria-label="${safe(nm)}"><span class="v7-mech-face">${glyph(m.g)}</span><span class="v7-mech-name">${safe(nm)}</span>${sealed?`<i class="v9-seal"><em>${en?'SEALED':'封'}</em></i>`:''}${kind==='toggle'&&!sealed?'<i class="v7-switch"></i>':''}</button>`;}
  paintBars(v,w){
   for(const slot of ['top','bottom']){const bar=$('v7-'+slot);const list=MECHS.filter(m=>m.slot===slot);
    v.owned=Array.isArray(v.owned)?v.owned:[];for(const m of list)if(w>=m.at*100&&m.kind==='click'&&!v.owned.includes(m.id))v.owned.push(m.id);
-   const want=list.filter(m=>w>=m.at*100||(m.kind==='click'&&v.owned.includes(m.id))).map(m=>m.id);
+   const want=list.filter(m=>w>=m.at*100||(m.at<=0)).map(m=>m.id);
    // remove icons that fell below their gate: play the "reclaimed" animation first
    for(const el of [...bar.children]){if(!want.includes(el.dataset.mech)&&!el.classList.contains('reclaim')){el.classList.add('reclaim');el.disabled=true;setTimeout(()=>el.remove(),this.c.motion()?900:0);if(this.c.started())this.flash(`「${MECHS.find(m=>m.id===el.dataset.mech)?.name}」被收回了`,'down');}}
    for(const id of want){const m=MECHS.find(x=>x.id===id);let el=bar.querySelector(`[data-mech="${id}"]:not(.reclaim)`);
     if(!el){const tmp=document.createElement('div');tmp.innerHTML=this.iconMarkup(m,v.seen.includes(id)||!this.c.started()?'':'fresh');el=tmp.firstElementChild;const after=[...bar.children].find(x=>MECHS.findIndex(q=>q.id===x.dataset.mech)>MECHS.indexOf(m));bar.insertBefore(el,after||null);if(!v.seen.includes(id)){v.seen.push(id);if(this.c.started()&&m.at>0)this.flyIn(el,m);}}
+    if(el.classList.contains('v9-sealed')!==!!this.needsBuy(m)||el.dataset.lang!==$('app').dataset.v9lang){const tmp=document.createElement('div');tmp.innerHTML=this.iconMarkup(m,'');const n=tmp.firstElementChild;n.dataset.lang=$('app').dataset.v9lang;el.replaceWith(n);el=n;}
     if(m.kind==='toggle')el.dataset.on=v.toggles[id]!==false?'on':'off';
     if(id==='rest')el.classList.toggle('alert',this.s.life.energy<=20&&!this.s.life.rest);
    }
@@ -234,13 +241,13 @@ export class V7{
  flash(text,dir){const b=document.createElement('div');b.className='v7-flash '+dir;b.textContent=(dir==='up'?'✦ ':'↓ ')+text;$('v7-windows').append(b);setTimeout(()=>b.remove(),2600);}
 
  /* ---------- hover tooltips for all mechanism icons ---------- */
- bindTips(){const tip=$('v7-tip');const show=el=>{const m=MECHS.find(x=>x.id===el.dataset.mech);if(!m)return;let d=m.desc;if(d==='live-bill'){const q=this.s.life.rest?.bill||billQuote(this.s);d=`下次休息要付 ${fmt(q.total)}（阶级生活费 + 服务费）。现金不够就结束本局。`;}if(d==='live-vault')d=`金库里躺着 ${fmt(worth(this.s))}。它们不会说话，但很安静地证明你来过。`;const v=this.st();tip.innerHTML=`<b>${safe(m.name)}</b><span class="v7-tip-kind">${m.kind==='toggle'?`开关 · 当前${v.toggles[m.id]?'开启':'关闭'}`:m.kind==='hover'?'被动效果 · 仅查看':'点击打开'}${m.deco?' · 装饰':''}</span><p>${safe(d)}</p><small>解锁门槛 ${fmt(m.at*100)} · 身家跌破会被收回</small>`;tip.hidden=false;const r=el.getBoundingClientRect(),tw=tip.offsetWidth,th=tip.offsetHeight;tip.style.left=clamp(r.left+r.width/2-tw/2,8,innerWidth-tw-8)+'px';tip.style.top=(r.top>innerHeight/2?r.top-th-10:r.bottom+10)+'px';};
+ bindTips(){const tip=$('v7-tip');const show=el=>{const m=MECHS.find(x=>x.id===el.dataset.mech);if(!m)return;let d=m.desc;const en=$('app').dataset.v9lang==='en';if(this.needsBuy(m)){tip.innerHTML=`<b>${safe(en?EN_NAMES[m.id]:m.name)}</b><span class="v7-tip-kind">${en?'Sealed':'已封条'}</span><p>${en?'You must buy this at a roadside shop before it works.':'必须先在路边商店购买，才能启用这个功能。'}</p>`;tip.hidden=false;const r=el.getBoundingClientRect();tip.style.left=clamp(r.left+r.width/2-tip.offsetWidth/2,8,innerWidth-tip.offsetWidth-8)+'px';tip.style.top=(r.top>innerHeight/2?r.top-tip.offsetHeight-10:r.bottom+10)+'px';return;}if(d==='live-bill'){const q=this.s.life.rest?.bill||billQuote(this.s);d=`下次休息要付 ${fmt(q.total)}（阶级生活费 + 服务费）。现金不够就结束本局。`;}if(d==='live-vault')d=`金库里躺着 ${fmt(worth(this.s))}。它们不会说话，但很安静地证明你来过。`;const v=this.st();tip.innerHTML=`<b>${safe(m.name)}</b><span class="v7-tip-kind">${m.kind==='toggle'?`开关 · 当前${v.toggles[m.id]?'开启':'关闭'}`:m.kind==='hover'?'被动效果 · 仅查看':'点击打开'}${m.deco?' · 装饰':''}</span><p>${safe(d)}</p><small>解锁门槛 ${fmt(m.at*100)} · 身家跌破会被收回</small>`;tip.hidden=false;const r=el.getBoundingClientRect(),tw=tip.offsetWidth,th=tip.offsetHeight;tip.style.left=clamp(r.left+r.width/2-tw/2,8,innerWidth-tw-8)+'px';tip.style.top=(r.top>innerHeight/2?r.top-th-10:r.bottom+10)+'px';};
   document.addEventListener('pointerover',e=>{const el=e.target.closest?.('.v7-mech');if(el)show(el);});document.addEventListener('pointerout',e=>{if(e.target.closest?.('.v7-mech'))tip.hidden=true;});document.addEventListener('focusin',e=>{const el=e.target.closest?.('.v7-mech');if(el)show(el);});document.addEventListener('focusout',()=>{tip.hidden=true;});
   document.addEventListener('click',e=>{const el=e.target.closest?.('.v7-mech.k-hover');if(el){show(el);setTimeout(()=>{tip.hidden=true;},2600);}});}
 
  /* ---------- draggable windows (dock windows, modals, delayed contracts, games) ---------- */
  bindDrag(){
-  document.addEventListener('pointerdown',e=>{const h=e.target.closest?.('.v7-handle');if(!h||e.target.closest('button,input,select'))return;const win=h.closest('.v7-draggable');if(!win)return;const r=win.getBoundingClientRect();this.drag={win,id:e.pointerId,dx:e.clientX-r.left,dy:e.clientY-r.top};win.classList.add('dragging');h.setPointerCapture?.(e.pointerId);e.preventDefault();e.stopPropagation();},true);
+  document.addEventListener('pointerdown',e=>{const h=e.target.closest?.('.v7-handle');if(!h||e.target.closest('button,input,select'))return;const win=h.closest('.v7-draggable');if(!win)return;const r=win.getBoundingClientRect();this.drag={win,id:e.pointerId,dx:e.clientX-r.left,dy:e.clientY-r.top};win.classList.add('dragging');try{h.setPointerCapture(e.pointerId)}catch{};e.preventDefault();e.stopPropagation();},true);
   document.addEventListener('pointermove',e=>{const d=this.drag;if(!d||e.pointerId!==d.id)return;const w=d.win,host=w.offsetParent?.getBoundingClientRect()||{left:0,top:0};const x=clamp(e.clientX-d.dx,4-w.offsetWidth+80,innerWidth-80),y=clamp(e.clientY-d.dy,4,innerHeight-50);for(const [k,val] of [['left',x-host.left+'px'],['top',y-host.top+'px'],['right','auto'],['bottom','auto'],['translate','none'],['transform','none'],['margin','0']])w.style.setProperty(k,val,'important');w.dataset.moved='1';});
   const end=e=>{if(this.drag&&e.pointerId===this.drag.id){this.drag.win.classList.remove('dragging');this.drag=null;}};document.addEventListener('pointerup',end);document.addEventListener('pointercancel',end);
  }
@@ -263,7 +270,7 @@ export class V7{
   if(o.type!=='project'||o.settled||o.pendingStake||!d.querySelector('.stake-area')||d.querySelector('.v8-deal'))return;
   const delay=this.delayOf(o),q=sel=>d.querySelector(sel),rk=this.rank();
   const header=q('.dock-header'),h1=q('h1'),terms=q('.project-terms'),banner=q('.rarity-banner'),odds=q('.odds-grid'),risk=q('.risk-strip'),stake=q('.stake-area'),actions=q('.action-row'),pass=actions?.querySelector('.pass-button'),rules=header?.querySelector('.rules-button');
-  const w=worth(s),next=GATES.find(g=>g*100>w),prev=[...GATES].reverse().find(g=>g*100<=w)||0;
+  const w=liquid(s),next=GATES.find(g=>g*100>w),prev=[...GATES].reverse().find(g=>g*100<=w)||0;
   const stars=banner?.querySelector('.rb-star')?.textContent||'★',cat=o.category||'',twist=o.v8twist;
   const kind=delay?`<span class="v8-chip v8-k-delay">${glyph('hourglass')}${delay==='long'?'长期延时 · 2 次休息后兑现':'短期延时 · 下次休息后兑现'}</span>`:`<span class="v8-chip v8-k-now">${glyph('bolt')}即时揭晓</span>`;
   const wrap=document.createElement('div');wrap.className='v8-deal';wrap.dataset.rank=rk;
@@ -340,9 +347,9 @@ export class V7{
   if(this.prevRest===true&&!resting&&!s.ended)this.onRestEnd(v);
   this.prevRest=resting;
   this.beatFrame();this.paintContracts();this.maybeCrossroads();if(resting)this.ensureGames();else if($('v7-games'))this.closeGames();
-  if(now-(this.lastRail||0)>400){this.lastRail=now;this.paintRail(worth(s));this.measure();this.goals();}
+  if(now-(this.lastRail||0)>400){this.lastRail=now;this.paintRail(liquid(s));this.measure();this.goals();}
  }
- goals(){const s=this.s,v=this.st(),key=(s.life.restCount||0)+'';if(!this.c.started()||s.ended)return;
+ goals(){const s=this.s,v=this.st(),key=(s.life.restCount||0)+'';const ge=$('v8-goals');if(ge)ge.hidden=this.rank()<1;if(!this.c.started()||s.ended||this.rank()<1)return;
   if(!v.goals||v.goals.key!==key){const w=worth(s),rk=this.rank(),r=(n)=>((s.life.restCount||0)*7+n)%3;const list=[];
    list.push({t:'wins',n:[2,3,4][r(1)]+Math.min(2,rk>>1),base:s.wins||0,label:n=>`本季赢 ${n} 个项目`});
    list.push({t:'streak',n:[2,3,3][r(2)],label:n=>`打出 ${n} 连胜`});
@@ -393,7 +400,8 @@ export class V7{
   if(a==='v7-game'){this.startGame();return true;}
   if(a==='v7-game-quit'){if(this.mg)this.endGame(true);else $('v7-game-win')?.remove();return true;}
   if(a==='v7-skip-rest'){this.skipRest();return true;}
-  if(a==='v7-toggle'){const st=this.st();st.toggles[v]=st.toggles[v]===false;this.c.save();this.paint();const m=MECHS.find(x=>x.id===v);this.flash(`${m.name}：${st.toggles[v]!==false?'开启':'关闭'}`,'up');return true;}
+  if(a==='v9-sealed'){const en=$('app').dataset.v9lang==='en';this.c.toast(en?'Sealed: buy it at a roadside shop first.':'已封条：必须先在路边商店购买才能启用。');return true;}
+  if(a==='v7-toggle'){if(MECHS.find(x=>x.id===v)?.deco)return true;const st=this.st();st.toggles[v]=st.toggles[v]===false;this.c.save();this.paint();const m=MECHS.find(x=>x.id===v);this.flash(`${m.name}：${st.toggles[v]!==false?'开启':'关闭'}`,'up');return true;}
   return false;
  }
  onNewOffer(){}

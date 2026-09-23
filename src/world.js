@@ -280,7 +280,7 @@ export class World{
   const up=new T.Vector3(0,1,0).applyQuaternion(c.quaternion),right=new T.Vector3(1,0,0).applyQuaternion(c.quaternion);c.position.addScaledVector(up,-(cy-foot)/h*f);c.position.addScaledVector(right,(cx-dx)/w*(f*w/h));c.updateMatrixWorld(true);
  }
  setStreetCast(people,crew,market){
-  if(this.fallback)return;const key=JSON.stringify([people.map(p=>p.id),crew.map(p=>p.id),market]);if(this.streetCastKey===key)return;this.streetCastKey=key;
+  if(this.fallback)return;const key=JSON.stringify([people.length,crew.map(p=>p.id),market]);if(this.streetCastKey===key&&this.streetActors)return;this.streetCastKey=key;
   if(this.streetCast)disposeGroup(this.streetCast);this.streetCast=new T.Group();this.scene.add(this.streetCast);this.streetActors=[];
   const positions=[[-5.7,1.7],[3.9,2.0],[-3.4,-.7],[5.2,-1.2],[2.3,4.1],[-6.2,4.4]];
   people.forEach((n,i)=>{const a=person({color:n.color,scale:1.02+(i%2)*.05,hat:i%3===0});a.root.position.set(positions[i][0],.05,positions[i][1]);this.streetCast.add(a.root);this.streetActors.push({a,id:'npc-'+i,base:positions[i],i,kind:'npc'});});
@@ -289,7 +289,7 @@ export class World{
   if(market){const booth=new T.Group();booth.position.set(-5.2,0,-.65);box(booth,1.35,.75,.75,0x729b80,0,.4,0);box(booth,1.65,.12,1.0,0xe7ce92,0,1.55,0);for(const x of [-.65,.65])box(booth,.05,1.5,.05,0x887d59,x,.78,0);label(booth,'TALENT',1.05,.28,0,1.30,.45,'#305747','#fff2c9');this.streetCast.add(booth);this.streetMarket=booth;}else this.streetMarket=null;
  }
  updateStreetCast(t,dt){
-  if(!this.streetCast)return;this.streetCast.visible=!this.titleMode&&!this.restStage&&!this.travelTime;this.streetCast.rotation.y=this.blockAngle||0;
+  if(!this.streetCast)return;this.streetCast.visible=!this.titleMode&&!this.restStage;this.streetCast.rotation.y=this.blockAngle||0;
   const localHero=this.actor.root.position.clone().applyAxisAngle(new T.Vector3(0,1,0),-(this.blockAngle||0));
   for(const p of this.streetActors){const a=p.a;if(p.kind==='npc'&&this.motion){const walking=t%12<4,step=Math.floor(t/12)*4+Math.min(t%12,4),phase=step*.25+p.i*1.9;let nx=p.base[0]+Math.sin(phase)*.95;const bz=p.base[1];
    // keep walkers out of the hero / manager / crew footprint so bodies never overlap
@@ -324,7 +324,7 @@ export class World{
   const sky=document.querySelector('.sky-backdrop');if(sky)sky.style.background=`linear-gradient(180deg,${city.sky} 0%,${id==='vegas'?'#ba9cbf':'#e4e9d5'} 60%,#d5d9bf 100%)`;
  }
  setDaylight(energy,cap=200){
-  if(this.fallback)return;this.dayRatio=Math.max(0,Math.min(1,energy/cap));const r=this.dayRatio,day=new T.Color(CITY_DATA.find(c=>c.id===this.city)?.sky||'#c5dccc'),dusk=new T.Color('#ba888b'),night=new T.Color('#15233e');let sky=day.clone();if(r<.45&&r>.2)sky.lerp(dusk,(.45-r)/.25);else if(r<=.2)sky=dusk.clone().lerp(night,(.2-r)/.2);this.scene.background.copy(sky);this.scene.fog.color.copy(sky);this.sun.intensity=.6+2.6*Math.min(1,r*2.3);this.sun.color.set(r<.42?'#f2ba83':'#fff1d0');const hemi=this.scene.children.find(o=>o.isHemisphereLight);if(hemi){hemi.intensity=.6+1.4*Math.min(1,r*2);hemi.color.set(r<.2?'#a5b9ff':'#e3f3ff');}this.renderer.toneMappingExposure=r<.2?1.14:1.08;
+  if(this.fallback)return;this.dayRatio=Math.max(0,Math.min(1,energy/cap));const r=this.dayRatio,day=new T.Color(CITY_DATA.find(c=>c.id===this.city)?.sky||'#c5dccc'),dusk=new T.Color('#ba888b'),night=new T.Color('#15233e');let sky=day.clone();if(r<.45&&r>.2)sky.lerp(dusk,(.45-r)/.25);else if(r<=.2)sky=dusk.clone().lerp(night,(.2-r)/.2);this.scene.background.copy(sky);this.scene.fog.color.copy(sky);this.sun.intensity=.6+2.6*Math.min(1,r*2.3);this.sun.color.set(r<.42?'#f2ba83':'#fff1d0');const hemi=this.scene.children.find(o=>o.isHemisphereLight);if(hemi){hemi.intensity=.6+1.4*Math.min(1,r*2);hemi.color.set(r<.2?'#a5b9ff':'#e3f3ff');}const b=this.beauty||0;this.renderer.toneMappingExposure=(r<.2?1.14:1.08)-.1+b*.05;this.sun.intensity*=.8+b*.07;if(hemi)hemi.intensity*=.8+b*.07;if(b<2&&r>.45){this.scene.background.lerp(new T.Color('#b9bcb6'),.45-b*.2);this.scene.fog.color.copy(this.scene.background);}
  }
  buildSurroundings(city){
   if(!this.scene)return;if(this.neighborhood)dispose(this.neighborhood);const g=new T.Group();this.scene.add(g);this.neighborhood=g;
@@ -356,12 +356,19 @@ export class World{
   return new Promise(resolve=>this.corner.resolve=resolve);
  }
  setLanguage(lang){this.lang=lang;}
+ setSkin(color){this.skinColor=color??null;if(this.actor&&color!=null)this.actor.clothes.color.set(color);}
+ setBeauty(rank){if(this.fallback||!this.renderer)return;this.beauty=rank;const r=Math.max(0,Math.min(5,rank));this.scene.fog.density=.026-r*.0035;if(this.ground)this.ground.material.color.lerp(new T.Color(r>=3?0x9fcf9a:0xaabca3),.5);if(this.dayRatio!=null)this.setDaylight(this.dayRatio*200,200);const sky=document.querySelector('.sky-backdrop');if(sky)sky.style.filter=`saturate(${.55+r*.18}) brightness(${.94+r*.03})`;}
  setOffer(offer){if(this.fallback)return;if(this.travelResolve){this.travelResolve();this.travelResolve=null;}if(this.plot)dispose(this.plot);if(this.incoming)dispose(this.incoming);this.incoming=null;this.plot=makePlot(offer,this.lang);this.plot.rotation.y=this.blockAngle||0;this.scene.add(this.plot);this.travelTime=null;this.drag=0;this.justTurned=false;this.actor.root.position.copy(this.streetPoint(-1.65,2.2));this.resize();}
  travel(offer,duration=850){if(this.fallback)return Promise.resolve();if(this.incoming)dispose(this.incoming);this.incoming=makePlot(offer,this.lang);this.incoming.rotation.y=this.blockAngle||0;this.justTurned=false;this.incoming.position.copy(this.streetPoint(16,0));this.scene.add(this.incoming);this.travelTime=0;this.travelStarted=performance.now();this.duration=this.motion?duration/this.speed:80;this.drag=0;return new Promise(r=>{this.travelResolve=r;});}
  setDrag(n){this.drag=n;}
  updateStyle(s){
   if(this.fallback)return;const o=getOutfit(s.equipped);if(this.heroIdentity)this.heroIdentity.visible=o.kind!=='royal'&&o.kind!=='gold';this.actor.clothes.color.set(o.color);this.actor.trousers.color.set(['suit','gold','cyber','royal'].includes(o.kind)?o.color:0xf0f4f0);this.actor.dress.children.slice().forEach(dispose);const d=this.actor.dress;
   const effects=(s.assets||[]).map(id=>getAsset(id)?.effect).filter(Boolean);const wealth=classIndex(s);if(wealth>=2)effects.push('silver');if(wealth>=3)effects.push('gold','petals');if(wealth>=4)effects.push('welcome4','diamond');if(wealth>=5)effects.push('welcome8','royal','cosmic');if(s.equipped==='plain'){this.actor.clothes.color.set([0x46796e,0x789887,0x577b71,0x365c55,0xdcd5bd,0xe9dcc0][wealth]);this.actor.trousers.color.set(wealth>=3?0x53645d:0x9fa79d);}this.effects=effects;
+  if(this.skinColor!=null&&s.equipped==='plain')this.actor.clothes.color.set(this.skinColor);
+  {const r=wealth,acc=d;if(r>=1){const strap=box(acc,.03,.05,.07,0x6d6f73,-.31,.86,.05);}if(r>=2){const tie=mesh(acc,new T.ConeGeometry(.04,.2,4),0x2f4f6f,0,1.13,.21);tie.rotation.z=Math.PI;}
+   if(r>=3){const chain=torus(acc,.17,.014,mat(0xe3bd57,{metalness:.9,roughness:.25}),0,1.3,.05);chain.rotation.x=Math.PI/2.3;const watch=box(acc,.06,.06,.08,mat(0xe3bd57,{metalness:.9,roughness:.2}),-.31,.86,.05);}
+   if(r>=4){const hat=cyl(acc,.2,.2,.16,0x1f2328,0,1.98,0,18);cyl(acc,.33,.33,.02,0x1f2328,0,1.9,0,24);cyl(acc,.205,.205,.035,0xc9a24a,0,1.92,0,18);}
+   if(r>=5){this.crown(acc,0,2.1,0,.32);const cape=box(acc,.5,.72,.03,0x7a1022,0,1.0,-.2);}}
   if(o.kind!=='plain'){
    for(const x of [-.287,.287]){const sleeve=cyl(d,.095,.083,.21,new T.Color(o.color),x,1.19,0,12);sleeve.rotation.z=x<0?-.15:.15;}
    if(['suit','gold','royal'].includes(o.kind)){

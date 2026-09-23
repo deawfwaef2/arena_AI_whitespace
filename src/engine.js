@@ -1,11 +1,13 @@
 import {createRegionalStory,REGIONAL_STORIES} from './regional-stories.js';
 import {hasCrew} from './street-core.js';
+import {draw,tune,workOffer,V9_TYPES,PROJECT_MIN,liquid} from './v9-core.js';
 import {worth,lateTier,ensureEstate,endLife,streetEvent} from './endgame-core.js';
 import {DISTRICTS,districtOffer,LOCAL_PROJECTS} from './city-content.js';
 import {initLife,markLife,goodsValue,decorateOffer,useEnergy,assertFree,stakeBounds,owns,ITEMS,eligible} from './life-core.js';
 import {RARITIES,PROJECTS,ASSETS,OUTFITS,TIERS,SPECIALS,CHALLENGES,getAsset,getOutfit,getSpecial,getChallenge,getAuctionLot} from './catalog.js';
 export const VERSION=2;
 export const MAX_CENTS=900000000000000;
+const LIMIT_MAX=900000000000000;
 export const DEFAULT_RATES={assetRate:.04,shopRate:.06,challengeRate:.08,specialRate:0};
 export const moneyInt=n=>Math.max(0,Math.min(MAX_CENTS,Math.floor(Number(n)||0)));
 export function random(){const x=new Uint32Array(1);globalThis.crypto.getRandomValues(x);return x[0]/4294967296;}
@@ -14,7 +16,7 @@ const range=(a,b,rng)=>a+rng()*(b-a);
 const choose=(items,rng)=>items[Math.min(items.length-1,Math.floor(rng()*items.length))];
 const uid=()=>globalThis.crypto.randomUUID?.()||Date.now().toString(36)+Math.random().toString(36).slice(2);
 export const payout=(stake,mult)=>moneyInt(Math.floor(stake*mult+1e-7));
-export function newRun(runNumber=1){const s={version:VERSION,id:uid(),runNumber,cash:10000,peak:10000,page:1,investments:0,wins:0,streak:0,assets:[],outfits:['plain'],equipped:'plain',ended:false,unranked:false,history:[],challengeLog:[],activeChallenge:null,playedMs:0,created:Date.now(),offer:{id:uid(),type:'project',project:'coffee',rarity:'common',grade:'street',minStake:1,maxStake:50000,city:'taipei',localName:'巷口手冲咖啡',p:75,up:1.8,down:0,settled:false},lastResult:null};initLife(s);const first=LOCAL_PROJECTS.taipei[0];Object.assign(s.offer,{down:0,project:first.project,localId:first.id,localName:first.name,localModel:first.model,culture:first.culture,category:first.category,p:first.p,up:first.up});return s;}
+export function newRun(runNumber=1){const s={version:VERSION,id:uid(),runNumber,cash:10000,peak:10000,page:1,investments:0,wins:0,streak:0,assets:[],outfits:['plain'],equipped:'plain',ended:false,unranked:false,history:[],challengeLog:[],activeChallenge:null,playedMs:0,created:Date.now(),offer:{id:uid(),type:'project',project:'coffee',rarity:'common',grade:'street',minStake:1,maxStake:50000,city:'taipei',localName:'巷口手冲咖啡',p:75,up:1.8,down:0,settled:false},lastResult:null};initLife(s);const first=LOCAL_PROJECTS.taipei[0];Object.assign(s.offer,{down:0,project:first.project,localId:first.id,localName:first.name,localModel:first.model,culture:first.culture,category:first.category,p:first.p,up:first.up});{const d=draw(s,random);s.offer=d.offer?.type==='v9-work'?d.offer:workOffer(s,random);};return s;}
 export function assetValue(s){return goodsValue(s)+(s.offer?.pendingStake||0)+s.assets.reduce((n,id)=>n+(getAsset(id)?.price||0)*100,0)+s.outfits.reduce((n,id)=>n+getOutfit(id).price*100,0);}
 export function netWorth(s){return worth(s);}
 export function tier(s){const worth=netWorth(s)/100;return TIERS.reduce((n,t,i)=>worth>=t.at?i:n,0);}
@@ -44,6 +46,14 @@ export function makeOffer(s,options={},rng=random){
  const forced=!!(options.project||options.rarity||options.asset||options.shop||options.special||options.challenge);
  let o;
  if(!forced&&s.life.district)return districtOffer(s,rng);
+ if(!forced){const d=draw(s,rng);if(d.offer)return d.offer;
+  if(d.hint==='event'){const c=[];if(worth(s)>=25000&&s.page-(s.life.lastMarketPage||0)>=3)c.push('market');if(s.life.energy>=8)c.push('story');if(lateTier(s)>=2)c.push('street');if(liquid(s)>=300000)c.push('gate');c.push('interlude');
+   for(const k of c.sort(()=>rng()-.5)){if(k==='market'){s.life.lastMarketPage=s.page;return {id:uid(),type:'talent-market',city:s.life.city,rarity:'rare',settled:false};}if(k==='story'){s.life.lastStoryPage=s.page;return createRegionalStory(s,lateTier(s),rng);}if(k==='street'){const e=streetEvent(s,rng);if(e)return e;}if(k==='gate'&&s.life.energy>25)return {id:uid(),type:'district-gate',city:s.life.city,district:s.life.city,rarity:'epic',settled:false};if(k==='interlude')return {id:uid(),type:'interlude',city:s.life.city,scene:['bridge','waterfront','park','alley'][Math.floor(rng()*4)],rarity:'common',settled:false};}}
+  o=decorateOffer(s,makeBaseOffer(s,options,rng),rng,false);
+  if(o.type==='project'){if(d.elite&&worth(s)>=100000){o.grade=worth(s)>=100000000?'elite':'advanced';o.rarity=o.grade==='elite'?'legendary':'epic';o.up=Math.round((o.up+(o.grade==='elite'?1.1:.6))*100)/100;o.minStake=o.grade==='elite'?Math.max(o.minStake,10000000):Math.max(o.minStake,1000000);o.maxStake=LIMIT_MAX;}
+   if(o.grade==='street'){o.minStake=Math.max(o.minStake||1,PROJECT_MIN);o.maxStake=Math.max(o.maxStake||0,5000000);}else o.minStake=Math.max(o.minStake||1,PROJECT_MIN);
+   tune(s,o);}
+  return o;}
  if(!forced&&!s.activeChallenge&&worth(s)>=25000&&s.page>2&&s.page-(s.life.lastMarketPage||0)>=3&&(rng()<.13||s.page-(s.life.lastMarketPage||s.life.marketEligibleAt||s.page)>12)){s.life.lastMarketPage=s.page;return {id:uid(),type:'talent-market',city:s.life.city,rarity:'rare',settled:false};}
  if(worth(s)>=25000)s.life.marketEligibleAt??=s.page;
  if(!forced&&!s.activeChallenge&&s.page>2&&s.life.energy>=8&&s.page-(s.life.lastStoryPage||0)>=3&&rng()<.12){s.life.lastStoryPage=s.page;return createRegionalStory(s,lateTier(s),rng);}
@@ -137,6 +147,7 @@ export function validateRun(input,{imported=false}={}){
  else if(o.type==='regional-story'){if(!REGIONAL_STORIES[o.city]||o.city!==s.life.city||!Number.isInteger(o.story?.band)||o.story.band<0||o.story.band>2||!Number.isFinite(o.story.roll)||o.story.roll<0||o.story.roll>=1)throw Error('Invalid regional story');}
  else if(o.type==='talent-market'){if(o.city!==s.life.city)throw Error('Invalid talent market');}
  else if(o.type==='clinic'){}
+ else if(V9_TYPES.includes(o.type)){}
  else throw Error('Invalid offer');o.settled=!!o.settled;
  if(s.activeChallenge){const a=s.activeChallenge;if(!CHALLENGES.some(c=>c.id===a.kind)||!['wealth','streak'].includes(a.metric))throw Error('Invalid active challenge');for(const k of ['durationMs','remainingMs','target','reward','penalty','minStake','progress'])if(!Number.isFinite(a[k])||a[k]<0||a[k]>MAX_CENTS)throw Error('Invalid active challenge');if(a.remainingMs>a.durationMs||a.durationMs>600000)throw Error('Invalid timer');}
  if(s.lastResult&&(!Number.isFinite(s.lastResult.profit)||!Number.isFinite(s.lastResult.returned)))s.lastResult=null;

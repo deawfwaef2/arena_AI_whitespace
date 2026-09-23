@@ -117,7 +117,7 @@ export function beginRest(s,rng=Math.random){
  const estimate=billQuote(s),index=estimate.class,c=CLASSES[index],city=getCity(s);
  const maintenance=estimate.maintenance,tax=estimate.tax;
  s.life.rest={id:Date.now(),class:index,city:city.id,remaining:600000,duration:600000,paid:false,maintenance,tax,startedAt:0,lastTick:0,activityVersion:2,pose:null,camera:0,activities:c.acts.map(([name,price,seconds,pose,instant],i)=>({id:i,name,price:Math.round(price*100*(.85+rng()*.3)*city.fee),seconds,pose,instant:!!instant,used:false})),ads:0,aid:false,total:0};
- s.life.district=null;s.life.energy=0;s.life.restCount++;s.page++;const n=NEWS[Math.floor(rng()*NEWS.length)];s.life.news={id:n.id,cycle:s.life.restCount};prepareRest(s,s.life.rest,rng);return s.life.rest;
+ s.life.district=null;s.life.v9fatigue=s.life.energy;s.life.energy=0;s.life.restCount++;s.page++;const n=NEWS[Math.floor(rng()*NEWS.length)];s.life.news={id:n.id,cycle:s.life.restCount};prepareRest(s,s.life.rest,rng);return s.life.rest;
 }
 export function payRest(s,aid=false){return settleBill(s);}
 export function tickRest(s,now=Date.now()){
