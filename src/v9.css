@@ -229,7 +229,7 @@
 .v9-upkeep.bad{background:#e8452c22;color:#c0392b;animation:v9pulse 1.4s infinite}
 
 /* ---------- poverty stage: keep it simple ---------- */
-#app[data-v9poor='yes'] #v8-goals,#app[data-v9poor='yes'] .street-bubble,#app[data-v9poor='yes'] .npc-bubble,#app[data-v9poor='yes'] .v7-deal-extra,#app[data-v9poor='yes'] .deal-meta-extra{display:none!important}
+#app[data-v9poor='yes'] .passer-label,#app[data-v9poor='yes'] .street-quip,#app[data-v9poor='yes'] #v8-goals,#app[data-v9poor='yes'] .street-bubble,#app[data-v9poor='yes'] .npc-bubble,#app[data-v9poor='yes'] .v7-deal-extra,#app[data-v9poor='yes'] .deal-meta-extra{display:none!important}
 
 /* ---------- richer shapes when wealthy (dock & chips) ---------- */
 #app[data-v9tier='0'] #game-dock{border-radius:6px}

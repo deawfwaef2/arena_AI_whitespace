@@ -168,3 +168,22 @@ Playwright 需要 `npx playwright install --with-deps chromium`（沙箱重建�
 26. ⬜ 开局动画同时是**快速教程**。
 27. ⬜ **被收回（降级回收）要弹窗，必须点击确认**；更强的反馈系统。
 28. ⬜ **装饰机制不允许关闭**；**无用的被动机制放一起、做得更隐身**（不让画面复杂），**很有用的放一起**。
+
+## Round 6 progress log (appended)
+- [x] v9 phase 1 (commit 7b9caf4): `src/v9-core.js` (pure rules) + `src/v9.js` (UI) + `src/v9.css`; wired in app.js (renderDock → v9.interceptDock first, dispatcher → v9.handle, pulseClock → v9.tick, refresh → v9.refresh).
+  - Work-first: below $3,000 liquid only tap-work cards (v9-work); projects need liquid ≥ $3,000 and stake ≥ $2,000.
+  - Card deck strip top-centre under the status bar; empty deck → v9-fork card (work / market / elite / hospital / casino / pawn).
+  - Tiered frames (#v9-frame[data-rank] 0–5) with big class identity props (assets/art/ic/*.webp, embedded as ART('ic-name')).
+  - Seals on mechanisms whose item isn't bought yet (v7.js ITEM_REQ); decorative mechs can't be toggled and sit in a compact quiet strip.
+  - Reclaim popup must be clicked (v9-reclaim is DELIBERATE_ONLY); rank now follows LIQUID money (cash + stakes).
+  - Fatigue < 100 energy: screen vignette + chip + one-time big popup; rest-time extra heart-loss chance = 100 − energy %.
+  - Hearts are now 3 (4 with constitution); qa/core.test.mjs updated to match.
+  - LV: luxuries (once per run, vitrine window), estates, partner bonds, peak bonus → record.lv, meta.v9best, skins.
+  - Main story popup per class (t0 origin perk choice), partners (fee → later interrupting deals), special places.
+  - Upkeep + affordability shown under the money (v7-money-sub).
+- [x] NPCs no longer vanish while travelling (world.js streetCast visible during travel; cast key no longer resets on every step).
+- [x] Poor stage hides season goals, NPC labels and quips.
+- [x] Language no longer reverts on platform onAuth (keeps intro/session choice).
+- [x] Root phone launcher: PLAY-ON-PHONE.bat / play-on-phone.command / play-on-phone.py (prints LAN URL, same Wi-Fi).
+- [x] World gets brighter/saturated with wealth (world.setBeauty), avatar accessories by wealth, world.setSkin for LV skins.
+- [ ] TODO next: intro as 3D-camera tutorial; English strings for v7 texts; grouping passives further; story-with-no-options audit; more investment kinds.
