@@ -52,7 +52,7 @@ export function billQuote(s,{restNumber=(s.life?.restCount||0)+1}={}){
  const maintenance=baseMaintenance+auctionUpkeep+outfitUpkeep;
  const rate=Math.min(.58,TIERS_LATE[tier].tax*region.tax),tax=Math.floor(n*rate),guards=guardSalary(s),management=tier>=5?Math.floor(n*.001*(tier-3)):0;
  const before=maintenance+tax+guards+management,credit=s.estate?.perks?.includes('reserve')&&restNumber===1?Math.min(3000,before):0;
- return {worth:n,cash:s.cash,tier,class:klass,maintenance,tax,guards,management,credit,rate,region:region.name,total:cents(before-credit),restNumber};
+ return {worth:n,cash:s.cash,tier,class:klass,maintenance,baseMaintenance,auctionUpkeep,outfitUpkeep,tax,guards,management,credit,rate,region:region.name,total:cents(before-credit),restNumber};
 }
 export function availableAuctionLot(s){
  const e=ensureEstate(s),tier=lateTier(s);

@@ -1,9 +1,9 @@
-import {ensureEstate,initLegacy,applyLegacy,collectLegacy,endLife,worth,lateTier,TIERS_LATE} from './endgame-core.js';
-import {playObituary,obituaryArt} from './obituary.js';
+import {ensureEstate,initLegacy,applyLegacy,collectLegacy,endLife,worth,lateTier,TIERS_LATE,availableAuctionLot,bidAuctionLot,passAuctionLot,healthRisk,medicalOptions,buyMedical} from './endgame-core.js';
+import {playObituary,obituaryArt,getSatiricalEpitaph} from './obituary.js';
 import {Onboarding} from './onboarding.js';
 import {LifeUI} from './capital-ui.js';
-import {initLife,stakeBounds,owns,tickRest} from './life-core.js';
-import {ASSETS,OUTFITS,PROJECTS,RARITIES,TIERS,EFFECTS,SPECIALS,CHALLENGES,getAsset,getOutfit,getProject,getRarity,getSpecial,getChallenge} from './catalog.js';
+import {initLife,stakeBounds,owns,tickRest,UNLOCK_MILESTONES,nextUnlock,checkNewUnlocks} from './life-core.js';
+import {ASSETS,OUTFITS,PROJECTS,RARITIES,TIERS,EFFECTS,SPECIALS,CHALLENGES,getAsset,getOutfit,getProject,getRarity,getSpecial,getChallenge,getAuctionLot,getNobleItem,AUCTION_LOTS,NOBLE_ITEMS} from './catalog.js';
 import {newRun,validateRun,invest,next,purchaseAsset,purchaseOutfit,netWorth,assetValue,tier,prestige,bankrupt,markPeak,moneyInt,MAX_CENTS,DEFAULT_RATES,createBots,makeOffer,payout,quote,requiredStake,acceptChallenge,advanceTime,checkChallenge} from './engine.js';
 import {Platform} from './platform.js';
 import {World} from './world.js';
@@ -18,8 +18,8 @@ const SAVE_KEY='upshift-save-v3';
 let lifeUI,onboarding;let started=false;
 $('app').innerHTML=shell;
 const platform=new Platform(CONFIG);await platform.init();
-const defaults={lang:'zh',sound:true,music:true,volume:.28,musicMode:'auto',motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,low:false,name:'',records:[],bots:[],runCount:1};
-function normalizeMeta(input={}){const m={...defaults,...input};m.lang=m.lang==='zh'?'zh':'en';m.name=String(m.name||'').slice(0,20);m.records=Array.isArray(m.records)?m.records.filter(x=>x&&Number.isFinite(x.peak)).slice(0,25):[];m.bots=Array.isArray(m.bots)?m.bots.filter(x=>x&&x.simulated&&Number.isFinite(x.peak)).slice(0,100):[];m.volume=Math.max(0,Math.min(1,Number(m.volume)||0));m.musicMode=['auto','city','rush'].includes(m.musicMode)?m.musicMode:'auto';initLegacy(m);return m;}
+const defaults={lang:'zh',theme:'minimalist',scale:1,sound:true,music:true,volume:.28,musicMode:'auto',motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,low:false,name:'',records:[],bots:[],runCount:1};
+function normalizeMeta(input={}){const m={...defaults,...input};m.lang=m.lang==='zh'?'zh':'en';m.name=String(m.name||'').slice(0,20);m.theme=['minimalist','imperial','cyber','swiss'].includes(m.theme)?m.theme:'minimalist';m.scale=Math.max(.75,Math.min(1.25,Number(m.scale)||1));m.records=Array.isArray(m.records)?m.records.filter(x=>x&&Number.isFinite(x.peak)).slice(0,25):[];m.bots=Array.isArray(m.bots)?m.bots.filter(x=>x&&x.simulated&&Number.isFinite(x.peak)).slice(0,100):[];m.volume=Math.max(0,Math.min(1,Number(m.volume)||0));m.musicMode=['auto','city','rush'].includes(m.musicMode)?m.musicMode:'auto';initLegacy(m);return m;}
 let stored;try{stored=JSON.parse(platform.load(SAVE_KEY)||platform.load('upshift-save-v2')||'null');}catch{}
 let meta=normalizeMeta(stored?.meta);if(!stored?.meta?.lang&&false&&platform.locale)meta.lang=String(platform.locale).startsWith('zh')?'zh':'en';
 let run;try{run=stored?.run?validateRun(stored.run):newRun();}catch{run=newRun();}
@@ -45,7 +45,7 @@ function save(){if(run.life){run.life.lastSeen=Date.now();tickRest(run);}record(
 function finishStyle(){const es=run.assets.map(id=>getAsset(id)?.effect);return ['sovereign','cosmic','diamond','royal','gold','prism','neon','silver','glass','bronze'].find(x=>es.includes(x))||'none';}
 function refreshStyle(){world.updateStyle(run);$('game').dataset.prestige=prestige(run);$('game').dataset.wealth=tier(run);$('game').dataset.finish=finishStyle();$('game').classList.toggle('ended',run.ended);}
 function musicMode(){const id=meta.musicMode==='auto'?(run.activeChallenge||run.offer.type==='special'?'rush':'city'):meta.musicMode;music.setMode(lifeUI?.musicId(id)||id);}
-function preferences(){effects.sound=meta.sound;effects.motion=meta.motion;effects.low=meta.low;effects.muted=platform.muted||document.hidden||adPlaying;world.motion=meta.motion;world.quality(meta.low);music.enabled=meta.music;music.setVolume(meta.volume);music.setMuted(platform.muted||adPlaying);music.setHidden(document.hidden);musicMode();document.body.dataset.motion=meta.motion?'on':'off';}
+function preferences(){effects.sound=meta.sound;effects.motion=meta.motion;effects.low=meta.low;effects.muted=platform.muted||document.hidden||adPlaying;world.motion=meta.motion;world.quality(meta.low);music.enabled=meta.music;music.setVolume(meta.volume);music.setMuted(platform.muted||adPlaying);music.setHidden(document.hidden);musicMode();document.body.dataset.motion=meta.motion?'on':'off';document.body.dataset.theme=meta.theme||'minimalist';document.documentElement.dataset.theme=meta.theme||'minimalist';document.documentElement.style.setProperty('--ui-scale',meta.scale||1);}
 function queueChallenge(event){if(event&&!pendingChallenge.some(x=>x.id===event.id)){pendingChallenge.push(event);save();renderHud();if(!busy)renderDock();}}
 function clock(){const now=performance.now(),elapsed=now-lastClock;lastClock=now;if(started&&!modalType&&!visit&&!document.hidden&&!adPlaying&&!run.ended&&!run.life?.rest&&!run.life?.travel){const event=advanceTime(run,elapsed);if(event)queueChallenge(event);}return now;}
 function pause(){lastClock=performance.now();world.paused=!started||!!modalType||adPlaying||run.ended||!!run.life?.rest||!!run.life?.travel;world.sceneSuspended=!!modalType||adPlaying||run.ended||!started;music.setDucked(!!modalType||!!visit||run.ended);platform.play(started&&!modalType&&!visit&&!run.ended&&!adPlaying&&!run.life?.rest&&!run.life?.travel);renderChallengeHud();}
@@ -75,7 +75,7 @@ function renderDock(){if(lifeUI?.interceptDock())return;renderDockBase();lifeUI?
 function renderDockBase(){
  if(visit){renderTour();return;}
  const o=run.offer,d=$('game-dock');d.dataset.kind=o.type;
- if(o.type==='asset'){renderAsset();return;}if(o.type==='shop'){renderShop();return;}if(o.type==='challenge'){renderChallengeOffer();return;}
+ if(o.type==='asset'){renderAsset();return;}if(o.type==='shop'){renderShop();return;}if(o.type==='challenge'){renderChallengeOffer();return;}if(o.type==='auction'){renderAuctionOffer();return;}if(o.type==='clinic'){renderClinicOffer();return;}
  const special=o.type==='special'?getSpecial(o.special):null,p=getProject(o.project),r=getRarity(o.rarity);
  if(special)stake=requiredStake(run);else{const limits=stakeBounds(run);stake=Math.max(1,Math.min(limits.max,Math.max(limits.min,stake)));}
  const result=run.lastResult,q=quote(run,stake),displayStake=o.settled&&result?result.stake:stake;
@@ -107,6 +107,77 @@ function updateStake(cents,from='code'){
 function renderAsset(){const a=getAsset(run.offer.asset),own=run.assets.includes(a.id),done=run.offer.settled;const d=$('game-dock');d.style.setProperty('--rarity',a.color);d.innerHTML=header(L('RARE ESTATE','稀有资产'),text(a.name),'estate')+`<div class="asset-tagline">${assetIcon(a)}<div><span class="price-label">${L('Reference price · USD','美元参考标价')}</span><strong>${price(a.price)}</strong></div></div><div class="asset-feature">${icon('sparkle')}<span>${safe(text(EFFECTS[a.effect]))}</span></div><p class="small-rule">${L('Cosmetic only. No income or odds boost.','仅装饰，不产钱、不改变胜率。')}</p>${own?`<div class="owned-message">${icon('check')}${L('This address is yours.','这处资产属于你了。')}</div>`:run.cash<a.price*100?`<p class="small-rule">${L('Need ','还差 ')}${money(a.price*100-run.cash,true)} ${L('more cash.','现金。')}</p>`:''}`+actions(done?L('NEXT STOP','下一站'):L('BUY ','购买 ')+price(a.price),done?'next':'buy-asset',{disabled:!done&&(own||run.cash<a.price*100),gold:true,solo:done});fitDock();}
 function renderShop(){const o=run.offer,items=o.items;selectedOutfit=Math.min(selectedOutfit,items.length-1);const selected=getOutfit(items[selectedOutfit]),owned=run.outfits.includes(selected.id);const d=$('game-dock');d.style.setProperty('--rarity','#d39fce');d.innerHTML=header(L('ROADSIDE POP-UP','路边限时商店'),L('Street / Style','街头换装站'),'bag')+`<p class="offer-sub">${L('Buy here, before you walk away. Looks only.','只在这一站出售。服装仅改变外观。')}</p><div class="shop-grid">${items.map((id,i)=>{const o=getOutfit(id),owned=run.outfits.includes(id);return `<button class="shop-item ${i===selectedOutfit?'selected':''}" data-action="shop-select" data-value="${i}" aria-pressed="${i===selectedOutfit}">${owned?'<span class="owned-check">✓</span>':''}${outfitIcon(o)}<span class="shop-name">${safe(text(o.name))}</span><strong>${owned?L('OWNED','已拥有'):price(o.price)}</strong></button>`;}).join('')}</div>`+actions(owned?L('WEAR THIS','穿上这件'):L('BUY ','购买 ')+price(selected.price),'buy-outfit',{disabled:!owned&&run.cash<selected.price*100});fitDock();}
 function renderChallengeOffer(){const o=run.offer,c=getChallenge(o.challenge);const d=$('game-dock');d.style.setProperty('--rarity',c.color);const active=!!run.activeChallenge;d.innerHTML=header(text(c.short),text(c.name),'timer')+`<div class="contract-grid"><div class="contract-cell"><span>${icon('timer')}${L('TIME LIMIT','限时')}</span><strong>${time(o.durationMs)}</strong></div><div class="contract-cell"><span>${icon('up')}${o.metric==='wealth'?L('NET WORTH TARGET','目标总身家'):L('WIN STREAK','连续成功')}</span><strong>${o.metric==='wealth'?money(o.target,true):L('3 WINS','3 连胜')}</strong></div><div class="contract-cell reward"><span>${L('SUCCESS BONUS','成功奖励')}</span><strong>+${money(o.reward,true)}</strong></div><div class="contract-cell penalty"><span>${L('FAILURE PENALTY','失败扣除')}</span><strong>−${money(o.penalty,true)}</strong></div></div>${o.metric==='wealth'&&o.target>=100000000?`<p class="small-rule">${L('Exact target: ','精确目标：')}${money(o.target)}</p>`:''}${o.metric==='streak'?`<p class="small-rule">${L('Each qualifying bet must be at least ','每次有效投入至少 ')}${money(o.minStake,true)}${L('. A loss breaks the streak.','，失败会打断连胜。')}</p>`:''}<p class="small-rule">${L('Active play time. Menus / background pause the clock. Penalties can bankrupt you.','仅计算游玩时间；菜单和后台暂停计时。扣款可能导致破产。')}</p>${active?`<div class="owned-message">${icon('timer')}${run.offer.settled?L('Challenge live. Keep moving!','挑战进行中，继续前进！'):L('Finish your active challenge first.','请先完成当前挑战。')}</div>`:''}`+actions(o.settled?L('KEEP MOVING','继续前进'):L('START CHALLENGE','接受挑战'),o.settled?'next':'accept-challenge',{purple:true,disabled:active&&!o.settled,solo:o.settled});fitDock();}
+function renderAuctionOffer(){
+ const o=run.offer,lot=getAuctionLot(o.auction);
+ const d=$('game-dock');d.style.setProperty('--rarity','#e5b034');
+ const affordable=run.cash>=lot.price*100;const done=o.settled;
+ d.innerHTML=header(L('SECRET AUCTION','地下秘密拍卖行'),lot.name,'sparkle')+`
+  <div class="auction-card-box">
+   <div class="auction-headline"><span class="auction-medal-badge">${lot.medal}</span><div><h3>${safe(lot.name)}</h3><p>${safe(lot.desc)}</p></div></div>
+   <div class="auction-metrics">
+    <div class="metric-cell"><span>起拍估价</span><strong>${money(lot.price*100,true)}</strong></div>
+    <div class="metric-cell gold"><span>转世点数</span><strong>+${lot.lv} LP</strong></div>
+    <div class="metric-cell danger"><span>休整维护费</span><strong>+${money(lot.upkeep*100,true)}</strong></div>
+   </div>
+   <p class="small-rule">${done?L('Won! Medal pinned to honors tray.','竞拍已斩获！专属勋章已陈列在荣誉栏。'):L('Exclusive lot per run. Winning awards permanent medals and lifetime LP. Pass means miss forever.','本局唯一绝版藏品。竞拍获胜将铸造永久荣誉勋章并奖励转世功德点；放弃则本局永远错过。')}</p>
+   ${!affordable&&!done?`<p class="small-rule danger">${L('Need ','还需 ')}${money(lot.price*100-run.cash,true)}${L(' more cash.',' 现金。')}</p>`:''}
+  </div>
+ `+`<div class="action-row"><button class="pass-button" data-action="pass-auction" ${busy||done?'disabled':''}>${L('PASS','放弃举牌')}</button><button class="primary gold" data-action="bid-auction" ${busy||done||!affordable?'disabled':''}>${done?L('WON','已成交'):L('BID ','举牌 ')+money(lot.price*100,true)}${icon('arrow')}</button></div>`;
+ fitDock();
+}
+function renderClinicOffer(){
+ const d=$('game-dock'),e=run.estate||ensureEstate(run);d.style.setProperty('--rarity','#e55353');const done=run.offer.settled;
+ d.innerHTML=header(L('ROYAL WELLNESS CLINIC','皇家抗衰理疗诊所'),'逆转机能 · 延寿疗法','sparkle')+`
+  <div class="clinic-box">
+   <div class="clinic-stats"><span>当前健康：${'♥'.repeat(e.health)}${'♡'.repeat(e.maxHealth-e.health)}</span><span>下期衰退风险：${healthRisk(run,true)}%</span></div>
+   <p class="small-rule">皇家特许私人诊所，为资本家提供细胞级逆龄修复与衰退阻断。</p>
+   <div class="clinic-options">${medicalOptions(run).map(o=>`<button class="small-button" data-action="clinic-buy" data-value="${o.id}" ${run.cash<o.cost||(o.id==='care'&&e.health>=e.maxHealth)?'disabled':''}>${safe(o.name)} · ${money(o.cost)}</button>`).join('')}</div>
+  </div>
+ `+actions(done?L('LEAVE CLINIC','离开诊所'):L('CONTINUE','继续前行'),'next',{solo:true});
+ fitDock();
+}
+function bidAuction(){
+ if(busy||modalType||run.offer.type!=='auction'||run.offer.settled)return;
+ const lot=getAuctionLot(run.offer.auction);
+ if(!lot||run.cash<lot.price*100){toast(L('Not enough cash to bid on this lot.','现金不足，无法竞拍该藏品。'));return;}
+ try{
+  bidAuctionLot(run,lot.id);run.offer.settled=true;save();refreshStyle();renderHud();renderDock();effects.tone('buy');
+  const r=focusRect();effects.burst(r.left+r.width*.45,r.top+r.height*.6,5,'#e5b034');world.celebrate();platform.celebrate();
+  openModal('auction-win','','',`
+   <div class="auction-win-view">
+    <div class="win-medal-glow">${lot.medal}</div>
+    <div class="modal-eyebrow">HAMMER DOWN / 竞拍成交</div>
+    <h2 id="modal-title">${safe(lot.name)}</h2>
+    <div class="large-delta">+${lot.lv} LP</div>
+    <p>恭喜阁下拍下此件旷世奇珍！<br>专属勋章已永久陈列于你的排面荣誉墙。<br>请注意：后续每个休整期需支付 <strong>${money(lot.upkeep*100,true)}</strong> 的专属保养费。</p>
+    <button class="primary" data-action="close">${L('COLLECT & WALK ON','收藏珍宝，继续前行')}${icon('arrow')}</button>
+   </div>
+  `,{custom:true});
+  checkMilestoneCelebration();
+ }catch(e){toast(e.message);}
+}
+function passAuction(){
+ if(busy||modalType||run.offer.type!=='auction'||run.offer.settled)return;
+ const lot=getAuctionLot(run.offer.auction);if(lot)passAuctionLot(run,lot.id);
+ run.offer.settled=true;save();toast(L('Lot passed. It will not appear again this run.','已放弃举牌，该藏品本局不再出现。'));nextOffer();
+}
+function checkMilestoneCelebration(){
+ const newly=checkNewUnlocks(run);
+ if(newly.length){
+  const m=newly[0];effects.tone('win',4);effects.burst(innerWidth/2,innerHeight*.4,6,'#ffd700');world.celebrate();platform.celebrate();
+  openModal('milestone-celebrate','','',`
+   <div class="milestone-celebrate-dialog">
+    <div class="milestone-ribbon">✦ NEW MECHANISM UNLOCKED · 新机制达成 ✦</div>
+    <div class="milestone-symbol-badge">${icon(m.icon||'crown')}</div>
+    <h2 id="modal-title">机制解锁：${safe(m.title)}</h2>
+    <div class="milestone-req">达成身家门槛：${money(m.at*100,true)}</div>
+    <p class="milestone-info">${safe(m.desc)}</p>
+    <div class="milestone-notice"><strong>全新规则已生效</strong><span>随着阶层跃升，城市街头将解锁对应的专属奇遇、功能建筑与商业特权！</span></div>
+    <button class="primary" data-action="close">${L('ENTER THE STREET','领略新机制，继续前行')}${icon('arrow')}</button>
+   </div>
+  `,{custom:true});
+ }
+}
 let fitPending=false;
 function fitDock(){if(fitPending)return;fitPending=true;requestAnimationFrame(()=>{fitPending=false;$('game').style.setProperty('--dock-height',$('game-dock').getBoundingClientRect().height+'px');world.resize();});}
 new ResizeObserver(fitDock).observe($('game-dock'));
@@ -130,13 +201,13 @@ async function doInvest(confirmed=false){
  if(run.id!==id){busy=false;return;}busy=false;renderHud();renderDock();refreshStyle();const rect=focusRect();
  effects.pop(signed(result.profit),result.won?L('NET PROFIT','净收益'):result.lossScope==='wallet'?L('ALL CASH LOST','全部现金清空'):L('THIS STAKE IS GONE','本次投入已全部亏掉'),rect,result.profit<0);
  effects.tone(result.won?'win':'loss',rank);
- if(result.profit>0){world.celebrate();effects.burst(rect.left+rect.width*.46,rect.top+rect.height*.6,rank+1,getRarity(run.offer.rarity).color);}else{world.fail();$('game-dock').classList.add('shake');setTimeout(()=>$('game-dock').classList.remove('shake'),380);}
+ if(result.profit>0){world.celebrate();effects.burst(rect.left+rect.width*.46,rect.top+rect.height*.6,rank+1,getRarity(run.offer.rarity).color);checkMilestoneCelebration();}else{world.fail();$('game-dock').classList.add('shake');setTimeout(()=>$('game-dock').classList.remove('shake'),380);}
  $('announcement').textContent=L('Result ','结果 ')+signed(result.profit)+L('. Cash remaining ','。剩余现金 ')+money(run.cash);
  if(tier(run)>oldTier){sceneMessage(text(TIERS[tier(run)].name));platform.celebrate();}
  platform.submit(run).catch(()=>{});
  if(run.ended){pause();await wait(meta.motion?650:50);if(run.id===id&&run.ended)showGameOver();}else if(pendingChallenge.length){await wait(meta.motion?600:20);if(run.id===id&&!modalType)showChallengeResult(pendingChallenge.shift());}
 }
-function buyAsset(){if(busy||modalType||!validAction()||run.offer.type!=='asset'||!lifeUI.beforeNext())return;const a=getAsset(run.offer.asset);const apply=()=>{try{purchaseAsset(run,a.id);save();refreshStyle();renderHud();renderDock();effects.tone('buy');world.celebrate();const r=focusRect();effects.burst(r.left+r.width*.45,r.top+r.height*.6,4,a.color);if(run.ended&&!lifeUI?.hasPendingDeath())showGameOver();else sceneMessage(L('WELCOME HOME!','欢迎回家！'));}catch{toast(L('You cannot purchase this asset right now.','当前无法购买此资产。'));}};if(run.cash===a.price*100)confirmDialog(L('This purchase ends your run.','这次购买会结束本局。'),L('It leaves you with $0. You will lose this building and everything else to bankruptcy. Continue?','购买后现金归零，会立即破产并清空这座建筑及所有资产。仍然继续？'),apply);else apply();}
+function buyAsset(){if(busy||modalType||!validAction()||run.offer.type!=='asset'||!lifeUI.beforeNext())return;const a=getAsset(run.offer.asset);const apply=()=>{try{purchaseAsset(run,a.id);save();refreshStyle();renderHud();renderDock();effects.tone('buy');world.celebrate();const r=focusRect();effects.burst(r.left+r.width*.45,r.top+r.height*.6,4,a.color);checkMilestoneCelebration();if(run.ended&&!lifeUI?.hasPendingDeath())showGameOver();else sceneMessage(L('WELCOME HOME!','欢迎回家！'));}catch{toast(L('You cannot purchase this asset right now.','当前无法购买此资产。'));}};if(run.cash===a.price*100)confirmDialog(L('This purchase ends your run.','这次购买会结束本局。'),L('It leaves you with $0. You will lose this building and everything else to bankruptcy. Continue?','购买后现金归零，会立即破产并清空这座建筑及所有资产。仍然继续？'),apply);else apply();}
 function buyOutfit(id){if(busy||!validAction())return;if(!run.outfits.includes(id)&&!lifeUI.beforeNext())return;const o=getOutfit(id);const apply=()=>{try{purchaseOutfit(run,id);save();refreshStyle();renderHud();renderDock();effects.tone('buy');if(run.ended){forceClose();showGameOver();}else if(modalType==='wardrobe')showWardrobe();else sceneMessage(L('NEW LOOK. SAME ODDS.','新外观，不改胜率。'));}catch{toast(L('Buy new outfits only at a roadside shop.','新服装只能在路边遇到的商店购买。'));}};if(!run.outfits.includes(id)&&run.cash===o.price*100)confirmDialog(L('Spend your last dollar?','要花光最后的现金吗？'),L('Zero cash means bankruptcy and all outfits are cleared.','现金归零就会破产，所有服装也会清空。'),apply);else apply();}
 function startChallenge(){if(busy||modalType||!validAction()||!lifeUI.beforeNext())return;try{acceptChallenge(run);save();renderHud();renderDock();effects.tone('rare');sceneMessage(L('CLOCK IS TICKING. LET’S GO!','倒计时开始，出发！'));musicMode();}catch{toast(L('Finish the active challenge before accepting another.','请先完成当前挑战，再接受新挑战。'));}}
 
@@ -154,7 +225,7 @@ function confirmDialog(title,message,callback){openModal('confirm',title,message
 function showCashRisk(q,callback){openModal('risk-confirm',L('Your entire wallet is on the line.','这次押上的是全部现金。'),L('This is NOT an ordinary investment.','这不是普通投资规则。'),`<div class="confirm-risk">${L('You only put in ','你投入 ')}<strong>${money(q.stake,true)}</strong>${L(', but failure takes ALL of your ','，但失败会清空全部 ')}<strong>${money(run.cash,true)}</strong>${L(' cash, including the money you did not invest.',' 现金，包括没有投入的钱。')}</div><div class="danger-amount">${L('LOSE → $0','失败 → $0')}</div><p class="small-rule">${L('Bankruptcy removes every building and outfit. This run ends.','破产会清空所有建筑和服装，本局结束。')}</p><div class="button-row"><button class="small-button" data-action="close">${L('NO, GO BACK','返回')}</button><button class="small-button danger" data-action="confirm">${L('I ACCEPT THE RISK','确认承担全部风险')}</button></div>`);confirmCallback=callback;}
 function showChallengeResult(e){
  if(!e)return;if(run.ended){showGameOver();return;}e.seen=true;const savedEvent=run.challengeLog.find(x=>x.id===e.id);if(savedEvent)savedEvent.seen=true;save();musicMode();renderHud();renderDock();
- const r=focusRect();effects.tone(e.won?'win':'loss',e.won?4:0);if(e.won){effects.burst(r.left+r.width*.45,r.top+r.height*.6,5,'#c6afff');world.celebrate();platform.celebrate();}else world.fail();
+ const r=focusRect();effects.tone(e.won?'win':'loss',e.won?4:0);if(e.won){effects.burst(r.left+r.width*.45,r.top+r.height*.6,5,'#c6afff');world.celebrate();platform.celebrate();checkMilestoneCelebration();}else world.fail();
  platform.submit(run).catch(()=>{});
  openModal('challenge-result','','',`<div class="challenge-result ${e.won?'':'failed'}"><div class="success-symbol" style="${e.won?'':'background:#f9e4df;color:#b6746a;border-color:#e9c3b9'}">${icon(e.won?'rank':'timer')}</div><div class="modal-eyebrow">${safe(text(getChallenge(e.kind).name))}</div><h2 id="modal-title">${e.won?L('YOU BEAT THE CLOCK!','你赢下了对赌！'):L('TIME IS UP.','时间到。')}</h2><div class="large-delta">${signed(e.delta)}</div><p>${e.won?L('Bonus paid into your cash.','奖励已经计入现金余额。'):L('The agreed penalty has been deducted.','已扣除接受挑战时约定的惩罚金额。')}</p><p>${L('Cash now: ','当前现金：')}<strong>${money(run.cash,true)}</strong></p><button class="primary" data-action="close">${L('KEEP GOING','继续前进')}${icon('arrow')}</button></div>`,{custom:true});
 }
@@ -163,7 +234,38 @@ function showMenu(){
  const tile=(action,i,title,sub,cls='')=>run.life.seenWorth<50000&&['leaderboard','collection','wardrobe'].includes(action)?'':`<button class="menu-tile ${cls}" data-action="${action}">${icon(i)}<span><strong>${title}</strong><small>${sub}</small></span></button>`;
  openModal('menu',L('Take a breather.','休息一下。'),L('Your challenge timer is paused.','挑战倒计时已暂停。'),`<div class="menu-grid">${tile('leaderboard','rank',L('Leaderboard','排行榜'),L('Your climb so far','看看你的成绩'))}${tile('collection','estate',L('My buildings','我的建筑'),L('Owned assets only','只查看已拥有资产'))}${tile('wardrobe','shirt',L('My outfits','我的衣橱'),L('Equip what you own','切换已拥有的外观'))}${tile('music','music',L('Music & sound','音乐与音效'),L('Real tracks · CC0','现成音乐 · CC0'))}${tile('help','help',L('How to play','游戏规则'),L('Clear rules. No surprises.','所有风险都写清楚'))}${tile('history','history',L('Run journal','本局记录'),L('Investments & challenges','投资与挑战结果'))}${tile('language','globe',L('简体中文','English'),L('Switch language','切换语言'))}${tile('settings','settings',L('Settings','设置'),L('Name, visuals, saves','昵称、画质与存档'))}${CONFIG.allowDeveloperMode?tile('developer','lab',L('Developer lab','开发者实验室'),L('Test the wild stuff','直接测试特殊玩法'),'purple'):''}${tile('restart','reset',L('New run','重新开始'),L('Fresh $100. Clear assets.','资产清空，重回 $100'),'danger')}</div><button class="primary" style="width:100%;margin-top:19px" data-action="close">${L('BACK TO THE STREET','回到街头')}${icon('play')}</button>`);
 }
-function showSettings(){const toggle=(a,label,on)=>`<div class="setting-row"><label>${label}</label><button class="toggle ${on?'on':''}" data-action="${a}" aria-label="${safe(label)}" aria-pressed="${on}"></button></div>`;openModal('settings',L('Your kind of game.','按你的方式游玩。'),L('Big controls. A comfortable pace.','清晰操作，舒服的节奏。'),`<label class="small-rule" for="player-name">${L('Leaderboard name','排行榜昵称')}</label><div class="form-row"><input class="field-input" id="player-name" maxlength="20" value="${safe(meta.name)}" placeholder="${L('You','你')}" ${platform.user?'disabled':''}><button class="small-button" data-action="save-name">${L('SAVE','保存')}</button></div><div class="settings-section">${toggle('motion',L('Animation & particles','动画与粒子效果'),meta.motion)}${toggle('quality',L('Low-power graphics','低功耗画质'),meta.low)}<div class="setting-row"><label>${L('Language','语言')}</label><button class="small-button" data-action="language">${meta.lang==='en'?'简体中文':'English'}</button></div></div><div class="panel-notice">${L('Save mode: ','存档方式：')}${safe(platform.storageMode)}<br>${L('Your run and the remaining challenge time are saved automatically. The clock pauses outside the game.','本局进度及挑战剩余时间自动保存，离开游戏不会扣除挑战时间。')}</div><button class="primary" style="width:100%" data-action="close">${L('DONE','完成')}${icon('check')}</button>`);}
+function showSettings(){
+ const toggle=(a,label,on)=>`<div class="setting-row"><label>${label}</label><button class="toggle ${on?'on':''}" data-action="${a}" aria-label="${safe(label)}" aria-pressed="${on}"></button></div>`;
+ const themes=[
+  {id:'minimalist',name:'极简黑白',en:'Minimalist'},
+  {id:'imperial',name:'帝国鎏金',en:'Imperial Gold'},
+  {id:'cyber',name:'赛博霓虹',en:'Cyber Neon'},
+  {id:'swiss',name:'瑞士现代',en:'Swiss Clean'}
+ ];
+ const scalePresets=[0.75,0.9,1.0,1.1,1.25];
+ openModal('settings',L('Your kind of game.','按你的方式游玩。'),L('Big controls. A comfortable pace.','清晰操作，舒服的节奏。'),`
+  <label class="small-rule" for="player-name">${L('Leaderboard name','排行榜昵称')}</label>
+  <div class="form-row"><input class="field-input" id="player-name" maxlength="20" value="${safe(meta.name)}" placeholder="${L('You','你')}" ${platform.user?'disabled':''}><button class="small-button" data-action="save-name">${L('SAVE','保存')}</button></div>
+  <div class="settings-section">
+   <label class="small-rule">${L('UI Visual Theme','UI 视觉风格方案')}</label>
+   <div class="settings-theme-row">
+    ${themes.map(t=>`<button class="theme-choice-btn ${meta.theme===t.id?'active':''}" data-action="set-theme" data-value="${t.id}"><span class="swatch ${t.id}"></span><strong>${t.name}</strong><small>${t.en}</small></button>`).join('')}
+   </div>
+   <div class="setting-row">
+    <label>${L('UI Zoom Scale','界面缩放比例')} <strong id="ui-scale-value">${Math.round((meta.scale||1)*100)}%</strong></label>
+   </div>
+   <input class="volume-slider" id="ui-scale-slider" type="range" min="75" max="125" step="5" value="${Math.round((meta.scale||1)*100)}">
+   <div class="scale-presets-row">
+    ${scalePresets.map(s=>`<button class="scale-pill ${Math.abs((meta.scale||1)-s)<0.02?'active':''}" data-action="scale-preset" data-value="${s}">${Math.round(s*100)}%</button>`).join('')}
+   </div>
+   ${toggle('motion',L('Animation & particles','动画与粒子效果'),meta.motion)}
+   ${toggle('quality',L('Low-power graphics','低功耗画质'),meta.low)}
+   <div class="setting-row"><label>${L('Language','语言')}</label><button class="small-button" data-action="language">${meta.lang==='en'?'简体中文':'English'}</button></div>
+  </div>
+  <div class="panel-notice">${L('Save mode: ','存档方式：')}${safe(platform.storageMode)}<br>${L('Your run and the remaining challenge time are saved automatically. The clock pauses outside the game.','本局进度及挑战剩余时间自动保存，离开游戏不会扣除挑战时间。')}</div>
+  <button class="primary" style="width:100%" data-action="close">${L('DONE','完成')}${icon('check')}</button>
+ `);
+}
 function showMusic(){openModal('music',L('A real soundtrack.','真正的游戏配乐。'),L('Six cities, six distinct licensed recordings, embedded for offline playback.','六座城市，六首网上取得的独立配乐。默认自动随城市切换；全部内置，无需联网播放。'),`<div class="setting-row"><label>${L('Background music','背景音乐')}</label><button class="toggle ${meta.music?'on':''}" data-action="music-toggle" aria-label="${L('Background music','背景音乐')}" aria-pressed="${meta.music}"></button></div><div class="setting-row"><label>${L('Sound effects','游戏音效')}</label><button class="toggle ${meta.sound?'on':''}" data-action="sound-toggle" aria-label="${L('Sound effects','游戏音效')}" aria-pressed="${meta.sound}"></button></div><label for="music-volume" class="small-rule">${L('Music volume','音乐音量')} <strong id="volume-value">${Math.round(meta.volume*100)}%</strong></label><input class="volume-slider" id="music-volume" type="range" min="0" max="100" value="${Math.round(meta.volume*100)}"><p class="small-rule">默认城市配乐自动切换；阶层配乐可在购买音乐管家后于生活菜单选择。</p><div id="music-state" class="panel-notice"></div>${MUSIC_CREDITS.map(c=>`<div class="music-credit"><strong>${safe(c.title)}</strong>${safe(c.artist)}<br>${safe(c.license)} · ${c.source.includes('incompetech')?'incompetech.com':c.source.startsWith('http')?'OpenGameArt':'原工程原创配乐'}${c.licenseURL?`<br><a href="${c.licenseURL}" target="_blank" rel="noopener">Creative Commons Attribution 4.0</a>`:''}</div>`).join('')}<p class="pause-note">${L('Source links, original license evidence, and credits are included in the download. Music starts after your first tap.','下载包包含来源、原始授权说明与署名。首次点击后开始播放音乐。')}</p>${platform.muted?`<div class="panel-notice warning">${L('The platform currently requires mute. Game switches cannot override it.','平台当前要求静音，游戏开关不能解除平台静音。')}</div>`:''}`);renderMusicStatus();}
 function renderMusicStatus(){if(modalType!=='music'||!$('music-state'))return;const s=music.status();$('music-state').textContent=s.error?L('Audio could not load: ','音频加载失败：')+s.error:s.playing?L('Now playing: ','正在播放：')+(MUSIC_CREDITS.find(c=>c.id===s.mode)?.title||s.mode):!meta.music?L('Music is off.','音乐已关闭。'):platform.muted?L('Muted by the platform.','平台已静音。'):meta.volume===0?L('Music volume is 0%.','音乐音量为 0%。'):!s.unlocked?L('Tap or press a key to start the music.','点击或按键后开始播放。'):L('Loading the recorded track…','正在加载录制音乐…');}
 function showWardrobe(){const list=OUTFITS.filter(o=>run.outfits.includes(o.id));openModal('wardrobe',L('Your wardrobe.','你的衣橱。'),L('Equip owned clothes here. Buy new ones only at random street shops.','这里只能穿戴已拥有的服装。新衣服需沿途遇到商店购买。'),`<div class="asset-grid">${list.map(o=>`<article class="asset-tile"><span class="tile-tag">${run.equipped===o.id?L('EQUIPPED','穿着中'):L('OWNED','已拥有')}</span>${outfitIcon(o)}<h3>${safe(text(o.name))}</h3><button class="small-button" data-action="equip" data-value="${o.id}" ${run.equipped===o.id?'disabled':''}>${L('WEAR THIS','穿上这件')}</button></article>`).join('')}</div><div class="panel-notice">${L('There is no permanent store. Pop-up shops appear randomly on your route. All clothing is cosmetic and disappears on bankruptcy.','没有常驻商店。换装店会随机出现在路上。服装只改变外观，破产时全部清空。')}</div>`);}
@@ -191,9 +293,60 @@ function showHelp(){openModal('help',L('Walk. Risk. Rise.','走下一站，闯�
 function showHistory(){openModal('history',L('Your run journal.','你的本局日记。'),L('Every reward. Every risk.','每次收益，每次风险。'),`<div class="stat-grid"><div class="stat-cell"><span>${L('PEAK','最高身家')}</span><strong>${money(run.peak,true)}</strong></div><div class="stat-cell"><span>${L('STOPS','已走站数')}</span><strong>${run.page}</strong></div><div class="stat-cell"><span>${L('WINS','成功次数')}</span><strong>${run.wins}</strong></div></div>${run.challengeLog.map(c=>`<div class="history-row"><div>${icon('timer')} ${safe(text(getChallenge(c.kind).name))}<small>${c.won?L('Challenge completed','挑战完成'):L('Challenge failed','挑战失败')} · #${c.page}</small></div><strong class="${c.delta>=0?'positive':'negative'}">${signed(c.delta)}</strong></div>`).join('')}${run.history.length?run.history.map(h=>`<div class="history-row"><div>${safe(h.special?text(getSpecial(h.special).name):text(getProject(h.project).name))}<small>#${h.page} · ${L('Stake ','投入 ')}${money(h.stake,true)} · ×${h.multiplier.toFixed(2)}</small></div><strong class="${h.profit>=0?'positive':'negative'}">${signed(h.profit)}</strong></div>`).join(''):`<div class="empty-state">${L('Your first decision is ahead.','第一次抉择，就在前方。')}</div>`}`);}
 function showGameOver(){
  if(modalType==='gameover')return;busy=false;pendingChallenge=[];$('game').classList.remove('travelling');save();refreshStyle();renderHud();renderDock();const e=run.estate||ensureEstate(run),d=e.death;
- openModal('gameover','','',`<div class="life-end">${obituaryArt}<div class="modal-eyebrow">LIFE CLOSED / 人生结算</div><h2 id="modal-title">你的故事，停止计息。</h2><p>${safe(d?.cause||'现金耗尽')}。<br>系统收回排面，但不会没收你已经留下的故事。</p><div class="stat-grid"><div class="stat-cell"><span>最高总身家</span><strong>${money(run.peak,true)}</strong></div><div class="stat-cell"><span>结束前身家</span><strong>${money(d?.worth??worth(run),true)}</strong></div><div class="stat-cell"><span>度过的休息周期</span><strong>${e.age}</strong></div></div><div class="legacy-receipt">本局奢侈点 +${e.luxuryEarned} · 转世账户 ${meta.legacy.points}<small>已记入本机人生排行榜，结算不会重复发点。</small></div><button class="primary" data-action="new-run">领取下一张 $100 人生体验券 →</button><div class="button-row"><button class="small-button" data-action="life-legacy">转世事务所</button><button class="small-button" data-action="leaderboard">人生排行榜</button></div><p class="pause-note">本机记录不是真实联网全球排名；不同设备各自保存。</p></div>`,{custom:true,noClose:true});pause();
+ const epitaph=getSatiricalEpitaph(d?.cause||'');
+ const medals=e.auctionMedals||[];
+ const medalsHtml=medals.length?`
+  <div class="auction-medals-summary">
+   <span>生前所获专属拍卖勋章：</span>
+   ${medals.map(id=>`<span class="medal-tag" title="${getAuctionLot(id)?.name}">${getAuctionLot(id)?.medal||'🎖️'} ${getAuctionLot(id)?.name}</span>`).join(' ')}
+  </div>
+ `:'';
+ openModal('gameover','','',`
+  <div class="life-end">
+   ${obituaryArt}
+   <div class="modal-eyebrow">LIFE CLOSED / 财务死亡与人生清算</div>
+   <h2 id="modal-title">你的故事，停止计息。</h2>
+   <div class="death-cause-box">
+    <strong>💀 离场原因：${safe(d?.cause||'现金耗尽，宣告破产')}</strong>
+    <p>${safe(epitaph)}</p>
+   </div>
+   <div class="stat-grid">
+    <div class="stat-cell"><span>生前最高总身家</span><strong>${money(run.peak,true)}</strong></div>
+    <div class="stat-cell"><span>离场清算现金</span><strong>${money(d?.cash??run.cash,true)}</strong></div>
+    <div class="stat-cell"><span>度过的休整周期</span><strong>${e.age} 次</strong></div>
+   </div>
+   ${medalsHtml}
+   <div class="legacy-receipt">
+    本局累计功德点 +${e.luxuryEarned} LP · 转世账户总计 <strong>${meta.legacy.points} LP</strong>
+    <small>已永久记入本机人生功勋册，转世事务所可用点数强化下一次人生。</small>
+   </div>
+   <button class="primary" data-action="new-run">领取下辈子 $100 初始资金 · 投胎转世 →</button>
+   <div class="button-row">
+    <button class="small-button" data-action="life-legacy">转世事务所</button>
+    <button class="small-button" data-action="leaderboard">人生功勋榜</button>
+   </div>
+   <p class="pause-note">命运无常，账单长存。下一世也许你就能买下整座太空发射场。</p>
+  </div>
+ `,{custom:true,noClose:true});
+ pause();
 }
-async function restart(){if(busy)return;if(!run.ended)endLife(run,'主动结束本局，申请转世');save();forceClose();busy=true;$('game').inert=true;await playObituary(!meta.motion);$('game').inert=false;if(run.runNumber%3===0)await platform.midgame();meta.runCount=Math.max(meta.runCount||1,run.runNumber)+1;run=newRun(meta.runCount);applyLegacy(run,meta);lifeUI.loaded();Object.assign(dev,{force:null,...DEFAULT_RATES,speed:1});world.speed=1;stake=2500;stakeRatio=.25;pendingChallenge=[];visit=null;selectedOutfit=0;effects.parts=[];document.querySelectorAll('.money-pop').forEach(x=>x.remove());clearTimeout(discoveryTimer);$('discovery').classList.remove('show');busy=false;$('game').classList.remove('travelling');world.setOffer(run.offer);refreshStyle();renderHud();renderDock();save();pause();platform.context(run);sceneMessage(L('A NEW START. $100.','全新开始，$100。'));}
+async function restart(){
+ if(busy)return;
+ const e=run.estate||ensureEstate(run),cause=e.death?.cause||'主动结束本局，申请转世';
+ if(!run.ended)endLife(run,cause);
+ save();forceClose();busy=true;$('game').inert=true;
+ await playObituary(!meta.motion, cause);
+ $('game').inert=false;
+ if(run.runNumber%3===0)await platform.midgame();
+ meta.runCount=Math.max(meta.runCount||1,run.runNumber)+1;
+ run=newRun(meta.runCount);applyLegacy(run,meta);lifeUI.loaded();
+ Object.assign(dev,{force:null,...DEFAULT_RATES,speed:1});world.speed=1;stake=2500;stakeRatio=.25;
+ pendingChallenge=[];visit=null;selectedOutfit=0;effects.parts=[];
+ document.querySelectorAll('.money-pop').forEach(x=>x.remove());clearTimeout(discoveryTimer);
+ $('discovery').classList.remove('show');busy=false;$('game').classList.remove('travelling');
+ world.setOffer(run.offer);refreshStyle();renderHud();renderDock();save();pause();platform.context(run);
+ sceneMessage(L('A NEW START. $100.','全新开始，$100。'));
+}
 function ensureActive(){if(run.ended){meta.runCount++;run=newRun(meta.runCount);world.setOffer(run.offer);}run.unranked=true;}
 function devChanged(){markPeak(run);stake=Math.max(1,Math.min(stake,run.cash));save();refreshStyle();renderHud();renderDock();}
 
@@ -261,6 +414,11 @@ document.addEventListener('click',async e=>{
  case 'new-run':restart();break;
  case 'visit':{const asset=getAsset(v);if(!asset||!run.assets.includes(v))break;forceClose();visit=asset;world.inspect(asset);renderTour();renderHud();pause();break;}
  case 'exit-visit':visit=null;world.setOffer(run.offer);renderHud();renderDock();pause();break;
+ case 'bid-auction':bidAuction();break;
+ case 'pass-auction':passAuction();break;
+ case 'clinic-buy':{try{buyMedical(run,v);save();effects.tone('buy');renderDock();toast('购买疗程成功，健康已恢复！');}catch(err){toast(err.message);}break;}
+ case 'set-theme':meta.theme=v;preferences();save();showSettings();break;
+ case 'scale-preset':meta.scale=Number(v);preferences();fitDock();world.resize();save();showSettings();break;
  case 'submit-score':submitScore();break;
  case 'login':await platform.login();showLeaderboard('platform');break;
  case 'developer':showDeveloper();break;
@@ -293,11 +451,12 @@ document.addEventListener('input',e=>{
  if(e.target.id==='stake-range'){updateStake(Math.max(1,Math.floor(run.cash*Number(e.target.value)/1000)),'range');$('slider-wrap').classList.add('active');}
  if(e.target.id==='stake-input'){if(e.target.validity.stepMismatch)$('primary-action').disabled=true;else updateStake(Math.round(Number(e.target.value)*100),'input');}
  if(e.target.id==='music-volume'){meta.volume=Number(e.target.value)/100;music.setVolume(meta.volume);$('volume-value').textContent=e.target.value+'%';}
+ if(e.target.id==='ui-scale-slider'){meta.scale=Number(e.target.value)/100;preferences();fitDock();world.resize();const lbl=$('ui-scale-value');if(lbl)lbl.textContent=e.target.value+'%';}
  if(e.target.id==='dev-rate')$('dev-rate-value').textContent=e.target.value+'%';
 });
 document.addEventListener('change',async e=>{
  if(e.target.id==='stake-range')setTimeout(()=>$('slider-wrap')?.classList.remove('active'),500);
- if(e.target.id==='music-volume')save();
+ if(e.target.id==='music-volume'||e.target.id==='ui-scale-slider')save();
  if(e.target.id==='dev-speed'){dev.speed=Number(e.target.value);world.speed=dev.speed;if(dev.speed!==1){ensureActive();devChanged();}}
  if(e.target.id==='import-file'){const file=e.target.files?.[0];if(!file)return;try{if(file.size>512000)throw Error('Too large');const json=JSON.parse(await file.text());run=validateRun(json.run||json,{imported:true});lifeUI.loaded();Object.assign(dev,{force:null,...DEFAULT_RATES,speed:1});pendingChallenge=[];visit=null;devChanged();world.setOffer(run.offer);forceClose();renderHud();renderDock();if(run.ended&&!lifeUI?.hasPendingDeath())showGameOver();toast(L('Imported as a TEST run.','已作为 TEST 测试局导入。'));}catch{toast(L('Invalid v2/v3 save. Your current run is unchanged.','无效 v2/v3 存档，当前进度未改变。'));}}
 });

@@ -80,3 +80,364 @@
 @media(orientation:landscape) and (max-height:520px) and (min-width:640px){#game #game-dock,#game.is-resting #game-dock{width:306px;left:auto;right:12px;top:78px;bottom:12px!important;height:auto;max-height:none;zoom:1;translate:0}#game.is-resting #game-dock{left:12px;right:auto}#game #world,#game #swipe-surface,#game.is-resting #world,#game.is-resting #swipe-surface{bottom:12px}#game.is-resting .portrait-hud{left:12px;right:155px}#game.is-resting .cash-hud{min-width:0;flex-basis:145px}}
 @media(max-height:680px){#game .game-dock .action-row{position:sticky;bottom:-12px;z-index:4;background:#fffbed;padding:8px 0 0;margin-top:8px}#game .game-dock::before{content:'上下滑动面板，可查看全部操作';display:block;font-size:10px;line-height:1.5;color:#65756a;margin-bottom:5px}}
 #game.is-resting[data-capital-tier='0'] .portrait-hud{left:20px}@media(max-width:899px){#game.is-resting[data-capital-tier='0'] .portrait-hud{left:12px}}
+
+/* =========================================================
+   MILESTONE 3 & 4 EXPANSIONS: THEMES, MINIMALISM, AUCTIONS
+   ========================================================= */
+
+/* Top Milestone Progress Bar */
+.milestone-progress-bar{
+ display:block;
+ width:100%;
+ max-width:440px;
+ margin:0 auto 6px;
+ background:rgba(20, 30, 42, 0.85);
+ border:1px solid rgba(255,255,255,0.18);
+ border-radius:12px;
+ padding:5px 12px;
+ color:#f1f5f9;
+ backdrop-filter:blur(10px);
+ cursor:pointer;
+ transition:all .2s;
+ box-shadow:0 3px 12px rgba(0,0,0,0.15);
+ pointer-events:auto;
+}
+.milestone-progress-bar:hover{
+ transform:translateY(-1px);
+ border-color:#e5b034;
+ box-shadow:0 4px 16px rgba(229,176,52,0.25);
+}
+.milestone-bar-inner{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ font-size:11px;
+ font-weight:600;
+}
+.milestone-bar-inner .milestone-icon{font-size:13px;flex-shrink:0}
+.milestone-bar-inner .milestone-title{flex:1;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#f8fafc}
+.milestone-bar-inner .milestone-target{font-weight:700;color:#fde047;white-space:nowrap}
+.milestone-track{
+ width:65px;
+ height:5px;
+ background:rgba(255,255,255,0.15);
+ border-radius:3px;
+ overflow:hidden;
+ flex-shrink:0;
+}
+.milestone-track i{
+ display:block;
+ height:100%;
+ background:linear-gradient(90deg,#e5b034,#fef08a);
+ border-radius:3px;
+ transition:width .3s ease;
+}
+.milestone-bar-inner.maxed .milestone-title{color:#fde047;text-align:center}
+
+/* Auction Medals Tray */
+.auction-medals-tray{
+ display:flex;
+ align-items:center;
+ gap:6px;
+ flex-wrap:wrap;
+ margin-top:5px;
+ pointer-events:auto;
+}
+.auction-medal-btn{
+ width:32px;
+ height:32px;
+ display:grid;
+ place-items:center;
+ font-size:16px;
+ border-radius:8px;
+ background:linear-gradient(135deg,#3a2e12,#1f1a0e);
+ border:1.5px solid #d4af37;
+ box-shadow:0 0 8px rgba(212,175,55,0.3);
+ transition:transform .15s,box-shadow .15s;
+ cursor:pointer;
+}
+.auction-medal-btn:hover{
+ transform:scale(1.15) translateY(-2px);
+ box-shadow:0 0 14px rgba(212,175,55,0.6);
+}
+
+/* Poverty Mode Minimalism (Net worth < $500 / Tier 0) */
+#game[data-poverty='yes'] .capital-summary,
+#game[data-poverty='yes'] .energy-hud,
+#game[data-poverty='yes'] .city-panorama,
+#game[data-poverty='yes'] .class-ticker,
+#game[data-poverty='yes'] .world-news,
+#game[data-poverty='yes'] .life-map-pull,
+#game[data-poverty='yes'] .life-radio,
+#game[data-poverty='yes'] .life-rank,
+#game[data-poverty='yes'] .project-context,
+#game[data-poverty='yes'] .route-hud,
+#game[data-poverty='yes'] .street-title,
+#game[data-poverty='yes'] .sky-cloud-layer,
+#game[data-poverty='yes'] .world-prompt{
+ display:none !important;
+}
+#game[data-poverty='yes'] .portrait-hud{
+ left:16px !important;
+ right:16px !important;
+ max-width:480px;
+ margin:0 auto;
+ display:flex !important;
+ flex-direction:column;
+ align-items:stretch;
+ gap:8px;
+}
+#game[data-poverty='yes'] .top-hud{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ width:100%;
+}
+#game[data-poverty='yes'] .cash-hud{
+ flex:1;
+ background:#161a1f !important;
+ border:1.5px solid #2e3846 !important;
+ border-radius:14px;
+ box-shadow:0 4px 18px rgba(0,0,0,0.3) !important;
+}
+#game[data-poverty='yes'] .cash-hud strong{color:#f8fafc !important}
+#game[data-poverty='yes'] .cash-label{color:#94a3b8 !important}
+#game[data-poverty='yes'] .game-dock{
+ background:#12161bee !important;
+ border:1.5px solid #2b3542 !important;
+ box-shadow:0 8px 30px rgba(0,0,0,0.4) !important;
+ color:#e2e8f0 !important;
+}
+#game[data-poverty='yes'] .game-dock h1{color:#f8fafc !important}
+#game[data-poverty='yes'] .odds-box{
+ background:#162420 !important;
+ border-color:#234e40 !important;
+ color:#86efac !important;
+}
+#game[data-poverty='yes'] .odds-box.loss{
+ background:#26181b !important;
+ border-color:#532328 !important;
+ color:#fca5a5 !important;
+}
+#game[data-poverty='yes'] .primary{
+ background:#1e293b !important;
+ border:1.5px solid #334155 !important;
+ color:#f8fafc !important;
+}
+
+/* Rest Energy Alert on Dock */
+.dock-energy-alert{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:10px;
+ background:#3b181b;
+ border:1px solid #7f1d1d;
+ border-radius:10px;
+ padding:8px 12px;
+ margin-bottom:10px;
+ color:#fecaca;
+ font-size:12px;
+ font-weight:600;
+}
+.dock-energy-alert button{
+ background:#dc2626 !important;
+ color:#fff !important;
+ border:0 !important;
+ border-radius:6px;
+ font-size:11px !important;
+ font-weight:700;
+ padding:5px 9px;
+ cursor:pointer;
+}
+
+/* Auction Offer in Dock */
+.auction-card-box{
+ background:rgba(230,175,46,0.08);
+ border:1.5px solid #e5b034;
+ border-radius:14px;
+ padding:14px;
+ margin-bottom:12px;
+}
+.auction-headline{
+ display:flex;
+ gap:12px;
+ align-items:flex-start;
+ margin-bottom:12px;
+}
+.auction-medal-badge{
+ font-size:36px;
+ flex-shrink:0;
+ filter:drop-shadow(0 2px 8px rgba(229,176,52,0.4));
+}
+.auction-headline h3{margin:0 0 5px;font-size:18px;color:#fef08a}
+.auction-headline p{margin:0;font-size:12px;line-height:1.5;color:#e2e8f0}
+.auction-metrics{
+ display:grid;
+ grid-template-columns:1fr 1fr 1fr;
+ gap:8px;
+ margin:10px 0;
+}
+.metric-cell{
+ background:rgba(0,0,0,0.25);
+ border-radius:8px;
+ padding:8px 6px;
+ text-align:center;
+ border:1px solid rgba(255,255,255,0.08);
+}
+.metric-cell span{display:block;font-size:10px;color:#94a3b8;margin-bottom:3px}
+.metric-cell strong{display:block;font-size:13px;color:#f8fafc}
+.metric-cell.gold strong{color:#fde047}
+.metric-cell.danger strong{color:#f87171}
+
+/* Auction Win Modal */
+.auction-win-view{text-align:center;padding:10px 0}
+.win-medal-glow{font-size:56px;animation:trophyBounce 1s infinite alternate ease-in-out}
+@keyframes trophyBounce{from{transform:translateY(0) scale(1)}to{transform:translateY(-8px) scale(1.08)}}
+
+/* Milestone Celebrate Modal */
+.milestone-celebrate-dialog{text-align:center;padding:12px 0}
+.milestone-ribbon{font-size:11px;letter-spacing:2px;font-weight:700;color:#e5b034;margin-bottom:12px}
+.milestone-symbol-badge{width:64px;height:64px;display:grid;place-items:center;background:#2d2412;border:2px solid #e5b034;border-radius:20px;margin:0 auto 14px;color:#fde047}
+.milestone-symbol-badge .icon{width:36px;height:36px}
+.milestone-req{font-size:14px;color:#68d391;font-weight:700;margin-bottom:12px}
+.milestone-info{font-size:15px;line-height:1.7;color:#e2e8f0;margin-bottom:14px}
+.milestone-notice{background:rgba(229,176,52,0.12);border:1px solid rgba(229,176,52,0.3);border-radius:12px;padding:12px 14px;margin-bottom:18px;text-align:left}
+.milestone-notice strong{display:block;color:#fef08a;font-size:13px;margin-bottom:4px}
+.milestone-notice span{font-size:12px;color:#cbd5e1;line-height:1.6}
+
+/* Showcase Grid */
+.medals-showcase-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.medal-showcase-tile{background:#18212cee;border:1px solid #cbb16b66;border-radius:14px;padding:14px;text-align:center}
+.medal-hero-icon{font-size:38px;display:block;margin-bottom:8px}
+.medal-showcase-tile h3{font-size:16px;color:#fef08a;margin:0 0 6px}
+.medal-showcase-tile p{font-size:12px;color:#cbd5e1;line-height:1.5;margin:0 0 10px}
+.medal-props{display:flex;justify-content:space-around;font-size:11px;font-weight:600;color:#68d391;border-top:1px solid rgba(255,255,255,0.1);padding-top:8px}
+
+/* Theme Options in Settings & Start Screen */
+.start-theme-section{margin:18px auto 22px;width:100%;max-width:540px}
+.start-theme-label{display:block;font-size:10px;letter-spacing:2px;color:#e5b034;font-weight:700;margin-bottom:10px;text-align:center}
+.start-theme-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
+.start-theme-btn{
+ background:rgba(255,255,255,0.06);
+ border:1.5px solid rgba(255,255,255,0.15);
+ border-radius:12px;
+ padding:9px 6px;
+ color:#f8fafc;
+ text-align:center;
+ cursor:pointer;
+ transition:all .15s;
+}
+.start-theme-btn:hover{background:rgba(255,255,255,0.12);border-color:#e5b034}
+.start-theme-btn.active{border-color:#e5b034;background:rgba(229,176,52,0.18);box-shadow:0 0 14px rgba(229,176,52,0.3)}
+.start-theme-btn strong{display:block;font-size:13px;margin:2px 0}
+.start-theme-btn small{display:block;font-size:9px;color:#94a3b8}
+
+.settings-theme-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 14px}
+.theme-choice-btn{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ padding:10px 12px;
+ border-radius:10px;
+ border:1.5px solid #cfd9c7;
+ background:#edf1e3;
+ color:#294f4d;
+ text-align:left;
+ cursor:pointer;
+}
+.theme-choice-btn.active{border-color:#e5b034;background:#fff8db;box-shadow:0 0 10px rgba(229,176,52,0.3)}
+.theme-choice-btn strong{display:block;font-size:13px}
+.theme-choice-btn small{display:block;font-size:10px;color:#64748b}
+.scale-presets-row{display:flex;gap:6px;margin:8px 0 14px}
+.scale-pill{
+ flex:1;
+ padding:6px;
+ border-radius:8px;
+ font-size:12px;
+ font-weight:600;
+ border:1px solid #cbd5e1;
+ background:#f1f5f9;
+ color:#334155;
+ cursor:pointer;
+}
+.scale-pill.active{background:#3b82f6;color:#fff;border-color:#3b82f6}
+
+/* =========================================================
+   FOUR THEME SCHEMES (data-theme)
+   ========================================================= */
+
+/* 1. Minimalist (Modern Minimalist / 极简黑白) */
+[data-theme='minimalist'] #game{background:#0e1115}
+[data-theme='minimalist'] .game-dock{background:#15181fee;border-color:#2a313d;color:#f1f5f9}
+[data-theme='minimalist'] .cash-hud{background:#181c24;border-color:#2d3542;color:#f8fafc}
+[data-theme='minimalist'] .cash-hud strong{color:#ffffff}
+[data-theme='minimalist'] .primary{background:#2563eb;color:#ffffff;border-color:#3b82f6}
+
+/* 2. Imperial Gold (帝国鎏金) */
+[data-theme='imperial'] #game{background:#0b131e}
+[data-theme='imperial'] .game-dock{
+ background:linear-gradient(145deg,#131f2de8,#0d1622f4);
+ border:1.5px solid #d4af37;
+ box-shadow:0 0 25px rgba(212,175,55,0.2), 0 12px 40px rgba(0,0,0,0.5);
+ color:#fef08a;
+}
+[data-theme='imperial'] .cash-hud{
+ background:linear-gradient(135deg,#1c2c40,#111b27);
+ border:1.5px solid #e5b034;
+ box-shadow:0 0 18px rgba(229,176,52,0.25);
+ color:#fef08a;
+}
+[data-theme='imperial'] .cash-hud strong{color:#fde047;text-shadow:0 0 12px rgba(253,224,71,0.4)}
+[data-theme='imperial'] .primary{
+ background:linear-gradient(135deg,#e5b034,#b7791f);
+ color:#1a1005;
+ border:1px solid #fef08a;
+ font-weight:800;
+ box-shadow:0 4px 16px rgba(229,176,52,0.4);
+}
+
+/* 3. Cyber Neon (复古赛博霓虹) */
+[data-theme='cyber'] #game{background:#080914}
+[data-theme='cyber'] .game-dock{
+ background:#0c1020f0;
+ border:1.5px solid #00f3ff;
+ box-shadow:0 0 20px rgba(0,243,255,0.3), inset 0 0 15px rgba(0,243,255,0.08);
+ color:#e0f7fa;
+}
+[data-theme='cyber'] .cash-hud{
+ background:#0f1428;
+ border:1.5px solid #ff007f;
+ box-shadow:0 0 16px rgba(255,0,127,0.3);
+ color:#ff80bf;
+}
+[data-theme='cyber'] .cash-hud strong{color:#00f3ff;text-shadow:0 0 12px rgba(0,243,255,0.6)}
+[data-theme='cyber'] .primary{
+ background:linear-gradient(135deg,#ff007f,#00f3ff);
+ color:#ffffff;
+ border:0;
+ font-weight:800;
+ box-shadow:0 0 20px rgba(255,0,127,0.5);
+}
+
+/* 4. Swiss Clean Editorial (瑞士现代) */
+[data-theme='swiss'] #game{background:#f4f3ef}
+[data-theme='swiss'] .game-dock{
+ background:#fffffff8;
+ border:2px solid #111111;
+ box-shadow:6px 6px 0 #111111;
+ color:#111111;
+}
+[data-theme='swiss'] .cash-hud{
+ background:#ffffff;
+ border:2px solid #111111;
+ box-shadow:4px 4px 0 #111111;
+ color:#111111;
+}
+[data-theme='swiss'] .cash-hud strong{color:#111111}
+[data-theme='swiss'] .primary{
+ background:#111111;
+ color:#ffffff;
+ border:2px solid #111111;
+ box-shadow:4px 4px 0 #e53e3e;
+}

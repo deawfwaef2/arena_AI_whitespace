@@ -1,14 +1,16 @@
 import {LifeUI as JourneyUI} from './journey-ui.js';
 import {glyph} from './life-ui.js';
-import {escape as safe} from './ui.js';
-import {CLASSES,getCity,owns,finishRest,restActivity} from './life-core.js';
+import {escape as safe,icon} from './ui.js';
+import {CLASSES,getCity,owns,finishRest,restActivity,UNLOCK_MILESTONES,nextUnlock,activateNoble} from './life-core.js';
 import {makeOffer,markPeak} from './engine.js';
+import {getAuctionLot,getNobleItem,AUCTION_LOTS,NOBLE_ITEMS} from './catalog.js';
 import {worth,lateTier,TIERS_LATE,FACTIONS,ensureEstate,reconcile,billQuote,restDue,pendingEvent,eventView,resolveEvent,acknowledgeEvent,securityOdds,hireGuards,activeGuards,healthRisk,medicalOptions,buyMedical,regions,currentRegion,enterRegion,luxuries,consumeLuxury,PERKS,initLegacy,buyPerk,collectLegacy} from './endgame-core.js';
 const $=id=>document.getElementById(id);
 const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n/100);
 const short=n=>n>=1e10?'$'+(n/1e10).toFixed(2)+'亿':n>=1e6?'$'+(n/1e6).toFixed(1)+'万':money(n);
 const clock=n=>Math.floor(Math.max(0,n)/60000).toString().padStart(2,'0')+':'+Math.ceil(Math.max(0,n)/1000%60).toString().padStart(2,'0');
 const btn=(id,text,v='',disabled=false,cls='')=>`<button class="life-button ${cls}" data-action="life-${id}" data-value="${v}" ${disabled?'disabled':''}>${text}</button>`;
+
 export class LifeUI extends JourneyUI{
  constructor(c){super(c);this.contextExpanded=false;this.eventBusy=false;this.nextLateTick=0;this.eventOpened='';this.c.meta().wealthTextures??=true;for(const name of ['luxury','ivory'])document.documentElement.style.setProperty('--'+name+'-material',`url('${window.UPSHIFT_ART?.[name+'-texture']||''}')`);initLegacy(this.c.meta());
   $('menu-button').classList.add('global-menu');$('game').append($('menu-button'));
@@ -17,7 +19,7 @@ export class LifeUI extends JourneyUI{
  }
  get e(){return this.s.estate||ensureEstate(this.s);}
  hasPendingDeath(){return this.s.ended&&!!pendingEvent(this.s)?.resolved;}
- renderHud(){super.renderHud();if(!$('capital-summary'))return;const s=this.s,e=this.e,t=reconcile(s),inGame=this.c.started?.()!==false,g=$('game'),m=this.c.meta();g.dataset.capitalTier=t;g.dataset.wealthTextures=m.wealthTextures?'on':'off';g.dataset.legacySkin=m.legacy?.skin||'default';document.body.dataset.legacySkin=m.legacy?.skin||'default';
+ renderHud(){super.renderHud();if(!$('capital-summary'))return;const s=this.s,e=this.e,t=reconcile(s),inGame=this.c.started?.()!==false,g=$('game'),m=this.c.meta();g.dataset.capitalTier=t;g.dataset.wealthTextures=m.wealthTextures?'on':'off';g.dataset.legacySkin=m.legacy?.skin||'default';g.dataset.poverty=t===0?'yes':'no';document.body.dataset.legacySkin=m.legacy?.skin||'default';
   $('city-panorama').hidden=!inGame||t===0||!!s.life.travel;
   $('class-ticker').hidden=!inGame||t<3||!!s.life.travel;
   $('life-map-pull').hidden=!inGame||t===0||!!s.life.rest||!!s.life.travel;
@@ -25,13 +27,63 @@ export class LifeUI extends JourneyUI{
   const cv=$('cash-value');cv.style.fontSize=(innerWidth<900?(cv.textContent.length>8?19:25):(cv.textContent.length>8?23:29))+'px';
   const summary=$('capital-summary');summary.hidden=!inGame||t<2||!!s.life.travel;
   if(!summary.hidden){const locked=s.life.rest&&!s.life.rest.paid,q=locked?{total:restDue(s.life.rest)}:billQuote(s);summary.innerHTML=`<span>${TIERS_LATE[t].name} · 总身家 ${short(worth(s))}</span><b>${locked?'本次账单':'下次休息'} ${short(q.total)} <i>ⓘ</i></b>`;summary.title='查看总身家、预计账单、健康和当前机制';}
-  if(t<2){const h=$('energy-hint');h.textContent=s.life.rest?'假期恢复中':h.textContent.split('·')[0].trim()+' · 下休 '+short(billQuote(s).total);}
+  if(t<2){const h=$('energy-hint');if(h)h.textContent=s.life.rest?'假期恢复中':h.textContent.split('·')[0].trim()+' · 下休 '+short(billQuote(s).total);}
   if(s.life.rest)this.paintNews();
   this.paintContext();
+  this.renderMilestoneProgress();
+  this.renderMedalsTray();
+ }
+ renderMilestoneProgress(){
+  let bar=$('milestone-progress-bar');
+  if(!bar){
+   const topHud=$('game').querySelector('.portrait-hud');
+   if(topHud){
+    topHud.insertAdjacentHTML('afterbegin',`<button id="milestone-progress-bar" class="milestone-progress-bar" data-action="life-mechanisms" aria-label="机制解锁进度"></button>`);
+    bar=$('milestone-progress-bar');
+   }
+  }
+  if(!bar)return;
+  const s=this.s,w=worth(s),next=nextUnlock(s);
+  if(next){
+   const pct=Math.max(5,Math.min(100,((w/100)/next.at)*100));
+   bar.innerHTML=`<div class="milestone-bar-inner"><span class="milestone-icon">🔓</span><span class="milestone-title">下一机制: ${safe(next.title)}</span><span class="milestone-target">${money(next.at*100,true)}</span><div class="milestone-track"><i style="width:${pct.toFixed(0)}%"></i></div></div>`;
+   bar.title=`当前身家 ${money(w)} / 解锁门槛 ${money(next.at*100)}。点击查看完整机制蓝图`;
+  }else{
+   bar.innerHTML=`<div class="milestone-bar-inner maxed"><span class="milestone-icon">👑</span><span class="milestone-title">全机制已激活 · 巅峰资本家</span></div>`;
+   bar.title='所有核心机制均已解锁！点击查看图谱';
+  }
+ }
+ renderMedalsTray(){
+  let tray=$('auction-medals-tray');
+  if(!tray){
+   const hud=$('game').querySelector('.portrait-hud');
+   if(hud){
+    hud.insertAdjacentHTML('beforeend',`<div id="auction-medals-tray" class="auction-medals-tray" hidden></div>`);
+    tray=$('auction-medals-tray');
+   }
+  }
+  if(!tray)return;
+  const medals=this.s.estate?.auctionMedals||[];
+  tray.hidden=!medals.length;
+  if(medals.length){
+   tray.innerHTML=medals.map(id=>{
+    const lot=getAuctionLot(id);
+    return `<button class="auction-medal-btn" data-action="life-show-medals" data-value="${id}" title="${lot?.name} (+${lot?.lv}LP · 维护费 ${money((lot?.upkeep||0)*100)}/次)">${lot?.medal||'🎖️'}</button>`;
+   }).join('');
+  }
  }
  paintContext(){super.paintContext();const el=$('project-context');if(!el||el.hidden)return;const detail=el.querySelector('p');if(detail){detail.id='culture-detail';detail.hidden=!this.contextExpanded;}const h=el.querySelector('h2');if(h){const name=h.textContent;h.innerHTML=`<span>${safe(name)}</span><button data-action="life-culture" aria-label="${this.contextExpanded?'收起':'展开'}当地项目说明" aria-expanded="${this.contextExpanded}" aria-controls="culture-detail">${this.contextExpanded?'−':'i'}</button>`;}el.classList.toggle('expanded',this.contextExpanded);}
  paintNews(){super.paintNews();const el=$('world-news');if(!el||el.hidden)return;el.classList.add('compact-news');el.querySelector('.news-kicker').textContent='世界新闻 · 游戏事件';if(!el.querySelector('button'))el.insertAdjacentHTML('beforeend',btn('news','查看新闻 →'));}
  interceptDock(){if(this.s.offer.type==='world-event'&&!this.s.life.rest&&!this.s.life.travel){this.renderStreetEvent();return true;}return super.interceptDock();}
+ afterDock(){
+  super.afterDock();
+  if(this.s.life.energy<=0 && !this.s.life.rest && !this.s.life.travel && this.s.offer.type!=='interlude'){
+   const dock=$('game-dock');
+   if(dock && !dock.querySelector('.dock-energy-alert')){
+    dock.insertAdjacentHTML('afterbegin',`<div class="dock-energy-alert"><span>⚠️ 体力已耗尽 (0/${this.s.life.energyCap}) · 无法前行</span><button class="life-button compact highlight" data-action="life-prompt-rest">申请休整 🛏️</button></div>`);
+   }
+  }
+ }
  renderStreetEvent(){const ev=this.s.estate.queue.find(x=>x.id===this.s.offer.eventId),d=$('game-dock');d.dataset.kind='world-event';d.innerHTML=`<span class="life-eyebrow">CITY ENCOUNTER / 街头会面</span><h1>${ev?safe(eventView(this.s,ev).title):'会面已结束。'}</h1><p class="small-rule">${ev?.ack?'这段插曲已记录。继续探索下一条街。':'用几个选择回应这段插曲，不需要打开复杂管理面板。'}</p>${ev?.ack?'<button class="primary" data-action="next">继续前行 →</button>':btn('open-event','回应这次会面 →','',false,'primary')}`;this.paintContext();this.c.fit();}
  beforeNext(){if(pendingEvent(this.s)){this.openEvent();return false;}this.contextExpanded=false;return super.beforeNext();}
  openEvent(){const ev=pendingEvent(this.s);if(!ev||this.c.started?.()===false||this.c.busy?.())return;const modal=this.c.modal?.();if(modal&&modal!=='world-event')return;const v=eventView(this.s,ev),result=ev.result;this.eventOpened=ev.id;
@@ -47,7 +99,56 @@ export class LifeUI extends JourneyUI{
  }
  paintRest(){const r=this.s.life.rest;if(!r||!$('rest-clock'))return;$('rest-clock').textContent=clock(r.remaining);const pct=r.paid?(1-r.remaining/r.duration)*100:0;$('rest-fill').style.width=pct+'%';$('rest-fill').parentElement.setAttribute('aria-valuenow',Math.round(pct));$('rest-status').textContent=!r.paid?'账单未支付':r.remaining<=0?'恢复完成':'离线也会继续恢复';if($('rest-ready'))$('rest-ready').hidden=r.remaining>0;if($('rest-options'))$('rest-options').hidden=r.remaining<=0;}
  openRestAll(){const r=this.s.life.rest;if(!r?.paid)return;this.c.open('rest-activities','休息，换一种方式。','活动消耗游戏币，缩短剩余计时。',`<div class="rest-all-grid">${r.activities.filter(a=>!a.instant).map(a=>`<article><h3>${safe(a.name)}</h3><p>减少 ${Math.floor(a.seconds/60)} 分 ${a.seconds%60} 秒</p>${btn('rest-do',a.used?'已体验':money(a.price),a.id,a.used||r.remaining<=0||this.s.cash<=a.price)}</article>`).join('')}</div>`);}
- openStatus(){const s=this.s,t=lateTier(s),q=s.life.rest?(s.life.rest.bill||billQuote(s)):billQuote(s),pending=s.offer.pendingStake||0,asset=worth(s)-s.cash-pending,e=this.e;this.c.open('life-status','看清自己，还剩下什么。',`${TIERS_LATE[t].name} / 所有金额都是游戏币`, `<div class="capital-ledger"><div><span>可用现金</span><b>${money(s.cash)}</b></div><div><span>资产、服装与已购商品</span><b>${money(asset)}</b></div><div><span>待交割本金（仅计一次）</span><b>${money(pending)}</b></div><div class="total"><span>当前总身家</span><b>${money(worth(s))}</b></div></div><h3>${s.life.rest?'已锁定的本次账单':'下次休息预估'}</h3><div class="capital-ledger"><div><span>生活维护</span><b>${money(q.maintenance)}</b></div><div><span>地区税 · ${(q.rate*100).toFixed(2)}%</span><b>${money(s.life.rest?.tax??q.tax)}</b></div><div><span>保镖工资</span><b>${money(q.guards)}</b></div><div><span>管理费用</span><b>${money(q.management)}</b></div><div><span>转世减免</span><b>−${money(q.credit)}</b></div><div class="total"><span>合计</span><b>${money(s.life.rest?restDue(s.life.rest):q.total)}</b></div></div><p>按当前总身家和区域估算，入休时锁定；不包含尚未触发的风波、抢劫和自选消费。没钱付剩余强制账单会直接结束本局。</p><h3>健康 ${'♥'.repeat(e.health)}${'♡'.repeat(e.maxHealth-e.health)}</h3><p>已经休息 ${e.age} 次。下一次衰退概率 ${healthRisk(s,true)}%；每次休息 +1 个百分点，抽中减少 1 格，归零死亡。</p><h3>当前可用机制</h3><p>${[['基础投资与休息',0],['城市通行与商品',1],['社群交往',2],['安保 / 地区税 / 康复',3],['财务风波 / 多派系',4],['当地奢侈消费 / 延寿',5],['工业特区',6],['主权特区',7],['细胞更新',8],['云端区域',9],['极限财富压力',10]].map(([name,at])=>`<span class="mechanism-token ${t>=at?'active':''}">${t>=at?'✓':'🔒'} ${name}</span>`).join('')}</p><p>机制按当前总身家而非历史最高身家启停。变穷后购买过的功能会暂时停用；回升后恢复，物品不会重复收费。</p>`);}
+ openStatus(){
+  const s=this.s,t=lateTier(s),q=s.life.rest?(s.life.rest.bill||billQuote(s)):billQuote(s),pending=s.offer.pendingStake||0,asset=worth(s)-s.cash-pending,e=this.e;
+  const medals=e.auctionMedals||[];
+  const nobles=(s.life.items||[]).filter(id=>id.startsWith('noble-'));
+
+  const medalsHtml=medals.length?`
+   <h3>已斩获绝版拍卖勋章 (${medals.length})</h3>
+   <div class="status-medals-grid">
+    ${medals.map(id=>{const lot=getAuctionLot(id);return `<div class="status-medal-item"><span class="status-medal-icon">${lot?.medal||'🎖️'}</span><div><strong>${safe(lot?.name)}</strong><small>+${lot?.lv} LP · 每期保养费 ${money((lot?.upkeep||0)*100)}</small></div></div>`;}).join('')}
+   </div>
+  `:'';
+
+  const noblesHtml=nobles.length?`
+   <h3>持有的贵族特许令 (${nobles.length})</h3>
+   <div class="noble-items-grid">
+    ${nobles.map(id=>{const item=getNobleItem(id);return `<div class="noble-item-card"><span class="noble-icon">📜</span><div><strong>${safe(item?.name)}</strong><small>${safe(item?.desc)}</small></div><button class="small-button highlight" data-action="life-activate-noble" data-value="${id}">${s.life.nobleSummon===item?.target?'生效中':'立即使用'}</button></div>`;}).join('')}
+   </div>
+  `:'';
+
+  this.c.open('life-status','看清自己，还剩下什么。',`${TIERS_LATE[t].name} / 所有金额都是游戏币`, `
+   <div class="capital-ledger">
+    <div><span>可用现金</span><b>${money(s.cash)}</b></div>
+    <div><span>资产、服装与已购商品</span><b>${money(asset)}</b></div>
+    <div><span>待交割本金（仅计一次）</span><b>${money(pending)}</b></div>
+    <div class="total"><span>当前总身家</span><b>${money(worth(s))}</b></div>
+   </div>
+   <h3>${s.life.rest?'已锁定的本次账单':'下次休息预估'}</h3>
+   <div class="capital-ledger">
+    <div><span>生活维护</span><b>${money(q.maintenance)}</b></div>
+    <div><span>地区税 · ${(q.rate*100).toFixed(2)}%</span><b>${money(s.life.rest?.tax??q.tax)}</b></div>
+    <div><span>保镖工资</span><b>${money(q.guards)}</b></div>
+    <div><span>管理费用</span><b>${money(q.management)}</b></div>
+    <div><span>转世减免</span><b>−${money(q.credit)}</b></div>
+    <div class="total"><span>合计</span><b>${money(s.life.rest?restDue(s.life.rest):q.total)}</b></div>
+   </div>
+   ${medalsHtml}
+   ${noblesHtml}
+   <h3>健康 ${'♥'.repeat(e.health)}${'♡'.repeat(e.maxHealth-e.health)}</h3>
+   <p>已经休息 ${e.age} 次。下一次衰退概率 ${healthRisk(s,true)}%；每次休息 +1 个百分点，抽中减少 1 格，归零死亡。</p>
+   <h3>当前可用机制</h3>
+   <p>${[['基础投资与休息',0],['城市通行与商品',1],['社群交往',2],['安保 / 地区税 / 康复',3],['财务风波 / 多派系',4],['当地奢侈消费 / 延寿',5],['工业特区',6],['主权特区',7],['细胞更新',8],['云端区域',9],['极限财富压力',10]].map(([name,at])=>`<span class="mechanism-token ${t>=at?'active':''}">${t>=at?'✓':'🔒'} ${name}</span>`).join('')}</p>
+   <p>机制按当前总身家而非历史最高身家启停。跌回低身家后高级功能暂时停用；回升后恢复。</p>
+  `);
+ }
+ openMedalsModal(){
+  const medals=this.s.estate?.auctionMedals||[];
+  if(!medals.length){this.c.toast('暂无绝版拍卖勋章。在街头秘密拍卖行举牌可永久斩获！');return;}
+  const list=medals.map(id=>{const lot=getAuctionLot(id);return `<article class="medal-showcase-tile"><span class="medal-hero-icon">${lot?.medal}</span><h3>${safe(lot?.name)}</h3><p>${safe(lot?.desc)}</p><div class="medal-props"><span>永久功德 +${lot?.lv} LP</span><span>每期保养 ${money((lot?.upkeep||0)*100)}</span></div></article>`;}).join('');
+  this.c.open('medals-showcase','资本家荣誉勋章陈列墙','本局在秘密拍卖行斩获的绝版珍宝与勋章',`<div class="medals-showcase-grid">${list}</div><p class="life-note">绝版拍卖品本局无法重复获得；每枚勋章永久记录你的荣耀，并随休整期收取维护保养费。</p>`,{wide:true});
+ }
  openSecurity(){const s=this.s,e=this.e,o=securityOdds(s);this.c.open('security','有钱以后，安全也有账单。','谨慎降低遇险率，强硬提高反抗率但更容易被盯上。',`<div class="security-summary"><b>休息抢劫触发约 ${o.robbery.toFixed(0)}%</b><span>基础躲避 ${o.dodge.toFixed(0)}% · 绕路额外 +15%，上限 97%</span></div><div class="security-levels">${[0,1,2,3].map(level=>{const cost=level>e.guards?[0,100000,1000000,10000000][level]-[0,100000,1000000,10000000][e.guards]:0;return btn('guards',`<strong>${['不雇佣','随行护卫','专业小队','私人安保团'][level]}</strong><span>${e.guards===level?'已选':cost?'聘用差价 '+money(cost):'调整不退费用'} · 基础每次休息 ${money([0,35000,350000,3500000][level])}</span>`,`${level}:${e.stance}`,lateTier(s)<3||!!s.life.rest||s.life.travel||s.cash<=cost,e.guards===level?'selected':'');}).join('')}</div><h3>你的意志</h3><div class="stance-choices">${[['cautious','低调绕行','抢劫触发 −6%，躲避 +8%；工资 ×1.4'],['balanced','正常随行','标准概率与工资'],['assertive','公开威慑','抢劫触发 +5%，反抗 +14%；更引人注意']].map(([id,name,desc])=>btn('guards',`<strong>${name}</strong><span>${desc}</span>`,e.guards+':'+id,lateTier(s)<3||!!s.life.rest||!!s.life.travel,e.stance===id?'selected':'')).join('')}</div><p>跌回 $100,000 总身家以下，安保暂时停用且不收工资。所有概率都是游戏规则，不是真实安全建议。</p>`);}
  openFactions(){const t=lateTier(this.s);this.c.open('factions','财富让你被更多人看见。','关系不是永久资产，会随每次选择变化。',`<div class="faction-list">${FACTIONS.map(f=>`<article class="${t<f.at?'locked':''}"><b>${f.symbol}</b><div><h3>${f.name}</h3><p>${t<f.at?'尚未达到当前财富门槛':this.e.relations[f.id]<=-35?'敌对：可能触发惩罚':this.e.relations[f.id]>=35?'友好：可能触发馈赠':'观望：支持与拒绝都会留下记录'}</p><div class="relation-line"><i style="left:${(this.e.relations[f.id]+100)/2}%"></i></div></div><strong>${this.e.relations[f.id]>0?'+':''}${this.e.relations[f.id]}</strong></article>`).join('')}</div><p>派系会在街道和休息事件中提出请求。地下帮派严重敌对可能暗杀；议政署敌对会带来冻结与罚款，不是每个派系都使用相同惩罚。</p>`);}
  openRegions(){this.c.open('regions',getCity(this.s).name+'，还有更高的一层。','更高门槛、更高税率，也有当地专属项目。',`<div class="region-grid">${regions(this.s.life.city).map((z,i)=>`<article><span>0${i+1} / ${i?'WEALTH DISTRICT':'THE STREET'}</span><h3>${z.name}</h3><p>${z.at?'总身家门槛 '+short(z.at*100):'没有财富门槛'}<br>区域税率系数 ×${z.tax} · 项目风险 +${z.risk}</p>${btn('region',this.e.region===z.id?'当前所在':worth(this.s)<z.at*100?'尚未开放':'进入该区域',z.id,worth(this.s)<z.at*100||this.e.region===z.id)}</article>`).join('')}</div><p>当前：${currentRegion(this.s).name}。跌破区域门槛会自动回到普通街区。高空 / 轨道区域是虚构后期地点，不代表现实设施。</p>`);}
@@ -60,7 +161,7 @@ export class LifeUI extends JourneyUI{
  menuExtras(){const t=lateTier(this.s);return super.menuExtras()+`<section class="capital-menu"><div class="life-eyebrow">LIFE HAS CONSEQUENCES / 人生的后半程</div><div class="capital-menu-grid">${btn('status','身家与下期账单')}${btn('legacy','转世事务所 · '+(this.c.meta().legacy?.points||0)+' LP')}${t>=2?btn('factions','派系关系'):''}${t>=3?btn('security','雇佣保镖 / 安保姿态')+btn('medical','健康 / 昂贵延寿'):''}${t>=4?btn('regions','城市深层区域'):''}${t>=5?btn('luxury','地区奢侈消费'):''}${btn('textures','财富配色与贴图：'+(this.c.meta().wealthTextures?'开启':'关闭'))}</div><p>功能按当前总身家启停。最贫穷阶段没有额外常驻面板；必要的健康与账单只在休息弹窗出现。</p></section>`;}
  tick(){super.tick();if(this.c.started?.()===false)return;const now=performance.now();if(now<this.nextLateTick)return;this.nextLateTick=now+300;if(pendingEvent(this.s)&&!this.c.modal?.()&&!this.c.busy?.()&&(!this.s.ended||pendingEvent(this.s)?.resolved))this.openEvent();}
  async handle(a,v){
-  const actions=['culture','open-event','event-choice','event-ack','status','security','guards','factions','regions','region','medical','medical-buy','luxury','luxury-buy','legacy','perk','skin','textures','rest-all','rest-do','news'];
+  const actions=['culture','open-event','event-choice','event-ack','status','security','guards','factions','regions','region','medical','medical-buy','luxury','luxury-buy','legacy','perk','skin','textures','rest-all','rest-do','news','activate-noble','show-medals'];
   if(!a.startsWith('life-')||!actions.includes(a.slice(5)))return super.handle(a,v);
   try{switch(a.slice(5)){
    case 'culture':this.contextExpanded=!this.contextExpanded;this.paintContext();break;
@@ -76,6 +177,8 @@ export class LifeUI extends JourneyUI{
    case 'textures':this.c.meta().wealthTextures=!this.c.meta().wealthTextures;this.c.save();this.renderHud();document.querySelectorAll('[data-action="life-textures"]').forEach(b=>b.textContent='财富配色与贴图：'+(this.c.meta().wealthTextures?'开启':'关闭'));this.c.toast('财富贴图与配色已'+(this.c.meta().wealthTextures?'开启':'关闭')+'，布局不会改变。');break;
    case 'rest-all':this.openRestAll();break;case 'rest-do':restActivity(this.s,Number(v));this.persist();this.renderRest();this.openRestAll();break;
    case 'news':{const el=$('world-news');this.c.open('news','世界的另一面。','这些是会影响下一轮项目的虚构游戏新闻。',`<h3>${safe(el.querySelector('h3')?.textContent||'市场平稳')}</h3><p>${safe(el.querySelector('p')?.textContent||'')}</p>`);break;}
+   case 'activate-noble':{const msg=activateNoble(this.s,v);this.persist();this.openStatus();this.c.toast(msg);break;}
+   case 'show-medals':this.openMedalsModal();break;
   }}catch(e){this.c.toast(e.message||'此操作当前不可用。');}
   return true;
  }

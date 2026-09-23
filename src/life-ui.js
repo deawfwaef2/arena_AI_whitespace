@@ -46,10 +46,16 @@ export class LifeUI{
   else if(l.travel&&inGame){const to=CITY_DATA.find(x=>x.id===l.travel.to);back.style.backgroundImage=`linear-gradient(180deg,#31463e10,#31463e30),url('${this.c.world.cityPreview(to.id)}')`;caption.innerHTML=`<span>正在前往</span><h2>下一站，${to.name}。</h2><p>每一次出发，都有新的可能。</p>`;}
 
  }
+ promptRest(){
+  const s=this.s;if(s.life.rest||s.life.travel)return;
+  this.c.confirm('体力已耗尽 · 是否进入休整？',`当前体力已归零（0 / ${s.life.energyCap}）。继续前行需要进入生活休整以恢复体力。\n休整期将结算阶层维护账单并进行健康抽签审查。\n是否现在确认进入休整？`,()=>{
+   beginRest(s);this.c.save();this.c.refresh();this.c.renderDock();
+  });
+ }
  beforeNext(){
   const s=this.s;if(s.life.rest||s.life.travel){this.c.renderDock();return false;}
   if(s.offer.pendingStake){this.c.toast('资金正在交割，完成后才能继续。');return false;}
-  if(s.life.energy<=0){beginRest(s);this.c.save();this.c.refresh();this.c.renderDock();return false;}return true;
+  if(s.life.energy<=0){this.promptRest();return false;}return true;
  }
  beforeInvest(){if(this.s.offer.pendingStake)return true;if(!this.beforeNext())return false;return true;}
  interceptDock(){
@@ -102,9 +108,13 @@ export class LifeUI{
   const previous=$('atlas-scroll')?.scrollLeft??this.atlasLeft;this.c.open('atlas','','',body,{wide:true,custom:true});if($('atlas-scroll')){$('atlas-scroll').scrollLeft=previous;$('atlas-scroll').addEventListener('scroll',()=>this.atlasLeft=$('atlas-scroll').scrollLeft,{passive:true});}
  }
  openMechanisms(){
-  if(!owns(this.s,'hex'))return;const s=this.s;
-  const cells=MECHANISMS.map((m,index)=>{const item=ITEMS.find(i=>i.id===m.item),owned=m.always||(item?owns(s,item.id):s.life.currentWorth>=m.at*100),unlocked=item?eligible(s,item):owned;return `<article class="mechanism ${owned?'owned':unlocked?'available':'locked'}"><div>${glyph(item?.icon||'hex')}<b>${String(index+1).padStart(2,'0')}</b></div><h3>${m.name}</h3><span>${owned?'已解锁':unlocked?'可购买 · 沿途商店':'尚未达到财富门槛'}</span><p>${item?.desc||m.desc||'每个人都拥有的基础机制。'}</p>${!owned?`<small>${item?`门槛 ${short(item.at*100)} · 售价 ${short(item.price*100)}`:`门槛 ${short(m.at*100)}`}</small>`:''}</article>`;}).join('');
-  this.c.open('mechanisms','你的机制图谱。','财富打开可能，购买让机制真正属于你。',`<div class="mechanism-grid">${cells}</div><p class="life-note">财富门槛按本局历史最高身家保留；阶层维护费按当前现金确定。破产会失去本局所有商品。</p>`,{wide:true});
+  const s=this.s;
+  const w=worth(s);
+  const milestoneCards=UNLOCK_MILESTONES.map((m,index)=>{
+    const unlocked=w>=m.at*100;
+    return `<article class="milestone-card ${unlocked?'unlocked':'locked'}"><div class="milestone-card-top"><span class="milestone-badge">${unlocked?'✓ 已生效':'🔒 未解锁'}</span><span class="milestone-threshold">门槛 ${short(m.at*100)}</span></div><h3>${safe(m.title)}</h3><p>${safe(m.desc)}</p></article>`;
+  }).join('');
+  this.c.open('mechanisms','机制演进图谱','白手起家到巅峰资本家的解锁路线',`<div class="milestone-roadmap">${milestoneCards}</div><p class="life-note">机制根据当前总身家即时激活；阶层跃升后沿途将涌现更多专属奇遇与秘密拍卖！</p>`,{wide:true});
  }
  menuExtras(){
   const s=this.s;return `<section class="life-menu"><div class="life-eyebrow">LIFE / 生活系统</div><p>体力 ${s.life.energy} / 200 · ${getCity(s).name} · ${CLASSES[classIndex(s)].name}</p><div class="life-menu-actions">${owns(s,'passport')?action('map','旅行地图'):''}${owns(s,'hex')?action('mechanisms','机制图谱'):''}${owns(s,'car')?action('filter',`项目过滤：${s.life.filter?'开启':'关闭'}`):''}${owns(s,'ui')?action('theme',`界面：${s.life.modern?'Atelier':'基础'}`):''}${owns(s,'music')?action('soundscape',`配乐：${{auto:'自适应',city:'按城市',class:'按阶层'}[s.life.soundscape]}`):''}${owns(s,'deposit')?action('interest',`离线日利率 ${(dailyRate(s)*100).toFixed(1)}%`):''}${action('guide','体力与生活规则')}</div></section>`;
@@ -127,6 +137,7 @@ export class LifeUI{
     case 'city':this.selected=v;this.openAtlas();break;
     case 'mechanisms':this.openMechanisms();break;
     case 'guide':this.guide();break;
+    case 'prompt-rest':this.promptRest();break;
     case 'buy':{if(!this.beforeNext())break;const i=buyUtility(s,v);this.persist();this.c.renderDock();this.c.toast(`已购买 ${i.name} · ${i.desc}`);break;}
     case 'filter':if(owns(s,'car')){s.life.filter=!s.life.filter;this.persist();this.c.renderDock();this.c.toast(s.life.filter?'过滤开启：自动跨过低级项目，每站仍消耗体力。':'过滤已关闭。');}break;
     case 'theme':if(owns(s,'ui')){s.life.modern=!s.life.modern;this.persist();this.c.toast(s.life.modern?'已启用 Atelier 现代界面。':'已切回原有基础界面。');}break;
