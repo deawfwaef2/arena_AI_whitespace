@@ -1,0 +1,80 @@
+TAP version 13
+# Subtest: old save migrates without resetting wealth or page
+ok 1 - old save migrates without resetting wealth or page
+  ---
+  duration_ms: 5.747469
+  ...
+# Subtest: hire charges cents once and prohibits duplicates
+ok 2 - hire charges cents once and prohibits duplicates
+  ---
+  duration_ms: 0.99553
+  ...
+# Subtest: local talents require current city, wealth and cash
+ok 3 - local talents require current city, wealth and cash
+  ---
+  duration_ms: 0.592709
+  ...
+# Subtest: guide actually reduces forward stamina usage
+ok 4 - guide actually reduces forward stamina usage
+  ---
+  duration_ms: 1.490837
+  ...
+# Subtest: merchant bonus does not change old quote and affects later offers
+ok 5 - merchant bonus does not change old quote and affects later offers
+  ---
+  duration_ms: 0.706277
+  ...
+# Subtest: analyst bonus composes with dual review and remains valid on reload
+ok 6 - analyst bonus composes with dual review and remains valid on reload
+  ---
+  duration_ms: 1.351564
+  ...
+# Subtest: maintenance includes wages and steward discount without reducing tax
+ok 7 - maintenance includes wages and steward discount without reducing tax
+  ---
+  duration_ms: 0.958562
+  ...
+# Subtest: rest locks wages and prohibits hire/dismiss, no wage evasion
+ok 8 - rest locks wages and prohibits hire/dismiss, no wage evasion
+  ---
+  duration_ms: 2.869318
+  ...
+# Subtest: dismiss stops fees, removes effect, does not refund
+ok 9 - dismiss stops fees, removes effect, does not refund
+  ---
+  duration_ms: 0.5499
+  ...
+# Subtest: greeting costs energy and blocks repeats, alters faction not cash
+ok 10 - greeting costs energy and blocks repeats, alters faction not cash
+  ---
+  duration_ms: 0.687377
+  ...
+# Subtest: diplomat amplifies greeting, medic reduces risk
+ok 11 - diplomat amplifies greeting, medic reduces risk
+  ---
+  duration_ms: 0.27484
+  ...
+# Subtest: thoughts depend on wealth and relationships
+ok 12 - thoughts depend on wealth and relationships
+  ---
+  duration_ms: 0.739395
+  ...
+# Subtest: progress uses consecutive thresholds rather than total proportion
+ok 13 - progress uses consecutive thresholds rather than total proportion
+  ---
+  duration_ms: 0.331715
+  ...
+# Subtest: three-person limit and unknown imported IDs are sanitized
+ok 14 - three-person limit and unknown imported IDs are sanitized
+  ---
+  duration_ms: 0.468659
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 114.765058

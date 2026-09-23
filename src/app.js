@@ -116,19 +116,19 @@ function renderChallengeOffer(){const o=run.offer,c=getChallenge(o.challenge);co
 function renderAuctionOffer(){
  const o=run.offer,lot=getAuctionLot(o.auction);
  const d=$('game-dock');d.style.setProperty('--rarity','#e5b034');
- const affordable=run.cash>=lot.price*100;const done=o.settled;
- d.innerHTML=header(L('SECRET AUCTION','地下秘密拍卖行'),lot.name,'sparkle')+`
+ const affordable=run.cash>lot.price;const done=o.settled;
+ d.innerHTML=header(L('SECRET AUCTION','地下秘密拍卖行'),text(lot.name),'sparkle')+`
   <div class="auction-card-box">
-   <div class="auction-headline"><span class="auction-medal-badge">${lot.medal}</span><div><h3>${safe(lot.name)}</h3><p>${safe(lot.desc)}</p></div></div>
+   <div class="auction-headline"><span class="auction-medal-badge">${lot.medal}</span><div><h3>${safe(text(lot.name))}</h3><p>${safe(text(lot.desc))}</p></div></div>
    <div class="auction-metrics">
-    <div class="metric-cell"><span>起拍估价</span><strong>${money(lot.price*100,true)}</strong></div>
-    <div class="metric-cell gold"><span>转世点数</span><strong>+${lot.lv} LP</strong></div>
-    <div class="metric-cell danger"><span>休整维护费</span><strong>+${money(lot.upkeep*100,true)}</strong></div>
+    <div class="metric-cell"><span>起拍估价</span><strong>${money(lot.price,true)}</strong></div>
+    <div class="metric-cell gold"><span>转世点数</span><strong>+${lot.points} LP</strong></div>
+    <div class="metric-cell danger"><span>休整维护费</span><strong>+${money(lot.upkeep,true)}</strong></div>
    </div>
    <p class="small-rule">${done?L('Won! Medal pinned to honors tray.','竞拍已斩获！专属勋章已陈列在荣誉栏。'):L('Exclusive lot per run. Winning awards permanent medals and lifetime LP. Pass means miss forever.','本局唯一绝版藏品。竞拍获胜将铸造永久荣誉勋章并奖励转世功德点；放弃则本局永远错过。')}</p>
-   ${!affordable&&!done?`<p class="small-rule danger">${L('Need ','还需 ')}${money(lot.price*100-run.cash,true)}${L(' more cash.',' 现金。')}</p>`:''}
+   ${!affordable&&!done?`<p class="small-rule danger">${L('Need ','还需 ')}${money(lot.price-run.cash,true)}${L(' more cash.',' 现金。')}</p>`:''}
   </div>
- `+`<div class="action-row"><button class="pass-button" data-action="pass-auction" ${busy||done?'disabled':''}>${L('PASS','放弃举牌')}</button><button class="primary gold" data-action="bid-auction" ${busy||done||!affordable?'disabled':''}>${done?L('WON','已成交'):L('BID ','举牌 ')+money(lot.price*100,true)}${icon('arrow')}</button></div>`;
+ `+`<div class="action-row"><button class="pass-button" data-action="pass-auction" ${busy||done?'disabled':''}>${L('PASS','放弃举牌')}</button><button class="primary gold" data-action="${done?'next':'bid-auction'}" ${busy||(!done&&!affordable)?'disabled':''}>${done?L('NEXT STOP','下一站'):L('BID ','举牌 ')+money(lot.price,true)}${icon('arrow')}</button></div>`;
  fitDock();
 }
 function renderClinicOffer(){
@@ -145,7 +145,7 @@ function renderClinicOffer(){
 function bidAuction(){
  if(busy||modalType||run.offer.type!=='auction'||run.offer.settled)return;
  const lot=getAuctionLot(run.offer.auction);
- if(!lot||run.cash<lot.price*100){toast(L('Not enough cash to bid on this lot.','现金不足，无法竞拍该藏品。'));return;}
+ if(!lot||run.cash<=lot.price){toast(L('Not enough cash to bid on this lot.','现金不足，无法竞拍该藏品。'));return;}
  try{
   bidAuctionLot(run,lot.id);run.offer.settled=true;save();refreshStyle();renderHud();renderDock();effects.tone('buy');
   const r=focusRect();effects.burst(r.left+r.width*.45,r.top+r.height*.6,5,'#e5b034');world.celebrate();platform.celebrate();
@@ -153,9 +153,9 @@ function bidAuction(){
    <div class="auction-win-view">
     <div class="win-medal-glow">${lot.medal}</div>
     <div class="modal-eyebrow">HAMMER DOWN / 竞拍成交</div>
-    <h2 id="modal-title">${safe(lot.name)}</h2>
-    <div class="large-delta">+${lot.lv} LP</div>
-    <p>恭喜阁下拍下此件旷世奇珍！<br>专属勋章已永久陈列于你的排面荣誉墙。<br>请注意：后续每个休整期需支付 <strong>${money(lot.upkeep*100,true)}</strong> 的专属保养费。</p>
+    <h2 id="modal-title">${safe(text(lot.name))}</h2>
+    <div class="large-delta">+${lot.points} LP</div>
+    <p>恭喜阁下拍下此件旷世奇珍！<br>专属勋章已永久陈列于你的排面荣誉墙。<br>请注意：后续每个休整期需支付 <strong>${money(lot.upkeep,true)}</strong> 的专属保养费。</p>
     <button class="primary" data-action="close">${L('COLLECT & WALK ON','收藏珍宝，继续前行')}${icon('arrow')}</button>
    </div>
   `,{custom:true});
@@ -170,6 +170,7 @@ function passAuction(){
 function checkMilestoneCelebration(){
  const newly=checkNewUnlocks(run);
  if(newly.length){
+  save();
   const m=newly[0];effects.tone('win',4);effects.burst(innerWidth/2,innerHeight*.4,6,'#ffd700');world.celebrate();platform.celebrate();
   openModal('milestone-celebrate','','',`
    <div class="milestone-celebrate-dialog">
@@ -239,8 +240,8 @@ function showChallengeDetails(){const a=run.activeChallenge;if(!a){toast(L('No a
 function showMenu(){
  const tile=(action,i,title,sub)=>`<button class="menu-tile" data-action="${action}">${icon(i)}<span><strong>${title}</strong><small>${sub}</small></span></button>`;
  openModal('menu','给旅程留一点空白。','功能集中在这里，街头只留下重要选择。',`<div class="menu-grid">
- ${tile('collection','estate','我的资产','已拥有的建筑与 3D 参观')}${tile('wardrobe','shirt','我的衣橱','穿戴已拥有的外观')}${tile('history','history','旅程记录','投资结果与本局经历')}${tile('leaderboard','rank','人生战绩','本机保存的历史人生')}${tile('music','music','音乐与声音','音量、配乐和音效')}${tile('settings','settings','显示与存档','可读性、画质、备份与恢复')}</div>
- <details class="menu-advanced"><summary>成长与生活服务 <span>展开 →</span></summary>${lifeUI.menuExtras()}</details>
+ ${worth(run)>=50000?tile('collection','estate','我的资产','已拥有的建筑与 3D 参观')+tile('wardrobe','shirt','我的衣橱','穿戴已拥有的外观'):''}${tile('history','history','旅程记录','投资结果与本局经历')}${tile('leaderboard','rank','人生战绩','本机保存的历史人生')}${tile('music','music','音乐与声音','音量、配乐和音效')}${tile('settings','settings','显示与存档','可读性、画质、备份与恢复')}</div>
+ ${worth(run)>=50000?`<details class="menu-advanced"><summary>成长与生活服务 <span>展开 →</span></summary>${lifeUI.menuExtras()}</details>`:'<p class="pause-note">成长与生活服务随财富逐步开放。眼下，先做好这一次投资。</p>'}
  <div class="menu-bottom"><button class="small-button" data-action="help">完整游戏规则</button><button class="small-button" data-action="restart">重新开始一局</button></div><button class="primary" style="width:100%;margin-top:20px" data-action="close">回到街头 →</button>`);
 }
 function showSettings(){

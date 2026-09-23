@@ -2,7 +2,7 @@ import {hasCrew} from './street-core.js';
 import {worth,ensureEstate,endLife,streetEvent} from './endgame-core.js';
 import {DISTRICTS,districtOffer,LOCAL_PROJECTS} from './city-content.js';
 import {initLife,markLife,goodsValue,decorateOffer,useEnergy,assertFree,stakeBounds,owns,ITEMS,eligible} from './life-core.js';
-import {RARITIES,PROJECTS,ASSETS,OUTFITS,TIERS,SPECIALS,CHALLENGES,getAsset,getOutfit,getSpecial,getChallenge} from './catalog.js';
+import {RARITIES,PROJECTS,ASSETS,OUTFITS,TIERS,SPECIALS,CHALLENGES,getAsset,getOutfit,getSpecial,getChallenge,getAuctionLot} from './catalog.js';
 export const VERSION=2;
 export const MAX_CENTS=900000000000000;
 export const DEFAULT_RATES={assetRate:.04,shopRate:.06,challengeRate:.08,specialRate:0};
@@ -129,7 +129,7 @@ export function validateRun(input,{imported=false}={}){
  else if(['district-gate','district-task'].includes(o.type)){if(!DISTRICTS[o.district]||o.city!==s.life.city)throw Error('Invalid district');if(o.type==='district-task'&&(!Number.isInteger(o.task)||o.task<0||o.task>=DISTRICTS[o.district].tasks.length||!s.life.district))throw Error('Invalid district task');}
  else if(o.type==='world-event'){if(!s.estate.queue.some(e=>e.id===o.eventId))throw Error('Missing event');}
  else if(o.type==='interlude'){if(!['bridge','waterfront','park','alley'].includes(o.scene))throw Error('Invalid interlude');}
- else if(o.type==='auction'){if(!o.auction)throw Error('Invalid auction');}
+ else if(o.type==='auction'){if(o.auction&&typeof o.auction==='object')o.auction=o.auction.id;if(!getAuctionLot(o.auction))throw Error('Invalid auction');}
  else if(o.type==='clinic'){}
  else throw Error('Invalid offer');o.settled=!!o.settled;
  if(s.activeChallenge){const a=s.activeChallenge;if(!CHALLENGES.some(c=>c.id===a.kind)||!['wealth','streak'].includes(a.metric))throw Error('Invalid active challenge');for(const k of ['durationMs','remainingMs','target','reward','penalty','minStake','progress'])if(!Number.isFinite(a[k])||a[k]<0||a[k]>MAX_CENTS)throw Error('Invalid active challenge');if(a.remainingMs>a.durationMs||a.durationMs>600000)throw Error('Invalid timer');}

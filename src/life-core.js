@@ -63,7 +63,7 @@ export function decorateOffer(s,o,rng=Math.random,forced=false){
   const target=s.life.summonTarget;s.life.summonTarget=null;
   if(target==='auction'){
    const lot=availableAuctionLot(s);
-   if(lot){o.type='auction';o.auction=lot;return o;}
+   if(lot){o.type='auction';o.auction=lot.id;return o;}
   }else if(target==='bank'){
    o.type='project';o.project='cloud';o.localName='苏黎世私人离岸金库';o.up=3.6;o.p=75;o.grade='elite';return o;
   }else if(target==='clinic'){
@@ -74,7 +74,7 @@ export function decorateOffer(s,o,rng=Math.random,forced=false){
  }
  if(worth(s)>=100000000&&rng()<.16&&o.type==='project'&&!forced){
   const lot=availableAuctionLot(s);
-  if(lot&&rng()<.38){o.type='auction';o.auction=lot;return o;}
+  if(lot&&rng()<.38){o.type='auction';o.auction=lot.id;return o;}
  }
  if(o.type==='shop'){
   const available=ITEMS.filter(i=>!s.life.items.includes(i.id)&&eligible(s,i)&&(!i.city||i.city===s.life.city));

@@ -69,9 +69,9 @@ export class LifeUI extends JourneyUI{
   if(medals.length){
    tray.innerHTML=medals.map(id=>{
     const lot=getAuctionLot(id);
-    const lotName=lot?.name?.pair?.[1]||lot?.name||'孤品勋章';
+    const lotName=lot?.name?.zh||lot?.name?.en||'孤品勋章';
     const lp=lot?.points||lot?.lv||0;
-    return `<button class="auction-medal-btn" data-action="life-show-medals" data-value="${id}" title="${lotName} (+${lp} LP · 维护费 ${money((lot?.upkeep||0)*100)}/次)">${lot?.medal||'🎖️'}</button>`;
+    return `<button class="auction-medal-btn" data-action="life-show-medals" data-value="${id}" title="${lotName} (+${lp} LP · 维护费 ${money((lot?.upkeep||0))}/次)">${lot?.medal||'🎖️'}</button>`;
    }).join('');
   }
  }
@@ -112,9 +112,9 @@ export class LifeUI extends JourneyUI{
    <div class="status-medals-grid">
     ${medals.map(id=>{
       const lot=getAuctionLot(id);
-      const lotName=lot?.name?.pair?.[1]||lot?.name||'孤品勋章';
+      const lotName=lot?.name?.zh||lot?.name?.en||'孤品勋章';
       const lp=lot?.points||lot?.lv||0;
-      return `<div class="status-medal-item"><span class="status-medal-icon">${lot?.medal||'🎖️'}</span><div><strong>${safe(lotName)}</strong><small>+${lp} LP · 每期保养费 ${money((lot?.upkeep||0)*100)}</small></div></div>`;
+      return `<div class="status-medal-item"><span class="status-medal-icon">${lot?.medal||'🎖️'}</span><div><strong>${safe(lotName)}</strong><small>+${lp} LP · 每期保养费 ${money((lot?.upkeep||0))}</small></div></div>`;
     }).join('')}
    </div>
   `:'';
@@ -167,6 +167,10 @@ export class LifeUI extends JourneyUI{
     <div class="confirm-rest-quote">
      <div class="quote-title">📋 本期预计休整账单明细</div>
      <div class="quote-row"><span>基础生活与住所维护</span><b>${money(quote.baseMaintenance)}</b></div>
+     ${quote.companions>0?`<div class="quote-row"><span>人才随从工资</span><b>${money(quote.companions)}</b></div>`:''}
+     ${quote.crewDiscount>0?`<div class="quote-row"><span>管家基础维护减免</span><b>−${money(quote.crewDiscount)}</b></div>`:''}
+     ${quote.management>0?`<div class="quote-row"><span>资产管理费</span><b>${money(quote.management)}</b></div>`:''}
+     ${quote.credit>0?`<div class="quote-row"><span>转世账单减免</span><b>−${money(quote.credit)}</b></div>`:''}
      ${quote.outfitUpkeep>0?`<div class="quote-row"><span>高级服装与外表保养</span><b>${money(quote.outfitUpkeep)}</b></div>`:''}
      ${quote.decoUpkeep>0?`<div class="quote-row"><span>金边UI装饰每期保养</span><b>${money(quote.decoUpkeep)}</b></div>`:''}
      ${quote.guards>0?`<div class="quote-row"><span>随行安保团队工资</span><b>${money(quote.guards)}</b></div>`:''}
@@ -190,8 +194,8 @@ export class LifeUI extends JourneyUI{
   const list=AUCTION_LOTS.map(lot=>{
    const isOwned=medals.includes(lot.id);
    const isMissed=missed.includes(lot.id);
-   const lotName=lot.name?.pair?.[1]||lot.name;
-   const lotDesc=lot.desc?.pair?.[1]||lot.desc;
+   const lotName=lot.name?.zh||lot.name?.en;
+   const lotDesc=lot.desc?.zh||lot.desc?.en;
    const lp=lot.points||lot.lv||0;
    return `<article class="medal-showcase-tile ${isOwned?'owned':isMissed?'missed':'locked'}">
      <span class="medal-hero-icon">${lot.medal}</span>
