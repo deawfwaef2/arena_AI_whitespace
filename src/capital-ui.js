@@ -1,7 +1,7 @@
 import {LifeUI as JourneyUI} from './journey-ui.js';
 import {glyph} from './life-ui.js';
 import {escape as safe,icon} from './ui.js';
-import {CLASSES,getCity,owns,finishRest,restActivity,UNLOCK_MILESTONES,nextUnlock,activateNoble} from './life-core.js';
+import {CLASSES,getCity,owns,beginRest,finishRest,restActivity,UNLOCK_MILESTONES,nextUnlock,activateNoble} from './life-core.js';
 import {makeOffer,markPeak} from './engine.js';
 import {getAuctionLot,getNobleItem,getDecoration,AUCTION_LOTS,NOBLE_ITEMS,DECORATIONS} from './catalog.js';
 import {worth,lateTier,TIERS_LATE,FACTIONS,ensureEstate,reconcile,billQuote,restDue,pendingEvent,eventView,resolveEvent,acknowledgeEvent,securityOdds,hireGuards,activeGuards,healthRisk,medicalOptions,buyMedical,regions,currentRegion,enterRegion,luxuries,consumeLuxury,PERKS,initLegacy,buyPerk,collectLegacy,buyDecoration} from './endgame-core.js';
@@ -155,12 +155,12 @@ export class LifeUI extends JourneyUI{
   const s=this.s;if(s.life.rest||s.life.travel)return;
   const quote=billQuote(s);
   const curCap=s.life.energyCap;
-  this.c.open('confirm-rest','体力已耗尽 · 进入休整确认','',`
+  this.c.open('confirm-rest','休息前，先看清账单','',`
    <div class="confirm-rest-dialog">
     <div class="confirm-rest-header">
      <div class="confirm-rest-badge">🛏️</div>
      <div class="confirm-rest-title-wrap">
-      <h3>当前体力已归零（0 / ${curCap}）</h3>
+      <h3>当前体力 ${s.life.energy} / ${curCap}</h3>
       <p>继续前行需要进入生活休整以恢复满额体力与状态。</p>
      </div>
     </div>
@@ -176,7 +176,7 @@ export class LifeUI extends JourneyUI{
     </div>
     <div class="confirm-rest-warning">
      <strong>⚠️ 休息须知：</strong>
-     <span>休整期间账单将正式锁定并扣款，同时进行身体周期健康审查（当前衰退概率 ${healthRisk(s,true)}%）；必须结清账单方可满血出发。</span>
+     <span>进入休整时锁定账单，处理事件后由你确认支付，同时进行身体周期健康审查（当前衰退概率 ${healthRisk(s,true)}%）；必须结清账单方可满血出发。</span>
     </div>
     <div class="dialog-actions action-row">
      <button class="life-button pass-btn" data-action="close">稍后再说</button>
@@ -301,7 +301,7 @@ export class LifeUI extends JourneyUI{
  menuExtras(){const t=lateTier(this.s),curTheme=this.c.meta().theme||'minimalist',themeNames={minimalist:'极简黑白',imperial:'帝国鎏金',cyber:'赛博霓虹',swiss:'瑞士现代'};return super.menuExtras()+`<section class="capital-menu"><div class="life-eyebrow">LIFE HAS CONSEQUENCES / 人生的后半程</div><div class="capital-menu-grid">${btn('status','身家与下期账单')}${btn('mechanisms','财富机制蓝图')}${btn('theme-picker','视觉风格：'+(themeNames[curTheme]||curTheme))}${btn('decorations','金边UI装饰与美化 (+LP)')}${btn('legacy','转世事务所 · '+(this.c.meta().legacy?.points||0)+' LP')}${t>=2?btn('factions','派系关系'):''}${t>=3?btn('security','雇佣保镖 / 安保姿态')+btn('medical','健康 / 昂贵延寿'):''}${t>=4?btn('regions','城市深层区域'):''}${t>=5?btn('luxury','地区奢侈消费'):''}${btn('textures','财富配色与贴图：'+(this.c.meta().wealthTextures?'开启':'关闭'))}</div><p>功能按当前总身家启停。最贫穷阶段没有额外常驻面板；必要的健康与账单只在休息弹窗出现。</p></section>`;}
  tick(){super.tick();if(this.c.started?.()===false)return;const now=performance.now();if(now<this.nextLateTick)return;this.nextLateTick=now+300;if(pendingEvent(this.s)&&!this.c.modal?.()&&!this.c.busy?.()&&(!this.s.ended||pendingEvent(this.s)?.resolved))this.openEvent();}
  async handle(a,v){
-  const actions=['culture','open-event','event-choice','event-ack','status','security','guards','factions','regions','region','medical','medical-buy','luxury','luxury-buy','legacy','perk','skin','textures','rest-all','rest-do','news','activate-noble','show-medals','mechanisms','theme-picker','theme-switch','prompt-rest','confirm-start-rest'];
+  const actions=['culture','open-event','event-choice','event-ack','status','security','guards','factions','regions','region','medical','medical-buy','luxury','luxury-buy','legacy','perk','skin','textures','rest-all','rest-do','news','activate-noble','show-medals','mechanisms','theme-picker','theme-switch','decorations','buy-deco','equip-deco','prompt-rest','confirm-start-rest'];
   if(!a.startsWith('life-')||!actions.includes(a.slice(5)))return super.handle(a,v);
   try{switch(a.slice(5)){
    case 'culture':this.contextExpanded=!this.contextExpanded;this.paintContext();break;
@@ -359,8 +359,9 @@ export class LifeUI extends JourneyUI{
    }
    case 'prompt-rest':this.promptRest();break;
    case 'confirm-start-rest':{
-    this.c.close();
+    if(this.s.life.rest||this.s.life.travel||this.s.ended)break;
     beginRest(this.s);
+    this.c.close();
     this.c.save();
     this.c.refresh();
     this.c.renderDock();
