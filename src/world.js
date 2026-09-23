@@ -269,8 +269,9 @@ export class World{
  resize(cameraOnly=false){
   if(!this.renderer||!this.camera)return;const w=this.container.clientWidth,h=this.container.clientHeight;if(!w||!h)return;if(!cameraOnly)this.renderer.setSize(w,h);
   if(this.restStage){resizeRest(this.restStage,w,h,this.restAngle||0);return;}
-  const desktop=innerWidth>=900||(innerWidth>innerHeight&&innerWidth>=640);
-  let foot=h*.82;let f=desktop?10.5:10.7;if(this.titleMode){f=11;foot=h*.74;}
+  const desktop=w>=760;
+  const dock=document.getElementById('game-dock');
+  let foot=desktop?h*.73:Math.max(h*.49,h-(dock?.getBoundingClientRect().height||h*.36)-32);let f=desktop?12.2:12.8;if(this.titleMode){f=11;foot=h*.74;}
   this.frustum=f;const c=this.camera;c.left=-f*w/h/2;c.right=f*w/h/2;c.top=f/2;c.bottom=-f/2;
   c.position.set(8,8.7,13);c.position.applyAxisAngle(new T.Vector3(0,1,0),this.blockAngle||0);c.lookAt(0,.8,0);c.updateProjectionMatrix();c.updateMatrixWorld(true);
   const p=new T.Vector3(this.actor?.root.position.x??-1.65,.18,this.actor?.root.position.z??2.2).project(c),cx=(p.x+1)*w/2,cy=(1-p.y)*h/2;

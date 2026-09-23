@@ -46,8 +46,8 @@ export class LifeUI extends JourneyUI{
   const s=this.s,w=worth(s),next=nextUnlock(s);
   if(next){
    const nextTitle=next.title||next.name||'新机制';
-   const pct=Math.max(5,Math.min(100,((w/100)/next.at)*100));
-   bar.innerHTML=`<div class="milestone-bar-inner"><span class="milestone-icon">🔓</span><span class="milestone-title">下一机制: ${safe(nextTitle)}</span><span class="milestone-target">${money(next.at*100,true)}</span><div class="milestone-track"><i style="width:${pct.toFixed(0)}%"></i></div></div>`;
+   const pct=Math.max(0,Math.min(100,next.progress*100));
+   bar.innerHTML=`<div class="milestone-bar-inner"><span class="milestone-icon">🔓</span><span class="milestone-title">${Math.round(next.progress*100)}% · ${safe(nextTitle)}</span><span class="milestone-target">${money(next.at*100,true)}</span><div class="milestone-track"><i style="width:${pct.toFixed(0)}%"></i></div></div>`;
    bar.title=`当前身家 ${money(w)} / 解锁门槛 ${money(next.at*100)}。点击查看完整机制蓝图`;
   }else{
    bar.innerHTML=`<div class="milestone-bar-inner maxed"><span class="milestone-icon">👑</span><span class="milestone-title">全机制已激活 · 巅峰资本家</span></div>`;
