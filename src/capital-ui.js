@@ -45,8 +45,9 @@ export class LifeUI extends JourneyUI{
   if(!bar)return;
   const s=this.s,w=worth(s),next=nextUnlock(s);
   if(next){
+   const nextTitle=next.title||next.name||'新机制';
    const pct=Math.max(5,Math.min(100,((w/100)/next.at)*100));
-   bar.innerHTML=`<div class="milestone-bar-inner"><span class="milestone-icon">🔓</span><span class="milestone-title">下一机制: ${safe(next.title)}</span><span class="milestone-target">${money(next.at*100,true)}</span><div class="milestone-track"><i style="width:${pct.toFixed(0)}%"></i></div></div>`;
+   bar.innerHTML=`<div class="milestone-bar-inner"><span class="milestone-icon">🔓</span><span class="milestone-title">下一机制: ${safe(nextTitle)}</span><span class="milestone-target">${money(next.at*100,true)}</span><div class="milestone-track"><i style="width:${pct.toFixed(0)}%"></i></div></div>`;
    bar.title=`当前身家 ${money(w)} / 解锁门槛 ${money(next.at*100)}。点击查看完整机制蓝图`;
   }else{
    bar.innerHTML=`<div class="milestone-bar-inner maxed"><span class="milestone-icon">👑</span><span class="milestone-title">全机制已激活 · 巅峰资本家</span></div>`;
@@ -68,7 +69,9 @@ export class LifeUI extends JourneyUI{
   if(medals.length){
    tray.innerHTML=medals.map(id=>{
     const lot=getAuctionLot(id);
-    return `<button class="auction-medal-btn" data-action="life-show-medals" data-value="${id}" title="${lot?.name} (+${lot?.lv}LP · 维护费 ${money((lot?.upkeep||0)*100)}/次)">${lot?.medal||'🎖️'}</button>`;
+    const lotName=lot?.name?.pair?.[1]||lot?.name||'孤品勋章';
+    const lp=lot?.points||lot?.lv||0;
+    return `<button class="auction-medal-btn" data-action="life-show-medals" data-value="${id}" title="${lotName} (+${lp} LP · 维护费 ${money((lot?.upkeep||0)*100)}/次)">${lot?.medal||'🎖️'}</button>`;
    }).join('');
   }
  }
@@ -107,7 +110,12 @@ export class LifeUI extends JourneyUI{
   const medalsHtml=medals.length?`
    <h3>已斩获绝版拍卖勋章 (${medals.length})</h3>
    <div class="status-medals-grid">
-    ${medals.map(id=>{const lot=getAuctionLot(id);return `<div class="status-medal-item"><span class="status-medal-icon">${lot?.medal||'🎖️'}</span><div><strong>${safe(lot?.name)}</strong><small>+${lot?.lv} LP · 每期保养费 ${money((lot?.upkeep||0)*100)}</small></div></div>`;}).join('')}
+    ${medals.map(id=>{
+      const lot=getAuctionLot(id);
+      const lotName=lot?.name?.pair?.[1]||lot?.name||'孤品勋章';
+      const lp=lot?.points||lot?.lv||0;
+      return `<div class="status-medal-item"><span class="status-medal-icon">${lot?.medal||'🎖️'}</span><div><strong>${safe(lotName)}</strong><small>+${lp} LP · 每期保养费 ${money((lot?.upkeep||0)*100)}</small></div></div>`;
+    }).join('')}
    </div>
   `:'';
 
@@ -181,22 +189,28 @@ export class LifeUI extends JourneyUI{
   const list=AUCTION_LOTS.map(lot=>{
    const isOwned=medals.includes(lot.id);
    const isMissed=missed.includes(lot.id);
+   const lotName=lot.name?.pair?.[1]||lot.name;
+   const lotDesc=lot.desc?.pair?.[1]||lot.desc;
+   const lp=lot.points||lot.lv||0;
    return `<article class="medal-showcase-tile ${isOwned?'owned':isMissed?'missed':'locked'}">
      <span class="medal-hero-icon">${lot.medal}</span>
      <div class="medal-meta">
-       <h3>${safe(lot.name)}</h3>
-       <p>${safe(lot.desc)}</p>
+       <h3>${safe(lotName)}</h3>
+       <p>${safe(lotDesc)}</p>
        <div class="medal-props">
-         <span class="lv-badge">+${lot.points} LP 转世点</span>
+         <span class="lv-badge">+${lp} LP 转世点</span>
          <span class="upkeep-badge">每期保养 ${money(lot.upkeep)}</span>
        </div>
        <div class="medal-state-tag">
-         ${isOwned?'<span class="tag-owned">✓ 已永久斩获 · 点亮荣誉</span>':isMissed?'<span class="tag-missed">✕ 本局已擦肩而过 · 永不复现</span>':`<span class="tag-locked">🔒 街头拍卖稀品 · 估价 ${money(lot.price)}</span>`}
+         ${isOwned?'<span class="tag-owned">✓ 已永久斩获 · 荣誉点亮</span>':isMissed?'<span class="tag-missed">✕ 本局已擦肩而过 · 永不复现</span>':`<span class="tag-locked">🔒 街头拍卖稀品 · 估价 ${money(lot.price)}</span>`}
        </div>
      </div>
    </article>`;
   }).join('');
-  const totalLP=medals.reduce((sum,id)=>sum+(getAuctionLot(id)?.points||0),0);
+  const totalLP=medals.reduce((sum,id)=>{
+    const lot=getAuctionLot(id);
+    return sum+(lot?.points||lot?.lv||0);
+  },0);
   this.c.open('medals-showcase','资本家荣誉勋章陈列墙 · THE IMPERIAL TREASURY',`已斩获 ${medals.length} / ${AUCTION_LOTS.length} 件世界孤品 · 永久转世点 +${totalLP} LP`,
    `<div class="medals-showcase-grid">${list}</div><p class="life-note">每件绝版孤品在街头举牌后永久转化为转世点（LP）并装点荣誉陈列墙；若放弃举牌，该藏品本局永不再现。所有勋章在每次休整结算时收取保养费。</p>`,{wide:true});
  }

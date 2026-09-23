@@ -48,10 +48,24 @@
 @media(min-width:900px) and (max-width:1170px){#game .portrait-hud{gap:9px;left:160px;right:190px}#game .city-panorama,#game.is-resting .city-panorama{left:14px;width:132px}#game .cash-hud{min-width:140px;flex-basis:150px}#game .cash-hud strong{font-size:26px}#game .cash-coin{display:none}#game .route-hud{display:none}#game .energy-hud{min-width:133px;flex-basis:150px}#game .capital-summary{min-width:160px;padding:9px;font-size:12px}#game .capital-summary>b{font-size:13px}#game .life-map-pull{right:75px;width:105px;min-width:105px;font-size:12px}#game .life-map-pull>b{display:none}#game #menu-button.global-menu{right:14px}#game .game-dock{width:326px;right:14px;padding:15px}#game #world,#game #swipe-surface{right:calc(326px * var(--ui-scale) + 28px)}#game.is-resting #world,#game.is-resting #swipe-surface{right:0;left:calc(326px * var(--ui-scale) + 28px)}#game.is-resting .game-dock{left:14px;right:auto}#game.is-resting .world-news{width:215px;right:14px}}
 @media(max-width:899px){
  #game #world,#game #swipe-surface{inset:112px 0 calc(min(392px,46dvh) + 55px) 0;width:auto;height:auto;border-radius:0}
- #game .portrait-hud,#game[data-capital-tier='0'] .portrait-hud{left:12px;right:68px;top:10px;width:auto;min-height:84px;display:grid;grid-template-columns:minmax(110px,1fr) minmax(130px,1fr);grid-template-rows:54px 23px;gap:6px 8px;zoom:1}
- #game .top-hud{display:contents}#game .cash-hud{height:54px;min-width:0;width:100%;padding:7px 10px;border-radius:10px;grid-column:1;grid-row:1}#game .cash-hud strong{font-size:25px}#game .cash-label{font-size:9px;letter-spacing:.5px}#game .cash-coin{display:none}
- #game .energy-hud{height:54px;min-height:54px;min-width:0;grid-column:2;grid-row:1;padding:7px 9px;gap:4px;width:100%;margin:0;border-radius:10px;font-size:12px}#game .energy-hud small{font-size:10px}#game .energy-hud #energy-hint{font-size:9px;display:block;width:100%;margin:0}#game .energy-track{min-width:25px;max-width:none}#game .energy-hud .life-icon{width:14px;height:14px}
- #game .route-hud{grid-row:2;grid-column:1;margin:0;height:23px;align-items:center;display:flex}#game .route-pill{min-height:23px;padding:0 4px;font-size:10px}#game .capital-summary{grid-row:2;grid-column:1/3;min-height:23px;height:23px;display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:4px;min-width:0;padding:2px 6px;border:0;border-radius:5px;background:#edf0e2;white-space:nowrap}#game .capital-summary>span{font-size:9px}#game .capital-summary>b{font-size:10px}#game .capital-summary i{display:none}#game:has(.capital-summary:not([hidden])) .route-hud{display:none}
+ #game .portrait-hud,#game[data-capital-tier='0'] .portrait-hud{left:10px;right:64px;top:8px;width:auto;display:flex;flex-direction:column;gap:5px;pointer-events:none}
+ #game .portrait-hud > *{pointer-events:auto}
+ #game .milestone-progress-bar{width:100%;max-width:none;margin:0}
+ #game .top-hud{display:flex;gap:6px;width:100%;align-items:stretch}
+ #game .cash-hud{height:48px;min-width:0;flex:1 1 50%;padding:6px 10px;border-radius:10px;display:flex;flex-direction:column;justify-content:center}
+ #game .cash-hud strong{font-size:20px;line-height:1.1}
+ #game .cash-label{font-size:8px;letter-spacing:.5px}
+ #game .cash-coin{display:none}
+ #game .energy-hud{height:48px;min-height:48px;min-width:0;flex:1 1 50%;padding:6px 8px;gap:3px;margin:0;border-radius:10px;font-size:11px}
+ #game .energy-hud small{font-size:9px}
+ #game .energy-hud #energy-hint{font-size:8px;display:block;width:100%;margin:0}
+ #game .energy-track{min-width:20px;max-width:none}
+ #game .energy-hud .life-icon{width:12px;height:12px}
+ #game .capital-summary{min-height:22px;height:22px;display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:4px;width:100%;padding:2px 8px;border-radius:6px;background:rgba(237,240,226,0.92);white-space:nowrap}
+ #game .capital-summary>span{font-size:8.5px}
+ #game .capital-summary>b{font-size:9.5px}
+ #game .capital-summary i{display:none}
+ #game .auction-medals-tray{width:100%;margin:0;padding:2px 4px}
  #game #menu-button.global-menu{right:12px;top:14px;width:44px;height:44px;min-width:44px}
  #game .city-panorama,#game.is-resting .city-panorama{display:none!important}#game .life-map-pull{right:12px;left:auto;top:63px;bottom:auto;width:44px;min-width:44px;height:40px;min-height:44px;padding:9px;zoom:1;border-radius:10px;border:1px solid #d7decb;background:#fbf9e9}#game .life-map-pull>span,#game .life-map-pull>b{display:none}#game .life-map-pull .life-icon{width:22px;height:22px}
  #game .game-dock{left:12px;right:auto;top:auto;bottom:43px;translate:0;width:calc(100vw - 24px);max-width:none;height:min(392px,46dvh);max-height:min(392px,46dvh);padding:12px 14px;border-radius:15px;zoom:1;z-index:8;overflow:auto}
@@ -388,70 +402,112 @@
    ========================================================= */
 
 /* 1. Minimalist (Modern Minimalist / 极简黑白) */
-[data-theme='minimalist'] #game{background:#0e1115}
-[data-theme='minimalist'] .game-dock{background:#15181fee;border-color:#2a313d;color:#f1f5f9}
-[data-theme='minimalist'] .cash-hud{background:#181c24;border-color:#2d3542;color:#f8fafc}
+[data-theme='minimalist'] #game{
+ background:#0a0d12;
+ font-family:system-ui,-apple-system,"Segoe UI",Roboto,"PingFang SC",sans-serif;
+}
+[data-theme='minimalist'] .game-dock{
+ background:rgba(18,24,34,0.92);
+ border:1px solid #2d3748;
+ color:#f1f5f9;
+ box-shadow:0 12px 36px rgba(0,0,0,0.4);
+}
+[data-theme='minimalist'] .cash-hud{
+ background:#161d27;
+ border:1px solid #2d3748;
+ color:#f8fafc;
+}
 [data-theme='minimalist'] .cash-hud strong{color:#ffffff}
-[data-theme='minimalist'] .primary{background:#2563eb;color:#ffffff;border-color:#3b82f6}
+[data-theme='minimalist'] .primary{
+ background:#0284c7;
+ color:#ffffff;
+ border:1px solid #38bdf8;
+ font-weight:700;
+}
+[data-theme='minimalist'] .primary:hover{background:#0369a1}
 
 /* 2. Imperial Gold (帝国鎏金) */
-[data-theme='imperial'] #game{background:#0b131e}
+[data-theme='imperial'] #game{
+ background:#070b10;
+ font-family:"Playfair Display","Cinzel","Times New Roman","Songti SC",serif;
+}
 [data-theme='imperial'] .game-dock{
- background:linear-gradient(145deg,#131f2de8,#0d1622f4);
- border:1.5px solid #d4af37;
- box-shadow:0 0 25px rgba(212,175,55,0.2), 0 12px 40px rgba(0,0,0,0.5);
+ background:linear-gradient(145deg,rgba(18,26,38,0.95),rgba(10,16,25,0.98));
+ border:1.8px solid #d4af37;
+ box-shadow:0 0 30px rgba(212,175,55,0.25), 0 16px 45px rgba(0,0,0,0.6);
  color:#fef08a;
 }
 [data-theme='imperial'] .cash-hud{
- background:linear-gradient(135deg,#1c2c40,#111b27);
- border:1.5px solid #e5b034;
- box-shadow:0 0 18px rgba(229,176,52,0.25);
+ background:linear-gradient(135deg,#1f2d40,#121b27);
+ border:1.8px solid #f59e0b;
+ box-shadow:0 0 20px rgba(245,158,11,0.3);
  color:#fef08a;
 }
-[data-theme='imperial'] .cash-hud strong{color:#fde047;text-shadow:0 0 12px rgba(253,224,71,0.4)}
+[data-theme='imperial'] .cash-hud strong{
+ color:#fde047;
+ text-shadow:0 0 14px rgba(253,224,71,0.5);
+}
 [data-theme='imperial'] .primary{
- background:linear-gradient(135deg,#e5b034,#b7791f);
- color:#1a1005;
- border:1px solid #fef08a;
- font-weight:800;
- box-shadow:0 4px 16px rgba(229,176,52,0.4);
+ background:linear-gradient(135deg,#f59e0b,#b45309);
+ color:#1c1305;
+ border:1.5px solid #fef08a;
+ font-weight:900;
+ text-shadow:0 1px 0 rgba(255,255,255,0.4);
+ box-shadow:0 4px 18px rgba(245,158,11,0.45);
+}
+[data-theme='imperial'] .primary:hover{
+ background:linear-gradient(135deg,#fbbf24,#d97706);
+ box-shadow:0 0 24px rgba(251,191,36,0.6);
 }
 
 /* 3. Cyber Neon (复古赛博霓虹) */
-[data-theme='cyber'] #game{background:#080914}
+[data-theme='cyber'] #game{
+ background:#04060e;
+ font-family:"Space Grotesk","SF Pro Text","Consolas",monospace,sans-serif;
+}
 [data-theme='cyber'] .game-dock{
- background:#0c1020f0;
- border:1.5px solid #00f3ff;
- box-shadow:0 0 20px rgba(0,243,255,0.3), inset 0 0 15px rgba(0,243,255,0.08);
+ background:rgba(8,12,24,0.94);
+ border:1.8px solid #00f3ff;
+ box-shadow:0 0 25px rgba(0,243,255,0.35), inset 0 0 15px rgba(0,243,255,0.1);
  color:#e0f7fa;
 }
 [data-theme='cyber'] .cash-hud{
- background:#0f1428;
- border:1.5px solid #ff007f;
- box-shadow:0 0 16px rgba(255,0,127,0.3);
+ background:#0c1122;
+ border:1.8px solid #ff007f;
+ box-shadow:0 0 20px rgba(255,0,127,0.35);
  color:#ff80bf;
 }
-[data-theme='cyber'] .cash-hud strong{color:#00f3ff;text-shadow:0 0 12px rgba(0,243,255,0.6)}
+[data-theme='cyber'] .cash-hud strong{
+ color:#00f3ff;
+ text-shadow:0 0 14px rgba(0,243,255,0.7);
+}
 [data-theme='cyber'] .primary{
  background:linear-gradient(135deg,#ff007f,#00f3ff);
  color:#ffffff;
  border:0;
  font-weight:800;
- box-shadow:0 0 20px rgba(255,0,127,0.5);
+ text-shadow:0 0 8px rgba(0,0,0,0.8);
+ box-shadow:0 0 22px rgba(255,0,127,0.6);
+}
+[data-theme='cyber'] .primary:hover{
+ box-shadow:0 0 30px rgba(0,243,255,0.8);
 }
 
 /* 4. Swiss Clean Editorial (瑞士现代) */
-[data-theme='swiss'] #game{background:#f4f3ef}
+[data-theme='swiss'] #game{
+ background:#f6f5f0;
+ font-family:"Space Grotesk","Helvetica Neue",Arial,"PingFang SC",sans-serif;
+}
 [data-theme='swiss'] .game-dock{
- background:#fffffff8;
- border:2px solid #111111;
- box-shadow:6px 6px 0 #111111;
+ background:#fffffffb;
+ border:2.5px solid #111111;
+ box-shadow:5px 5px 0 #111111;
  color:#111111;
 }
 [data-theme='swiss'] .cash-hud{
  background:#ffffff;
  border:2px solid #111111;
- box-shadow:4px 4px 0 #111111;
+ box-shadow:3px 3px 0 #111111;
  color:#111111;
 }
 [data-theme='swiss'] .cash-hud strong{color:#111111}
@@ -459,7 +515,46 @@
  background:#111111;
  color:#ffffff;
  border:2px solid #111111;
- box-shadow:4px 4px 0 #e53e3e;
+ box-shadow:4px 4px 0 #e11d48;
+ font-weight:800;
+}
+[data-theme='swiss'] .primary:hover{
+ transform:translate(-1px,-1px);
+ box-shadow:5px 5px 0 #e11d48;
+}
+
+/* =========================================================
+   POVERTY PHASE VS WEALTHY PHASE AESTHETICS
+   ========================================================= */
+
+/* POVERTY PHASE (data-poverty="yes"): Stark, raw, minimal */
+[data-poverty='yes'] #game{
+ filter:saturate(0.85);
+}
+[data-poverty='yes'] .game-dock{
+ border-color:#475569;
+ box-shadow:none;
+}
+[data-poverty='yes'] .city-panorama,
+[data-poverty='yes'] .class-ticker,
+[data-poverty='yes'] .life-map-pull,
+[data-poverty='yes'] .capital-summary,
+[data-poverty='yes'] .auction-medals-tray{
+ display:none !important;
+}
+
+/* WEALTHY PHASES: Lavish, gilded and ornate */
+[data-capital-tier='4'] .game-dock,
+[data-capital-tier='5'] .game-dock,
+[data-capital-tier='6'] .game-dock{
+ border:2px solid #f59e0b;
+ box-shadow:0 0 35px rgba(245,158,11,0.25), 0 16px 50px rgba(0,0,0,0.6);
+}
+[data-capital-tier='4'] .milestone-progress-bar,
+[data-capital-tier='5'] .milestone-progress-bar,
+[data-capital-tier='6'] .milestone-progress-bar{
+ border-color:#f59e0b;
+ box-shadow:0 0 16px rgba(245,158,11,0.25);
 }
 
 /* Quick Scale Button in Top HUD */

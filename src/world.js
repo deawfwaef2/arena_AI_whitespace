@@ -328,7 +328,7 @@ export class World{
   this.corner={
     from:this.blockAngle||0,
     start:performance.now(),
-    duration:2100
+    duration:1250
   };
   return new Promise(resolve=>this.corner.resolve=resolve);
  }
@@ -338,12 +338,36 @@ export class World{
  setDrag(n){this.drag=n;}
  updateStyle(s){
   if(this.fallback)return;const o=getOutfit(s.equipped);if(this.heroIdentity)this.heroIdentity.visible=o.kind!=='royal'&&o.kind!=='gold';this.actor.clothes.color.set(o.color);this.actor.trousers.color.set(['suit','gold','cyber','royal'].includes(o.kind)?o.color:0xf0f4f0);this.actor.dress.children.slice().forEach(dispose);const d=this.actor.dress;
-  const effects=s.assets.map(id=>getAsset(id)?.effect);const wealth=classIndex(s);if(wealth>=2)effects.push('silver');if(wealth>=3)effects.push('gold','petals');if(wealth>=4)effects.push('welcome4','diamond');if(wealth>=5)effects.push('welcome8','royal','cosmic');if(s.equipped==='plain'){this.actor.clothes.color.set([0x46796e,0x789887,0x577b71,0x365c55,0xdcd5bd,0xe9dcc0][wealth]);this.actor.trousers.color.set(wealth>=3?0x53645d:0x9fa79d);}this.effects=effects;
+  const effects=(s.assets||[]).map(id=>getAsset(id)?.effect).filter(Boolean);const wealth=classIndex(s);if(wealth>=2)effects.push('silver');if(wealth>=3)effects.push('gold','petals');if(wealth>=4)effects.push('welcome4','diamond');if(wealth>=5)effects.push('welcome8','royal','cosmic');if(s.equipped==='plain'){this.actor.clothes.color.set([0x46796e,0x789887,0x577b71,0x365c55,0xdcd5bd,0xe9dcc0][wealth]);this.actor.trousers.color.set(wealth>=3?0x53645d:0x9fa79d);}this.effects=effects;
   if(o.kind!=='plain'){
    for(const x of [-.287,.287]){const sleeve=cyl(d,.095,.083,.21,new T.Color(o.color),x,1.19,0,12);sleeve.rotation.z=x<0?-.15:.15;}
-   if(['suit','gold','royal'].includes(o.kind)){box(d,.21,.28,.017,0xf1e9da,0,1.16,.194);const tie=mesh(d,new T.ConeGeometry(.045,.21,4),0x456074,0,1.13,.215);tie.rotation.z=Math.PI;for(const y of [1,.88])sphere(d,.014,new T.Color(o.trim),.065,y,.204);}
+   if(['suit','gold','royal'].includes(o.kind)){
+     box(d,.21,.28,.017,0xf1e9da,0,1.16,.194);
+     const tie=mesh(d,new T.ConeGeometry(.045,.21,4),o.kind==='royal'?0x9b111e:0x456074,0,1.13,.215);
+     tie.rotation.z=Math.PI;
+     for(const y of [1,.88])sphere(d,.014,new T.Color(o.trim),.065,y,.204);
+   }
    if(o.kind==='hoodie'){const hood=torus(d,.31,.06,new T.Color(o.color),0,1.5,-.067);hood.rotation.x=.3;}
-   if(o.kind==='cyber'){for(const y of [.9,1.02,1.14])box(d,.32,.025,.03,mat(0x9fffe6,{emissive:0x2bb599,emissiveIntensity:.4}),0,y,.19);}
+   if(o.kind==='cyber'){
+     for(const y of [.9,1.02,1.14])box(d,.32,.025,.03,mat(0x9fffe6,{emissive:0x2bb599,emissiveIntensity:.5}),0,y,.19);
+     // Cyber holographic visor
+     const visor=box(d,.32,.07,.04,mat(0x00f3ff,{emissive:0x00f3ff,emissiveIntensity:.9,transparent:true,opacity:.85}),0,1.68,.21);
+     // Cyber shoulder energy pauldrons
+     for(const x of [-.32,.32])box(d,.11,.05,.16,mat(0x182030,{metalness:.8,emissive:0x00f3ff,emissiveIntensity:.4}),x,1.36,0);
+   }
+   if(o.kind==='royal'){
+     // Sovereign imperial flowing velvet cape with gold trim
+     const cape=mesh(d,new T.PlaneGeometry(.54,.96),mat(0x800020,{roughness:.35,side:T.DoubleSide}),0,.84,-.22);
+     cape.rotation.x=.12;
+     box(d,.56,.05,.05,mat(0xd4af37,{metalness:.7,roughness:.2}),0,1.33,-.2);
+     // Floating golden imperial halo
+     const halo=torus(d,.28,.022,mat(0xf5d184,{emissive:0xd4af37,emissiveIntensity:.7}),0,2.36,0);
+     halo.rotation.x=Math.PI/2;
+   }
+   if(o.kind==='gold'){
+     // Golden age sparkling shoulder pads
+     for(const x of [-.3,.3])sphere(d,.09,mat(0xffd700,{metalness:.9,roughness:.1,emissive:0xb7791f,emissiveIntensity:.3}),x,1.34,0);
+   }
   }
   const hasCrown=['royal','gold'].includes(o.kind)||effects.some(x=>['royal','sovereign'].includes(x));
   if(hasCrown)this.crown(d,0,2.02,0,.68);
@@ -377,14 +401,24 @@ export class World{
   if(this.corner){
     const c=this.corner,p=Math.min(1,(now-c.start)/c.duration);
     const ease=p*p*(3-2*p);
-    const tP=ease,invT=1-tP;
-    const bx=invT*invT*(-1.65) + 2*invT*tP*(2.2) + tP*tP*(2.2);
-    const bz=invT*invT*(2.2) + 2*invT*tP*(2.2) + tP*tP*(1.65);
-    const vx=2*invT*(2.2 - (-1.65));
-    const vz=2*tP*(1.65 - 2.2);
-    const localFacing=Math.atan2(Math.max(.01,vx),-vz);
+    const tP=ease,it=1-tP;
+    // Smooth cubic Bezier sidewalk corner trajectory from (-1.65, 2.2) to (2.2, 1.65)
+    const p0x=-1.65, p0z=2.2;
+    const p1x=0.55,  p1z=2.2;
+    const p2x=2.2,   p2z=2.2;
+    const p3x=2.2,   p3z=1.65;
+    const bx=it*it*it*p0x + 3*it*it*tP*p1x + 3*it*tP*tP*p2x + tP*tP*tP*p3x;
+    const bz=it*it*it*p0z + 3*it*it*tP*p1z + 3*it*tP*tP*p2z + tP*tP*tP*p3z;
+    const vx=3*it*it*(p1x-p0x) + 6*it*tP*(p2x-p1x) + 3*tP*tP*(p3x-p2x);
+    const vz=3*it*it*(p1z-p0z) + 6*it*tP*(p2z-p1z) + 3*tP*tP*(p3z-p2z);
+    const tangentAngle=Math.atan2(Math.max(0.001,vx), -vz);
     this.actor.root.position.copy(this.streetPoint(bx,bz,c.from));
-    this.cornerFacing=c.from+localFacing;
+    // Smoothly blend from tangent curve heading to the target block resting angle without snapping
+    const newBlockHeading=(c.from+Math.PI/2)+0.59;
+    const walkHeading=c.from+tangentAngle;
+    const settle=Math.max(0,(p-0.65)/0.35);
+    const settleEase=settle*settle*(3-2*settle);
+    this.cornerFacing=T.MathUtils.lerp(walkHeading, newBlockHeading, settleEase);
     this.blockAngle=c.from+(Math.PI/2)*ease;
     this.resize(true);
     if(p===1){
@@ -484,17 +518,20 @@ export class World{
        a.body.position.y=0;
      }
    });
+   if(this.actorAuras){
+     this.actorAuras.rotation.y+=dt*0.75;
+   }
    for(const cry of this.orbitingCrystals||[]){
      const u=cry.userData;
      if(!u?.orbit)continue;
      cry.position.set(
        Math.cos(t*u.orbit.speed+u.orbit.phase)*u.orbit.radius,
-       u.orbit.height+Math.sin(t*2.0+u.orbit.phase)*.12,
+       u.orbit.height+Math.sin(t*2.2+u.orbit.phase)*.14,
        Math.sin(t*u.orbit.speed+u.orbit.phase)*u.orbit.radius
      );
-     cry.rotation.y+=dt*2.2;
-     cry.rotation.x+=dt*1.4;
-     if(u.isPrism)cry.material.color.setHSL((t*.25+u.orbit.phase*.2)%1,.75,.7);
+     cry.rotation.y+=dt*2.6;
+     cry.rotation.x+=dt*1.6;
+     if(u.isPrism)cry.material.color.setHSL((t*.25+u.orbit.phase*.2)%1,.85,.65);
    }
   }
   for(const root of [this.plot,this.incoming])root?.traverse(o=>{if(o.userData.billboard){const q=this.billboardParentQ??=new T.Quaternion();o.parent.getWorldQuaternion(q);o.quaternion.copy(q.invert()).multiply(this.camera.quaternion);}});

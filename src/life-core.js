@@ -155,28 +155,28 @@ export const MECHANISMS=[
 export function upgradeEnergy(s){assertFree(s);if(s.life.energyCap>=400)throw Error('体力上限已经达到 400。');const step=(s.life.energyCap-200)/50,cost=[150000,400000,1000000,2500000][step];if(s.cash<=cost)throw Error('现金不足，升级后需保留至少 $0.01。');s.cash-=cost;s.life.energyCap+=50;s.life.energy=Math.min(s.life.energyCap,s.life.energy+50);return cost;}
 
 export const UNLOCK_MILESTONES=[
- {id:'tips',at:250,name:'街头伙伴与打赏',icon:'sparkle',desc:'街头偶遇更多路人伙伴，结交人脉，获得偶遇激励与探索声望！'},
- {id:'passport',at:500,name:'世界通行证与跨城出行',icon:'globe',desc:'开放跨城交通与大地图，迈向世界六大国际都市！'},
- {id:'radio',at:1500,name:'城市资讯电台',icon:'radio',desc:'解锁商业电台横条，实时播报当地事件、涨跌情报与政策红利！'},
- {id:'atlas',at:3000,name:'机制图谱与UI缩放',icon:'hex',desc:'解锁全机制观测图谱，并开启界面缩放自由调节！'},
- {id:'showdown',at:5000,name:'特殊对赌合约',icon:'fire',desc:'解锁硬币对决、极速合约等高风险高回报玩法！'},
- {id:'advanced',at:10000,name:'中产阶层与高级项目',icon:'diamond',desc:'开启中产精致界面，解锁多轮双重审核的高级复合项目！'},
- {id:'filter',at:25000,name:'二手轿车与项目过滤',icon:'car',desc:'开启低级项目智能过滤，右滑自动跳过微小项目，直奔核心机会！'},
- {id:'music',at:50000,name:'私人音乐管家与阶层原声',icon:'music',desc:'自选各城市定制配乐与各阶层专属环境原声音效！'},
- {id:'affluence',at:100000,name:'富裕阶层与私人保镖安保',icon:'crown',desc:'解锁鎏金奢华界面！雇佣私人保镖团队，制定防身与和解策略！'},
- {id:'noble',at:500000,name:'贵族特权与专属地点导航令',icon:'estate',desc:'解锁贵族特权令，可指定下一站出现奢侈品店、银行或科技中心！'},
- {id:'auction',at:1000000,name:'稀世孤品拍卖行与转世勋章墙',icon:'gem',desc:'参与不可复现的独家奢侈品拍卖，现金直接转为永久转世点数，点亮荣誉勋章墙！'}
+ {id:'tips',at:250,name:'街头伙伴与打赏',title:'街头伙伴与打赏',icon:'sparkle',desc:'街头偶遇更多路人伙伴，结交人脉，获得偶遇激励与探索声望！'},
+ {id:'passport',at:500,name:'世界通行证与跨城出行',title:'世界通行证与跨城出行',icon:'globe',desc:'开放跨城交通与大地图，迈向世界六大国际都市！'},
+ {id:'radio',at:1500,name:'城市资讯电台',title:'城市资讯电台',icon:'radio',desc:'解锁商业电台横条，实时播报当地事件、涨跌情报与政策红利！'},
+ {id:'atlas',at:3000,name:'机制图谱与UI缩放',title:'机制图谱与UI缩放',icon:'hex',desc:'解锁全机制观测图谱，并开启界面缩放自由调节！'},
+ {id:'showdown',at:5000,name:'特殊对赌合约',title:'特殊对赌合约',icon:'fire',desc:'解锁硬币对决、极速合约等高风险高回报玩法！'},
+ {id:'advanced',at:10000,name:'中产阶层与高级项目',title:'中产阶层与高级项目',icon:'diamond',desc:'开启中产精致界面，解锁多轮双重审核的高级复合项目！'},
+ {id:'filter',at:25000,name:'二手轿车与项目过滤',title:'二手轿车与项目过滤',icon:'car',desc:'开启低级项目智能过滤，右滑自动跳过微小项目，直奔核心机会！'},
+ {id:'music',at:50000,name:'私人音乐管家与阶层原声',title:'私人音乐管家与阶层原声',icon:'music',desc:'自选各城市定制配乐与各阶层专属环境原声音效！'},
+ {id:'affluence',at:100000,name:'富裕阶层与私人保镖安保',title:'富裕阶层与私人保镖安保',icon:'crown',desc:'解锁鎏金奢华界面！雇佣私人保镖团队，制定防身与和解策略！'},
+ {id:'noble',at:500000,name:'贵族特权与专属地点导航令',title:'贵族特权与专属地点导航令',icon:'estate',desc:'解锁贵族特权令，可指定下一站出现奢侈品店、银行或科技中心！'},
+ {id:'auction',at:1000000,name:'稀世孤品拍卖行与转世勋章墙',title:'稀世孤品拍卖行与转世勋章墙',icon:'gem',desc:'参与不可复现的独家奢侈品拍卖，现金直接转为永久转世点数，点亮荣誉勋章墙！'}
 ];
 
 export function nextUnlock(s){
  const w=worth(s)/100;
  const locked=UNLOCK_MILESTONES.filter(m=>w<m.at);
- if(!locked.length)return {milestone:null,progress:1,current:w,target:w};
+ if(!locked.length)return null;
  const m=locked[0];
  const prevIdx=UNLOCK_MILESTONES.indexOf(m)-1;
  const prevAt=prevIdx>=0?UNLOCK_MILESTONES[prevIdx].at:0;
  const progress=Math.max(0,Math.min(1,(w-prevAt)/(m.at-prevAt)));
- return {milestone:m,progress,current:w,target:m.at};
+ return {id:m.id,title:m.name,name:m.name,at:m.at,icon:m.icon,desc:m.desc,milestone:m,progress,current:w,target:m.at};
 }
 
 export function checkNewUnlocks(s){
