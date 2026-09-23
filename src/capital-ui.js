@@ -8,7 +8,7 @@ import {worth,lateTier,TIERS_LATE,FACTIONS,ensureEstate,reconcile,billQuote,rest
 const $=id=>document.getElementById(id);
 const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n/100);
 const short=n=>n>=1e10?'$'+(n/1e10).toFixed(2)+'亿':n>=1e6?'$'+(n/1e6).toFixed(1)+'万':money(n);
-const clock=n=>Math.floor(Math.max(0,n)/60000).toString().padStart(2,'0')+':'+Math.ceil(Math.max(0,n)/1000%60).toString().padStart(2,'0');
+const clock=n=>{const total=Math.max(0,Math.ceil(n/1000));return Math.floor(total/60).toString().padStart(2,'0')+':'+(total%60).toString().padStart(2,'0');};
 const btn=(id,text,v='',disabled=false,cls='')=>`<button class="life-button ${cls}" data-action="life-${id}" data-value="${v}" ${disabled?'disabled':''}>${text}</button>`;
 
 export class LifeUI extends JourneyUI{

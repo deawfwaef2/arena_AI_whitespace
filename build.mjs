@@ -3,7 +3,7 @@ import {build} from 'esbuild';
 const cfg=JSON.parse(await fs.readFile('config.json','utf8'));
 const production=process.argv.includes('--production');
 if(production)cfg.allowDeveloperMode=false;
-const folder=production?'release-production':'release';
+const folder=production?'build/production':'build/development';
 const audio={}; // Only playable city and rest-class tracks are embedded.
 for(const score of JSON.parse(await fs.readFile('assets/music/CITY-CREDITS.json','utf8')))audio[score.id]='data:audio/mpeg;base64,'+(await fs.readFile('assets/music/'+score.id+'.mp3')).toString('base64');
 const art={};for(const city of ['taipei','tokyo','vegas','singapore','newyork','monaco','luxury-texture','ivory-texture'])art[city]='data:image/webp;base64,'+(await fs.readFile('assets/art/'+city+'.webp')).toString('base64');

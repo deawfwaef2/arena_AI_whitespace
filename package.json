@@ -1,13 +1,14 @@
 {
   "name": "last-100-swipe-to-rich",
-  "version": "3.1.1",
+  "version": "4.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
-    "start": "python3 -m http.server 8080 --bind 0.0.0.0 --directory release-production",
+    "start": "python3 -m http.server 8080 --bind 0.0.0.0",
     "build:production": "node build.mjs --production",
-    "test": "node --test qa/core.test.mjs"
+    "test": "node --test qa/core.test.mjs qa/expansion.test.mjs",
+    "checkpoint": "node scripts/checkpoint.mjs"
   },
   "dependencies": {
     "three": "0.186.0"

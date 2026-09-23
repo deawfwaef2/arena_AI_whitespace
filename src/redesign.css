@@ -80,3 +80,16 @@ body[data-device='phone'] #app{width:min(390px,100%);height:min(844px,100dvh - 2
 @media(max-height:520px) and (min-width:760px){#app #game{padding:12px;gap:10px;grid-template-rows:46px 65px minmax(0,1fr);grid-template-columns:minmax(0,1fr) 340px}#app[data-layout='console'] #game{grid-template-rows:60px 50px minmax(0,1fr);grid-template-columns:70px minmax(0,1fr) 330px}#app[data-layout='console'] .game-navigation{padding:8px 4px;gap:3px}#app[data-layout='console'] .game-navigation button{flex-direction:row;min-height:35px}#app[data-layout='console'] .nav-brand{display:none}#app[data-layout='theater'] #game{grid-template-rows:45px minmax(90px,1fr) 200px}#app[data-layout='theater'] #game .game-dock{align-content:start}.game-chapter h2{font-size:22px}.wealth-service{display:none!important}}
 @media(prefers-reduced-motion:reduce){#app *,#app *::before,#app *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
 body[data-motion='off'] #app *,body[data-motion='off'] #app *::before,body[data-motion='off'] #app *::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+/* Remove the legacy full-screen vignette that reduced studio text contrast. */
+#app #start-screen::before,#app #start-screen::after{display:none!important;content:none!important}
+#app #game #energy-hint{display:block!important}
+#app #game .stake-range{accent-color:var(--r-accent)!important}
+#app .menu-advanced{border:1px solid var(--r-line);border-radius:12px;margin:20px 0;padding:0 16px}
+#app .menu-advanced>summary{display:flex;justify-content:space-between;cursor:pointer;font-size:15px;padding:18px 0;color:var(--r-ink)}
+#app .menu-advanced>summary span{font-size:12px;color:var(--r-muted)}
+#app .menu-bottom{display:flex;gap:10px;flex-wrap:wrap}
+#app #modal-card .backup-section{border-top:1px solid var(--r-line);margin:18px 0;padding-top:8px}
+#app[data-large-text='true'] #modal-card p,#app[data-large-text='true'] #game .small-rule,#app[data-large-text='true'] #game .risk-strip,#app[data-large-text='true'] #game .project-terms{font-size:18px!important;line-height:1.8!important}
+#app[data-large-text='true'] #modal-card button,#app[data-large-text='true'] #game .primary,#app[data-large-text='true'] #game .pass-button{font-size:17px!important;min-height:50px!important}
+.studio-saved{font-size:12px;color:#53694f}.studio-eyebrow{color:#66765c}.studio-option p{color:#53694f;font-size:11px}.option-line>span{color:#566d48}.studio-hint{color:#596e52}.preview-description span{color:#5b6c53;font-size:11px}.preview-description>small{color:#647357}.studio-device-row>small{color:#5b6c53}
+@media(max-width:700px){.studio-option p{font-size:9px}.studio-saved{font-size:8px}.preview-description span{font-size:10px}}

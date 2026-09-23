@@ -46,7 +46,7 @@ function save(){if(run.life){run.life.lastSeen=Date.now();tickRest(run);}record(
 function finishStyle(){const es=run.assets.map(id=>getAsset(id)?.effect);return ['sovereign','cosmic','diamond','royal','gold','prism','neon','silver','glass','bronze'].find(x=>es.includes(x))||'none';}
 function refreshStyle(){world.updateStyle(run);$('game').dataset.prestige=prestige(run);$('game').dataset.wealth=tier(run);$('game').dataset.finish=finishStyle();$('game').classList.toggle('ended',run.ended);}
 function musicMode(){const id=meta.musicMode==='auto'?(run.activeChallenge||run.offer.type==='special'?'rush':'city'):meta.musicMode;music.setMode(lifeUI?.musicId(id)||id);}
-function preferences(){effects.sound=meta.sound;effects.motion=meta.motion;effects.low=meta.low;effects.muted=platform.muted||document.hidden||adPlaying;world.motion=meta.motion;world.quality(meta.low);music.enabled=meta.music;music.setVolume(meta.volume);music.setMuted(platform.muted||adPlaying);music.setHidden(document.hidden);musicMode();document.body.dataset.motion=meta.motion?'on':'off';document.body.dataset.theme=meta.theme||'minimalist';document.documentElement.dataset.theme=meta.theme||'minimalist';document.documentElement.style.setProperty('--ui-scale',meta.scale||1);}
+function preferences(){$('app').dataset.largeText=String(!!meta.largeText);effects.sound=meta.sound;effects.motion=meta.motion;effects.low=meta.low;effects.muted=platform.muted||document.hidden||adPlaying;world.motion=meta.motion;world.quality(meta.low);music.enabled=meta.music;music.setVolume(meta.volume);music.setMuted(platform.muted||adPlaying);music.setHidden(document.hidden);musicMode();document.body.dataset.motion=meta.motion?'on':'off';document.body.dataset.theme=meta.theme||'minimalist';document.documentElement.dataset.theme=meta.theme||'minimalist';document.documentElement.style.setProperty('--ui-scale',meta.scale||1);}
 function queueChallenge(event){if(event&&!pendingChallenge.some(x=>x.id===event.id)){pendingChallenge.push(event);save();renderHud();if(!busy)renderDock();}}
 function clock(){const now=performance.now(),elapsed=now-lastClock;lastClock=now;if(started&&!modalType&&!visit&&!document.hidden&&!adPlaying&&!run.ended&&!run.life?.rest&&!run.life?.travel){const event=advanceTime(run,elapsed);if(event)queueChallenge(event);}return now;}
 function pause(){lastClock=performance.now();world.paused=!started||!!modalType||adPlaying||run.ended||!!run.life?.rest||!!run.life?.travel;world.sceneSuspended=!!modalType||adPlaying||run.ended||!started;music.setDucked(!!modalType||!!visit||run.ended);platform.play(started&&!modalType&&!visit&&!run.ended&&!adPlaying&&!run.life?.rest&&!run.life?.travel);renderChallengeHud();}
@@ -219,7 +219,7 @@ function startChallenge(){if(busy||modalType||!validAction()||!lifeUI.beforeNext
 function openModal(type,title,subtitle,body,{wide=false,noClose=false,custom=false}={}){
  if(busy)return;clock();if(!modalType)returnFocus=document.activeElement;modalType=type;$('modal').hidden=false;
  const card=$('modal-card');card.className='modal-card'+(type==='gameover'?' dead-card':'');card.style.maxWidth=wide?'870px':'';
- if(type==='menu'||type==='music')body+=lifeUI?.menuExtras()||'';if(type==='menu')body+=`<div class="onboard-menu-actions"><button class="small-button" data-action="onboard-tour">重看快速教程</button><button class="small-button" data-action="onboard-home">返回开始界面</button></div>`;if(type==='developer')body+=`<div class="life-dev-tools"><button class="small-button" data-action="life-dev-rest">测试：进入假期</button><button class="small-button" data-action="life-dev-ready">测试：完成计时</button><button class="small-button" data-action="life-dev-goods">测试：获得全部机制商品</button></div>`;
+ if(type==='menu')body+=`<div class="onboard-menu-actions"><button class="small-button" data-action="onboard-tour">重看快速教程</button><button class="small-button" data-action="onboard-home">返回开始界面</button></div>`;if(type==='developer')body+=`<div class="life-dev-tools"><button class="small-button" data-action="life-dev-rest">测试：进入假期</button><button class="small-button" data-action="life-dev-ready">测试：完成计时</button><button class="small-button" data-action="life-dev-goods">测试：获得全部机制商品</button></div>`;
  card.innerHTML=custom?body:`<div class="modal-head"><div><span class="modal-eyebrow">${L('Last $100 · PAUSED','Last $100 · 已暂停')}</span><h2 id="modal-title">${safe(title)}</h2><p>${safe(subtitle)}</p></div>${noClose?'':`<button class="modal-close" data-action="close" aria-label="${L('Close','关闭')}">${icon('close')}</button>`}</div>${body}`;
  if(type==='rules'&&run.offer.type==='project'){const o=run.offer;card.querySelector('.modal-head')?.insertAdjacentHTML('afterend',`<div class="panel-notice">项目下限 ${money(o.minStake||1)}；${o.maxStake>=MAX_CENTS?'不设玩法上限（系统上限 9 万亿美元）':'上限 '+money(o.maxStake||50000)}。${o.stages?'必须连续通过两轮审核：'+o.stages.join('% × ')+'%，综合 '+o.p+'%。':''}${o.delay?'投入后锁定 20 秒，刷新不会重抽结果。':''}</div>`);}
  card.getAnimations().forEach(a=>a.cancel());if(meta.motion)card.animate([{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{duration:230,easing:'ease-out'});pause();requestAnimationFrame(()=>card.querySelector('button:not(:disabled),input,select')?.focus());
@@ -236,40 +236,20 @@ function showChallengeResult(e){
 }
 function showChallengeDetails(){const a=run.activeChallenge;if(!a){toast(L('No active challenge. Find one on the road.','暂无进行中的挑战，沿途寻找吧。'));return;}openModal('challenge-details',text(getChallenge(a.kind).name),L('The clock is paused while this menu is open.','打开此菜单时，倒计时暂停。'),`<div class="contract-grid"><div class="contract-cell"><span>${L('TIME LEFT','剩余时间')}</span><strong>${time(a.remainingMs)}</strong></div><div class="contract-cell"><span>${L('TARGET','目标')}</span><strong>${a.metric==='wealth'?money(a.target,true):`${a.progress} / 3`}</strong></div><div class="contract-cell reward"><span>${L('SUCCESS','成功奖励')}</span><strong>+${money(a.reward,true)}</strong></div><div class="contract-cell penalty"><span>${L('FAILURE','失败惩罚')}</span><strong>−${money(a.penalty,true)}</strong></div></div>${a.metric==='wealth'?`<p class="small-rule">${L('Exact target: ','精确目标：')}${money(a.target)}<br>${L('Current net worth: ','当前总身家：')}${money(netWorth(run))}</p>`:''}<div class="panel-notice">${a.metric==='wealth'?L('Reach the target net worth before the clock reaches zero. Net worth is cash plus the purchase value of owned cosmetics. Shopping does not increase net worth.','倒计时归零前，让总身家达到目标。总身家为现金、已购资产与机制商品原价，以及尚未结算的锁定投入。购买本身不会凭空增加总身家。'):L('Land three winning rolls in a row. Each counted win must risk at least ','连续三次成功。每次计入的投入至少为 ')+money(a.minStake)+L('. Any lost roll resets the streak.','；任何一次失败都会打断连胜。')}</div><div class="panel-notice warning">${L('Only one challenge at a time. It cannot be cancelled after acceptance. A penalty cannot create debt, but can take your final dollar and cause bankruptcy.','同时只能进行一个挑战，接受后不能取消。失败扣款不会产生负债，但可能扣光现金导致破产。')}</div><button class="primary" data-action="close">${L('RESUME THE CHALLENGE','继续挑战')}${icon('arrow')}</button>`);}
 function showMenu(){
- const tile=(action,i,title,sub,cls='')=>run.life.seenWorth<50000&&['leaderboard','collection','wardrobe'].includes(action)?'':`<button class="menu-tile ${cls}" data-action="${action}">${icon(i)}<span><strong>${title}</strong><small>${sub}</small></span></button>`;
- openModal('menu',L('Take a breather.','休息一下。'),L('Your challenge timer is paused.','挑战倒计时已暂停。'),`<div class="menu-grid">${tile('leaderboard','rank',L('Leaderboard','排行榜'),L('Your climb so far','看看你的成绩'))}${tile('collection','estate',L('My buildings','我的建筑'),L('Owned assets only','只查看已拥有资产'))}${tile('wardrobe','shirt',L('My outfits','我的衣橱'),L('Equip what you own','切换已拥有的外观'))}${tile('life-decorations','diamond',L('UI Cosmetics','UI 金边装潢'),L('Gilded frames & LP','金边框与转世点'))}${tile('music','music',L('Music & sound','音乐与音效'),L('Real tracks · CC0','现成音乐 · CC0'))}${tile('help','help',L('How to play','游戏规则'),L('Clear rules. No surprises.','所有风险都写清楚'))}${tile('history','history',L('Run journal','本局记录'),L('Investments & challenges','投资与挑战结果'))}${tile('language','globe',L('简体中文','English'),L('Switch language','切换语言'))}${tile('settings','settings',L('Settings','设置'),L('Name, visuals, saves','昵称、画质与存档'))}${CONFIG.allowDeveloperMode?tile('developer','lab',L('Developer lab','开发者实验室'),L('Test the wild stuff','直接测试特殊玩法'),'purple'):''}${tile('restart','reset',L('New run','重新开始'),L('Fresh $100. Clear assets.','资产清空，重回 $100'),'danger')}</div><button class="primary" style="width:100%;margin-top:19px" data-action="close">${L('BACK TO THE STREET','回到街头')}${icon('play')}</button>`);
+ const tile=(action,i,title,sub)=>`<button class="menu-tile" data-action="${action}">${icon(i)}<span><strong>${title}</strong><small>${sub}</small></span></button>`;
+ openModal('menu','给旅程留一点空白。','功能集中在这里，街头只留下重要选择。',`<div class="menu-grid">
+ ${tile('collection','estate','我的资产','已拥有的建筑与 3D 参观')}${tile('wardrobe','shirt','我的衣橱','穿戴已拥有的外观')}${tile('history','history','旅程记录','投资结果与本局经历')}${tile('leaderboard','rank','人生战绩','本机保存的历史人生')}${tile('music','music','音乐与声音','音量、配乐和音效')}${tile('settings','settings','显示与存档','可读性、画质、备份与恢复')}</div>
+ <details class="menu-advanced"><summary>成长与生活服务 <span>展开 →</span></summary>${lifeUI.menuExtras()}</details>
+ <div class="menu-bottom"><button class="small-button" data-action="help">完整游戏规则</button><button class="small-button" data-action="restart">重新开始一局</button></div><button class="primary" style="width:100%;margin-top:20px" data-action="close">回到街头 →</button>`);
 }
 function showSettings(){
  const toggle=(a,label,on)=>`<div class="setting-row"><label>${label}</label><button class="toggle ${on?'on':''}" data-action="${a}" aria-label="${safe(label)}" aria-pressed="${on}"></button></div>`;
- const themes=[
-  {id:'minimalist',name:'极简黑白',en:'Minimalist'},
-  {id:'imperial',name:'帝国鎏金',en:'Imperial Gold'},
-  {id:'cyber',name:'赛博霓虹',en:'Cyber Neon'},
-  {id:'swiss',name:'瑞士现代',en:'Swiss Clean'}
- ];
- const scalePresets=[0.75,0.9,1.0,1.1,1.25];
- openModal('settings',L('Your kind of game.','按你的方式游玩。'),L('Big controls. A comfortable pace.','清晰操作，舒服的节奏。'),`
-  <label class="small-rule" for="player-name">${L('Leaderboard name','排行榜昵称')}</label>
-  <div class="form-row"><input class="field-input" id="player-name" maxlength="20" value="${safe(meta.name)}" placeholder="${L('You','你')}" ${platform.user?'disabled':''}><button class="small-button" data-action="save-name">${L('SAVE','保存')}</button></div>
-  <div class="settings-section">
-   <label class="small-rule">${L('UI Visual Theme','UI 视觉风格方案')}</label>
-   <div class="settings-theme-row">
-    ${themes.map(t=>`<button class="theme-choice-btn ${meta.theme===t.id?'active':''}" data-action="set-theme" data-value="${t.id}"><span class="swatch ${t.id}"></span><strong>${t.name}</strong><small>${t.en}</small></button>`).join('')}
-   </div>
-   <div class="setting-row">
-    <label>${L('UI Zoom Scale','界面缩放比例')} <strong id="ui-scale-value">${Math.round((meta.scale||1)*100)}%</strong></label>
-   </div>
-   <input class="volume-slider" id="ui-scale-slider" type="range" min="75" max="125" step="5" value="${Math.round((meta.scale||1)*100)}">
-   <div class="scale-presets-row">
-    ${scalePresets.map(s=>`<button class="scale-pill ${Math.abs((meta.scale||1)-s)<0.02?'active':''}" data-action="scale-preset" data-value="${s}">${Math.round(s*100)}%</button>`).join('')}
-   </div>
-   ${toggle('motion',L('Animation & particles','动画与粒子效果'),meta.motion)}
-   ${toggle('quality',L('Low-power graphics','低功耗画质'),meta.low)}
-   <div class="setting-row"><label>${L('Language','语言')}</label><button class="small-button" data-action="language">${meta.lang==='en'?'简体中文':'English'}</button></div>
-  </div>
-  <div class="panel-notice">${L('Save mode: ','存档方式：')}${safe(platform.storageMode)}<br>${L('Your run and the remaining challenge time are saved automatically. The clock pauses outside the game.','本局进度及挑战剩余时间自动保存，离开游戏不会扣除挑战时间。')}</div>
-  <button class="primary" style="width:100%" data-action="close">${L('DONE','完成')}${icon('check')}</button>
- `);
+ openModal('settings','按你的方式游玩。','布局在「界面」里切换。这里负责舒适与安全。',`
+ <label class="small-rule" for="player-name">排行榜昵称</label><div class="form-row"><input class="field-input" id="player-name" maxlength="20" value="${safe(meta.name)}" placeholder="你" ${platform.user?'disabled':''}><button class="small-button" data-action="save-name">保存</button></div>
+ ${toggle('readability','大字阅读模式',!!meta.largeText)}${toggle('motion','界面动画与粒子效果',meta.motion)}${toggle('quality','低功耗画质',meta.low)}
+ <div class="setting-row"><label>布局与设备</label><button class="small-button" data-action="onboard-home">打开界面工作室 →</button></div>
+ <section class="backup-section"><h3>给进度留一份备份。</h3><p>同一浏览器、同一地址下自动保存。更换电脑、浏览器或下载文件位置前，先导出 JSON 存档。</p><div class="button-row"><button class="small-button" data-action="backup-export">导出存档 ↓</button><button class="small-button" data-action="backup-import">导入备份 ↑</button></div><input type="file" id="backup-file" accept=".json,application/json" hidden><p class="life-note">导入会替换当前进度，需再次确认。导入局标为测试局，不提交官方榜单。</p></section>
+ <div class="panel-notice">存储方式：${safe(platform.storageMode)}。${platform.storageMode==='session'?'当前环境不支持持久保存，请及时导出备份。':'自动保存已开启。休息计时支持离线恢复。'}</div><button class="primary" style="width:100%" data-action="close">完成 ✓</button>`);
 }
 function showMusic(){openModal('music',L('A real soundtrack.','真正的游戏配乐。'),L('Six cities, six distinct licensed recordings, embedded for offline playback.','六座城市，六首网上取得的独立配乐。默认自动随城市切换；全部内置，无需联网播放。'),`<div class="setting-row"><label>${L('Background music','背景音乐')}</label><button class="toggle ${meta.music?'on':''}" data-action="music-toggle" aria-label="${L('Background music','背景音乐')}" aria-pressed="${meta.music}"></button></div><div class="setting-row"><label>${L('Sound effects','游戏音效')}</label><button class="toggle ${meta.sound?'on':''}" data-action="sound-toggle" aria-label="${L('Sound effects','游戏音效')}" aria-pressed="${meta.sound}"></button></div><label for="music-volume" class="small-rule">${L('Music volume','音乐音量')} <strong id="volume-value">${Math.round(meta.volume*100)}%</strong></label><input class="volume-slider" id="music-volume" type="range" min="0" max="100" value="${Math.round(meta.volume*100)}"><p class="small-rule">默认城市配乐自动切换；阶层配乐可在购买音乐管家后于生活菜单选择。</p><div id="music-state" class="panel-notice"></div>${MUSIC_CREDITS.map(c=>`<div class="music-credit"><strong>${safe(c.title)}</strong>${safe(c.artist)}<br>${safe(c.license)} · ${c.source.includes('incompetech')?'incompetech.com':c.source.startsWith('http')?'OpenGameArt':'原工程原创配乐'}${c.licenseURL?`<br><a href="${c.licenseURL}" target="_blank" rel="noopener">Creative Commons Attribution 4.0</a>`:''}</div>`).join('')}<p class="pause-note">${L('Source links, original license evidence, and credits are included in the download. Music starts after your first tap.','下载包包含来源、原始授权说明与署名。首次点击后开始播放音乐。')}</p>${platform.muted?`<div class="panel-notice warning">${L('The platform currently requires mute. Game switches cannot override it.','平台当前要求静音，游戏开关不能解除平台静音。')}</div>`:''}`);renderMusicStatus();}
 function renderMusicStatus(){if(modalType!=='music'||!$('music-state'))return;const s=music.status();$('music-state').textContent=s.error?L('Audio could not load: ','音频加载失败：')+s.error:s.playing?L('Now playing: ','正在播放：')+(MUSIC_CREDITS.find(c=>c.id===s.mode)?.title||s.mode):!meta.music?L('Music is off.','音乐已关闭。'):platform.muted?L('Muted by the platform.','平台已静音。'):meta.volume===0?L('Music volume is 0%.','音乐音量为 0%。'):!s.unlocked?L('Tap or press a key to start the music.','点击或按键后开始播放。'):L('Loading the recorded track…','正在加载录制音乐…');}
@@ -387,6 +367,9 @@ document.addEventListener('click',async e=>{
  music.unlock();effects.unlock();
  if(await lifeUI.handle(a,v))return;
  switch(a){
+ case 'readability':meta.largeText=!meta.largeText;$('app').dataset.largeText=String(!!meta.largeText);save();showSettings();break;
+ case 'backup-export':{save();const data=JSON.stringify({version:3,run,meta},null,2),url=URL.createObjectURL(new Blob([data],{type:'application/json'})),link=document.createElement('a');link.href=url;link.download='Last100-save-'+new Date().toISOString().slice(0,10)+'.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),2000);toast('已生成备份，请妥善保存下载的 JSON 文件。');break;}
+ case 'backup-import':$('backup-file')?.click();break;
  case 'quick-scale':{
   const scales=[1, 0.85, 0.75, 1.15, 1.25];
   let cur=Number(document.documentElement.style.getPropertyValue('--ui-scale'))||1;
@@ -471,6 +454,13 @@ document.addEventListener('input',e=>{
  if(e.target.id==='dev-rate')$('dev-rate-value').textContent=e.target.value+'%';
 });
 document.addEventListener('change',async e=>{
+ if(e.target.id==='backup-file'){
+  const file=e.target.files?.[0];if(!file)return;
+  try{if(file.size>512000)throw Error('备份超过 500 KB');const data=JSON.parse(await file.text());if(!data.run||!data.run.id)throw Error('缺少有效游戏进度');const restored=validateRun(data.run,{imported:true}),restoredMeta=normalizeMeta(data.meta||{});
+   confirmDialog('用这份备份替换当前旅程？','建议先导出当前存档。确认后将载入第 '+restored.page+' 站，现金 '+money(restored.cash)+'。',()=>{run=restored;meta=restoredMeta;lifeUI.loaded();pendingChallenge=[];visit=null;busy=false;forceClose();world.setOffer(run.offer);world.setLanguage(meta.lang);applyLayout(meta);preferences();refreshStyle();renderHud();renderDock();save();toast('备份已恢复。');if(run.ended&&!lifeUI.hasPendingDeath())showGameOver();});
+  }catch(err){toast('未导入：'+err.message+'。当前存档未改变。');}return;
+ }
+
  if(e.target.id==='stake-range')setTimeout(()=>$('slider-wrap')?.classList.remove('active'),500);
  if(e.target.id==='music-volume'||e.target.id==='ui-scale-slider')save();
  if(e.target.id==='dev-speed'){dev.speed=Number(e.target.value);world.speed=dev.speed;if(dev.speed!==1){ensureActive();devChanged();}}
