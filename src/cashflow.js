@@ -34,7 +34,7 @@ export class CashFlow{
  setMotion(fn){this.motion=fn;}
  // Where the wallet lives right now (cash HUD), falling back to the top-left corner.
  walletPoint(){
-  const el=document.getElementById('cash-value')||document.querySelector('.cash-hud');
+  const el=document.getElementById('v7-money-value')?.offsetParent?document.getElementById('v7-money'):(document.getElementById('cash-value')||document.querySelector('.cash-hud'));
   if(!el)return {x:innerWidth*.2,y:60,el:null};
   const r=el.getBoundingClientRect();
   return {x:r.left+r.width/2,y:r.top+r.height/2,el:el.closest('.cash-hud')||el};
