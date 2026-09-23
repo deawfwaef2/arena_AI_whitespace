@@ -11,7 +11,7 @@ export function applyLayout(meta){
  const app=document.getElementById('app');app.dataset.layout=id;app.dataset.redesign='true';
  document.body.dataset.layout=id;
  document.body.dataset.device=meta.device==='phone'?'phone':'desktop';
- document.documentElement.style.setProperty('--ui-scale',1);
+ document.documentElement.style.setProperty('--ui-scale',1);const label=document.getElementById('device-label');if(label)label.textContent=meta.device==='phone'?'电脑':'手机';
 }
 export function cityDrawing(rich=false){
  let windows='';for(let i=0;i<8;i++)for(let j=0;j<4;j++)windows+=`<rect x="${387+j*19}" y="${74+i*20}" width="9" height="10" rx="1" fill="${(i+j)%3===0?'#e4c789':'#7caaa4'}" opacity=".7"/>`;

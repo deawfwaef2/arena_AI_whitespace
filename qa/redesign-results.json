@@ -1,0 +1,46 @@
+{
+  "date": "2026-09-23T10:44:13.162Z",
+  "results": [
+    {
+      "name": "24 preview combinations do not modify actual wealth",
+      "status": "PASS"
+    },
+    {
+      "name": "journal desktop, map, assets and simulated phone remain inside frame",
+      "status": "PASS"
+    },
+    {
+      "name": "theater desktop, map, assets and simulated phone remain inside frame",
+      "status": "PASS"
+    },
+    {
+      "name": "console desktop, map, assets and simulated phone remain inside frame",
+      "status": "PASS"
+    },
+    {
+      "name": "320px and 390px small phones / 844px landscape / tablet",
+      "status": "PASS"
+    },
+    {
+      "name": "rich layout is structurally different and existing game wealth stays intact",
+      "status": "PASS"
+    },
+    {
+      "name": "zero-energy rest: confirm → health → bill → offline timer → reclaim → next stop",
+      "status": "PASS"
+    },
+    {
+      "name": "settings backup export + rejected invalid import preserve save",
+      "status": "PASS"
+    },
+    {
+      "name": "large text toggles, keyboard close and no JS page errors",
+      "status": "PASS"
+    },
+    {
+      "name": "downloaded standalone HTML starts offline and makes no network requests",
+      "status": "PASS"
+    }
+  ],
+  "pageErrors": []
+}

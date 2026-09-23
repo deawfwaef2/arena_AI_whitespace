@@ -160,8 +160,8 @@ export class LifeUI extends JourneyUI{
     <div class="confirm-rest-header">
      <div class="confirm-rest-badge">🛏️</div>
      <div class="confirm-rest-title-wrap">
-      <h3>当前体力 ${s.life.energy} / ${curCap}</h3>
-      <p>继续前行需要进入生活休整以恢复满额体力与状态。</p>
+      <h3 id="modal-title">当前体力 ${s.life.energy} / ${curCap}</h3>
+      <p>${s.life.energy<=0?'体力已经耗尽，需要休整后继续前行。':'可以提前休整，但仍须支付账单并经历体检。'}</p>
      </div>
     </div>
     <div class="confirm-rest-quote">
