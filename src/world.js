@@ -255,9 +255,9 @@ export class World{
  constructor(container,{onError=()=>{}}={}){
   this.container=container;this.time=0;this.travelTime=null;this.motion=true;this.paused=false;this.speed=1;this.last=performance.now();this.hop=0;this.drag=0;this.lossPose=0;this.lang='en';this.onHeroPosition=()=>{};this.onProjectPosition=()=>{};this.blockAngle=0;
   try{
-   this.renderer=new T.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});this.renderer.setPixelRatio(Math.min(devicePixelRatio,2));this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFSoftShadowMap;this.renderer.outputColorSpace=T.SRGBColorSpace;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.08;container.appendChild(this.renderer.domElement);
+   this.renderer=new T.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});this.renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFShadowMap;this.renderer.outputColorSpace=T.SRGBColorSpace;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.08;container.appendChild(this.renderer.domElement);
    this.scene=new T.Scene();this.scene.fog=new T.FogExp2(0xc2d9e8,.022);this.camera=new T.OrthographicCamera(-8,8,6,-6,.1,100);
-   this.scene.add(new T.HemisphereLight(0xe3f3ff,0x94b297,2.0));const sun=new T.DirectionalLight(0xffefcd,3.2);sun.position.set(-5,11,9);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-13,right:13,top:12,bottom:-11});sun.shadow.normalBias=.028;sun.shadow.bias=-.0001;sun.shadow.radius=3;this.scene.add(sun);this.sun=sun;const rim=new T.DirectionalLight(0xaedcff,.9);rim.position.set(8,5,-7);this.scene.add(rim);
+   this.scene.add(new T.HemisphereLight(0xe3f3ff,0x94b297,2.0));const sun=new T.DirectionalLight(0xffefcd,3.2);sun.position.set(-5,11,9);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);Object.assign(sun.shadow.camera,{left:-13,right:13,top:12,bottom:-11});sun.shadow.normalBias=.028;sun.shadow.bias=-.0001;sun.shadow.radius=3;this.scene.add(sun);this.sun=sun;const rim=new T.DirectionalLight(0xaedcff,.9);rim.position.set(8,5,-7);this.scene.add(rim);
    const ground=box(this.scene,180,.12,120,0xa6bca7,0,-.35,-7);ground.castShadow=false;this.ground=ground;
    this.sky=skyline(this.scene);this.sky.visible=true;this.sky.children.forEach(o=>o.visible=o.userData.cloudBase!==undefined);this.scene.background=new T.Color(0xb6c4ad);this.sky.traverse(o=>{o.castShadow=false;});this.actor=avatar(1.42);this.actor.root.position.set(-1.65,0,2.2);this.actor.root.rotation.y=.59;this.scene.add(this.actor.root);
    this.heroMarker=torus(this.scene,.66,.045,0xf3d78e,-1.65,.19,2.2);this.heroMarker.rotation.x=Math.PI/2;
@@ -414,7 +414,7 @@ export class World{
  crown(parent,x,y,z,scale=1){const g=new T.Group();parent.add(g);g.position.set(x,y,z);g.scale.setScalar(scale);cyl(g,.37,.33,.13,mat(0xe6c46d,{metalness:.5,roughness:.3}),0,0,0,20);for(let i=0;i<6;i++){const a=i*Math.PI/3;mesh(g,new T.ConeGeometry(.075,.25,4),0xf5d184,Math.cos(a)*.3,.15,Math.sin(a)*.3);}g.userData.float=y;return g;}
  celebrate(){this.hop=1;this.lossPose=0;}
  fail(){this.lossPose=1;}
- quality(low){if(!this.renderer)return;this.renderer.setPixelRatio(Math.min(devicePixelRatio,low?1:2));this.renderer.shadowMap.enabled=!low;this.resize();}
+ quality(low){if(!this.renderer)return;this.renderer.setPixelRatio(Math.min(devicePixelRatio,low?1:1.5));this.renderer.shadowMap.enabled=!low;this.resize();}
  inspect(a){this.setOffer({type:'asset',asset:a.id});}
  loop(now){requestAnimationFrame(this.loop);const rawDt=(now-this.last)/1000,dt=Math.min(rawDt,.05);this.last=now;if(document.hidden)return;
   if(this.corner){

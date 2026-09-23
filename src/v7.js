@@ -42,6 +42,21 @@ const G={
  lock:'<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
  bolt:'<path d="m13 2-9 12h7l-1 8 10-13h-7Z"/>',
  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+ arrow:'<path d="M4 12h15M13 6l6 6-6 6"/>',
+ heart:'<path d="M12 21s-8-5.3-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.7-8 11-8 11Z"/>',
+ moon:'<path d="M15 3a8 8 0 1 0 6 12A9 9 0 0 1 15 3Z"/>',
+ s_spring:'<circle cx="12" cy="12" r="2.5"/><path d="M12 9.5C10 5 14 3 12 2c-2 1 2 3 0 7.5M14.5 12c4.5-2 6.5 2 7.5 0-1-2-3 2-7.5 0M12 14.5c2 4.5-2 6.5 0 7.5 2-1-2-3 0-7.5M9.5 12C5 14 3 10 2 12c1 2 3-2 7.5 0"/>',
+ s_summer:'<circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/>',
+ s_autumn:'<path d="M12 22v-6M12 16c-6 0-9-4-9-9 3 1 5 0 6-3 1 2 2 2 3 2s2 0 3-2c1 3 3 4 6 3 0 5-3 9-9 9Z"/><path d="M12 16V8"/>',
+ s_winter:'<path d="M12 2v20M3.3 7l17.4 10M3.3 17 20.7 7M9 3.5l3 2 3-2M9 20.5l3-2 3 2M3.5 10.5 5 7.3 3 4.4M20.5 13.5 19 16.7l2 2.9"/>',
+ w_clear:'<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/>',
+ w_cloud:'<path d="M7 18a4 4 0 0 1-.6-8A6 6 0 0 1 18 9a4.5 4.5 0 0 1 0 9Z"/>',
+ w_rain:'<path d="M7 14a4 4 0 0 1-.6-8A6 6 0 0 1 18 5a4.5 4.5 0 0 1 0 9Z"/><path d="M8 17l-1 3M12 17l-1 3M16 17l-1 3"/>',
+ w_storm:'<path d="M7 13a4 4 0 0 1-.6-8A6 6 0 0 1 18 4a4.5 4.5 0 0 1 0 9Z"/><path d="m13 13-3 5h4l-2 4"/>',
+ w_snow:'<path d="M7 13a4 4 0 0 1-.6-8A6 6 0 0 1 18 4a4.5 4.5 0 0 1 0 9Z"/><path d="M8 17h.01M12 19h.01M16 17h.01M10 21h.01M14 21h.01" stroke-width="2.6"/>',
+ w_fog:'<path d="M3 8h18M5 12h14M3 16h18M7 20h10"/>',
+ w_wind:'<path d="M3 8h11a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 16h8"/>',
+ w_heat:'<circle cx="12" cy="9" r="4"/><path d="M4 18c2-2 3 2 5 0s3 2 5 0 3 2 5 0M12 1v2M4.5 4.5 6 6M19.5 4.5 18 6"/>',
  hourglass:'<path d="M6 2h12M6 22h12M7 2c0 6 10 6 10 10S7 16 7 22M17 2c0 6-10 6-10 10s10 4 10 10"/>'
 };
 const glyph=(k,cls='')=>`<svg class="v7-glyph ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${G[k]||G.lock}</svg>`;
@@ -81,7 +96,8 @@ export const MECHS=[
 const GATES=[...new Set(MECHS.map(m=>m.at))].sort((a,b)=>a-b);
 
 /* ---------- seasons, weather, class-flavoured news ---------- */
-const SEASONS=[{id:'spring',name:'春',icon:'🌸',t:[14,24]},{id:'summer',name:'夏',icon:'☀️',t:[26,35]},{id:'autumn',name:'秋',icon:'🍁',t:[15,25]},{id:'winter',name:'冬',icon:'❄️',t:[2,13]}];
+const SEASONS=[{id:'spring',name:'春',en:'Spring',icon:'s_spring',t:[14,24]},{id:'summer',name:'夏',en:'Summer',icon:'s_summer',t:[26,35]},{id:'autumn',name:'秋',en:'Autumn',icon:'s_autumn',t:[15,25]},{id:'winter',name:'冬',en:'Winter',icon:'s_winter',t:[2,13]}];
+const WGLYPH={clear:'w_clear',breeze:'w_wind',drizzle:'w_rain',fog:'w_fog',rain:'w_rain',heat:'w_heat',storm:'w_storm',cloudy:'w_cloud',wind:'w_wind',snow:'w_snow',blizzard:'w_snow'};
 const WEATHER={
  spring:[['clear','晴朗','☀️',3],['breeze','和风','🍃',3],['drizzle','细雨','🌦️',3],['fog','晨雾','🌫️',1],['rain','春雨','🌧️',2]],
  summer:[['clear','烈日','☀️',4],['heat','热浪','🥵',2],['storm','雷阵雨','⛈️',2],['cloudy','多云','⛅',2],['rain','骤雨','🌧️',1]],
@@ -125,6 +141,7 @@ export class V7{
   <div id="v7-hud" hidden>
    <div id="v7-money" class="v7-panel"><span class="v7-crown">${glyph('crown')}</span><small id="v7-money-label">口袋里的钱</small><strong id="v7-money-value">$100</strong><div id="v7-money-sub"></div></div>
    <div id="v7-clock" class="v7-panel"><div class="v7-clock-row"><b id="v7-year"></b><span id="v7-season"></span><span id="v7-weather"></span></div><div class="v7-energy"><span>${glyph('bolt')}<i id="v7-energy-text"></i></span><div class="v7-energy-track"><i id="v7-energy-fill"></i></div></div><div id="v7-news"><span></span></div></div>
+   <div id="v8-status" class="v7-panel"><div class="v8-s-cell v8-s-time"><span id="v8-s-season"></span><b id="v8-s-year"></b><span id="v8-s-weather"></span></div><div class="v8-s-cell v8-s-health" title="健康"><span id="v8-s-hearts"></span></div><div class="v8-s-cell v8-s-rest" title="已经历的休息阶段"><span class="v8-s-ico">${glyph('moon')}</span><b id="v8-s-rests">0</b><small>次休息</small></div><div class="v8-s-cell v8-s-energy"><span class="v8-s-ico">${glyph('bolt')}</span><div class="v8-s-bar"><i id="v8-s-energy"></i></div><b id="v8-s-energy-t"></b></div></div>
    <div id="v7-top" class="v7-bar"></div>
    <div id="v7-bottom" class="v7-bar"></div>
    <div id="v7-pano" hidden><div class="v7-pano-frame"><img alt=""><div class="v7-eq"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><b id="v7-pano-name"></b></div><svg class="v7-pano-ornament" viewBox="0 0 200 140" preserveAspectRatio="none"><path d="M6 134V40Q6 6 100 6T194 40v94" fill="none" stroke="currentColor" stroke-width="3"/><path d="M16 134V44Q16 16 100 16T184 44v90" fill="none" stroke="currentColor" stroke-width="1" opacity=".6"/><circle cx="100" cy="6" r="5" fill="currentColor"/></svg></div>
@@ -158,7 +175,7 @@ export class V7{
  paint(){
   const s=this.s;if(!s?.life)return;const v=this.st(),app=$('app'),game=$('game'),started=this.c.started(),w=worth(s),rank=this.rank();
   app.dataset.v7='on';app.dataset.v7rank=rank;game.dataset.v7rank=rank;game.dataset.season=SEASONS[v.season].id;game.dataset.weather=v.weather;
-  for(const m of MECHS)if(m.fx)app.dataset['fx'+m.fx[0].toUpperCase()+m.fx.slice(1)]=this.unlocked(m)&&v.toggles[m.id]!==false&&v.toggles[m.id]?'on':'off';
+  for(const m of MECHS)if(m.fx)app.dataset['fx'+m.fx[0].toUpperCase()+m.fx.slice(1)]=this.unlocked(m)&&v.toggles[m.id]!==false?'on':'off';
   $('v7-hud').hidden=!started;$('v7-hud').dataset.rest=s.life.rest?'yes':'no';
   // money
   $('v7-money-value').textContent=fmt(s.cash);$('v7-money-value').title=fmt(s.cash,false);
@@ -167,9 +184,12 @@ export class V7{
   // clock
   const se=SEASONS[v.season],we=WEATHER[se.id].find(x=>x[0]===v.weather)||WEATHER[se.id][0];
   const temp=Math.round(se.t[0]+(se.t[1]-se.t[0])*((v.weather.length*7+v.year*3+v.season)%10)/10)-(['rain','storm','snow','blizzard','fog'].includes(v.weather)?3:0);
-  $('v7-year').textContent=`${2025+v.year} 年`;$('v7-season').textContent=`${se.icon} ${se.name}季`;$('v7-weather').textContent=`${we[2]} ${we[1]} ${temp}°`;
+  $('v7-year').textContent=`${2025+v.year} 年`;$('v7-season').textContent=`${se.name}季`;$('v7-weather').textContent=`${we[1]} ${temp}°`;
+  const sk=[v.season,v.weather,v.year,temp].join();if(this.statusKey!==sk){this.statusKey=sk;$('v8-s-season').innerHTML=glyph(se.icon)+`<em>${se.name}</em>`;$('v8-s-year').textContent=`${2025+v.year}`;$('v8-s-weather').innerHTML=glyph(WGLYPH[v.weather]||'w_clear')+`<em>${we[1]} ${temp}°</em>`;$('v8-status').dataset.season=se.id;}
+  const e=s.estate||{health:5,maxHealth:5},hk=e.health+'/'+e.maxHealth;if(this.heartKey!==hk){const lost=this.heartKey&&Number(this.heartKey.split('/')[0])>e.health;this.heartKey=hk;$('v8-s-hearts').innerHTML=Array.from({length:e.maxHealth},(_,i)=>`<i class="${i<e.health?'on':'off'}">${glyph('heart')}</i>`).join('');if(lost&&this.c.motion())$('v8-s-hearts').animate([{transform:'scale(1.4)',filter:'hue-rotate(-30deg)'},{transform:'scale(1)'}],{duration:700});}
+  $('v8-s-rests').textContent=s.life.restCount||0;const en=s.life.rest?1:s.life.energy/s.life.energyCap;$('v8-s-energy').style.width=(en*100).toFixed(1)+'%';$('v8-s-energy-t').textContent=s.life.rest?'休息中':s.life.energy;$('v8-status').classList.toggle('low',!s.life.rest&&s.life.energy<30);
   $('v7-energy-text').textContent=s.life.rest?'休息中':`${s.life.energy}/${s.life.energyCap}`;$('v7-energy-fill').style.width=(s.life.rest?100:s.life.energy/s.life.energyCap*100)+'%';$('v7-clock').classList.toggle('low',!s.life.rest&&s.life.energy<30);
-  const news=$('v7-news');const radio=this.unlocked(MECHS.find(m=>m.id==='radio'))&&v.toggles.radio!==false;news.hidden=!radio&&rank>0;const pool=NEWS[rank];const line=pool[(s.page+v.season)%pool.length]+(v.district?`　📍${v.district.name}：${v.district.note}`:'');if(news.dataset.line!==line){news.dataset.line=line;news.firstElementChild.textContent=line;}news.classList.toggle('ticker',radio);
+  const news=$('v7-news');const radio=this.unlocked(MECHS.find(m=>m.id==='radio'))&&v.toggles.radio!==false;news.hidden=!radio&&rank>0;const pool=NEWS[rank];const line=pool[(s.page+v.season)%pool.length]+(v.district?`　◆ ${v.district.name}：${v.district.note}`:'');if(news.dataset.line!==line){news.dataset.line=line;news.firstElementChild.textContent=line;}news.classList.toggle('ticker',radio);
   // mechanism bars
   this.paintBars(v,w);
   // panorama
@@ -180,15 +200,16 @@ export class V7{
   this.lastWorth=w;
  }
  unlocked(m){return worth(this.s)>=m.at*100;}
- iconMarkup(m,state){const v=this.st();const on=m.kind==='toggle'?(v.toggles[m.id]?'on':'off'):'';return `<button class="v7-mech k-${m.kind} ${state}" data-mech="${m.id}" data-kind="${m.kind}" ${m.kind==='click'?`data-action="${m.action}"`:m.kind==='toggle'?`data-action="v7-toggle" data-value="${m.id}"`:'tabindex="0"'} data-on="${on}" aria-label="${safe(m.name)}"><span class="v7-mech-face">${glyph(m.g)}</span><span class="v7-mech-name">${safe(m.name)}</span>${m.kind==='toggle'?'<i class="v7-switch"></i>':m.kind==='hover'?'<i class="v7-eye">i</i>':''}</button>`;}
+ iconMarkup(m,state){const v=this.st();const on=m.kind==='toggle'?(v.toggles[m.id]!==false?'on':'off'):'';return `<button class="v7-mech k-${m.kind} ${state}" data-mech="${m.id}" data-kind="${m.kind}" ${m.kind==='click'?`data-action="${m.action}"`:m.kind==='toggle'?`data-action="v7-toggle" data-value="${m.id}"`:'tabindex="0"'} data-on="${on}" aria-label="${safe(m.name)}"><span class="v7-mech-face">${glyph(m.g)}</span><span class="v7-mech-name">${safe(m.name)}</span>${m.kind==='toggle'?'<i class="v7-switch"></i>':m.kind==='hover'?'<i class="v7-eye">i</i>':''}</button>`;}
  paintBars(v,w){
   for(const slot of ['top','bottom']){const bar=$('v7-'+slot);const list=MECHS.filter(m=>m.slot===slot);
-   const want=list.filter(m=>w>=m.at*100).map(m=>m.id);
+   v.owned=Array.isArray(v.owned)?v.owned:[];for(const m of list)if(w>=m.at*100&&m.kind==='click'&&!v.owned.includes(m.id))v.owned.push(m.id);
+   const want=list.filter(m=>w>=m.at*100||(m.kind==='click'&&v.owned.includes(m.id))).map(m=>m.id);
    // remove icons that fell below their gate: play the "reclaimed" animation first
    for(const el of [...bar.children]){if(!want.includes(el.dataset.mech)&&!el.classList.contains('reclaim')){el.classList.add('reclaim');el.disabled=true;setTimeout(()=>el.remove(),this.c.motion()?900:0);if(this.c.started())this.flash(`「${MECHS.find(m=>m.id===el.dataset.mech)?.name}」被收回了`,'down');}}
    for(const id of want){const m=MECHS.find(x=>x.id===id);let el=bar.querySelector(`[data-mech="${id}"]:not(.reclaim)`);
     if(!el){const tmp=document.createElement('div');tmp.innerHTML=this.iconMarkup(m,v.seen.includes(id)||!this.c.started()?'':'fresh');el=tmp.firstElementChild;const after=[...bar.children].find(x=>MECHS.findIndex(q=>q.id===x.dataset.mech)>MECHS.indexOf(m));bar.insertBefore(el,after||null);if(!v.seen.includes(id)){v.seen.push(id);if(this.c.started()&&m.at>0)this.flyIn(el,m);}}
-    if(m.kind==='toggle')el.dataset.on=v.toggles[id]?'on':'off';
+    if(m.kind==='toggle')el.dataset.on=v.toggles[id]!==false?'on':'off';
     if(id==='rest')el.classList.toggle('alert',this.s.life.energy<=20&&!this.s.life.rest);
    }
    bar.dataset.count=want.length;
@@ -235,20 +256,30 @@ export class V7{
  delayOf(o){return o?.type==='project'&&o.v7delay?o.v7delay:null;}
  enhanceDeal(d){
   const s=this.s,o=s.offer;d.dataset.v7deal=o.type==='project'?(this.delayOf(o)?'delayed':'instant'):'other';
-  if(o.type!=='project'||o.settled||o.pendingStake||!d.querySelector('.stake-area')||d.querySelector('.v7-deal'))return;
-  const delay=this.delayOf(o);
-  d.querySelector('.dock-header')?.insertAdjacentHTML('afterend',delay?`<div class="v7-kind delayed">${glyph('hourglass')}<b>${delay==='long'?'长期':'短期'}延时项目</b><span>资金锁定 ${delay==='long'?2:1} 次休息 · 到期兑现 · 返还更高</span></div>`:`<div class="v7-kind instant">${glyph('bolt')}<b>即时项目</b><span>投下去，马上揭晓</span></div>`);
+  if(o.type!=='project'||o.settled||o.pendingStake||!d.querySelector('.stake-area')||d.querySelector('.v8-deal'))return;
+  const delay=this.delayOf(o),q=sel=>d.querySelector(sel),rk=this.rank();
+  const header=q('.dock-header'),h1=q('h1'),terms=q('.project-terms'),banner=q('.rarity-banner'),odds=q('.odds-grid'),risk=q('.risk-strip'),stake=q('.stake-area'),actions=q('.action-row'),pass=actions?.querySelector('.pass-button'),rules=header?.querySelector('.rules-button');
   const w=worth(s),next=GATES.find(g=>g*100>w),prev=[...GATES].reverse().find(g=>g*100<=w)||0;
-  d.querySelector('.stake-area').insertAdjacentHTML('afterend',`<div class="v7-deal"><div class="v7-knob" id="v7-knob" role="slider" tabindex="0" aria-label="拖动旋钮选择投入金额"><svg viewBox="0 0 120 120"><circle class="v7-knob-bg" cx="60" cy="60" r="48"/><circle class="v7-knob-arc" id="v7-knob-arc" cx="60" cy="60" r="48" pathLength="100"/><g class="v7-knob-ticks">${Array.from({length:12},(_,i)=>`<line x1="60" y1="6" x2="60" y2="12" transform="rotate(${-135+i*270/11} 60 60)"/>`).join('')}</g><circle class="v7-knob-cap" cx="60" cy="60" r="34"/><circle class="v7-knob-needle" id="v7-knob-needle" cx="60" cy="33" r="5"/></svg><b id="v7-knob-pct">25%</b><small>转动选择投入</small></div><div class="v7-go-col"><div class="v7-upgrade"><small id="v7-up-label">资产升级进度</small><div class="v7-up-track"><i id="v7-up-now"></i><i id="v7-up-win"></i></div><span id="v7-up-gate">${next!==undefined?'下个门槛 '+fmt(next*100):'已满级'}</span></div><button class="v7-go ${delay?'delayed':''}" id="v7-go" data-action="${delay?'v7-delay-invest':'invest'}"><span id="v7-go-label">投资</span><b id="v7-go-amt"></b></button></div></div>`);
-  const right=document.createElement('div');right.className='v7-deal-right';const left=document.createElement('div');left.className='v7-deal-left';[...d.children].forEach(ch=>{if(ch.matches('.stake-area,.v7-deal,.action-row,.risk-strip'))right.append(ch);else if(!ch.matches('.v7-handle'))left.append(ch);});d.append(left,right);d.classList.add('v7-split');
-  this.gate={next,prev};this.syncDeal();this.bindKnob();
+  const stars=banner?.querySelector('.rb-star')?.textContent||'★',cat=o.category||'',twist=o.v8twist;
+  const kind=delay?`<span class="v8-chip v8-k-delay">${glyph('hourglass')}${delay==='long'?'长期延时 · 2 次休息后兑现':'短期延时 · 下次休息后兑现'}</span>`:`<span class="v8-chip v8-k-now">${glyph('bolt')}即时揭晓</span>`;
+  const wrap=document.createElement('div');wrap.className='v8-deal';wrap.dataset.rank=rk;
+  wrap.innerHTML=`<div class="v8-info"><div class="v8-tags">${kind}<span class="v8-chip v8-stars">${stars}</span>${cat?`<span class="v8-chip">${safe(cat)}</span>`:''}</div><div class="v8-title"></div>${twist?`<div class="v8-twist ${twist.good?'good':'bad'}"><b>${safe(twist.name)}</b><span>${safe(twist.note)}</span></div>`:''}<div class="v8-stake"></div></div><div class="v8-act"><div class="v8-odds"></div><div class="v8-up"><div class="v8-up-track"><i id="v7-up-now"></i><i id="v7-up-win"></i></div><small id="v7-up-label">升级进度</small></div><div class="v8-btns"><button class="v7-go ${delay?'delayed':''}" id="v7-go" data-action="${delay?'v7-delay-invest':'invest'}"><span id="v7-go-label">${delay?'签约':'投资'}</span><b id="v7-go-amt"></b></button></div></div>`;
+  if(h1){if(terms)h1.title=terms.textContent.trim();wrap.querySelector('.v8-title').append(h1);}
+  if(stake)wrap.querySelector('.v8-stake').append(stake);
+  if(risk)wrap.querySelector('.v8-info').append(risk);
+  if(odds)wrap.querySelector('.v8-odds').append(odds);
+  if(pass){pass.classList.add('v8-pass');pass.innerHTML='<span>跳过</span>'+glyph('arrow');wrap.querySelector('.v8-btns').prepend(pass);}
+  if(rules){rules.classList.add('v8-rules');wrap.querySelector('.v8-tags').append(rules);}
+  header?.remove();terms?.remove();banner?.remove();d.querySelector(':scope>.v7-kind')?.remove();
+  d.prepend(wrap);d.classList.add('v8-wide');d.classList.remove('v7-split');
+  this.gate={next,prev};this.syncDeal();
+  if(!this.inputBound){this.inputBound=true;const sync=()=>{if(this.syncRaf)return;this.syncRaf=requestAnimationFrame(()=>{this.syncRaf=0;this.syncDeal();});};document.addEventListener('input',e=>{if(e.target.id==='stake-range'||e.target.id==='stake-input')sync();});document.addEventListener('click',e=>{if(e.target.closest?.('[data-action="stake"]'))sync();});}
  }
- syncDeal(){const r=$('stake-range'),s=this.s;if(!r||!$('v7-knob'))return;const val=Number(r.value)/1000,deg=-135+val*270;$('v7-knob-needle').setAttribute('transform',`rotate(${deg} 60 60)`);$('v7-knob-arc').style.strokeDasharray=`${val*75} 100`;$('v7-knob-pct').textContent=Math.round(val*100)+'%';const stake=Math.round(Number($('stake-input')?.value||0)*100);$('v7-go-amt').textContent=fmt(stake);const o=s.offer,up=o.up+(this.delayOf(o)==='long'?0:0);const g=this.gate||{};const w=worth(s);if(g.next!==undefined){const span=(g.next-g.prev)*100,now=clamp((w-g.prev*100)/span,0,1),win=clamp((w+Math.floor(stake*up)-stake-g.prev*100)/span,0,1);$('v7-up-now').style.width=now*100+'%';$('v7-up-win').style.width=win*100+'%';$('v7-up-label').textContent=win>=1?'赢了就能升级！':`资产升级进度 ${Math.round(now*100)}% → ${Math.round(win*100)}%`;$('v7-up-label').classList.toggle('hot',win>=1);}const pd=$('primary-action');$('v7-go').disabled=!!pd?.disabled&&!this.delayOf(o);}
- bindKnob(){const k=$('v7-knob');if(!k)return;const set=val=>{const r=$('stake-range');if(!r)return;r.value=Math.round(clamp(val,0,1)*1000);r.dispatchEvent(new Event('input',{bubbles:true}));this.syncDeal();};const fromPt=e=>{const b=k.querySelector('svg').getBoundingClientRect(),cx=b.left+b.width/2,cy=b.top+b.height/2;let a=Math.atan2(e.clientX-cx,cy-e.clientY)*180/Math.PI;a=clamp(a,-135,135);set((a+135)/270);};
-  k.addEventListener('pointerdown',e=>{k.setPointerCapture(e.pointerId);k.classList.add('turning');fromPt(e);e.preventDefault();e.stopPropagation();});k.addEventListener('pointermove',e=>{if(k.hasPointerCapture(e.pointerId))fromPt(e);});k.addEventListener('pointerup',e=>{k.classList.remove('turning');k.releasePointerCapture?.(e.pointerId);});
-  k.addEventListener('wheel',e=>{e.preventDefault();e.stopPropagation();set(Number($('stake-range').value)/1000+(e.deltaY<0?.02:-.02));},{passive:false});
-  k.addEventListener('keydown',e=>{const d={ArrowUp:.02,ArrowRight:.02,ArrowDown:-.02,ArrowLeft:-.02}[e.key];if(d){e.preventDefault();set(Number($('stake-range').value)/1000+d);}});
-  if(!this.inputBound){this.inputBound=true;document.addEventListener('input',e=>{if(e.target.id==='stake-range'||e.target.id==='stake-input')requestAnimationFrame(()=>this.syncDeal());});document.addEventListener('click',e=>{if(e.target.closest?.('[data-action="stake"]'))requestAnimationFrame(()=>this.syncDeal());});}}
+ syncDeal(){const s=this.s;if(!$('v7-go'))return;const stake=Math.round(Number($('stake-input')?.value||0)*100);$('v7-go-amt').textContent=fmt(stake);const o=s.offer,up=o.up||1;const g=this.gate||{};const w=worth(s);
+  const r=$('stake-range');if(r)r.style.setProperty('--fill',(Number(r.value)/10)+'%');
+  if(g.next!==undefined){const span=(g.next-g.prev)*100,now=clamp((w-g.prev*100)/span,0,1),win=clamp((w+Math.floor(stake*up)-stake-g.prev*100)/span,0,1);$('v7-up-now').style.width=now*100+'%';$('v7-up-win').style.width=win*100+'%';const lab=$('v7-up-label');lab.textContent=win>=1?'赢了就解锁新东西！':`升级 ${Math.round(now*100)}% → ${Math.round(win*100)}%`;lab.classList.toggle('hot',win>=1);}else{$('v7-up-label').textContent='已全部解锁';}
+  const pd=$('primary-action');$('v7-go').disabled=!!pd?.disabled&&!this.delayOf(o);}
+ bindKnob(){}
 
  /* ---------- delayed projects ---------- */
  markOffer(){const s=this.s,o=s.offer;if(!o||o.v7seen)return;o.v7seen=1;const v=this.st();
@@ -293,20 +324,20 @@ export class V7{
   this.c.effects?.tone?.(tier>=2?'win':'tap',tier);this.c.renderDock();this.ensureGames();}
 
  /* ---------- per-frame work ---------- */
- tick(now){if(now<this.nextTick)return;this.nextTick=now+120;try{this.step(now);}catch(e){console.error('v7 tick',e);}}
+ tick(now){try{if(this.fxOn!==false)this.drawFx(now);}catch(e){}if(now<this.nextTick)return;this.nextTick=now+150;try{this.step(now);}catch(e){console.error('v7 tick',e);}}
  step(now){
   const s=this.s;if(!s?.life)return;const v=this.st();const resting=!!s.life.rest;
   if(this.prevRest===true&&!resting&&!s.ended)this.onRestEnd(v);
   this.prevRest=resting;
-  this.beatFrame();this.drawFx(now);this.paintContracts();this.maybeCrossroads();if(resting)this.ensureGames();else if($('v7-games'))this.closeGames();
+  this.beatFrame();this.paintContracts();this.maybeCrossroads();if(resting)this.ensureGames();else if($('v7-games'))this.closeGames();
   if(now-(this.lastRail||0)>400){this.lastRail=now;this.paintRail(worth(s));this.measure();}
  }
  measure(){const g=$('game'),m=$('v7-money'),r=$('v7-reward'),d=$('game-dock'),p=$('v7-pano');if(m)g.style.setProperty('--v7-money-h',m.offsetHeight+'px');if(r)g.style.setProperty('--v7-reward-h',(r.offsetHeight||0)+'px');if(d){const dr=d.getBoundingClientRect(),gr=g.getBoundingClientRect();g.style.setProperty('--v7-dock-w',Math.max(0,gr.right-dr.left-24)+'px');}const b=$('v7-bottom');g.style.setProperty('--v7-bar-h',(b?.offsetHeight||90)+'px');}
  onRestEnd(v){for(const c of v.delayed)c.left=Math.max(0,c.left-1);v.crossAt=null;v.season=(v.season+1)%4;if(v.season===0)v.year++;v.weather=this.rollWeather(v.season);v.district=null;this.c.save();this.c.refresh();this.seasonBanner(v);}
- seasonBanner(v){const se=SEASONS[v.season],we=WEATHER[se.id].find(x=>x[0]===v.weather);const b=$('v7-season-banner');b.hidden=false;b.dataset.season=se.id;b.innerHTML=`<span>${se.icon}</span><div><small>${2025+v.year} 年 · 新的阶段</small><b>${se.name}天到了</b><em>${we[2]} 今日天气：${we[1]}</em></div>`;if(this.c.motion())b.animate([{opacity:0,transform:'translate(-50%,-30px) scale(.8)'},{opacity:1,transform:'translate(-50%,0) scale(1)'}],{duration:700,easing:'cubic-bezier(.2,.9,.3,1.2)'});clearTimeout(this.bannerT);this.bannerT=setTimeout(()=>{b.hidden=true;},3600);}
+ seasonBanner(v){const se=SEASONS[v.season],we=WEATHER[se.id].find(x=>x[0]===v.weather);const b=$('v7-season-banner');b.hidden=false;b.dataset.season=se.id;b.innerHTML=`<span>${glyph(se.icon)}</span><div><small>${2025+v.year} 年 · 新的阶段</small><b>${se.name}天到了</b><em>今日天气：${we[1]}</em></div>`;if(this.c.motion())b.animate([{opacity:0,transform:'translate(-50%,-30px) scale(.8)'},{opacity:1,transform:'translate(-50%,0) scale(1)'}],{duration:700,easing:'cubic-bezier(.2,.9,.3,1.2)'});clearTimeout(this.bannerT);this.bannerT=setTimeout(()=>{b.hidden=true;},3600);}
 
  /* ---------- music-reactive pulse ---------- */
- beatFrame(){const m=this.c.music;if(!m?.ctx||!m.master){this.beat*=.9;}else{if(!this.analyser){try{this.analyser=m.ctx.createAnalyser();this.analyser.fftSize=64;m.master.connect(this.analyser);this.bins=new Uint8Array(this.analyser.frequencyBinCount);}catch{}}if(this.analyser){this.analyser.getByteFrequencyData(this.bins);let low=0;for(let i=1;i<6;i++)low+=this.bins[i];low/=5*255;this.beat=Math.max(low,this.beat*.82);const eq=document.querySelectorAll('#v7-pano .v7-eq i');eq.forEach((el,i)=>{el.style.height=(8+this.bins[2+i*2]/255*92)+'%';});}}document.documentElement.style.setProperty('--v7-beat',this.beat.toFixed(3));}
+ beatFrame(){const m=this.c.music;if(!m?.ctx||!m.master){this.beat*=.9;}else{if(!this.analyser){try{this.analyser=m.ctx.createAnalyser();this.analyser.fftSize=64;m.master.connect(this.analyser);this.bins=new Uint8Array(this.analyser.frequencyBinCount);}catch{}}if(this.analyser){this.analyser.getByteFrequencyData(this.bins);let low=0;for(let i=1;i<6;i++)low+=this.bins[i];low/=5*255;this.beat=Math.max(low,this.beat*.82);const eq=$('v7-pano')?.hidden?[]:(this.eqEls||=document.querySelectorAll('#v7-pano .v7-eq i'));eq.forEach((el,i)=>{el.style.height=(8+this.bins[2+i*2]/255*92)+'%';});}}const bq=this.beat.toFixed(2);if(bq!==this.lastBq){this.lastBq=bq;$('v7-hud')?.style.setProperty('--v7-beat',bq);}}
 
  /* ---------- seasonal + weather particles ---------- */
  drawFx(now){const ctx=this.fxc,W=this.fx.width,H=this.fx.height;const dt=Math.min(.2,(now-this.lastFx)/1000);this.lastFx=now;ctx.clearRect(0,0,W,H);if(!this.c.motion()||!this.c.started()||document.hidden)return;const v=this.st(),se=SEASONS[v.season].id,we=v.weather,app=$('app').dataset;
@@ -317,7 +348,7 @@ export class V7{
    else if(p.k==='snow'){ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(0,0,p.s,0,7);ctx.fill();}
    else if(p.k==='petal'){ctx.fillStyle='#f7b9cf';ctx.beginPath();ctx.ellipse(0,0,p.s*1.4,p.s*.7,0,0,7);ctx.fill();}
    else if(p.k==='leaf'){ctx.fillStyle=p.c;ctx.beginPath();ctx.moveTo(0,-p.s*1.4);ctx.quadraticCurveTo(p.s*1.2,0,0,p.s*1.4);ctx.quadraticCurveTo(-p.s*1.2,0,0,-p.s*1.4);ctx.fill();}
-   else if(p.k==='mote'){ctx.fillStyle='rgba(255,236,150,.9)';ctx.shadowColor='#ffe27a';ctx.shadowBlur=8;ctx.beginPath();ctx.arc(0,0,p.s*.6,0,7);ctx.fill();}
+   else if(p.k==='mote'){ctx.fillStyle='rgba(255,236,150,.9)';ctx.beginPath();ctx.arc(0,0,p.s*.6,0,7);ctx.fill();}
    else if(p.k==='bubble'){ctx.strokeStyle='rgba(255,236,170,.9)';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,p.s,0,7);ctx.stroke();}
    ctx.restore();}
   if(we==='storm'&&Math.random()<.004){this.flashT=now;}if(this.flashT&&now-this.flashT<160){ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(0,0,W,H);}
@@ -339,7 +370,7 @@ export class V7{
   if(a==='v7-game'){this.startGame();return true;}
   if(a==='v7-game-quit'){if(this.mg)this.endGame(true);else $('v7-game-win')?.remove();return true;}
   if(a==='v7-skip-rest'){this.skipRest();return true;}
-  if(a==='v7-toggle'){const st=this.st();st.toggles[v]=!st.toggles[v];this.c.save();this.paint();const m=MECHS.find(x=>x.id===v);this.flash(`${m.name}：${st.toggles[v]?'开启':'关闭'}`,'up');return true;}
+  if(a==='v7-toggle'){const st=this.st();st.toggles[v]=st.toggles[v]===false;this.c.save();this.paint();const m=MECHS.find(x=>x.id===v);this.flash(`${m.name}：${st.toggles[v]!==false?'开启':'关闭'}`,'up');return true;}
   return false;
  }
  onNewOffer(){}

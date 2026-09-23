@@ -1,0 +1,10 @@
+import {chromium} from '@playwright/test';
+import {newRun,markPeak} from '../src/engine.js';
+const b=await chromium.launch({args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+const c=await b.newContext({viewport:{width:1280,height:800}});
+const run=newRun();run.cash=100*100;markPeak(run);
+await c.addInitScript(seed=>{localStorage.setItem('upshift-save-v3',JSON.stringify(seed));},{version:3,run,meta:{layout:'street',music:false,sound:false,low:true,motion:true}});
+const p=await c.newPage();await p.goto('http://127.0.0.1:8080/',{timeout:120000});
+await p.locator('[data-action="onboard-play"]').click({timeout:30000});await p.waitForTimeout(2500);
+console.log(await p.evaluate(()=>{const d=document.getElementById('game-dock');const walk=(e,dep)=>[...e.children].map(ch=>' '.repeat(dep)+ch.tagName+'.'+[...ch.classList].join('.')+(ch.id?'#'+ch.id:'')+'\n'+(dep<4?walk(ch,dep+1):'')).join('');return walk(d,0);}));
+await b.close();

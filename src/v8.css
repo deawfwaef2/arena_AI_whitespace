@@ -1,0 +1,179 @@
+/* ===== v8 layer (round-4 feedback). Loaded last. Wide simple deal bar, top status strip, bigger money, stronger rank gap. ===== */
+/* ---- perf: kill expensive blur/backdrop on big layers ---- */
+#app[data-v7='on'] #modal{backdrop-filter:none!important}
+#app[data-v7='on'] #game .game-dock{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+
+/* ---- money: very big, top-left ---- */
+#app[data-v7='on'] #v7-money{min-width:340px;max-width:40vw;padding:10px 22px 12px}
+#app[data-v7='on'] #v7-money small{font-size:15px}
+#app[data-v7='on'] #v7-money strong{font-size:clamp(52px,6.4vw,86px);line-height:1}
+#app[data-v7='on'] #v7-money-sub{font-size:14px}
+#app[data-v7='on'] #v7-clock{display:none!important}
+
+/* ---- top-centre status strip: season/year/weather · health · rests · energy ---- */
+#v8-status{left:50%;top:10px;transform:translateX(-50%);display:flex;align-items:stretch;gap:0;padding:0!important;white-space:nowrap;font-size:15px;z-index:3}
+.v8-s-cell{display:flex;align-items:center;gap:7px;padding:8px 14px;border-left:1px solid #0000001f}
+.v8-s-cell:first-child{border-left:0}
+.v8-s-cell .v7-glyph{width:22px;height:22px}
+.v8-s-cell em{font-style:normal;font-weight:700}
+.v8-s-time b{font-size:19px;font-weight:800;letter-spacing:.02em}
+.v8-s-time>span{display:flex;align-items:center;gap:4px}
+.v8-s-health span{display:flex;gap:2px}
+.v8-s-health i{display:block;color:#d0463b}
+.v8-s-health i .v7-glyph{width:21px;height:21px;fill:currentColor}
+.v8-s-health i.off{color:#0000003a}.v8-s-health i.off .v7-glyph{fill:none}
+.v8-s-rest b{font-size:19px}.v8-s-rest small{font-size:12px;opacity:.75}
+.v8-s-energy .v8-s-bar{width:92px;height:10px;border-radius:9px;background:#0000001f;overflow:hidden}
+.v8-s-energy .v8-s-bar i{display:block;height:100%;background:linear-gradient(90deg,#6ea860,#c8e07a);transition:width .5s}
+.v8-s-energy b{min-width:34px;font-size:15px}
+#v8-status.low .v8-s-bar i{background:#d5553d;animation:v7blink 1s infinite}
+#v8-status[data-season='spring'] .v8-s-time>span:first-child{color:#d9608e}
+#v8-status[data-season='summer'] .v8-s-time>span:first-child{color:#d98a12}
+#v8-status[data-season='autumn'] .v8-s-time>span:first-child{color:#b9531f}
+#v8-status[data-season='winter'] .v8-s-time>span:first-child{color:#3f7fb8}
+#app[data-v7rank='0'] #v8-status .v8-s-cell{border-left:1px dashed #8f8f8a}
+#app[data-v7rank='0'] #v8-status [data-season] span,#app[data-v7rank='0'] #v8-status .v8-s-time>span:first-child{color:#4a4a46!important}
+#app[data-v7rank='0'] .v8-s-health i{color:#6d6d68}
+#app[data-v7rank='0'] .v8-s-energy .v8-s-bar{border-radius:0;background:#bdbdb7}#app[data-v7rank='0'] .v8-s-energy .v8-s-bar i{background:#6d6d68}
+#app[data-v7rank='4'] .v8-s-cell,#app[data-v7rank='5'] .v8-s-cell{border-left-color:#f0cf7344}
+#app[data-v7rank='3'] .v8-s-energy .v8-s-bar i,#app[data-v7rank='4'] .v8-s-energy .v8-s-bar i,#app[data-v7rank='5'] .v8-s-energy .v8-s-bar i{background:linear-gradient(90deg,#b88a2a,#f0cf73)}
+#app[data-v7='on'] #v7-top{top:76px!important;left:380px!important;right:360px!important;justify-content:center!important}
+
+/* ---- the wide, simple deal bar (bottom-right) ---- */
+#app[data-v7='on'] #game .game-dock.v8-wide{width:min(900px,calc(100vw - 480px))!important;min-width:620px;right:60px!important;bottom:18px!important;max-height:calc(100% - 200px)!important;padding:16px 20px!important;overflow:visible!important;display:block!important}
+.v8-deal{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0 22px;align-items:stretch}
+.v8-info{display:flex;flex-direction:column;gap:8px;min-width:0}
+.v8-act{display:flex;flex-direction:column;gap:10px;min-width:0;padding-left:20px;border-left:2px solid #00000012}
+.v8-tags{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.v8-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;font-size:13.5px;font-weight:800;background:#0000000d;white-space:nowrap}
+.v8-chip .v7-glyph{width:16px;height:16px}
+.v8-k-now{background:#ffe6a0;color:#6a4b00}
+.v8-k-delay{background:#d9e6f7;color:#23466f;border:1.5px dashed #5d86b8}
+.v8-stars{color:#c48a12;letter-spacing:1px}
+.v8-deal .v8-rules{margin-left:auto;min-height:32px!important;height:32px;padding:0 10px!important;font-size:13px!important;border-radius:99px!important}
+.v8-title h1{margin:0!important;font-size:clamp(24px,2.3vw,32px)!important;line-height:1.15!important;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.v8-title h1:before{content:none!important}
+.v8-twist{display:flex;gap:8px;align-items:baseline;padding:6px 10px;border-radius:10px;font-size:13.5px;background:#eaf5e4;color:#285b34}
+.v8-twist.bad{background:#fbe7e2;color:#8a2e1e}.v8-twist b{white-space:nowrap}
+.v8-deal .risk-strip{margin:0!important;font-size:12.5px!important;opacity:.75}
+/* stake: amount + big slider + quick picks */
+.v8-stake .stake-area{margin:0!important;padding:0!important;background:none!important;border:0!important}
+.v8-stake .stake-top{display:flex!important;align-items:center;gap:10px;flex-wrap:nowrap!important}
+.v8-stake .stake-money{display:flex!important;align-items:baseline;gap:4px;min-width:0;flex:1;font-size:26px!important;font-weight:800;white-space:nowrap}
+.v8-stake .stake-money .bet-label{font-size:13px!important;font-weight:800;opacity:.7;margin-right:4px}
+.v8-stake .stake-money input{min-width:0;width:100%!important;font-size:30px!important;font-weight:800!important;border:0!important;border-bottom:2px solid #0000002a!important;background:transparent!important;padding:0 2px!important;border-radius:0!important;height:auto!important}
+.v8-stake .quick-stakes{display:flex!important;gap:6px;flex:0 0 auto}
+.v8-stake .quick-stakes button{min-height:40px!important;min-width:54px;padding:0 10px!important;font-size:14px!important;border-radius:99px!important}
+.v8-stake .slider-wrap{display:block!important;position:relative;margin:14px 0 4px!important;padding:0!important;height:34px}
+.v8-stake .slider-bubble{display:none!important}
+.v8-stake .stake-range{-webkit-appearance:none;appearance:none;width:100%;height:34px;background:transparent;margin:0;cursor:pointer;touch-action:none;--fill:25%}
+.v8-stake .stake-range::-webkit-slider-runnable-track{height:14px;border-radius:99px;background:linear-gradient(90deg,var(--v8-acc,#3a8f5c) var(--fill),#00000018 var(--fill))}
+.v8-stake .stake-range::-moz-range-track{height:14px;border-radius:99px;background:linear-gradient(90deg,var(--v8-acc,#3a8f5c) var(--fill),#00000018 var(--fill))}
+.v8-stake .stake-range::-webkit-slider-thumb{-webkit-appearance:none;width:34px;height:34px;margin-top:-10px;border-radius:50%;background:#fff;border:4px solid var(--v8-acc,#3a8f5c);box-shadow:0 3px 8px #0004;transition:transform .1s}
+.v8-stake .stake-range::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:#fff;border:4px solid var(--v8-acc,#3a8f5c);box-shadow:0 3px 8px #0004}
+.v8-stake .stake-range:active::-webkit-slider-thumb{transform:scale(1.15)}
+/* odds ABOVE the buttons */
+.v8-odds .odds-grid{display:grid!important;grid-template-columns:1fr 1fr;gap:8px;margin:0!important}
+.v8-odds .odds-box{padding:8px 12px!important;border-radius:14px!important;min-width:0;overflow:hidden}
+.v8-odds .chance-line{display:flex;align-items:center;gap:6px;font-size:14px!important}
+.v8-odds .chance-line strong{font-size:20px!important}
+.v8-odds .chance-line .icon{width:18px;height:18px;margin-left:auto}
+.v8-odds .odds-box .amount{font-size:clamp(22px,2.2vw,30px)!important;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.5px!important}
+.v8-odds .outcome-meta{font-size:12px!important;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px!important}
+.v8-up small{display:block;font-size:12.5px;font-weight:800;opacity:.8;margin-top:4px}
+.v8-up small.hot{color:#c05a00;opacity:1;animation:v7blink .8s infinite}
+.v8-up-track{position:relative;height:12px;border-radius:99px;background:#0000001a;overflow:hidden}
+.v8-up-track i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;transition:width .25s}
+#v7-up-win{background:repeating-linear-gradient(45deg,#f2c14e 0 6px,#f7da8c 6px 12px)}
+#v7-up-now{background:var(--v8-acc,#3a8f5c);z-index:1}
+.v8-btns{display:flex;align-items:center;gap:14px;justify-content:flex-end;margin-top:auto}
+.v8-deal .v8-pass{flex:1;display:flex!important;align-items:center;justify-content:center;gap:6px;min-height:56px!important;border-radius:99px!important;font-size:17px!important;font-weight:800}
+.v8-deal .v8-pass .v7-glyph{width:20px;height:20px}
+.v8-deal .v7-go{width:124px!important;height:124px!important;flex:0 0 124px;margin:-34px 0 0}
+.v8-deal .v7-go span{font-size:24px!important}.v8-deal .v7-go b{font-size:16px!important;max-width:108px}
+.v8-deal .v7-go.delayed span:after{content:''!important}
+#game .game-dock.v8-wide>.action-row{display:none!important}
+/* rail starts right of invest button */
+#app[data-v7='on'] #v7-rail{right:18px!important;bottom:24px!important}
+#app[data-v7='on'] #game .game-dock.v8-wide{--v8-acc:#3a8f5c}
+
+/* ---- rank skins for the deal bar: grey & crude → black-gold ---- */
+#app[data-v7rank='0'] .v8-deal{--v8-acc:#6d6d68}
+#app[data-v7rank='0'] #game .game-dock.v8-wide{--v8-acc:#6d6d68;background:#dcdcd6!important;border:2px solid #8f8f8a!important;border-radius:0!important;box-shadow:4px 4px 0 #8f8f8a!important;filter:none!important}
+#app[data-v7rank='0'] .v8-chip,#app[data-v7rank='0'] .v8-odds .odds-box,#app[data-v7rank='0'] .v8-deal .v8-pass,#app[data-v7rank='0'] .v8-stake .quick-stakes button{border-radius:0!important;background:#c9c9c3!important;color:#333!important;border:1px solid #8f8f8a!important;box-shadow:none!important}
+#app[data-v7rank='0'] .v8-deal .v7-go{background:#77776f!important;box-shadow:0 5px 0 #4a4a46!important;border-radius:50%!important}
+#app[data-v7rank='0'] .v8-stake .stake-range::-webkit-slider-thumb{border-radius:0;background:#e8e8e3}
+#app[data-v7rank='0'] .v8-stake .stake-range::-webkit-slider-runnable-track{border-radius:0}
+#app[data-v7rank='0'] .v8-up-track{border-radius:0}#app[data-v7rank='0'] #v7-up-win{background:repeating-linear-gradient(45deg,#9d9d97 0 6px,#bdbdb7 6px 12px)}
+#app[data-v7rank='0'] .v8-act{border-left:2px dashed #8f8f8a}
+#app[data-v7rank='1'] #game .game-dock.v8-wide{--v8-acc:#7b8c5a;border-radius:10px!important}
+#app[data-v7rank='2'] #game .game-dock.v8-wide{--v8-acc:#2f8a57;border-radius:22px!important}
+#app[data-v7rank='3'] #game .game-dock.v8-wide{--v8-acc:#c08f24;background:linear-gradient(135deg,#fffaf0,#f6e7c3)!important;border:2px solid #c9a24a!important;border-radius:30px 8px 30px 8px!important;box-shadow:0 0 0 5px #fff6dd,0 0 0 7px #d9b460,0 22px 50px #6b4a1044!important}
+#app[data-v7rank='4'] #game .game-dock.v8-wide,#app[data-v7rank='5'] #game .game-dock.v8-wide{--v8-acc:#e3be62;background:radial-gradient(120% 160% at 10% 0,#2b3a55,#141c2a 65%)!important;color:#f7ecd0!important;border:2px solid #e3be62!important;box-shadow:0 0 0 4px #141c2a,0 0 0 6px #e3be6288,0 24px 60px #0008!important}
+#app[data-v7rank='5'] #game .game-dock.v8-wide{background:radial-gradient(120% 160% at 10% 0,#3a2e14,#0c0b09 65%)!important;border-radius:34px 8px 34px 8px!important}
+#app[data-v7rank='4'] .v8-deal,#app[data-v7rank='5'] .v8-deal{color:#f7ecd0}
+#app[data-v7rank='4'] .v8-deal h1,#app[data-v7rank='5'] .v8-deal h1{color:#fff3cf!important}
+#app[data-v7rank='4'] .v8-chip,#app[data-v7rank='5'] .v8-chip{background:#ffffff14;color:#f5d98c;border:1px solid #e3be6255}
+#app[data-v7rank='4'] .v8-odds .odds-box,#app[data-v7rank='5'] .v8-odds .odds-box{background:#ffffff0d!important;border:1px solid #e3be6255!important;color:#f7ecd0!important}
+#app[data-v7rank='4'] .v8-odds .odds-box .amount,#app[data-v7rank='5'] .v8-odds .odds-box .amount{color:#ffe29a!important}
+#app[data-v7rank='4'] .v8-odds .odds-box.loss .amount,#app[data-v7rank='5'] .v8-odds .odds-box.loss .amount{color:#ff9d8a!important}
+#app[data-v7rank='4'] .v8-deal .v8-pass,#app[data-v7rank='5'] .v8-deal .v8-pass,#app[data-v7rank='4'] .v8-stake .quick-stakes button,#app[data-v7rank='5'] .v8-stake .quick-stakes button{background:#ffffff10!important;color:#f5d98c!important;border:1px solid #e3be6266!important}
+#app[data-v7rank='4'] .v8-stake input,#app[data-v7rank='5'] .v8-stake input{color:#ffe29a!important;border-bottom-color:#e3be6266!important}
+#app[data-v7rank='4'] .v8-act,#app[data-v7rank='5'] .v8-act{border-left-color:#e3be6233}
+#app[data-v7rank='4'] .v8-deal .risk-strip,#app[data-v7rank='5'] .v8-deal .risk-strip{color:#e8dcc0!important}
+#app[data-v7rank='5'] .v8-stake .stake-range::-webkit-slider-thumb{background:radial-gradient(circle at 35% 30%,#fff3c4,#c8931f);border-color:#fff3c4;box-shadow:0 0 14px #f0cf73}
+/* delayed deals look like a contract sheet, not just a tag */
+#game .game-dock.v8-wide[data-v7deal='delayed']{background-image:repeating-linear-gradient(0deg,transparent 0 27px,#5d86b81a 27px 28px)!important;border-style:dashed!important;border-color:#5d86b8!important}
+#game .game-dock.v8-wide[data-v7deal='delayed'] .v8-title h1{font-family:Georgia,'Songti SC',serif!important}
+
+/* ---- phone landscape ---- */
+body[data-v7phone='yes'] #app[data-v7='on'] #game .game-dock.v8-wide{min-width:0;width:min(62vw,600px)!important;right:34px!important;top:auto!important;bottom:6px!important;max-height:calc(100% - 12px)!important;padding:8px 10px!important;overflow:auto!important}
+body[data-v7phone='yes'] .v8-deal{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 10px}
+body[data-v7phone='yes'] .v8-act{padding-left:10px;gap:6px}
+body[data-v7phone='yes'] .v8-title h1{font-size:18px!important;-webkit-line-clamp:1}
+body[data-v7phone='yes'] .v8-deal .risk-strip,body[data-v7phone='yes'] .v8-twist span{display:none!important}
+body[data-v7phone='yes'] .v8-chip{font-size:11px;padding:2px 7px}
+body[data-v7phone='yes'] .v8-stake .stake-top{flex-wrap:wrap!important}
+body[data-v7phone='yes'] .v8-stake .stake-money input{font-size:22px!important}
+body[data-v7phone='yes'] .v8-stake .quick-stakes button{min-height:32px!important;min-width:40px;font-size:12px!important}
+body[data-v7phone='yes'] .v8-stake .slider-wrap{margin:6px 0 0!important}
+body[data-v7phone='yes'] .v8-odds .odds-box{padding:5px 8px!important}
+body[data-v7phone='yes'] .v8-odds .odds-box .amount{font-size:18px!important}
+body[data-v7phone='yes'] .v8-odds .outcome-meta{display:none}
+body[data-v7phone='yes'] .v8-deal .v7-go{width:82px!important;height:82px!important;flex-basis:82px;margin:0}
+body[data-v7phone='yes'] .v8-deal .v7-go span{font-size:16px!important}
+body[data-v7phone='yes'] .v8-deal .v8-pass{min-height:42px!important;font-size:14px!important}
+body[data-v7phone='yes'] #app[data-v7='on'] #v7-money strong{font-size:38px}
+body[data-v7phone='yes'] #app[data-v7='on'] #v7-money{min-width:0}
+body[data-v7phone='yes'] #v8-status{left:8px;transform:none;top:calc(6px + var(--v7-money-h,80px) + 6px);font-size:11px;flex-wrap:wrap;max-width:34vw}
+body[data-v7phone='yes'] .v8-s-cell{padding:4px 7px;gap:4px}
+body[data-v7phone='yes'] .v8-s-cell .v7-glyph,body[data-v7phone='yes'] .v8-s-health i .v7-glyph{width:15px;height:15px}
+body[data-v7phone='yes'] .v8-s-time b,body[data-v7phone='yes'] .v8-s-rest b{font-size:13px}
+body[data-v7phone='yes'] .v8-s-energy .v8-s-bar{width:46px}
+body[data-v7phone='yes'] #app[data-v7='on'] #v7-top{top:calc(var(--v7-money-h,70px) + 90px)!important;left:8px!important;right:calc(var(--v7-dock-w,380px) + 44px)!important;justify-content:flex-start!important}
+@media (max-width:1100px){#app[data-v7='on'] #game .game-dock.v8-wide{min-width:0;width:calc(100vw - 110px)!important}.v8-s-energy{display:none!important}}
+/* v8 fixes after first screenshot pass */
+.v8-deal{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}
+.v8-stake .stake-top{flex-wrap:wrap!important;row-gap:6px}
+.v8-stake .stake-money{flex:1 1 100%!important}
+.v8-stake .stake-money input{flex:1;max-width:none!important}
+.v8-stake .quick-stakes{flex:1 1 100%!important}
+.v8-stake .quick-stakes button{flex:1}
+.v8-odds .odds-box .amount{font-size:clamp(20px,1.9vw,27px)!important;text-overflow:clip!important}
+#v8-status .v8-s-cell{padding:7px 11px}
+#app[data-v7='on'] #v7-reward{width:262px!important}
+@media (max-width:1400px){#v8-status{font-size:13.5px}.v8-s-energy .v8-s-bar{width:64px}.v8-s-rest small{display:none}}
+#app[data-v7rank='4'] #game .game-dock .v8-title h1,#app[data-v7rank='5'] #game .game-dock .v8-title h1{color:#fff3cf!important;text-shadow:0 2px 10px #0008!important;-webkit-text-fill-color:#fff3cf!important}
+#app[data-v7rank='4'] #game .game-dock .v8-stake input,#app[data-v7rank='5'] #game .game-dock .v8-stake input,#app[data-v7rank='4'] #game .game-dock .v8-stake .stake-money,#app[data-v7rank='5'] #game .game-dock .v8-stake .stake-money{color:#ffe29a!important;-webkit-text-fill-color:#ffe29a!important}
+#app[data-v7rank='4'] #game .game-dock .v8-odds .odds-box,#app[data-v7rank='5'] #game .game-dock .v8-odds .odds-box{background:#ffffff10!important;border:1px solid #e3be6266!important;color:#f7ecd0!important}
+#app[data-v7rank='4'] #game .game-dock .v8-odds .odds-box *,#app[data-v7rank='5'] #game .game-dock .v8-odds .odds-box *{color:inherit!important}
+#app[data-v7rank='4'] #game .game-dock .v8-odds .odds-box .amount,#app[data-v7rank='5'] #game .game-dock .v8-odds .odds-box .amount{color:#ffe29a!important}
+#app[data-v7rank='4'] #game .game-dock .v8-odds .odds-box.loss .amount,#app[data-v7rank='5'] #game .game-dock .v8-odds .odds-box.loss .amount{color:#ff9d8a!important}
+#app[data-v7rank='4'] #game .game-dock .v8-deal .v8-pass,#app[data-v7rank='5'] #game .game-dock .v8-deal .v8-pass,#app[data-v7rank='4'] #game .game-dock .v8-stake .quick-stakes button,#app[data-v7rank='5'] #game .game-dock .v8-stake .quick-stakes button,#app[data-v7rank='4'] #game .game-dock .v8-rules,#app[data-v7rank='5'] #game .game-dock .v8-rules{background:#ffffff12!important;color:#f5d98c!important;border:1px solid #e3be6266!important}
+#app[data-v7rank='4'] #game .game-dock .v8-stake .quick-stakes button.active,#app[data-v7rank='5'] #game .game-dock .v8-stake .quick-stakes button.active{background:#e3be62!important;color:#1a1408!important}
+#app[data-v7rank='4'] .v8-stake .stake-range::-webkit-slider-runnable-track,#app[data-v7rank='5'] .v8-stake .stake-range::-webkit-slider-runnable-track{background:linear-gradient(90deg,#e3be62 var(--fill),#ffffff26 var(--fill))}
+#app[data-v7rank='4'] .v8-up-track,#app[data-v7rank='5'] .v8-up-track{background:#ffffff1c}
+body[data-v7phone='yes'] .v8-odds .odds-box .amount{font-size:16px!important}
+body[data-v7phone='yes'] .v8-odds .chance-line strong{font-size:15px!important}
+body[data-v7phone='yes'] .v8-odds .chance-line{font-size:11px!important}
+body[data-v7phone='yes'] #app[data-v7='on'] #game .game-dock.v8-wide{right:30px!important;width:min(60vw,580px)!important}
