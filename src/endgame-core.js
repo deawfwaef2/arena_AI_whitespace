@@ -12,7 +12,7 @@ export const TIERS_LATE=[
 export const FACTIONS=[{id:'people',name:'平民社群',at:2,symbol:'众'},{id:'tech',name:'科技联盟',at:3,symbol:'科'},{id:'industry',name:'工业联合',at:4,symbol:'工'},{id:'state',name:'地区议政署',at:3,symbol:'政'},{id:'underworld',name:'地下帮派',at:4,symbol:'影'},{id:'capital',name:'资本公会',at:5,symbol:'资'}];
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 export const cents=n=>Math.floor(clamp(Number(n)||0,0,MONEY_CAP));
-export const worth=s=>cents((s.cash||0)+(s.offer?.pendingStake||0)+(s.assets||[]).reduce((n,id)=>n+(getAsset(id)?.price||0)*100,0)+(s.outfits||[]).reduce((n,id)=>n+(getOutfit(id)?.price||0)*100,0)+(s.decorations||[]).reduce((n,id)=>n+(getDecoration(id)?.price||0)*100,0)+(s.life?.items||[]).reduce((n,id)=>n+(I[id]||0)*100,0));
+export const worth=s=>cents((s.cash||0)+(s.offer?.pendingStake||0)+(Array.isArray(s.life?.v7?.delayed)?s.life.v7.delayed.reduce((n,d)=>n+(Number.isSafeInteger(d?.stake)?d.stake:0),0):0)+(s.assets||[]).reduce((n,id)=>n+(getAsset(id)?.price||0)*100,0)+(s.outfits||[]).reduce((n,id)=>n+(getOutfit(id)?.price||0)*100,0)+(s.decorations||[]).reduce((n,id)=>n+(getDecoration(id)?.price||0)*100,0)+(s.life?.items||[]).reduce((n,id)=>n+(I[id]||0)*100,0));
 export const lateTier=s=>TIERS_LATE.reduce((i,t,j)=>worth(s)>=t.at*100?j:i,0);
 export const activeItem=(s,id)=>s.life?.items?.includes(id)&&worth(s)>=(ITEM_FLOORS[id]||0)*100;
 const uid=()=>globalThis.crypto?.randomUUID?.()||Date.now().toString(36)+Math.random().toString(36).slice(2);
