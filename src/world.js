@@ -282,7 +282,7 @@ export class World{
  setStreetCast(people,crew,market){
   if(this.fallback)return;const key=JSON.stringify([people.map(p=>p.id),crew.map(p=>p.id),market]);if(this.streetCastKey===key)return;this.streetCastKey=key;
   if(this.streetCast)disposeGroup(this.streetCast);this.streetCast=new T.Group();this.scene.add(this.streetCast);this.streetActors=[];
-  const positions=[[-4.4,2.1],[2.8,1.9],[-3.5,-.4],[4.8,-1.4],[-.5,4.5],[-5.8,4.2]];
+  const positions=[[-5.7,1.7],[3.9,2.0],[-3.4,-.7],[5.2,-1.2],[2.3,4.1],[-6.2,4.4]];
   people.forEach((n,i)=>{const a=person({color:n.color,scale:1.02+(i%2)*.05,hat:i%3===0});a.root.position.set(positions[i][0],.05,positions[i][1]);this.streetCast.add(a.root);this.streetActors.push({a,id:'npc-'+i,base:positions[i],i,kind:'npc'});});
   const boss=person({color:0xa18e68,scale:1.12});boss.root.position.set(1.1,.08,1.35);this.streetCast.add(boss.root);this.streetActors.push({a:boss,id:'manager',kind:'manager'});
   crew.forEach((n,i)=>{const a=person({color:n.color,scale:1.08,hat:n.id==='guide'});this.streetCast.add(a.root);this.streetActors.push({a,id:'crew-'+n.id,i,kind:'crew'});});
@@ -291,7 +291,11 @@ export class World{
  updateStreetCast(t,dt){
   if(!this.streetCast)return;this.streetCast.visible=!this.titleMode&&!this.restStage&&!this.travelTime;this.streetCast.rotation.y=this.blockAngle||0;
   const localHero=this.actor.root.position.clone().applyAxisAngle(new T.Vector3(0,1,0),-(this.blockAngle||0));
-  for(const p of this.streetActors){const a=p.a;if(p.kind==='npc'&&this.motion){const walking=t%12<4,step=Math.floor(t/12)*4+Math.min(t%12,4),phase=step*.25+p.i*1.9;a.root.position.x=p.base[0]+Math.sin(phase)*1.25;a.root.rotation.y=Math.cos(phase)>0?1.45:-1.45;for(let j=0;j<2;j++){a.legs[j].root.rotation.x=walking?Math.sin(t*4+p.i+j*Math.PI)*.28:0;a.arms[j].root.rotation.x=walking?-Math.sin(t*4+p.i+j*Math.PI)*.2:0;}}else if(p.kind==='crew'){a.root.position.set(localHero.x-1.15-p.i*.7,.05,localHero.z+.65+(p.i%2)*.65);a.root.rotation.y=.1;animatePerson(a,t,this.motion);}else animatePerson(a,t,this.motion);}
+  for(const p of this.streetActors){const a=p.a;if(p.kind==='npc'&&this.motion){const walking=t%12<4,step=Math.floor(t/12)*4+Math.min(t%12,4),phase=step*.25+p.i*1.9;let nx=p.base[0]+Math.sin(phase)*.95;const bz=p.base[1];
+   // keep walkers out of the hero / manager / crew footprint so bodies never overlap
+   const blockers=[[localHero.x,localHero.z,1.25],[1.1,1.35,1.05]];for(const q of this.streetActors)if(q.kind==='crew')blockers.push([q.a.root.position.x,q.a.root.position.z,.9]);for(const q of this.streetActors)if(q!==p&&q.kind==='npc'&&q.i<p.i)blockers.push([q.a.root.position.x,q.a.root.position.z,.85]);
+   for(const [bx,bz2,r] of blockers){if(Math.abs(bz-bz2)<r&&Math.abs(nx-bx)<r){nx=nx<bx?bx-r:bx+r;}}
+   const prevX=a.root.position.x;a.root.position.x=T.MathUtils.lerp(prevX,nx,.2);const vx=a.root.position.x-prevX;if(Math.abs(vx)>.0005)p.face=vx>0?1.45:-1.45;a.root.rotation.y=T.MathUtils.lerp(a.root.rotation.y,p.face??1.45,.15);for(let j=0;j<2;j++){a.legs[j].root.rotation.x=walking?Math.sin(t*4+p.i+j*Math.PI)*.28:0;a.arms[j].root.rotation.x=walking?-Math.sin(t*4+p.i+j*Math.PI)*.2:0;}}else if(p.kind==='crew'){{const tx=localHero.x-1.05-p.i*.8,tz=localHero.z+.55+(p.i%2)*.6;a.root.position.x=T.MathUtils.lerp(a.root.position.x||tx,tx,.18);a.root.position.z=T.MathUtils.lerp(a.root.position.z||tz,tz,.18);a.root.position.y=.05;a.root.rotation.y=.35;}animatePerson(a,t,this.motion);}else animatePerson(a,t,this.motion);}
   this.streetCast.updateMatrixWorld(true);const rect=this.container.getBoundingClientRect();const points=this.streetActors.map(p=>{const v=new T.Vector3(0,2.55,0);p.a.root.localToWorld(v);v.project(this.camera);return {id:p.id,x:rect.left+(v.x+1)*rect.width/2,y:rect.top+(1-v.y)*rect.height/2,visible:this.streetCast.visible&&v.z>-1&&v.z<1};});
   if(this.streetMarket){const v=new T.Vector3(0,1.8,0);this.streetMarket.localToWorld(v);v.project(this.camera);points.push({id:'market',x:rect.left+(v.x+1)*rect.width/2,y:rect.top+(1-v.y)*rect.height/2,visible:this.streetCast.visible});}
   this.onStreetPositions?.(points);
