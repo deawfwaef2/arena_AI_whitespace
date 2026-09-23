@@ -47,7 +47,7 @@ export function guardSalary(s){const g=activeGuards(s);return Math.round([0,3500
 export function billQuote(s,{restNumber=(s.life?.restCount||0)+1}={}){
  const n=worth(s),tier=lateTier(s),klass=Math.min(5,[0,1,2,3,4,4,5,5,5,5,5][tier]),city=s.life?.city||'taipei',fee={taipei:.7,tokyo:1.1,vegas:1.05,singapore:1.2,newyork:1.6,monaco:2.1}[city],region=currentRegion(s);
  const baseMaintenance=Math.floor([8,35,180,1500,12000,250000][klass]*100*fee*(tier>=3?1+Math.min(restNumber*.01,1):1));
- const auctionUpkeep=(s.estate?.auctionMedals||[]).reduce((sum,id)=>{const a=getAuctionLot(id);return sum+(a?.upkeep||0)*100;},0);
+ const auctionUpkeep=(s.estate?.auctionMedals||[]).reduce((sum,id)=>{const a=getAuctionLot(id);return sum+(a?.upkeep||0);},0);
  const outfitUpkeep=(s.outfits||[]).reduce((sum,id)=>{const o=getOutfit(id);return sum+(o?.upkeep||0);},0);
  const maintenance=baseMaintenance+auctionUpkeep+outfitUpkeep;
  const rate=Math.min(.58,TIERS_LATE[tier].tax*region.tax),tax=Math.floor(n*rate),guards=guardSalary(s),management=tier>=5?Math.floor(n*.001*(tier-3)):0;

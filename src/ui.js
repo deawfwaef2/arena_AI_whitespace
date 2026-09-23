@@ -47,6 +47,7 @@ export const shell=`
  <div class="portrait-hud">
   <header class="top-hud">
    <div class="cash-hud" aria-label="Available game cash"><span class="cash-coin">${icon('coin')}</span><div><span class="cash-label" id="cash-label">YOUR CASH</span><strong id="cash-value">$100</strong></div></div>
+   <button class="hud-round small scale-quick-btn" data-action="quick-scale" id="quick-scale-btn" title="点击缩放界面大小" aria-label="缩放界面大小">100%</button>
    <button class="hud-round" data-action="menu" id="menu-button" aria-label="Pause and open menu">${icon('settings')}</button>
   </header>
   <div class="route-hud"><div class="route-pill"><span class="route-dot"></span><span id="page-label">STOP 001</span></div><button class="hud-chip" data-action="leaderboard" id="rank-button">${icon('rank')}<span>RANKS</span></button><button class="hud-round small" id="music-button" data-action="music-toggle" aria-label="Toggle background music">${icon('music')}</button></div>

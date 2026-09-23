@@ -163,7 +163,6 @@
 
 /* Poverty Mode Minimalism (Net worth < $500 / Tier 0) */
 #game[data-poverty='yes'] .capital-summary,
-#game[data-poverty='yes'] .energy-hud,
 #game[data-poverty='yes'] .city-panorama,
 #game[data-poverty='yes'] .class-ticker,
 #game[data-poverty='yes'] .world-news,
@@ -174,8 +173,29 @@
 #game[data-poverty='yes'] .route-hud,
 #game[data-poverty='yes'] .street-title,
 #game[data-poverty='yes'] .sky-cloud-layer,
-#game[data-poverty='yes'] .world-prompt{
+#game[data-poverty='yes'] .world-prompt,
+#game[data-poverty='yes'] .auction-medals-tray{
  display:none !important;
+}
+#game[data-poverty='yes'] .energy-hud{
+ display:flex !important;
+ height:34px;
+ min-height:34px;
+ padding:4px 10px;
+ margin:0;
+ background:#161a1fcc !important;
+ border:1px solid #2e3846 !important;
+ border-radius:10px;
+ font-size:11px;
+ align-items:center;
+ gap:6px;
+}
+#game[data-poverty='yes'] .energy-hud #energy-hint{
+ display:none !important;
+}
+#game[data-poverty='yes'] .energy-track{
+ height:4px;
+ min-width:35px;
 }
 #game[data-poverty='yes'] .portrait-hud{
  left:16px !important;
@@ -441,3 +461,311 @@
  border:2px solid #111111;
  box-shadow:4px 4px 0 #e53e3e;
 }
+
+/* Quick Scale Button in Top HUD */
+.scale-quick-btn{
+ min-width:44px;
+ height:38px;
+ padding:0 8px;
+ font-size:11px;
+ font-weight:800;
+ letter-spacing:0.5px;
+ border-radius:10px;
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ border:1.5px solid rgba(255,255,255,0.25);
+ background:rgba(255,255,255,0.12);
+ color:#f8fafc;
+ cursor:pointer;
+ transition:all .2s;
+}
+.scale-quick-btn:hover{
+ background:rgba(255,255,255,0.22);
+ border-color:rgba(255,255,255,0.5);
+ transform:scale(1.05);
+}
+
+/* Medal Showcase Wall (资本家荣誉勋章陈列墙 - 16枚满屏展柜) */
+.medals-showcase-grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));
+ gap:14px;
+ max-height:68vh;
+ overflow-y:auto;
+ padding:6px;
+ margin:12px 0;
+ overscroll-behavior:contain;
+}
+.medal-showcase-tile{
+ display:flex;
+ gap:12px;
+ padding:12px 14px;
+ border-radius:14px;
+ background:#161c24;
+ border:1.5px solid #2d3748;
+ position:relative;
+ overflow:hidden;
+ transition:transform .2s, box-shadow .2s;
+}
+.medal-showcase-tile.owned{
+ background:linear-gradient(145deg, #1f271a, #131c13);
+ border:1.5px solid #d4af37;
+ box-shadow:0 0 16px rgba(212,175,55,0.2);
+}
+.medal-showcase-tile.owned:hover{
+ transform:translateY(-2px);
+ box-shadow:0 0 24px rgba(212,175,55,0.4);
+}
+.medal-showcase-tile.missed{
+ background:#18181b;
+ border:1.5px dashed #71717a;
+ opacity:0.65;
+}
+.medal-showcase-tile.locked{
+ background:#0f1318;
+ border:1.5px solid #1e293b;
+ opacity:0.75;
+}
+.medal-hero-icon{
+ font-size:32px;
+ line-height:1;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ width:48px;
+ height:48px;
+ border-radius:12px;
+ background:rgba(255,255,255,0.06);
+ border:1px solid rgba(255,255,255,0.12);
+ flex-shrink:0;
+}
+.medal-showcase-tile.owned .medal-hero-icon{
+ background:linear-gradient(135deg, #3d3210, #1c1809);
+ border-color:#d4af37;
+ box-shadow:0 0 12px rgba(212,175,55,0.3);
+}
+.medal-meta{flex:1; min-width:0}
+.medal-meta h3{
+ font-size:13px;
+ font-weight:700;
+ margin:0 0 4px;
+ line-height:1.3;
+ color:#f8fafc;
+}
+.medal-showcase-tile.owned .medal-meta h3{color:#fde047}
+.medal-meta p{
+ font-size:10px;
+ color:#94a3b8;
+ line-height:1.5;
+ margin:0 0 6px;
+}
+.medal-props{
+ display:flex;
+ gap:8px;
+ flex-wrap:wrap;
+ font-size:10px;
+ margin-bottom:6px;
+}
+.medal-props .lv-badge{
+ background:rgba(212,175,55,0.2);
+ color:#fde047;
+ border:1px solid rgba(212,175,55,0.5);
+ padding:2px 6px;
+ border-radius:5px;
+ font-weight:700;
+}
+.medal-props .upkeep-badge{
+ background:rgba(148,163,184,0.15);
+ color:#cbd5e1;
+ padding:2px 6px;
+ border-radius:5px;
+}
+.medal-state-tag{font-size:10px; font-weight:600}
+.tag-owned{color:#4ade80}
+.tag-missed{color:#f87171}
+.tag-locked{color:#94a3b8}
+
+/* Confirmation Dialog for Rest (休整弹窗) */
+.confirm-rest-dialog{
+ padding:4px 0;
+ text-align:left;
+}
+.confirm-rest-header{
+ display:flex;
+ gap:14px;
+ align-items:center;
+ margin-bottom:14px;
+}
+.confirm-rest-badge{
+ font-size:36px;
+ width:56px;
+ height:56px;
+ border-radius:14px;
+ display:grid;
+ place-items:center;
+ background:rgba(212,175,55,0.15);
+ border:1.5px solid #d4af37;
+ flex-shrink:0;
+}
+.confirm-rest-title-wrap h3{
+ font-size:17px;
+ margin:0 0 4px;
+ color:#f8fafc;
+ font-weight:700;
+}
+.confirm-rest-title-wrap p{
+ font-size:11px;
+ margin:0;
+ color:#94a3b8;
+ line-height:1.5;
+}
+.confirm-rest-quote{
+ background:#161d26;
+ border:1px solid #2d3b4e;
+ border-radius:12px;
+ padding:12px 14px;
+ margin:12px 0;
+}
+.quote-title{
+ font-size:11px;
+ font-weight:700;
+ letter-spacing:0.5px;
+ color:#cbd5e1;
+ margin-bottom:8px;
+}
+.quote-row{
+ display:flex;
+ justify-content:space-between;
+ font-size:11px;
+ color:#94a3b8;
+ padding:4px 0;
+ border-bottom:1px dashed rgba(255,255,255,0.08);
+}
+.quote-row b{color:#f1f5f9; font-weight:500}
+.quote-row.total{
+ border-bottom:0;
+ padding-top:8px;
+ font-size:13px;
+ color:#fde047;
+ font-weight:700;
+}
+.quote-row.total strong{font-size:15px; color:#fde047}
+.confirm-rest-warning{
+ background:rgba(239,68,68,0.1);
+ border:1px solid rgba(239,68,68,0.3);
+ border-radius:10px;
+ padding:9px 12px;
+ font-size:11px;
+ color:#fca5a5;
+ line-height:1.5;
+ margin:12px 0 16px;
+}
+.rest-actions{
+ display:flex;
+ gap:10px;
+ margin-top:14px;
+}
+.rest-actions button{flex:1}
+
+/* Wealth Mechanisms Blueprint Modal */
+.blueprint-list{
+ display:grid;
+ gap:10px;
+ max-height:65vh;
+ overflow-y:auto;
+ padding:4px;
+ margin:12px 0;
+}
+.blueprint-item{
+ display:flex;
+ gap:12px;
+ align-items:center;
+ padding:11px 14px;
+ border-radius:12px;
+ background:#151b24;
+ border:1.5px solid #2d3a4d;
+}
+.blueprint-item.unlocked{
+ border-color:#22c55e;
+ background:rgba(34,197,94,0.08);
+}
+.bp-icon{
+ font-size:24px;
+ width:40px;
+ height:40px;
+ border-radius:10px;
+ display:grid;
+ place-items:center;
+ background:rgba(255,255,255,0.06);
+ flex-shrink:0;
+}
+.bp-info{flex:1; min-width:0}
+.bp-top{
+ display:flex;
+ justify-content:space-between;
+ align-items:baseline;
+ margin-bottom:3px;
+}
+.bp-top strong{font-size:13px; color:#f8fafc}
+.bp-at{font-size:11px; color:#fde047; font-weight:700}
+.bp-info p{font-size:10px; color:#94a3b8; margin:0; line-height:1.4}
+.bp-status{
+ font-size:10px;
+ font-weight:700;
+ padding:3px 8px;
+ border-radius:6px;
+ background:rgba(255,255,255,0.08);
+ color:#cbd5e1;
+}
+.blueprint-item.unlocked .bp-status{
+ background:#22c55e;
+ color:#052e16;
+}
+
+/* Theme Picker Modal */
+.theme-picker-grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+ margin:12px 0;
+}
+.theme-select-card{
+ display:flex;
+ flex-direction:column;
+ gap:8px;
+ padding:12px;
+ border-radius:12px;
+ background:#161d27;
+ border:1.5px solid #2d3d52;
+ cursor:pointer;
+ transition:all .18s;
+}
+.theme-select-card:hover{
+ border-color:#d4af37;
+ transform:translateY(-2px);
+}
+.theme-select-card.selected{
+ border-color:#d4af37;
+ background:linear-gradient(145deg, #222b38, #182230);
+ box-shadow:0 0 16px rgba(212,175,55,0.25);
+}
+.theme-select-dot{
+ width:24px;
+ height:24px;
+ border-radius:50%;
+ border:2px solid #fff;
+}
+.theme-select-info strong{
+ display:block;
+ font-size:13px;
+ color:#f8fafc;
+ margin-bottom:2px;
+}
+.theme-select-info p{
+ font-size:10px;
+ color:#94a3b8;
+ margin:0;
+ line-height:1.4;
+}
+

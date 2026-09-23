@@ -65,6 +65,10 @@ function renderHud(){
  $('page-label').textContent=L('STOP ','第 ')+String(run.page).padStart(3,'0')+L('',' 站');$('rank-button').querySelector('span').textContent=L('RANKS','排行');$('rank-button').ariaLabel=L('Leaderboard','排行榜');$('menu-button').ariaLabel=L('Menu and pause','菜单与暂停');
  $('music-button').innerHTML=icon(meta.music&&!platform.muted?'music':'mute');$('music-button').ariaLabel=L('Toggle recorded background music','切换背景音乐');$('music-button').title=L('City soundtrack · CC BY 4.0','城市配乐 · CC BY 4.0');
  $('avatar-name').textContent=playerName();$('tier-label').textContent=text(TIERS[tier(run)].name).toUpperCase();
+ if($('quick-scale-btn')){
+  const curScale=Math.round((Number(document.documentElement.style.getPropertyValue('--ui-scale'))||1)*100);
+  $('quick-scale-btn').textContent=curScale+'%';
+ }
  $('test-badge').hidden=!run.unranked;$('test-badge').textContent=L('TEST RUN · NO OFFICIAL SCORE','测试局 · 不提交正式分数');
  $('swipe-cue').querySelector('span').textContent=visit?L('ESTATE TOUR · SWIPE TO CONTINUE','资产参观 · 右滑继续'):L('SWIPE RIGHT TO WALK ON','向右滑动，继续前行');
  $('game').dataset.prestige=prestige(run);$('game').dataset.wealth=tier(run);$('game').dataset.finish=finishStyle();$('game').classList.toggle('ended',run.ended);const k=run.offer.type==='asset'?getAsset(run.offer.asset).model:run.offer.project;const biome=['ocean','marina','island','beach','resort'].includes(k)?'coast':['solar','greenhouse','vineyard','cottage'].includes(k)?'nature':['rocket','spaceport','cloud','lab'].includes(k)?'future':['manor','palace','castle'].includes(k)?'royal':'city';$('game').dataset.biome=biome;renderChallengeHud();lifeUI?.renderHud();musicMode();
@@ -382,6 +386,16 @@ document.addEventListener('click',async e=>{
  music.unlock();effects.unlock();
  if(await lifeUI.handle(a,v))return;
  switch(a){
+ case 'quick-scale':{
+  const scales=[1, 0.85, 0.75, 1.15, 1.25];
+  let cur=Number(document.documentElement.style.getPropertyValue('--ui-scale'))||1;
+  let idx=scales.findIndex(s=>Math.abs(s-cur)<0.04);
+  let next=scales[(idx+1)%scales.length];
+  document.documentElement.style.setProperty('--ui-scale',next);
+  if($('quick-scale-btn'))$('quick-scale-btn').textContent=Math.round(next*100)+'%';
+  try{let s=JSON.parse(localStorage.getItem('last100-ui')||'{}');s.scale=next;localStorage.setItem('last100-ui',JSON.stringify(s));}catch{}
+  fitDock();toast(`界面缩放已设为 ${Math.round(next*100)}%`);break;
+ }
  case 'next':nextOffer();break;
  case 'invest':doInvest();break;
  case 'stake':updateStake(Math.max(1,Math.floor(run.cash*Number(v)/100)));break;
