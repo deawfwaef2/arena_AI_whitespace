@@ -318,8 +318,9 @@ export class World{
  turnCorner(){
   if(this.fallback)return Promise.resolve();
   if(!this.motion){
-    this.actor.root.position.copy(this.streetPoint(7.2,-7));
     this.blockAngle=(this.blockAngle||0)+Math.PI/2;
+    this.actor.root.position.copy(this.streetPoint(-1.65,2.2));
+    this.actor.root.rotation.y=(this.blockAngle||0)+0.59;
     this.justTurned=true;
     this.resize();
     return Promise.resolve();
@@ -327,34 +328,45 @@ export class World{
   this.corner={
     from:this.blockAngle||0,
     start:performance.now(),
-    duration:2500
+    duration:2100
   };
   return new Promise(resolve=>this.corner.resolve=resolve);
  }
  setLanguage(lang){this.lang=lang;}
  setOffer(offer){if(this.fallback)return;if(this.travelResolve){this.travelResolve();this.travelResolve=null;}if(this.plot)dispose(this.plot);if(this.incoming)dispose(this.incoming);this.incoming=null;this.plot=makePlot(offer,this.lang);this.plot.rotation.y=this.blockAngle||0;this.scene.add(this.plot);this.travelTime=null;this.drag=0;this.justTurned=false;this.actor.root.position.copy(this.streetPoint(-1.65,2.2));this.resize();}
- travel(offer,duration=850){if(this.fallback)return Promise.resolve();if(this.incoming)dispose(this.incoming);this.incoming=makePlot(offer,this.lang);this.incoming.rotation.y=this.blockAngle||0;this.travelAfterCorner=!!this.justTurned;this.travelActorStart=this.actor.root.position.clone();this.justTurned=false;this.incoming.position.copy(this.streetPoint(this.travelAfterCorner?18:16,0));this.scene.add(this.incoming);this.travelTime=0;this.travelStarted=performance.now();this.duration=this.motion?duration/this.speed:80;this.drag=0;return new Promise(r=>{this.travelResolve=r;});}
+ travel(offer,duration=850){if(this.fallback)return Promise.resolve();if(this.incoming)dispose(this.incoming);this.incoming=makePlot(offer,this.lang);this.incoming.rotation.y=this.blockAngle||0;this.justTurned=false;this.incoming.position.copy(this.streetPoint(16,0));this.scene.add(this.incoming);this.travelTime=0;this.travelStarted=performance.now();this.duration=this.motion?duration/this.speed:80;this.drag=0;return new Promise(r=>{this.travelResolve=r;});}
  setDrag(n){this.drag=n;}
  updateStyle(s){
   if(this.fallback)return;const o=getOutfit(s.equipped);if(this.heroIdentity)this.heroIdentity.visible=o.kind!=='royal'&&o.kind!=='gold';this.actor.clothes.color.set(o.color);this.actor.trousers.color.set(['suit','gold','cyber','royal'].includes(o.kind)?o.color:0xf0f4f0);this.actor.dress.children.slice().forEach(dispose);const d=this.actor.dress;
+  const effects=s.assets.map(id=>getAsset(id)?.effect);const wealth=classIndex(s);if(wealth>=2)effects.push('silver');if(wealth>=3)effects.push('gold','petals');if(wealth>=4)effects.push('welcome4','diamond');if(wealth>=5)effects.push('welcome8','royal','cosmic');if(s.equipped==='plain'){this.actor.clothes.color.set([0x46796e,0x789887,0x577b71,0x365c55,0xdcd5bd,0xe9dcc0][wealth]);this.actor.trousers.color.set(wealth>=3?0x53645d:0x9fa79d);}this.effects=effects;
   if(o.kind!=='plain'){
    for(const x of [-.287,.287]){const sleeve=cyl(d,.095,.083,.21,new T.Color(o.color),x,1.19,0,12);sleeve.rotation.z=x<0?-.15:.15;}
    if(['suit','gold','royal'].includes(o.kind)){box(d,.21,.28,.017,0xf1e9da,0,1.16,.194);const tie=mesh(d,new T.ConeGeometry(.045,.21,4),0x456074,0,1.13,.215);tie.rotation.z=Math.PI;for(const y of [1,.88])sphere(d,.014,new T.Color(o.trim),.065,y,.204);}
    if(o.kind==='hoodie'){const hood=torus(d,.31,.06,new T.Color(o.color),0,1.5,-.067);hood.rotation.x=.3;}
    if(o.kind==='cyber'){for(const y of [.9,1.02,1.14])box(d,.32,.025,.03,mat(0x9fffe6,{emissive:0x2bb599,emissiveIntensity:.4}),0,y,.19);}
-   if(o.kind==='royal'||o.kind==='gold')this.crown(d,0,2.0,0,.67);
   }
+  const hasCrown=['royal','gold'].includes(o.kind)||effects.some(x=>['royal','sovereign'].includes(x));
+  if(hasCrown)this.crown(d,0,2.02,0,.68);
   this.trail=[];this.trailClock=0;const old=this.cosmetics;this.cosmetics=new T.Group();this.scene.add(this.cosmetics);dispose(old);this.followers=[];
-  const effects=s.assets.map(id=>getAsset(id)?.effect);const wealth=classIndex(s);if(wealth>=2)effects.push('silver');if(wealth>=3)effects.push('gold','petals');if(wealth>=4)effects.push('welcome4','diamond');if(wealth>=5)effects.push('welcome8','royal','cosmic');if(s.equipped==='plain'){this.actor.clothes.color.set([0x46796e,0x789887,0x577b71,0x365c55,0xdcd5bd,0xe9dcc0][wealth]);this.actor.trousers.color.set(wealth>=3?0x53645d:0x9fa79d);}this.effects=effects;
-  const count=effects.some(x=>['welcome8','sovereign'].includes(x))?8:effects.includes('welcome4')?4:effects.includes('welcome2')?2:0;
-  for(let i=0;i<count;i++){const npc=avatar(.66);npc.clothes.color.set(i%2?0x3f6579:0x526c61);npc.trousers.color.set(0x547077);npc.root.position.set(-3.1+Math.floor(i/2)*1.2,.065,i%2?1.46:3.02);npc.root.rotation.y=i%2?.15:2.8;this.cosmetics.add(npc.root);this.followers.push(npc);}
-  this.actor.root.position.y=count>=4?.12:0;this.trailFloor=count>=4?.33:.20;
-  if(count>=4)roundSlab(this.cosmetics,8,1.15,.035,.1,0xc78f82,.2,.21,2.2);
-  if(effects.some(x=>['royal','sovereign'].includes(x))){const crown=this.crown(this.cosmetics,-1.65,2.9,2.2,.7);crown.userData.followAvatar=true;crown.userData.baseY=2.9;}
+  const count=effects.some(x=>['welcome8','sovereign'].includes(x))?6:effects.includes('welcome4')?4:effects.includes('welcome2')?2:0;
+  for(let i=0;i<count;i++){const npc=avatar(.66);npc.clothes.color.set(0x2d3748);npc.trousers.color.set(0x1a202c);npc.root.position.set(-3.1+Math.floor(i/2)*1.2,.065,i%2?1.46:3.02);npc.root.rotation.y=this.actor.root.rotation.y;this.cosmetics.add(npc.root);this.followers.push(npc);}
+  this.actor.root.position.y=count>=4?.09:0;this.trailFloor=count>=4?.25:.18;
   const style=effects.includes('cosmic')||effects.includes('sovereign')?0xc4b1f2:effects.includes('aqua')?0x8ef1eb:0xefc573;
   const isPetal=effects.includes('petals'),hasTrail=effects.some(e=>['gold','silver','glass','cosmic','sovereign','prism'].includes(e));
-  if(hasTrail||isPetal)for(let i=0;i<18;i++){const p=mesh(this.cosmetics,isPetal?new T.PlaneGeometry(.09,.16):new T.CircleGeometry(.069,8),new T.MeshBasicMaterial({color:isPetal?(i%2?0xf3b4c7:0xffdec0):style,transparent:true,opacity:0,side:T.DoubleSide,depthWrite:false}),0,.22,0);p.rotation.x=-Math.PI/2;p.visible=false;p.userData.petal=isPetal;this.trail.push(p);}
-  if(effects.length){const r=torus(this.cosmetics,.64,.03,style,-1.65,count>=4?.335:.20,2.2);r.rotation.x=Math.PI/2;r.userData.followAvatar=true;r.userData.baseY=count>=4?.335:.20;for(let i=0;i<Math.min(effects.length*3,24);i++){const a=mesh(this.cosmetics,new T.OctahedronGeometry(.052),mat(style,{metalness:.4,emissive:style,emissiveIntensity:.07}),-1.65,.55+i*.05,2.2);a.userData.float=a.position.y;a.userData.baseY=a.position.y;a.userData.spin=.6;a.userData.orbit={phase:i*.8,radius:.66+(i%3)*.1};if(effects.includes('prism'))a.material.color.setHSL((i*.17)%1,.53,.78);}}
+  if(hasTrail||isPetal)for(let i=0;i<20;i++){const p=mesh(this.cosmetics,isPetal?new T.PlaneGeometry(.09,.16):new T.CircleGeometry(.069,8),new T.MeshBasicMaterial({color:isPetal?(i%2?0xf3b4c7:0xffdec0):style,transparent:true,opacity:0,side:T.DoubleSide,depthWrite:false}),0,.22,0);p.rotation.x=-Math.PI/2;p.visible=false;p.userData.petal=isPetal;this.trail.push(p);}
+  if(this.actorAuras){dispose(this.actorAuras);this.actor.root.remove(this.actorAuras);}
+  this.actorAuras=new T.Group();this.actor.root.add(this.actorAuras);this.orbitingCrystals=[];
+  if(effects.length){
+    const r=torus(this.actorAuras,.64,.028,style,0,.08,0);r.rotation.x=Math.PI/2;r.userData.spin=.7;
+    const numCrystals=Math.min(effects.length*3,18);
+    for(let i=0;i<numCrystals;i++){
+      const a=mesh(this.actorAuras,new T.OctahedronGeometry(.052),mat(style,{metalness:.5,roughness:.2,emissive:style,emissiveIntensity:.18}),0,1.3,0);
+      a.userData.orbit={phase:i*(Math.PI*2/numCrystals),radius:.68+(i%3)*.08,height:1.2+(i%4)*.22,speed:.85+(i%2)*.25};
+      a.userData.spin=1.2;
+      if(effects.includes('prism'))a.userData.isPrism=true;
+      this.orbitingCrystals.push(a);
+    }
+  }
  }
  crown(parent,x,y,z,scale=1){const g=new T.Group();parent.add(g);g.position.set(x,y,z);g.scale.setScalar(scale);cyl(g,.37,.33,.13,mat(0xe6c46d,{metalness:.5,roughness:.3}),0,0,0,20);for(let i=0;i<6;i++){const a=i*Math.PI/3;mesh(g,new T.ConeGeometry(.075,.25,4),0xf5d184,Math.cos(a)*.3,.15,Math.sin(a)*.3);}g.userData.float=y;return g;}
  celebrate(){this.hop=1;this.lossPose=0;}
@@ -364,33 +376,47 @@ export class World{
  loop(now){requestAnimationFrame(this.loop);const rawDt=(now-this.last)/1000,dt=Math.min(rawDt,.05);this.last=now;if(document.hidden)return;
   if(this.corner){
     const c=this.corner,p=Math.min(1,(now-c.start)/c.duration);
-    let lx,lz,localFacing;
-    if(p<.35){
-      const q=p/.35,e=q*q*(3-2*q);
-      lx=T.MathUtils.lerp(-1.65,4.8,e);
-      lz=2.2;
-      localFacing=Math.PI/2;
-    }else if(p<.72){
-      const q=(p-.35)/.37,e=q*q*(3-2*q);
-      lx=4.8+(7.2-4.8)*(2*e-e*e);
-      lz=2.2-2.4*(e*e);
-      const dx=Math.max(.01,2.4*(1-e)),dz=-2.4*e;
-      localFacing=Math.atan2(dx,-dz);
-    }else{
-      const q=(p-.72)/.28,e=q*q*(3-2*q);
-      lx=7.2;
-      lz=T.MathUtils.lerp(-.2,-7,e);
-      localFacing=Math.PI;
-    }
-    this.actor.root.position.copy(this.streetPoint(lx,lz,c.from));
+    const ease=p*p*(3-2*p);
+    const tP=ease,invT=1-tP;
+    const bx=invT*invT*(-1.65) + 2*invT*tP*(2.2) + tP*tP*(2.2);
+    const bz=invT*invT*(2.2) + 2*invT*tP*(2.2) + tP*tP*(1.65);
+    const vx=2*invT*(2.2 - (-1.65));
+    const vz=2*tP*(1.65 - 2.2);
+    const localFacing=Math.atan2(Math.max(.01,vx),-vz);
+    this.actor.root.position.copy(this.streetPoint(bx,bz,c.from));
     this.cornerFacing=c.from+localFacing;
-    const camP=Math.max(0,Math.min(1,(p-.30)/.55)),camEase=camP*camP*(3-2*camP);
-    this.blockAngle=c.from+(Math.PI/2)*camEase;
+    this.blockAngle=c.from+(Math.PI/2)*ease;
     this.resize(true);
-    if(p===1){const resolve=c.resolve;this.corner=null;this.justTurned=true;resolve?.();}
+    if(p===1){
+      const resolve=c.resolve;
+      this.corner=null;
+      this.justTurned=true;
+      this.blockAngle=c.from+Math.PI/2;
+      this.actor.root.position.copy(this.streetPoint(-1.65,2.2));
+      this.actor.root.rotation.y=(this.blockAngle||0)+0.59;
+      this.resize(true);
+      resolve?.();
+    }
   }
   if(this.restStage){if(!this.sceneSuspended)animateRest(this.restStage,dt,this.motion);this.renderer.render(this.restStage.scene,this.restStage.camera);return;}if(this.paused&&!this.titleMode){this.renderer.render(this.scene,this.camera);return;}this.time+=dt;const t=this.time;let walking=false;
-  if(this.travelTime!==null){this.travelTime=now-this.travelStarted;const p=Math.min(1,this.travelTime/this.duration),e=p*p*(3-2*p);const distance=this.travelAfterCorner?18:16;this.plot.position.copy(this.streetPoint(-distance*e,0));this.incoming.position.copy(this.streetPoint(distance*(1-e),0));if(this.travelAfterCorner){this.actor.root.position.copy(this.travelActorStart).lerp(this.streetPoint(-1.65,2.2),e);this.resize(true);}else{this.actor.root.position.copy(this.streetPoint(-1.65+Math.sin(p*Math.PI)*1.1,2.2));}walking=true;if(p>=1){dispose(this.plot);this.plot=this.incoming;this.incoming=null;this.plot.position.set(0,0,0);this.travelTime=null;this.travelResolve?.();this.travelResolve=null;this.resize(true);}}
+  if(this.travelTime!==null){
+    this.travelTime=now-this.travelStarted;
+    const p=Math.min(1,this.travelTime/this.duration),e=p*p*(3-2*p);
+    this.plot.position.copy(this.streetPoint(-16*e,0));
+    this.incoming.position.copy(this.streetPoint(16*(1-e),0));
+    this.actor.root.position.copy(this.streetPoint(-1.65+Math.sin(p*Math.PI)*0.35,2.2));
+    walking=true;
+    if(p>=1){
+      dispose(this.plot);
+      this.plot=this.incoming;
+      this.incoming=null;
+      this.plot.position.set(0,0,0);
+      this.travelTime=null;
+      this.travelResolve?.();
+      this.travelResolve=null;
+      this.resize(true);
+    }
+  }
   else if(this.corner||this.justTurned){walking=!!this.corner;}
   else if(this.plot){this.plot.position.copy(this.streetPoint(-this.drag*.85,0));this.actor.root.position.copy(this.streetPoint(-1.65+this.drag*.36,2.2));walking=Math.abs(this.drag)>.03;}
   this.heroMarker.position.x=this.actor.root.position.x;this.heroMarker.position.z=this.actor.root.position.z;
@@ -445,10 +471,31 @@ export class World{
      a.root.position.x=T.MathUtils.lerp(a.root.position.x,targetX,0.25);
      a.root.position.z=T.MathUtils.lerp(a.root.position.z,targetZ,0.25);
      a.root.rotation.y=this.actor.root.rotation.y;
-     a.limbs[0].rotation.z=-.9-Math.sin(t*4+i)*.3;
-     a.limbs[1].rotation.z=.9+Math.sin(t*4+i)*.3;
-     a.body.position.y=Math.sin(t*3+i)*.035;
+     if(walking){
+       a.limbs[0].rotation.x=Math.sin(t*12+i)*.55;
+       a.limbs[1].rotation.x=-Math.sin(t*12+i)*.55;
+       a.limbs[2].rotation.x=-Math.sin(t*12+i)*.6;
+       a.limbs[3].rotation.x=Math.sin(t*12+i)*.6;
+       a.body.position.y=Math.abs(Math.sin(t*12+i))*.04;
+     }else{
+       a.limbs[0].rotation.x=0;a.limbs[0].rotation.z=-.18;
+       a.limbs[1].rotation.x=0;a.limbs[1].rotation.z=.18;
+       a.limbs[2].rotation.x=0;a.limbs[3].rotation.x=0;
+       a.body.position.y=0;
+     }
    });
+   for(const cry of this.orbitingCrystals||[]){
+     const u=cry.userData;
+     if(!u?.orbit)continue;
+     cry.position.set(
+       Math.cos(t*u.orbit.speed+u.orbit.phase)*u.orbit.radius,
+       u.orbit.height+Math.sin(t*2.0+u.orbit.phase)*.12,
+       Math.sin(t*u.orbit.speed+u.orbit.phase)*u.orbit.radius
+     );
+     cry.rotation.y+=dt*2.2;
+     cry.rotation.x+=dt*1.4;
+     if(u.isPrism)cry.material.color.setHSL((t*.25+u.orbit.phase*.2)%1,.75,.7);
+   }
   }
   for(const root of [this.plot,this.incoming])root?.traverse(o=>{if(o.userData.billboard){const q=this.billboardParentQ??=new T.Quaternion();o.parent.getWorldQuaternion(q);o.quaternion.copy(q.invert()).multiply(this.camera.quaternion);}});
   if(this.plot){const p=new T.Vector3(.4,3.2,-.1);p.applyMatrix4(this.plot.matrixWorld);p.project(this.camera);const rect=this.container.getBoundingClientRect();this.onProjectPosition(rect.left+(p.x+1)*rect.width/2,rect.top+(1-p.y)*rect.height/2);}
