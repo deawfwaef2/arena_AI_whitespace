@@ -247,3 +247,15 @@
 #app[data-v9='on'] #v7-top .v7-mech-name{display:none!important}
 #app[data-v9='on'] #v7-top .v7-mech:hover{opacity:1;transform:scale(1.25)}
 #app[data-v9='on'] #v9-fatigue{top:146px}
+/* short screens (phone landscape): compact popups, always scrollable */
+@media (max-height:520px){
+ #modal[data-kind^='v9-'] #modal-card{max-height:calc(100dvh - 16px);overflow-y:auto}
+ .v9-pop h2{font-size:20px;margin:2px 0}
+ .v9-big{width:54px;height:54px}
+ .v9-story-body{font-size:14px;margin:4px 0;line-height:1.4}
+ .v9-story-choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:6px}
+ .v9-choice{padding:6px 10px;font-size:14px}.v9-choice img,.v9-choice.story img{width:28px;height:28px}
+ .v9-lost img{width:44px;height:44px}
+ #v9-deck{top:52px;font-size:12px;padding:3px 10px}
+ #app[data-v9='on'] #v7-top{top:84px!important}
+}
