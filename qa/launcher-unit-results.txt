@@ -1,0 +1,4 @@
+=== RUN   TestLocalPeers
+--- PASS: TestLocalPeers (0.00s)
+PASS
+ok  	last100/launcher	0.004s

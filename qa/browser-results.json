@@ -1,0 +1,915 @@
+[
+  {
+    "name": "phone-poor",
+    "layout": {
+      "world": {
+        "x": 0,
+        "y": 112,
+        "w": 390,
+        "h": 288.765625,
+        "right": 390,
+        "bottom": 400.765625,
+        "scroll": 289,
+        "client": 289
+      },
+      "dock": {
+        "x": 12,
+        "y": 412.765625,
+        "w": 366,
+        "h": 388.234375,
+        "right": 378,
+        "bottom": 801,
+        "scroll": 386,
+        "client": 386
+      },
+      "cash": {
+        "x": 23,
+        "y": 29.265625,
+        "w": 57,
+        "h": 26.25,
+        "right": 80,
+        "bottom": 55.515625,
+        "scroll": 29,
+        "client": 26
+      },
+      "cashBox": {
+        "x": 12,
+        "y": 10,
+        "width": 151,
+        "height": 54,
+        "top": 10,
+        "right": 163,
+        "bottom": 64,
+        "left": 12
+      },
+      "viewport": [
+        390,
+        844
+      ],
+      "summary": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "right": 0,
+        "bottom": 0,
+        "scroll": 0,
+        "client": 0
+      },
+      "menu": {
+        "x": 334,
+        "y": 14,
+        "w": 44,
+        "h": 44,
+        "right": 378,
+        "bottom": 58,
+        "scroll": 42,
+        "client": 42
+      }
+    }
+  },
+  {
+    "name": "phone-after-corner",
+    "layout": {
+      "world": {
+        "x": 0,
+        "y": 112,
+        "w": 390,
+        "h": 288.765625,
+        "right": 390,
+        "bottom": 400.765625,
+        "scroll": 289,
+        "client": 289
+      },
+      "dock": {
+        "x": 12,
+        "y": 412.765625,
+        "w": 366,
+        "h": 388.234375,
+        "right": 378,
+        "bottom": 801,
+        "scroll": 386,
+        "client": 386
+      },
+      "cash": {
+        "x": 23,
+        "y": 29.265625,
+        "w": 57,
+        "h": 26.25,
+        "right": 80,
+        "bottom": 55.515625,
+        "scroll": 29,
+        "client": 26
+      },
+      "cashBox": {
+        "x": 12,
+        "y": 10,
+        "width": 151,
+        "height": 54,
+        "top": 10,
+        "right": 163,
+        "bottom": 64,
+        "left": 12
+      },
+      "viewport": [
+        390,
+        844
+      ],
+      "summary": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "right": 0,
+        "bottom": 0,
+        "scroll": 0,
+        "client": 0
+      },
+      "menu": {
+        "x": 334,
+        "y": 14,
+        "w": 44,
+        "h": 44,
+        "right": 378,
+        "bottom": 58,
+        "scroll": 42,
+        "client": 42
+      }
+    }
+  },
+  {
+    "name": "small-phone",
+    "layout": {
+      "world": {
+        "x": 0,
+        "y": 112,
+        "w": 320,
+        "h": 139.734375,
+        "right": 320,
+        "bottom": 251.734375,
+        "scroll": 289,
+        "client": 140
+      },
+      "dock": {
+        "x": 12,
+        "y": 263.734375,
+        "w": 296,
+        "h": 261.265625,
+        "right": 308,
+        "bottom": 525,
+        "scroll": 424,
+        "client": 259
+      },
+      "cash": {
+        "x": 23,
+        "y": 29.265625,
+        "w": 57,
+        "h": 26.25,
+        "right": 80,
+        "bottom": 55.515625,
+        "scroll": 29,
+        "client": 26
+      },
+      "cashBox": {
+        "x": 12,
+        "y": 10,
+        "width": 110,
+        "height": 54,
+        "top": 10,
+        "right": 122,
+        "bottom": 64,
+        "left": 12
+      },
+      "viewport": [
+        320,
+        568
+      ],
+      "summary": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "right": 0,
+        "bottom": 0,
+        "scroll": 0,
+        "client": 0
+      },
+      "menu": {
+        "x": 264,
+        "y": 14,
+        "w": 44,
+        "h": 44,
+        "right": 308,
+        "bottom": 58,
+        "scroll": 42,
+        "client": 42
+      }
+    }
+  },
+  {
+    "name": "landscape",
+    "layout": {
+      "world": {
+        "x": 0,
+        "y": 78,
+        "w": 514,
+        "h": 300,
+        "right": 514,
+        "bottom": 378,
+        "scroll": 300,
+        "client": 300
+      },
+      "dock": {
+        "x": 526,
+        "y": 78,
+        "w": 306,
+        "h": 300,
+        "right": 832,
+        "bottom": 378,
+        "scroll": 433,
+        "client": 298
+      },
+      "cash": {
+        "x": 23,
+        "y": 29.28125,
+        "w": 57,
+        "h": 26.25,
+        "right": 80,
+        "bottom": 55.53125,
+        "scroll": 29,
+        "client": 26
+      },
+      "cashBox": {
+        "x": 12,
+        "y": 11,
+        "width": 145,
+        "height": 52,
+        "top": 11,
+        "right": 157,
+        "bottom": 63,
+        "left": 12
+      },
+      "viewport": [
+        844,
+        390
+      ],
+      "summary": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "right": 0,
+        "bottom": 0,
+        "scroll": 0,
+        "client": 0
+      },
+      "menu": {
+        "x": 788,
+        "y": 13,
+        "w": 44,
+        "h": 44,
+        "right": 832,
+        "bottom": 57,
+        "scroll": 42,
+        "client": 42
+      }
+    }
+  },
+  {
+    "name": "tablet",
+    "layout": {
+      "world": {
+        "x": 0,
+        "y": 104,
+        "w": 670,
+        "h": 616,
+        "right": 670,
+        "bottom": 720,
+        "scroll": 616,
+        "client": 616
+      },
+      "dock": {
+        "x": 684,
+        "y": 169.3125,
+        "w": 326,
+        "h": 546.6875,
+        "right": 1010,
+        "bottom": 716,
+        "scroll": 545,
+        "client": 545
+      },
+      "cash": {
+        "x": 34,
+        "y": 45.21875,
+        "w": 57,
+        "h": 25.75,
+        "right": 91,
+        "bottom": 70.96875,
+        "scroll": 28,
+        "client": 26
+      },
+      "cashBox": {
+        "x": 20,
+        "y": 17,
+        "width": 150,
+        "height": 66,
+        "top": 17,
+        "right": 170,
+        "bottom": 83,
+        "left": 20
+      },
+      "viewport": [
+        1024,
+        768
+      ],
+      "summary": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "right": 0,
+        "bottom": 0,
+        "scroll": 0,
+        "client": 0
+      },
+      "menu": {
+        "x": 962,
+        "y": 25,
+        "w": 48,
+        "h": 48,
+        "right": 1010,
+        "bottom": 73,
+        "scroll": 46,
+        "client": 46
+      }
+    }
+  },
+  {
+    "name": "desktop",
+    "layout": {
+      "world": {
+        "x": 0,
+        "y": 104,
+        "w": 1050,
+        "h": 748,
+        "right": 1050,
+        "bottom": 852,
+        "scroll": 748,
+        "client": 748
+      },
+      "dock": {
+        "x": 1066,
+        "y": 299.3125,
+        "w": 354,
+        "h": 548.6875,
+        "right": 1420,
+        "bottom": 848,
+        "scroll": 547,
+        "client": 547
+      },
+      "cash": {
+        "x": 73,
+        "y": 43.171875,
+        "w": 66,
+        "h": 29.859375,
+        "right": 139,
+        "bottom": 73.03125,
+        "scroll": 33,
+        "client": 30
+      },
+      "cashBox": {
+        "x": 20,
+        "y": 17,
+        "width": 195,
+        "height": 66,
+        "top": 17,
+        "right": 215,
+        "bottom": 83,
+        "left": 20
+      },
+      "viewport": [
+        1440,
+        900
+      ],
+      "summary": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "right": 0,
+        "bottom": 0,
+        "scroll": 0,
+        "client": 0
+      },
+      "menu": {
+        "x": 1372,
+        "y": 25,
+        "w": 48,
+        "h": 48,
+        "right": 1420,
+        "bottom": 73,
+        "scroll": 46,
+        "client": 46
+      }
+    }
+  },
+  {
+    "name": "desktop-scale125",
+    "layout": {
+      "world": {
+        "x": 0,
+        "y": 104,
+        "w": 961.5,
+        "h": 748,
+        "right": 961.5,
+        "bottom": 852,
+        "scroll": 748,
+        "client": 748
+      },
+      "dock": {
+        "x": 972.5,
+        "y": 150.625,
+        "w": 442.5,
+        "h": 684.375,
+        "right": 1415,
+        "bottom": 835,
+        "scroll": 546,
+        "client": 546
+      },
+      "cash": {
+        "x": 73,
+        "y": 43.171875,
+        "w": 66,
+        "h": 29.859375,
+        "right": 139,
+        "bottom": 73.03125,
+        "scroll": 33,
+        "client": 30
+      },
+      "cashBox": {
+        "x": 20,
+        "y": 17,
+        "width": 195,
+        "height": 66,
+        "top": 17,
+        "right": 215,
+        "bottom": 83,
+        "left": 20
+      },
+      "viewport": [
+        1440,
+        900
+      ],
+      "summary": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "right": 0,
+        "bottom": 0,
+        "scroll": 0,
+        "client": 0
+      },
+      "menu": {
+        "x": 1372,
+        "y": 25,
+        "w": 48,
+        "h": 48,
+        "right": 1420,
+        "bottom": 73,
+        "scroll": 46,
+        "client": 46
+      }
+    }
+  },
+  {
+    "name": "phone-scale125",
+    "layout": {
+      "world": {
+        "x": 0,
+        "y": 112,
+        "w": 390,
+        "h": 191.703125,
+        "right": 390,
+        "bottom": 303.703125,
+        "scroll": 748,
+        "client": 192
+      },
+      "dock": {
+        "x": 12,
+        "y": 315.703125,
+        "w": 366,
+        "h": 485.296875,
+        "right": 378,
+        "bottom": 801,
+        "scroll": 406,
+        "client": 387
+      },
+      "cash": {
+        "x": 23,
+        "y": 27.1875,
+        "w": 66,
+        "h": 30.4375,
+        "right": 89,
+        "bottom": 57.625,
+        "scroll": 33,
+        "client": 30
+      },
+      "cashBox": {
+        "x": 12,
+        "y": 10,
+        "width": 151,
+        "height": 54,
+        "top": 10,
+        "right": 163,
+        "bottom": 64,
+        "left": 12
+      },
+      "viewport": [
+        390,
+        844
+      ],
+      "summary": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "right": 0,
+        "bottom": 0,
+        "scroll": 0,
+        "client": 0
+      },
+      "menu": {
+        "x": 334,
+        "y": 14,
+        "w": 44,
+        "h": 44,
+        "right": 378,
+        "bottom": 58,
+        "scroll": 42,
+        "client": 42
+      }
+    }
+  },
+  {
+    "name": "phone-scale75",
+    "layout": {
+      "world": {
+        "x": 0,
+        "y": 112,
+        "w": 390,
+        "h": 385.828125,
+        "right": 390,
+        "bottom": 497.828125,
+        "scroll": 386,
+        "client": 386
+      },
+      "dock": {
+        "x": 12,
+        "y": 509.828125,
+        "w": 366,
+        "h": 291.171875,
+        "right": 378,
+        "bottom": 801,
+        "scroll": 386,
+        "client": 386
+      },
+      "cash": {
+        "x": 23,
+        "y": 29.265625,
+        "w": 57,
+        "h": 26.25,
+        "right": 80,
+        "bottom": 55.515625,
+        "scroll": 29,
+        "client": 26
+      },
+      "cashBox": {
+        "x": 12,
+        "y": 10,
+        "width": 151,
+        "height": 54,
+        "top": 10,
+        "right": 163,
+        "bottom": 64,
+        "left": 12
+      },
+      "viewport": [
+        390,
+        844
+      ],
+      "summary": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "right": 0,
+        "bottom": 0,
+        "scroll": 0,
+        "client": 0
+      },
+      "menu": {
+        "x": 334,
+        "y": 14,
+        "w": 44,
+        "h": 44,
+        "right": 378,
+        "bottom": 58,
+        "scroll": 42,
+        "client": 42
+      }
+    }
+  },
+  {
+    "scenario": "phone controls, offline, non-secure LAN origin, corner and responsive layouts",
+    "status": "PASS"
+  },
+  {
+    "name": "rich-phone",
+    "layout": {
+      "world": {
+        "x": 0,
+        "y": 112,
+        "w": 390,
+        "h": 288.765625,
+        "right": 390,
+        "bottom": 400.765625,
+        "scroll": 289,
+        "client": 289
+      },
+      "dock": {
+        "x": 12,
+        "y": 412.765625,
+        "w": 366,
+        "h": 388.234375,
+        "right": 378,
+        "bottom": 801,
+        "scroll": 386,
+        "client": 386
+      },
+      "cash": {
+        "x": 23,
+        "y": 29.265625,
+        "w": 95,
+        "h": 26.25,
+        "right": 118,
+        "bottom": 55.515625,
+        "scroll": 29,
+        "client": 26
+      },
+      "cashBox": {
+        "x": 12,
+        "y": 10,
+        "width": 151,
+        "height": 54,
+        "top": 10,
+        "right": 163,
+        "bottom": 64,
+        "left": 12
+      },
+      "viewport": [
+        390,
+        844
+      ],
+      "summary": {
+        "x": 12,
+        "y": 70,
+        "w": 310,
+        "h": 23,
+        "right": 322,
+        "bottom": 93,
+        "scroll": 23,
+        "client": 23
+      },
+      "menu": {
+        "x": 334,
+        "y": 14,
+        "w": 44,
+        "h": 44,
+        "right": 378,
+        "bottom": 58,
+        "scroll": 42,
+        "client": 42
+      }
+    }
+  },
+  {
+    "scenario": "rich phone map, menus, material toggle, luxury and persistence",
+    "status": "PASS"
+  },
+  {
+    "name": "phone-rest",
+    "layout": {
+      "world": {
+        "x": 0,
+        "y": 112,
+        "w": 390,
+        "h": 288.765625,
+        "right": 390,
+        "bottom": 400.765625,
+        "scroll": 289,
+        "client": 289
+      },
+      "dock": {
+        "x": 12,
+        "y": 412.765625,
+        "w": 366,
+        "h": 388.234375,
+        "right": 378,
+        "bottom": 801,
+        "scroll": 494,
+        "client": 386
+      },
+      "cash": {
+        "x": 23,
+        "y": 32.421875,
+        "w": 95.5,
+        "h": 19.9375,
+        "right": 118.5,
+        "bottom": 52.359375,
+        "scroll": 22,
+        "client": 20
+      },
+      "cashBox": {
+        "x": 12,
+        "y": 10,
+        "width": 151,
+        "height": 54,
+        "top": 10,
+        "right": 163,
+        "bottom": 64,
+        "left": 12
+      },
+      "viewport": [
+        390,
+        844
+      ],
+      "summary": {
+        "x": 12,
+        "y": 70,
+        "w": 310,
+        "h": 23,
+        "right": 322,
+        "bottom": 93,
+        "scroll": 23,
+        "client": 23
+      },
+      "menu": {
+        "x": 334,
+        "y": 14,
+        "w": 44,
+        "h": 44,
+        "right": 378,
+        "bottom": 58,
+        "scroll": 42,
+        "client": 42
+      }
+    }
+  },
+  {
+    "name": "small-rest",
+    "layout": {
+      "world": {
+        "x": 0,
+        "y": 112,
+        "w": 320,
+        "h": 139.734375,
+        "right": 320,
+        "bottom": 251.734375,
+        "scroll": 140,
+        "client": 140
+      },
+      "dock": {
+        "x": 12,
+        "y": 263.734375,
+        "w": 296,
+        "h": 261.265625,
+        "right": 308,
+        "bottom": 525,
+        "scroll": 512,
+        "client": 259
+      },
+      "cash": {
+        "x": 23,
+        "y": 32.421875,
+        "w": 95.5,
+        "h": 19.9375,
+        "right": 118.5,
+        "bottom": 52.359375,
+        "scroll": 22,
+        "client": 20
+      },
+      "cashBox": {
+        "x": 12,
+        "y": 10,
+        "width": 117.5,
+        "height": 54,
+        "top": 10,
+        "right": 129.5,
+        "bottom": 64,
+        "left": 12
+      },
+      "viewport": [
+        320,
+        568
+      ],
+      "summary": {
+        "x": 12,
+        "y": 69,
+        "w": 240,
+        "h": 23,
+        "right": 252,
+        "bottom": 92,
+        "scroll": 23,
+        "client": 23
+      },
+      "menu": {
+        "x": 264,
+        "y": 14,
+        "w": 44,
+        "h": 44,
+        "right": 308,
+        "bottom": 58,
+        "scroll": 42,
+        "client": 42
+      }
+    }
+  },
+  {
+    "name": "desktop-rest",
+    "layout": {
+      "world": {
+        "x": 390,
+        "y": 104,
+        "w": 1050,
+        "h": 748,
+        "right": 1440,
+        "bottom": 852,
+        "scroll": 748,
+        "client": 748
+      },
+      "dock": {
+        "x": 20,
+        "y": 252.421875,
+        "w": 354,
+        "h": 595.578125,
+        "right": 374,
+        "bottom": 848,
+        "scroll": 594,
+        "client": 594
+      },
+      "cash": {
+        "x": 241,
+        "y": 48.3125,
+        "w": 95.5,
+        "h": 19.5625,
+        "right": 336.5,
+        "bottom": 67.875,
+        "scroll": 22,
+        "client": 20
+      },
+      "cashBox": {
+        "x": 188,
+        "y": 17,
+        "width": 195,
+        "height": 66,
+        "top": 17,
+        "right": 383,
+        "bottom": 83,
+        "left": 188
+      },
+      "viewport": [
+        1440,
+        900
+      ],
+      "summary": {
+        "x": 589,
+        "y": 17,
+        "w": 250,
+        "h": 66,
+        "right": 839,
+        "bottom": 83,
+        "scroll": 64,
+        "client": 64
+      },
+      "menu": {
+        "x": 1372,
+        "y": 25,
+        "w": 48,
+        "h": 48,
+        "right": 1420,
+        "bottom": 73,
+        "scroll": 46,
+        "client": 46
+      }
+    }
+  },
+  {
+    "scenario": "rest scene, exact worth, small phone activity scrolling, desktop left dock",
+    "status": "PASS"
+  },
+  {
+    "scenario": "health choice result persists on reload; death, ranking and legacy",
+    "status": "PASS"
+  }
+]

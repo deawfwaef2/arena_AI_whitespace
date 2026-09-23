@@ -1,0 +1,11 @@
+{
+  "title": "Last $100: Swipe to Rich",
+  "allowDeveloperMode": false,
+  "crazygames": {
+    "enabled": false,
+    "encryptionKey": "",
+    "cooldownSeconds": 15,
+    "maxScore": 9000000000000,
+    "ads": true
+  }
+}

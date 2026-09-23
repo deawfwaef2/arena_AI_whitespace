@@ -1,0 +1,4 @@
+PASS phone controls, offline, non-secure LAN origin, corner and responsive layouts
+PASS rich phone map, menus, material toggle, luxury and persistence
+PASS rest scene, exact worth, small phone activity scrolling, desktop left dock
+PASS health choice result persists on reload; death, ranking and legacy

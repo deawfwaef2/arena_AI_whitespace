@@ -1,0 +1,28 @@
+[
+  {
+    "title": "Lofi Hip Hop Loop",
+    "artist": "omfgdude / OMF-Games",
+    "license": "CC0 1.0 Universal",
+    "page": "https://opengameart.org/content/lofi-hip-hop-loop",
+    "original_url": "https://opengameart.org/sites/default/files/LofiLoop_2.ogg",
+    "original_sha256": "e57ba821d4db8d66783ca984a2778ec68d1439e862239ec36407344ef3bd1eab",
+    "included_file": "city-lofi.mp3",
+    "included_sha256": "42e223b0108c9595f86b0522684c30ca78475e71caecd5cd63f2e9142d1daf86",
+    "verified_date": "2026-09-22",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+  },
+  {
+    "title": "Level 1 — Retro Game Music Pack",
+    "artist": "Juhani Junkala / SubspaceAudio",
+    "license": "CC0 1.0 Universal",
+    "page": "https://opengameart.org/content/5-chiptunes-action",
+    "original_url": "https://opengameart.org/sites/default/files/5%20Action%20Chiptunes%20By%20Juhani%20Junkala.zip",
+    "original_sha256": "6f79ae4c6f2b59baa62c46bcd264c9d157f5dca2c30845fabc3c5be4e2b64a43",
+    "included_file": "level-one.mp3",
+    "included_sha256": "f9112002e4a4ec27560c648a828cc4757d6eacf5a1fdcd67fa17241f62314219",
+    "verified_date": "2026-09-22",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original_file_in_archive": "Juhani Junkala [Retro Game Music Pack] Level 1.wav",
+    "original_sha256_applies_to": "the uncompressed WAV member, not the ZIP archive"
+  }
+]

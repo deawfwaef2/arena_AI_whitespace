@@ -1,0 +1,124 @@
+
+> last-100-swipe-to-rich@3.1.1 test
+> node --test qa/core.test.mjs
+
+TAP version 13
+# Subtest: new life: $100, 200 stamina, five health slots, zero risk
+ok 1 - new life: $100, 200 stamina, five health slots, zero risk
+  ---
+  duration_ms: 3.593879
+  ...
+# Subtest: net worth counts cash, assets, outfits, utilities and escrow once
+ok 2 - net worth counts cash, assets, outfits, utilities and escrow once
+  ---
+  duration_ms: 0.533242
+  ...
+# Subtest: current wealth, not peak, controls tiers, guards, services, regions
+ok 3 - current wealth, not peak, controls tiers, guards, services, regions
+  ---
+  duration_ms: 0.590296
+  ...
+# Subtest: every threshold advances, immediately dropping one cent regresses
+ok 4 - every threshold advances, immediately dropping one cent regresses
+  ---
+  duration_ms: 2.477536
+  ...
+# Subtest: rest bill freezes; payment decreases current worth, not peak
+ok 5 - rest bill freezes; payment decreases current worth, not peak
+  ---
+  duration_ms: 15.313316
+  ...
+# Subtest: unaffordable mandatory bill kills, no public aid escape
+ok 6 - unaffordable mandatory bill kills, no public aid escape
+  ---
+  duration_ms: 0.707707
+  ...
+# Subtest: pending rest choices block paying; chance advances one point each rest
+ok 7 - pending rest choices block paying; chance advances one point each rest
+  ---
+  duration_ms: 0.676033
+  ...
+# Subtest: health roll and result survive serialization; no duplicate hit
+ok 8 - health roll and result survive serialization; no duplicate hit
+  ---
+  duration_ms: 1.379171
+  ...
+# Subtest: health exhaustion kills and persists death cause and result
+ok 9 - health exhaustion kills and persists death cause and result
+  ---
+  duration_ms: 0.658187
+  ...
+# Subtest: three compliance choices cost 4.5%, reward 6% only once
+ok 10 - three compliance choices cost 4.5%, reward 6% only once
+  ---
+  duration_ms: 0.643478
+  ...
+# Subtest: scandal refusal deducts 14%, hostile fine death records remaining cash
+ok 11 - scandal refusal deducts 14%, hostile fine death records remaining cash
+  ---
+  duration_ms: 0.765211
+  ...
+# Subtest: tax agreement does not double-charge; refusal removes tax and hurts state
+ok 12 - tax agreement does not double-charge; refusal removes tax and hurts state
+  ---
+  duration_ms: 0.951149
+  ...
+# Subtest: security policy changes probabilities; robbery loses 22%; assassination kills
+ok 13 - security policy changes probabilities; robbery loses 22%; assassination kills
+  ---
+  duration_ms: 0.517397
+  ...
+# Subtest: luxury only consumes wealth and awards life points; one purchase per item
+ok 14 - luxury only consumes wealth and awards life points; one purchase per item
+  ---
+  duration_ms: 0.590459
+  ...
+# Subtest: legacy settles once, unlock prices deducted once, perks apply next life
+ok 15 - legacy settles once, unlock prices deducted once, perks apply next life
+  ---
+  duration_ms: 0.582459
+  ...
+# Subtest: medical treatments charge money and restore health or reduce risk
+ok 16 - medical treatments charge money and restore health or reduce risk
+  ---
+  duration_ms: 0.516796
+  ...
+# Subtest: old unpaid rest save gains one locked bill and one health event, not per reload
+ok 17 - old unpaid rest save gains one locked bill and one health event, not per reload
+  ---
+  duration_ms: 1.996303
+  ...
+# Subtest: old paid rest is not charged again and gets no retroactive health draw
+ok 18 - old paid rest is not charged again and gets no retroactive health draw
+  ---
+  duration_ms: 6.091847
+  ...
+# Subtest: acknowledged street event remains valid after future rest filters queue
+ok 19 - acknowledged street event remains valid after future rest filters queue
+  ---
+  duration_ms: 0.801563
+  ...
+# Subtest: 96 local projects have valid catalog and implemented model IDs; gated draw
+ok 20 - 96 local projects have valid catalog and implemented model IDs; gated draw
+  ---
+  duration_ms: 1.735064
+  ...
+# Subtest: seeded multi-life smoke keeps finite cents, valid saves and regression
+ok 21 - seeded multi-life smoke keeps finite cents, valid saves and regression
+  ---
+  duration_ms: 73.004885
+  ...
+# Subtest: health deterioration grows by one point until natural 100% ceiling
+ok 22 - health deterioration grows by one point until natural 100% ceiling
+  ---
+  duration_ms: 0.210784
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 22
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 208.44507

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "class0",
+    "title": "小小的房间",
+    "artist": "UPSHIFT procedural score",
+    "license": "Original synthesis; no sampled audio",
+    "source": "scripts/compose_music.py",
+    "bpm": 66
+  },
+  {
+    "id": "class1",
+    "title": "星期日的阳光",
+    "artist": "UPSHIFT procedural score",
+    "license": "Original synthesis; no sampled audio",
+    "source": "scripts/compose_music.py",
+    "bpm": 78
+  },
+  {
+    "id": "class2",
+    "title": "留给海风的时间",
+    "artist": "UPSHIFT procedural score",
+    "license": "Original synthesis; no sampled audio",
+    "source": "scripts/compose_music.py",
+    "bpm": 84
+  },
+  {
+    "id": "class3",
+    "title": "云端客房",
+    "artist": "UPSHIFT procedural score",
+    "license": "Original synthesis; no sampled audio",
+    "source": "scripts/compose_music.py",
+    "bpm": 72
+  },
+  {
+    "id": "class4",
+    "title": "私人海湾",
+    "artist": "UPSHIFT procedural score",
+    "license": "Original synthesis; no sampled audio",
+    "source": "scripts/compose_music.py",
+    "bpm": 68
+  },
+  {
+    "id": "class5",
+    "title": "时间的收藏家",
+    "artist": "UPSHIFT procedural score",
+    "license": "Original synthesis; no sampled audio",
+    "source": "scripts/compose_music.py",
+    "bpm": 62
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "city": "taipei",
+    "file": "taipei.webp",
+    "kind": "AI-generated city panorama illustration",
+    "method": "Generated separately using the image-generation tool for this project; converted to WebP quality 88, maximum 1536px.",
+    "depiction": "Taipei 101, lantern night market, subtropical mountains",
+    "notice": "Stylized imagined view, not documentary photography or geographic navigation.",
+    "sha256": "f7ffb9d4ff824048553176e66f5482724a86f010211c5a67746b7b379500b2ab"
+  },
+  {
+    "city": "tokyo",
+    "file": "tokyo.webp",
+    "kind": "AI-generated city panorama illustration",
+    "method": "Generated separately using the image-generation tool for this project; converted to WebP quality 88, maximum 1536px.",
+    "depiction": "Tokyo Tower, Shibuya, elevated train, cherry blossoms",
+    "notice": "Stylized imagined view, not documentary photography or geographic navigation.",
+    "sha256": "336635e0c1fdb34bce5d6fad7ea9ac965a60df7a66134e9fd5e56190ae69eff8"
+  },
+  {
+    "city": "vegas",
+    "file": "vegas.webp",
+    "kind": "AI-generated city panorama illustration",
+    "method": "Generated separately using the image-generation tool for this project; converted to WebP quality 88, maximum 1536px.",
+    "depiction": "Casino strip, pyramid, observation wheel, desert",
+    "notice": "Stylized imagined view, not documentary photography or geographic navigation.",
+    "sha256": "30dc4fa045507e59c99236d2e6d5811072455de712793d37e783327420642710"
+  },
+  {
+    "city": "singapore",
+    "file": "singapore.webp",
+    "kind": "AI-generated city panorama illustration",
+    "method": "Generated separately using the image-generation tool for this project; converted to WebP quality 88, maximum 1536px.",
+    "depiction": "Marina Bay Sands, Supertrees, Peranakan shophouses",
+    "notice": "Stylized imagined view, not documentary photography or geographic navigation.",
+    "sha256": "bd56f178e9a35c808e3230dc3d313189cebb97a974fd56a5d64eea9b0dc29772"
+  },
+  {
+    "city": "newyork",
+    "file": "newyork.webp",
+    "kind": "AI-generated city panorama illustration",
+    "method": "Generated separately using the image-generation tool for this project; converted to WebP quality 88, maximum 1536px.",
+    "depiction": "Manhattan, Brooklyn Bridge, yellow taxis",
+    "notice": "Stylized imagined view, not documentary photography or geographic navigation.",
+    "sha256": "aea48a50bbf200b83ed42717b5c52387cea0f5348a6b71ea535b90ec03b8c2ff"
+  },
+  {
+    "city": "monaco",
+    "file": "monaco.webp",
+    "kind": "AI-generated city panorama illustration",
+    "method": "Generated separately using the image-generation tool for this project; converted to WebP quality 88, maximum 1536px.",
+    "depiction": "Port Hercule, yachts, Monte Carlo casino, coastal hills",
+    "notice": "Stylized imagined view, not documentary photography or geographic navigation.",
+    "sha256": "61e99fc6ab632f3042a255038d0651441d860ad8cca9d9ca6363d0f3b7cab6c4"
+  },
+  {
+    "file": "luxury-texture.webp",
+    "kind": "AI-generated UI material texture",
+    "method": "Generated for this project with image-generation tool; resized to 768 pixels and converted to WebP.",
+    "depiction": "Dark geometric luxury metal",
+    "notice": "Decorative generated material, not a photograph or third-party brand pattern. Used only when wealth presentation is enabled.",
+    "sha256": "863484681240a451df7256788d408e18cddb768ffa25e325d91948d959b132e3"
+  },
+  {
+    "file": "ivory-texture.webp",
+    "kind": "AI-generated UI material texture",
+    "method": "Generated for this project with image-generation tool; resized to 768 pixels and converted to WebP.",
+    "depiction": "Ivory woven paper with subtle gold ornament",
+    "notice": "Decorative generated material, not a photograph or third-party brand pattern. Used only when wealth presentation is enabled.",
+    "sha256": "484244cfa6babea4cb91b76eb1da06a4783080db86ff4f2cd2507bd46828d3d2"
+  }
+]

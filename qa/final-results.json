@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "htmlSha256": "4ce5440c72b9dac82b1733dea2ede9a716c78410043097793c6556f39af2931f",
+  "checks": [
+    "GET: exact final HTML, compressed transfer",
+    "HEAD works",
+    "No directory/source exposure; POST denied",
+    "Final build: title legacy purchase, skin, back to title, start, actual investment and auto-save"
+  ],
+  "errors": []
+}

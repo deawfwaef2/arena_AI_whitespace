@@ -1,0 +1,80 @@
+[
+  {
+    "id": "taipei",
+    "title": "Local Forecast - Elevator",
+    "artist": "Kevin MacLeod (incompetech.com)",
+    "license": "CC BY 4.0",
+    "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Local%20Forecast%20-%20Elevator.mp3",
+    "licenseURL": "https://creativecommons.org/licenses/by/4.0/",
+    "licenseEvidence": "https://incompetech.com/music/royalty-free/licenses/",
+    "changes": "Re-encoded from source to MP3 112 kbps / 44.1 kHz for download size; full composition retained; runtime loop and volume fades.",
+    "includedSHA256": "afe941ab2acbf04124b955f23e3d117aba7d21707cf535bd806bf92c6dd579a0",
+    "includedBytes": 2650074,
+    "retrieved": "2026-09-23"
+  },
+  {
+    "id": "tokyo",
+    "title": "Cherry Blossom",
+    "artist": "Kevin MacLeod (incompetech.com)",
+    "license": "CC BY 4.0",
+    "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Cherry%20Blossom.mp3",
+    "licenseURL": "https://creativecommons.org/licenses/by/4.0/",
+    "licenseEvidence": "https://incompetech.com/music/royalty-free/licenses/",
+    "changes": "Re-encoded from source to MP3 112 kbps / 44.1 kHz for download size; full composition retained; runtime loop and volume fades.",
+    "includedSHA256": "119b54353a731ad0d42d1dadc9aefce6c8a5cdf2e848fd2bdeb78467899213e2",
+    "includedBytes": 1960013,
+    "retrieved": "2026-09-23"
+  },
+  {
+    "id": "vegas",
+    "title": "Disco Lounge",
+    "artist": "Kevin MacLeod (incompetech.com)",
+    "license": "CC BY 4.0",
+    "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Disco%20Lounge.mp3",
+    "licenseURL": "https://creativecommons.org/licenses/by/4.0/",
+    "licenseEvidence": "https://incompetech.com/music/royalty-free/licenses/",
+    "changes": "Re-encoded from source to MP3 112 kbps / 44.1 kHz for download size; full composition retained; runtime loop and volume fades.",
+    "includedSHA256": "9f6b0096cd9b25fb5fa2e5ae30a0e3929b3f7600b1699c990fa2853ad1bb5265",
+    "includedBytes": 3782885,
+    "retrieved": "2026-09-23"
+  },
+  {
+    "id": "singapore",
+    "title": "Airport Lounge",
+    "artist": "Kevin MacLeod (incompetech.com)",
+    "license": "CC BY 4.0",
+    "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Airport%20Lounge.mp3",
+    "licenseURL": "https://creativecommons.org/licenses/by/4.0/",
+    "licenseEvidence": "https://incompetech.com/music/royalty-free/licenses/",
+    "changes": "Re-encoded from source to MP3 112 kbps / 44.1 kHz for download size; full composition retained; runtime loop and volume fades.",
+    "includedSHA256": "9c0c36aac38e8678e7e60988149a38694b606fbab24699e1470e51b976a97d14",
+    "includedBytes": 4308591,
+    "retrieved": "2026-09-23"
+  },
+  {
+    "id": "newyork",
+    "title": "Backbay Lounge",
+    "artist": "Kevin MacLeod (incompetech.com)",
+    "license": "CC BY 4.0",
+    "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Backbay%20Lounge.mp3",
+    "licenseURL": "https://creativecommons.org/licenses/by/4.0/",
+    "licenseEvidence": "https://incompetech.com/music/royalty-free/licenses/",
+    "changes": "Re-encoded from source to MP3 112 kbps / 44.1 kHz for download size; full composition retained; runtime loop and volume fades.",
+    "includedSHA256": "76f075e5307dcbad8941ac04e995df76b7412bed82a3174f207ab2c5e30117a1",
+    "includedBytes": 3733012,
+    "retrieved": "2026-09-23"
+  },
+  {
+    "id": "monaco",
+    "title": "Apero Hour",
+    "artist": "Kevin MacLeod (incompetech.com)",
+    "license": "CC BY 4.0",
+    "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Apero%20Hour.mp3",
+    "licenseURL": "https://creativecommons.org/licenses/by/4.0/",
+    "licenseEvidence": "https://incompetech.com/music/royalty-free/licenses/",
+    "changes": "Re-encoded from source to MP3 112 kbps / 44.1 kHz for download size; full composition retained; runtime loop and volume fades.",
+    "includedSHA256": "3310cd0414b211c578b8a08069abf8612365bf8edc8c4e3b675efddc7c19f3f3",
+    "includedBytes": 3963774,
+    "retrieved": "2026-09-23"
+  }
+]
