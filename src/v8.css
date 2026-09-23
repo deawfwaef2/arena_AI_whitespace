@@ -177,3 +177,24 @@ body[data-v7phone='yes'] .v8-odds .odds-box .amount{font-size:16px!important}
 body[data-v7phone='yes'] .v8-odds .chance-line strong{font-size:15px!important}
 body[data-v7phone='yes'] .v8-odds .chance-line{font-size:11px!important}
 body[data-v7phone='yes'] #app[data-v7='on'] #game .game-dock.v8-wide{right:30px!important;width:min(60vw,580px)!important}
+/* season goals under reward box */
+#v8-goals{right:48px;top:calc(12px + var(--v7-reward-h,150px) + 10px);width:262px;padding:9px 13px;font-size:13.5px}
+.v8-g-head{display:flex;justify-content:space-between;align-items:baseline;gap:6px;margin-bottom:5px}
+.v8-g-head b{font-size:15px}.v8-g-head small{font-size:11px;opacity:.7}
+.v8-g-row{display:flex;align-items:center;gap:8px;padding:3px 0;font-weight:600}
+.v8-g-row i{flex:0 0 18px;height:18px;border:2px solid currentColor;border-radius:5px;display:grid;place-items:center;opacity:.6}
+.v8-g-row i .v7-glyph{width:14px;height:14px;stroke-width:3}
+.v8-g-row.done{opacity:.55;text-decoration:line-through}
+.v8-g-row.done i{background:#3a8f5c;border-color:#3a8f5c;color:#fff;opacity:1}
+#app[data-v7rank='0'] .v8-g-row i{border-radius:0}
+#app[data-v7rank='3'] .v8-g-row.done i,#app[data-v7rank='4'] .v8-g-row.done i,#app[data-v7rank='5'] .v8-g-row.done i{background:#d9a431;border-color:#d9a431}
+#v7-hud[data-rest='yes'] #v8-goals{opacity:.8}
+.v8-streak{background:#ffd9c2!important;color:#8a3a0c!important}
+body[data-v7phone='yes'] #v8-goals{display:none}
+/* money auto-size so it never collides with the centre status strip */
+#app[data-v7='on'] #v7-money{max-width:calc(50vw - 260px)}
+#app[data-v7='on'] #v7-money strong[data-len='8']{font-size:clamp(46px,5.2vw,74px)}
+#app[data-v7='on'] #v7-money strong[data-len='9']{font-size:clamp(42px,4.6vw,66px)}
+#app[data-v7='on'] #v7-money strong[data-len='10'],#app[data-v7='on'] #v7-money strong[data-len='11'],#app[data-v7='on'] #v7-money strong[data-len='12']{font-size:clamp(36px,4vw,58px)}
+body[data-v7phone='yes'] #app[data-v7='on'] #v7-money{max-width:36vw}
+body[data-v7phone='yes'] #app[data-v7='on'] #v7-money strong[data-len]{font-size:30px}

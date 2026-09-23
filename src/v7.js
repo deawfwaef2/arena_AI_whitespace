@@ -42,6 +42,7 @@ const G={
  lock:'<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
  bolt:'<path d="m13 2-9 12h7l-1 8 10-13h-7Z"/>',
  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+ check:'<path d="m5 12 5 5 9-10"/>',
  arrow:'<path d="M4 12h15M13 6l6 6-6 6"/>',
  heart:'<path d="M12 21s-8-5.3-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.7-8 11-8 11Z"/>',
  moon:'<path d="M15 3a8 8 0 1 0 6 12A9 9 0 0 1 15 3Z"/>',
@@ -146,6 +147,7 @@ export class V7{
    <div id="v7-bottom" class="v7-bar"></div>
    <div id="v7-pano" hidden><div class="v7-pano-frame"><img alt=""><div class="v7-eq"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><b id="v7-pano-name"></b></div><svg class="v7-pano-ornament" viewBox="0 0 200 140" preserveAspectRatio="none"><path d="M6 134V40Q6 6 100 6T194 40v94" fill="none" stroke="currentColor" stroke-width="3"/><path d="M16 134V44Q16 16 100 16T184 44v90" fill="none" stroke="currentColor" stroke-width="1" opacity=".6"/><circle cx="100" cy="6" r="5" fill="currentColor"/></svg></div>
    <div id="v7-reward" class="v7-panel"></div>
+   <div id="v8-goals" class="v7-panel"></div>
    <div id="v7-rail"><div class="v7-rail-track"><i id="v7-rail-fill"></i><i id="v7-rail-ghost"></i></div><span id="v7-rail-label"></span></div>
    <div id="v7-tip" hidden></div>
   </div>
@@ -178,7 +180,7 @@ export class V7{
   for(const m of MECHS)if(m.fx)app.dataset['fx'+m.fx[0].toUpperCase()+m.fx.slice(1)]=this.unlocked(m)&&v.toggles[m.id]!==false?'on':'off';
   $('v7-hud').hidden=!started;$('v7-hud').dataset.rest=s.life.rest?'yes':'no';
   // money
-  $('v7-money-value').textContent=fmt(s.cash);$('v7-money-value').title=fmt(s.cash,false);
+  $('v7-money-value').textContent=fmt(s.cash);$('v7-money-value').dataset.len=Math.min(12,fmt(s.cash).length);$('v7-money-value').title=fmt(s.cash,false);
   $('v7-money-label').textContent=['口袋里的钱','工资卡余额','可用资金','流动资产','私人账户','家族资本'][rank];
   const q=s.life.rest?.bill||billQuote(s);$('v7-money-sub').innerHTML=`<span>${TIERS_LATE[lateTier(s)].name}</span><span>身家 ${fmt(w)}</span>`;
   // clock
@@ -263,7 +265,7 @@ export class V7{
   const stars=banner?.querySelector('.rb-star')?.textContent||'★',cat=o.category||'',twist=o.v8twist;
   const kind=delay?`<span class="v8-chip v8-k-delay">${glyph('hourglass')}${delay==='long'?'长期延时 · 2 次休息后兑现':'短期延时 · 下次休息后兑现'}</span>`:`<span class="v8-chip v8-k-now">${glyph('bolt')}即时揭晓</span>`;
   const wrap=document.createElement('div');wrap.className='v8-deal';wrap.dataset.rank=rk;
-  wrap.innerHTML=`<div class="v8-info"><div class="v8-tags">${kind}<span class="v8-chip v8-stars">${stars}</span>${cat?`<span class="v8-chip">${safe(cat)}</span>`:''}</div><div class="v8-title"></div>${twist?`<div class="v8-twist ${twist.good?'good':'bad'}"><b>${safe(twist.name)}</b><span>${safe(twist.note)}</span></div>`:''}<div class="v8-stake"></div></div><div class="v8-act"><div class="v8-odds"></div><div class="v8-up"><div class="v8-up-track"><i id="v7-up-now"></i><i id="v7-up-win"></i></div><small id="v7-up-label">升级进度</small></div><div class="v8-btns"><button class="v7-go ${delay?'delayed':''}" id="v7-go" data-action="${delay?'v7-delay-invest':'invest'}"><span id="v7-go-label">${delay?'签约':'投资'}</span><b id="v7-go-amt"></b></button></div></div>`;
+  wrap.innerHTML=`<div class="v8-info"><div class="v8-tags">${kind}<span class="v8-chip v8-stars">${stars}</span>${cat?`<span class="v8-chip">${safe(cat)}</span>`:''}${o.v8streak?`<span class="v8-chip v8-streak">${glyph('bolt')}${o.v8streak} 连胜 · 返还 +${(o.v8streak*.05).toFixed(2)}</span>`:''}</div><div class="v8-title"></div>${twist?`<div class="v8-twist ${twist.good?'good':'bad'}"><b>${safe(twist.name)}</b><span>${safe(twist.note)}</span></div>`:''}<div class="v8-stake"></div></div><div class="v8-act"><div class="v8-odds"></div><div class="v8-up"><div class="v8-up-track"><i id="v7-up-now"></i><i id="v7-up-win"></i></div><small id="v7-up-label">升级进度</small></div><div class="v8-btns"><button class="v7-go ${delay?'delayed':''}" id="v7-go" data-action="${delay?'v7-delay-invest':'invest'}"><span id="v7-go-label">${delay?'签约':'投资'}</span><b id="v7-go-amt"></b></button></div></div>`;
   if(h1){if(terms)h1.title=terms.textContent.trim();wrap.querySelector('.v8-title').append(h1);}
   if(stake)wrap.querySelector('.v8-stake').append(stake);
   if(risk)wrap.querySelector('.v8-info').append(risk);
@@ -284,6 +286,12 @@ export class V7{
  /* ---------- delayed projects ---------- */
  markOffer(){const s=this.s,o=s.offer;if(!o||o.v7seen)return;o.v7seen=1;const v=this.st();
   if(o.type==='project'&&!o.delay&&!o.settled&&worth(s)>=2000000){const h=[...String(o.id)].reduce((n,ch)=>(n*31+ch.charCodeAt(0))>>>0,7)%100;if(h<30){o.v7delay=h<11?'long':'short';o.up=Math.min(20,+(o.up+(o.v7delay==='long'?.9:.4)).toFixed(2));}}
+  if(o.type==='project'&&!o.settled){const h=[...String(o.id)].reduce((n,ch)=>(n*33+ch.charCodeAt(0))>>>0,11);const wet=['rain','drizzle','storm','snow','blizzard'].includes(v.weather);
+   const pool=[['熟客推荐',true,'成功率 +5%',x=>{if(!x.stages)x.p=clamp(x.p+5,1,95);}],['网红打卡',true,'返还 +0.30',x=>{x.up=+(x.up+.3).toFixed(2);}],['老板跑路传闻',false,'成功率 −8%，但返还 +0.80',x=>{if(!x.stages)x.p=clamp(x.p-8,1,95);x.up=+(x.up+.8).toFixed(2);}],['房东涨租',false,'返还 −0.15',x=>{x.up=Math.max(1.05,+(x.up-.15).toFixed(2));}],['同行扎堆',false,'成功率 −4%',x=>{if(!x.stages)x.p=clamp(x.p-4,1,95);}],['政策利好',true,'成功率 +3%，返还 +0.15',x=>{if(!x.stages)x.p=clamp(x.p+3,1,95);x.up=+(x.up+.15).toFixed(2);}]];
+   if(wet)pool.push(['雨天淡季',false,'天气差：成功率 −3%，返还 +0.35',x=>{if(!x.stages)x.p=clamp(x.p-3,1,95);x.up=+(x.up+.35).toFixed(2);}]);
+   if(v.weather==='clear'||v.weather==='heat')pool.push(['好天气人潮',true,'晴天客流：成功率 +4%',x=>{if(!x.stages)x.p=clamp(x.p+4,1,95);}]);
+   if(h%100<42){const tw=pool[(h>>>7)%pool.length];tw[3](o);o.v8twist={name:tw[0],good:tw[1],note:tw[2]};}
+   const st=Math.min(6,s.streak||0);if(st>=2){o.up=+(o.up+st*.05).toFixed(2);o.v8streak=st;}}
   const dist=v.district;if(dist&&o.type==='project'&&!o.settled&&dist.city===s.life.city){if(dist.kind==='p'&&!o.stages)o.p=clamp(o.p+dist.val,1,95);if(dist.kind==='up')o.up=Math.min(20,+(o.up+dist.val).toFixed(2));if(dist.kind==='risky'){if(!o.stages)o.p=clamp(o.p-3,1,99);o.up=Math.min(20,+(o.up+.5).toFixed(2));}o.v7district=dist.name;}
   if(dist?.kind==='energy'&&dist.city===s.life.city&&!s.life.rest)s.life.energy=Math.min(s.life.energyCap,s.life.energy+2);
  }
@@ -330,8 +338,21 @@ export class V7{
   if(this.prevRest===true&&!resting&&!s.ended)this.onRestEnd(v);
   this.prevRest=resting;
   this.beatFrame();this.paintContracts();this.maybeCrossroads();if(resting)this.ensureGames();else if($('v7-games'))this.closeGames();
-  if(now-(this.lastRail||0)>400){this.lastRail=now;this.paintRail(worth(s));this.measure();}
+  if(now-(this.lastRail||0)>400){this.lastRail=now;this.paintRail(worth(s));this.measure();this.goals();}
  }
+ goals(){const s=this.s,v=this.st(),key=(s.life.restCount||0)+'';if(!this.c.started()||s.ended)return;
+  if(!v.goals||v.goals.key!==key){const w=worth(s),rk=this.rank(),r=(n)=>((s.life.restCount||0)*7+n)%3;const list=[];
+   list.push({t:'wins',n:[2,3,4][r(1)]+Math.min(2,rk>>1),base:s.wins||0,label:n=>`本季赢 ${n} 个项目`});
+   list.push({t:'streak',n:[2,3,3][r(2)],label:n=>`打出 ${n} 连胜`});
+   list.push({t:'worth',n:Math.round(w*([1.3,1.5,1.8][r(3)])),label:n=>`身家到达 ${fmt(n)}`});
+   if(rk>=2&&r(4)===0)list[0]={t:'delay',n:1,base:v.delayed.length,label:()=>'签下 1 份延时合同'};
+   else if(r(4)===1)list[1]={t:'district',n:1,label:()=>'在岔路口选一个区域'};
+   v.goals={key,start:w,list:list.map(g=>({t:g.t,n:g.n,base:g.base||0,text:g.label(g.n),done:false})),reward:Math.max(500,Math.floor(w*.04))};this.c.save();}
+  const G=v.goals;let changed=false;for(const g of G.list){if(g.done)continue;const ok=g.t==='wins'?(s.wins||0)-g.base>=g.n:g.t==='streak'?(s.streak||0)>=g.n:g.t==='worth'?worth(s)>=g.n:g.t==='delay'?v.delayed.length>g.base:g.t==='district'?!!v.district:false;if(ok){g.done=true;changed=true;const pay=G.reward;s.cash=Math.min(900000000000000,s.cash+pay);this.c.cash?.(pay,$('v8-goals'));this.c.effects?.tone?.('rare',3);this.flash(`季度目标达成：${g.text}  +${fmt(pay)}`,'up');}}
+  if(changed){if(G.list.every(g=>g.done)&&!G.bonus){G.bonus=true;const b=G.reward*3;s.cash+=b;this.flash(`本季目标全清！额外 +${fmt(b)}`,'up');this.c.effects?.burst?.(innerWidth-160,260,18,'#f0cf73');}this.c.save();this.c.refresh();}
+  const el=$('v8-goals');if(!el)return;const k=JSON.stringify(G.list.map(g=>g.done))+G.key;if(el.dataset.k===k)return;el.dataset.k=k;
+  el.innerHTML=`<div class="v8-g-head"><b>本季目标</b><small>每项 +${fmt(G.reward)} · 全清再 ×3</small></div>${G.list.map(g=>`<div class="v8-g-row ${g.done?'done':''}"><i>${g.done?glyph('check'):''}</i><span>${safe(g.text)}</span></div>`).join('')}`;
+  if(changed&&this.c.motion())el.animate([{transform:'scale(1.06)',filter:'brightness(1.3)'},{transform:'scale(1)'}],{duration:500});}
  measure(){const g=$('game'),m=$('v7-money'),r=$('v7-reward'),d=$('game-dock'),p=$('v7-pano');if(m)g.style.setProperty('--v7-money-h',m.offsetHeight+'px');if(r)g.style.setProperty('--v7-reward-h',(r.offsetHeight||0)+'px');if(d){const dr=d.getBoundingClientRect(),gr=g.getBoundingClientRect();g.style.setProperty('--v7-dock-w',Math.max(0,gr.right-dr.left-24)+'px');}const b=$('v7-bottom');g.style.setProperty('--v7-bar-h',(b?.offsetHeight||90)+'px');}
  onRestEnd(v){for(const c of v.delayed)c.left=Math.max(0,c.left-1);v.crossAt=null;v.season=(v.season+1)%4;if(v.season===0)v.year++;v.weather=this.rollWeather(v.season);v.district=null;this.c.save();this.c.refresh();this.seasonBanner(v);}
  seasonBanner(v){const se=SEASONS[v.season],we=WEATHER[se.id].find(x=>x[0]===v.weather);const b=$('v7-season-banner');b.hidden=false;b.dataset.season=se.id;b.innerHTML=`<span>${glyph(se.icon)}</span><div><small>${2025+v.year} 年 · 新的阶段</small><b>${se.name}天到了</b><em>今日天气：${we[1]}</em></div>`;if(this.c.motion())b.animate([{opacity:0,transform:'translate(-50%,-30px) scale(.8)'},{opacity:1,transform:'translate(-50%,0) scale(1)'}],{duration:700,easing:'cubic-bezier(.2,.9,.3,1.2)'});clearTimeout(this.bannerT);this.bannerT=setTimeout(()=>{b.hidden=true;},3600);}

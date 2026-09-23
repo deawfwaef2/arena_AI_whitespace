@@ -104,7 +104,7 @@ export const NEWS=[
  {id:'arts',title:'社区艺术基金扩容',city:'newyork',body:'小型创作机构获得更多关注。下一轮探索的纽约项目成功返还倍率 +0.20。',bonus:0,mult:.2},
  {id:'coast',title:'海岸会展周迎来宾客',city:'monaco',body:'游艇、礼宾与工艺服务需求上升。下一轮探索的摩纳哥项目成功率 +3%。',bonus:3,mult:0}
 ];
-export function pickLocal(city,rng=Math.random,wealth=0){const list=(LOCAL_PROJECTS[city]||LOCAL_PROJECTS.taipei).filter(p=>!p.at||wealth>=p.at);return list[Math.floor(rng()*list.length)];}
+export function pickLocal(city,rng=Math.random,wealth=0,recent=null){const all=(LOCAL_PROJECTS[city]||LOCAL_PROJECTS.taipei).filter(p=>!p.at||wealth>=p.at);let list=all;if(Array.isArray(recent)&&all.length>3){const keep=Math.min(recent.length,Math.max(0,all.length-3));const block=new Set(recent.slice(-keep));const f=all.filter(p=>!block.has(p.id));if(f.length)list=f;}const pick=list[Math.floor(rng()*list.length)];if(Array.isArray(recent)&&pick){recent.push(pick.id);if(recent.length>12)recent.splice(0,recent.length-12);}return pick;}
 export function localById(id){return Object.values(LOCAL_PROJECTS).flat().find(x=>x.id===id);}
 export function phase(energy,cap){const r=energy/cap;return r>.72?'清晨':r>.42?'午后':r>.18?'黄昏':'夜晚';}
 export function districtOffer(s,rng=Math.random){const city=s.life.city,d=DISTRICTS[city],i=Math.floor(rng()*d.tasks.length);return {id:crypto.randomUUID?.()||Date.now().toString(36)+Math.random().toString(36).slice(2),type:'district-task',city,district:city,task:i,rarity:'epic',settled:false};}

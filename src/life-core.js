@@ -83,7 +83,7 @@ export function decorateOffer(s,o,rng=Math.random,forced=false){
  }
  if(o.type!=='project')return o;
  const city=getCity(s),wealth=worth(s)/100;
- const local=forced?null:pickLocal(city.id,rng,wealth);if(local){o.project=local.project;o.localId=local.id;o.localName=local.name;o.localModel=local.model;o.culture=local.culture;o.category=local.category;}else{o.localName=city.names[city.projects.indexOf(o.project)]||null;}
+ if(!Array.isArray(s.life.recentLocal))s.life.recentLocal=[];const local=forced?null:pickLocal(city.id,rng,wealth,s.life.recentLocal);if(local){o.project=local.project;o.localId=local.id;o.localName=local.name;o.localModel=local.model;o.culture=local.culture;o.category=local.category;}else{o.localName=city.names[city.projects.indexOf(o.project)]||null;}
  const rank=wealth>=1000000&&rng()<.23?'elite':wealth>=10000&&rng()<.42?'advanced':'street';
  o.grade=rank;o.minStake=rank==='elite'?10000000:rank==='advanced'?100000:1;o.maxStake=rank==='elite'?LIMIT:rank==='advanced'?10000000:50000;
  if(!forced){o.p=(local?.p||70)+(rank==='elite'?3:rank==='advanced'?1:0);o.up=Math.round(((local?.up||1.9)+(rank==='elite'?1.2:rank==='advanced'?.55:0))*100)/100;o.rarity=rank==='elite'?'legendary':rank==='advanced'?'rare':'common';}
