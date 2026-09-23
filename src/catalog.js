@@ -126,12 +126,21 @@ export const TIERS=[
  {at:100000000,name:pair('Magnate','商业巨擘'),line:pair('You do not follow\nthe skyline. You own it.','不再仰望。\n你即天际。'),color:'#c5a5ed'},
  {at:1000000000,name:pair('The upper echelon','巅峰之上'),line:pair('Some build wealth.\nYou built a world.','有人积累财富。\n你创造了世界。'),color:'#f2cea0'}
 ];
+export const DECORATIONS = [
+ { id: 'deco-bronze', name: pair('Bronze Brushed Bezel','青铜拉丝边框'), price: 200, at: 300, lvPoints: 0.02, upkeep: 0, icon: '🛡️', desc: pair('Industrial bronze corner trim that decorates the dock card. +0.02 LP.','工业质感青铜包角拉丝边框，增添踏实沉稳感。附赠 +0.02 转世点。') },
+ { id: 'deco-silver', name: pair('Silver Filigree Frame','白银雕花衬线'), price: 1200, at: 2000, lvPoints: 0.06, upkeep: 50, icon: '💠', desc: pair('Elegant sterling silver filigree borders for refined status. +0.06 LP.','精密蚀刻纯银花丝边框，尽显精致中产排面。附赠 +0.06 转世点。') },
+ { id: 'deco-gold', name: pair('24K Gold Double Inlay','24K纯金双线镶边'), price: 15000, at: 20000, lvPoints: 0.25, upkeep: 300, icon: '👑', desc: pair('Solid 24-karat gold double bezel inlay with radiant reflections. +0.25 LP.','足金双线奢华包边，卡片流光溢彩，彰显豪门底蕴。附赠 +0.25 转世点。') },
+ { id: 'deco-obsidian', name: pair('Obsidian & Gold Signet','黑曜石熔金典藏框'), price: 120000, at: 150000, lvPoints: 0.80, upkeep: 2500, icon: '🔱', desc: pair('Volcanic obsidian layered with molten gold veins for top tycoons. +0.80 LP.','火山黑曜石胎体注入熔金脉络，冷峻霸气的资本主宰之证。附赠 +0.80 转世点。') },
+ { id: 'deco-celestial', name: pair('Celestial Sovereign Aura','星穹极光主权边框'), price: 2000000, at: 3000000, lvPoints: 5.0, upkeep: 35000, icon: '🌌', desc: pair('Living aurora borders that shimmer with cosmic prestige. +5.0 LP.','流动的极光星芒神圣边框，君临财富顶点的终极徽记。附赠 +5.0 转世点。') }
+];
+
 export const getAsset=id=>ASSETS.find(a=>a.id===id);
 export const getOutfit=id=>OUTFITS.find(a=>a.id===id)||OUTFITS[0];
 export const getRarity=id=>RARITIES.find(r=>r.id===id)||RARITIES[0];
 export const getProject=id=>PROJECTS.find(p=>p.id===id)||PROJECTS[0];
 export const getAuctionLot=id=>AUCTION_LOTS.find(a=>a.id===id)||null;
 export const getNobleItem=id=>NOBLE_ITEMS.find(n=>n.id===id)||null;
+export const getDecoration=id=>DECORATIONS.find(d=>d.id===id)||null;
 
 // Explicit special rules, never applied silently to ordinary investments.
 export const SPECIALS=[

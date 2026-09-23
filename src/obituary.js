@@ -130,7 +130,38 @@ export function getSatiricalEpitaph(cause=''){
   return SATIRICAL_EPITAPHS[Math.floor(Math.random()*SATIRICAL_EPITAPHS.length)];
 }
 
+
+export function playDeathSound(){
+  try{
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if(!AudioCtx) return;
+    const ctx = new AudioCtx();
+    if(ctx.state === 'suspended') ctx.resume();
+    const now = ctx.currentTime;
+    const notes = [311.13, 293.66, 277.18, 261.63]; // Eb4 -> D4 -> C#4 -> C4 sad trombone
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sawtooth';
+      const start = now + i * 0.32;
+      const dur = i === 3 ? 0.95 : 0.3;
+      osc.frequency.setValueAtTime(freq, start);
+      if(i === 3){
+        osc.frequency.linearRampToValueAtTime(207.65, start + dur);
+      }
+      gain.gain.setValueAtTime(0, start);
+      gain.gain.linearRampToValueAtTime(0.08, start + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(start);
+      osc.stop(start + dur + 0.05);
+    });
+  }catch(e){}
+}
+
 export async function playObituary(reduced=false, deathCause=''){
+  if(!reduced) playDeathSound();
   const layer=document.createElement('div');
   layer.className='obituary-overlay';
   layer.setAttribute('role','status');

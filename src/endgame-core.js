@@ -1,4 +1,4 @@
-import {getAsset,getOutfit,getAuctionLot,AUCTION_LOTS} from './catalog.js';
+import {getAsset,getOutfit,getAuctionLot,getDecoration,AUCTION_LOTS,DECORATIONS} from './catalog.js';
 // All money is integer cents. New risks are fictional, not financial/medical claims.
 export const MONEY_CAP=900000000000000;
 const I={passport:350,radio:800,ui:1200,hex:3000,deposit:10000,car:18000,music:35000,fund:100000,vault:250000,jet:800000,'noble-luxury':15000,'noble-bank':25000,'noble-clinic':40000,'noble-tech':80000};
@@ -11,7 +11,7 @@ export const TIERS_LATE=[
 export const FACTIONS=[{id:'people',name:'平民社群',at:2,symbol:'众'},{id:'tech',name:'科技联盟',at:3,symbol:'科'},{id:'industry',name:'工业联合',at:4,symbol:'工'},{id:'state',name:'地区议政署',at:3,symbol:'政'},{id:'underworld',name:'地下帮派',at:4,symbol:'影'},{id:'capital',name:'资本公会',at:5,symbol:'资'}];
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 export const cents=n=>Math.floor(clamp(Number(n)||0,0,MONEY_CAP));
-export const worth=s=>cents((s.cash||0)+(s.offer?.pendingStake||0)+(s.assets||[]).reduce((n,id)=>n+(getAsset(id)?.price||0)*100,0)+(s.outfits||[]).reduce((n,id)=>n+(getOutfit(id)?.price||0)*100,0)+(s.life?.items||[]).reduce((n,id)=>n+(I[id]||0)*100,0));
+export const worth=s=>cents((s.cash||0)+(s.offer?.pendingStake||0)+(s.assets||[]).reduce((n,id)=>n+(getAsset(id)?.price||0)*100,0)+(s.outfits||[]).reduce((n,id)=>n+(getOutfit(id)?.price||0)*100,0)+(s.decorations||[]).reduce((n,id)=>n+(getDecoration(id)?.price||0)*100,0)+(s.life?.items||[]).reduce((n,id)=>n+(I[id]||0)*100,0));
 export const lateTier=s=>TIERS_LATE.reduce((i,t,j)=>worth(s)>=t.at*100?j:i,0);
 export const activeItem=(s,id)=>s.life?.items?.includes(id)&&worth(s)>=(ITEM_FLOORS[id]||0)*100;
 const uid=()=>globalThis.crypto?.randomUUID?.()||Date.now().toString(36)+Math.random().toString(36).slice(2);
@@ -29,14 +29,14 @@ export const PERKS=[
  {id:'noir',name:'黑金来世',cost:18,desc:'解锁深蓝金色外观，不改变概率或费用。',type:'皮肤'},
  {id:'rose',name:'玫瑰香槟',cost:18,desc:'解锁玫瑰铜色外观，不改变概率或费用。',type:'皮肤'}
 ];
-export function initLegacy(meta){const old=meta.legacy||{};meta.legacy={points:Math.max(0,Math.floor(old.points||0)),lifetime:Math.max(0,Math.floor(old.lifetime||0)),unlocks:[...new Set((old.unlocks||[]).filter(id=>PERKS.some(p=>p.id===id)))],skin:['default','jade','noir','rose'].includes(old.skin)?old.skin:'default'};return meta.legacy;}
+export function initLegacy(meta){const old=meta.legacy||{};meta.legacy={points:Math.max(0,Math.round((Number(old.points)||0)*100)/100),lifetime:Math.max(0,Math.round((Number(old.lifetime)||0)*100)/100),unlocks:[...new Set((old.unlocks||[]).filter(id=>PERKS.some(p=>p.id===id)))],skin:['default','jade','noir','rose'].includes(old.skin)?old.skin:'default'};return meta.legacy;}
 export function ensureEstate(s){
  const old=s.estate||{};s.estate={version:1,health:5,maxHealth:5,age:s.life?.restCount||0,riskReduction:0,guards:0,stance:'balanced',relations:Object.fromEntries(FACTIONS.map(f=>[f.id,0])),queue:[],luxuryEarned:0,luxuries:[],region:'street',perks:[],medicalUses:0,settled:false,auctionMedals:[],missedAuctions:[],...old};const e=s.estate;
  e.perks=(Array.isArray(e.perks)?e.perks:[]).filter(id=>PERKS.some(p=>p.id===id));e.maxHealth=e.perks.includes('constitution')?6:5;e.health=clamp(Number(e.health)||0,0,e.maxHealth);e.age=Math.max(0,Math.floor(Number(e.age)||0));e.riskReduction=clamp(Number(e.riskReduction)||0,0,100000);e.guards=clamp(Math.floor(Number(e.guards)||0),0,3);if(!['cautious','balanced','assertive'].includes(e.stance))e.stance='balanced';
- e.relations=Object.fromEntries(FACTIONS.map(f=>[f.id,clamp(Number(e.relations?.[f.id])||0,-100,100)]));e.queue=Array.isArray(e.queue)?e.queue.filter(x=>x&&['health','tax','scandal','faction','security','luxury','windfall'].includes(x.kind)).slice(-20):[];e.luxuries=Array.isArray(e.luxuries)?e.luxuries:[];e.auctionMedals=Array.isArray(e.auctionMedals)?e.auctionMedals:[];e.missedAuctions=Array.isArray(e.missedAuctions)?e.missedAuctions:[];e.luxuryEarned=Math.max(0,Math.floor(Number(e.luxuryEarned)||0));if(!regions(s.life?.city||'taipei').some(z=>z.id===e.region))e.region='street';return e;
+ e.relations=Object.fromEntries(FACTIONS.map(f=>[f.id,clamp(Number(e.relations?.[f.id])||0,-100,100)]));e.queue=Array.isArray(e.queue)?e.queue.filter(x=>x&&['health','tax','scandal','faction','security','luxury','windfall'].includes(x.kind)).slice(-20):[];e.luxuries=Array.isArray(e.luxuries)?e.luxuries:[];e.auctionMedals=Array.isArray(e.auctionMedals)?e.auctionMedals:[];e.missedAuctions=Array.isArray(e.missedAuctions)?e.missedAuctions:[];e.luxuryEarned=Math.max(0,Math.round((Number(e.luxuryEarned)||0)*100)/100);if(!regions(s.life?.city||'taipei').some(z=>z.id===e.region))e.region='street';return e;
 }
 export function applyLegacy(s,meta){const l=initLegacy(meta),e=ensureEstate(s);e.perks=l.unlocks.filter(id=>PERKS.find(p=>p.id===id)?.type==='机制');e.maxHealth=e.perks.includes('constitution')?6:5;e.health=e.maxHealth;if(e.perks.includes('contacts'))e.relations=Object.fromEntries(FACTIONS.map(f=>[f.id,10]));}
-export function collectLegacy(s,meta){if(!s.ended)return;const e=ensureEstate(s),l=initLegacy(meta);if(e.settled)return;e.settled=true;l.points+=e.luxuryEarned;l.lifetime+=e.luxuryEarned;}
+export function collectLegacy(s,meta){if(!s.ended)return;const e=ensureEstate(s),l=initLegacy(meta);if(e.settled)return;e.settled=true;l.points=Math.round((l.points+e.luxuryEarned)*100)/100;l.lifetime=Math.round((l.lifetime+e.luxuryEarned)*100)/100;}
 export function buyPerk(meta,id){const l=initLegacy(meta),p=PERKS.find(x=>x.id===id);if(!p||l.unlocks.includes(id))throw Error('已解锁或不存在的转世内容。');if(l.points<p.cost)throw Error('奢侈点不足。消费当地奢侈品后，在人生结算时入账。');l.points-=p.cost;l.unlocks.push(id);return p;}
 export function endLife(s,cause){if(s.ended)return;const e=ensureEstate(s);e.death={cause,worth:worth(s),cash:s.cash,peak:s.peak,age:e.age,page:s.page,at:Date.now()};s.ended=true;s.activeChallenge=null;s.life.rest=null;s.life.travel=null;s.life.district=null;}
 export function reconcile(s){const e=s.estate||ensureEstate(s);if(worth(s)<currentRegion(s).at*100)e.region='street';s.life.currentWorth=worth(s);return lateTier(s);}
@@ -49,10 +49,11 @@ export function billQuote(s,{restNumber=(s.life?.restCount||0)+1}={}){
  const baseMaintenance=Math.floor([8,35,180,1500,12000,250000][klass]*100*fee*(tier>=3?1+Math.min(restNumber*.01,1):1));
  const auctionUpkeep=(s.estate?.auctionMedals||[]).reduce((sum,id)=>{const a=getAuctionLot(id);return sum+(a?.upkeep||0);},0);
  const outfitUpkeep=(s.outfits||[]).reduce((sum,id)=>{const o=getOutfit(id);return sum+(o?.upkeep||0);},0);
- const maintenance=baseMaintenance+auctionUpkeep+outfitUpkeep;
+ const decoUpkeep=(s.decorations||[]).reduce((sum,id)=>{const d=getDecoration(id);return sum+(d?.upkeep||0);},0);
+ const maintenance=baseMaintenance+auctionUpkeep+outfitUpkeep+decoUpkeep;
  const rate=Math.min(.58,TIERS_LATE[tier].tax*region.tax),tax=Math.floor(n*rate),guards=guardSalary(s),management=tier>=5?Math.floor(n*.001*(tier-3)):0;
  const before=maintenance+tax+guards+management,credit=s.estate?.perks?.includes('reserve')&&restNumber===1?Math.min(3000,before):0;
- return {worth:n,cash:s.cash,tier,class:klass,maintenance,baseMaintenance,auctionUpkeep,outfitUpkeep,tax,guards,management,credit,rate,region:region.name,total:cents(before-credit),restNumber};
+ return {worth:n,cash:s.cash,tier,class:klass,maintenance,baseMaintenance,auctionUpkeep,outfitUpkeep,decoUpkeep,tax,guards,management,credit,rate,region:region.name,total:cents(before-credit),restNumber};
 }
 export function availableAuctionLot(s){
  const e=ensureEstate(s),tier=lateTier(s);
@@ -125,3 +126,21 @@ export function resolveEvent(s,id,choice){const ev=pendingEvent(s);if(!ev||ev.id
  ev.resolved=true;ev.result={title,body,delta:s.cash-before,dead:!!s.ended};if(s.offer?.eventId===ev.id)s.offer.settled=true;reconcile(s);return ev.result;
 }
 export function acknowledgeEvent(s,id){const ev=pendingEvent(s);if(!ev||ev.id!==id||!ev.resolved)throw Error('请先作出选择。');ev.ack=true;if(s.offer?.eventId===id)s.offer={id:s.offer.id,type:'interlude',scene:'alley',city:s.life.city,rarity:'common',settled:true};}
+
+export function buyDecoration(s, decoId){
+ const d=getDecoration(decoId);
+ if(!d)throw Error('该装饰不存在。');
+ s.decorations=Array.isArray(s.decorations)?s.decorations:[];
+ if(s.decorations.includes(decoId)){
+   s.equippedDecoration=decoId;
+   return d;
+ }
+ if(worth(s)<d.at*100)throw Error('尚未达到该装饰的身家门槛。');
+ if(s.cash<=d.price*100)throw Error('现金不足，购买后需保留至少 $0.01。');
+ s.cash-=d.price*100;
+ s.decorations.push(decoId);
+ s.equippedDecoration=decoId;
+ const e=ensureEstate(s);
+ e.luxuryEarned=(e.luxuryEarned||0)+d.lvPoints;
+ return d;
+}

@@ -3,8 +3,8 @@ import {glyph} from './life-ui.js';
 import {escape as safe,icon} from './ui.js';
 import {CLASSES,getCity,owns,finishRest,restActivity,UNLOCK_MILESTONES,nextUnlock,activateNoble} from './life-core.js';
 import {makeOffer,markPeak} from './engine.js';
-import {getAuctionLot,getNobleItem,AUCTION_LOTS,NOBLE_ITEMS} from './catalog.js';
-import {worth,lateTier,TIERS_LATE,FACTIONS,ensureEstate,reconcile,billQuote,restDue,pendingEvent,eventView,resolveEvent,acknowledgeEvent,securityOdds,hireGuards,activeGuards,healthRisk,medicalOptions,buyMedical,regions,currentRegion,enterRegion,luxuries,consumeLuxury,PERKS,initLegacy,buyPerk,collectLegacy} from './endgame-core.js';
+import {getAuctionLot,getNobleItem,getDecoration,AUCTION_LOTS,NOBLE_ITEMS,DECORATIONS} from './catalog.js';
+import {worth,lateTier,TIERS_LATE,FACTIONS,ensureEstate,reconcile,billQuote,restDue,pendingEvent,eventView,resolveEvent,acknowledgeEvent,securityOdds,hireGuards,activeGuards,healthRisk,medicalOptions,buyMedical,regions,currentRegion,enterRegion,luxuries,consumeLuxury,PERKS,initLegacy,buyPerk,collectLegacy,buyDecoration} from './endgame-core.js';
 const $=id=>document.getElementById(id);
 const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n/100);
 const short=n=>n>=1e10?'$'+(n/1e10).toFixed(2)+'亿':n>=1e6?'$'+(n/1e6).toFixed(1)+'万':money(n);
@@ -19,7 +19,7 @@ export class LifeUI extends JourneyUI{
  }
  get e(){return this.s.estate||ensureEstate(this.s);}
  hasPendingDeath(){return this.s.ended&&!!pendingEvent(this.s)?.resolved;}
- renderHud(){super.renderHud();if(!$('capital-summary'))return;const s=this.s,e=this.e,t=reconcile(s),inGame=this.c.started?.()!==false,g=$('game'),m=this.c.meta();g.dataset.capitalTier=t;g.dataset.wealthTextures=m.wealthTextures?'on':'off';g.dataset.legacySkin=m.legacy?.skin||'default';g.dataset.poverty=t===0?'yes':'no';document.body.dataset.legacySkin=m.legacy?.skin||'default';
+ renderHud(){super.renderHud();if(!$('capital-summary'))return;const s=this.s,e=this.e,t=reconcile(s),inGame=this.c.started?.()!==false,g=$('game'),m=this.c.meta();g.dataset.capitalTier=t;g.dataset.wealthTextures=m.wealthTextures?'on':'off';g.dataset.legacySkin=m.legacy?.skin||'default';g.dataset.poverty=t===0?'yes':'no';g.dataset.decoration=s.equippedDecoration||'';document.body.dataset.legacySkin=m.legacy?.skin||'default';
   $('city-panorama').hidden=!inGame||t===0||!!s.life.travel;
   $('class-ticker').hidden=!inGame||t<3||!!s.life.travel;
   $('life-map-pull').hidden=!inGame||t===0||!!s.life.rest||!!s.life.travel;
@@ -168,6 +168,7 @@ export class LifeUI extends JourneyUI{
      <div class="quote-title">📋 本期预计休整账单明细</div>
      <div class="quote-row"><span>基础生活与住所维护</span><b>${money(quote.baseMaintenance)}</b></div>
      ${quote.outfitUpkeep>0?`<div class="quote-row"><span>高级服装与外表保养</span><b>${money(quote.outfitUpkeep)}</b></div>`:''}
+     ${quote.decoUpkeep>0?`<div class="quote-row"><span>金边UI装饰每期保养</span><b>${money(quote.decoUpkeep)}</b></div>`:''}
      ${quote.guards>0?`<div class="quote-row"><span>随行安保团队工资</span><b>${money(quote.guards)}</b></div>`:''}
      ${quote.auctionUpkeep>0?`<div class="quote-row"><span>绝版拍卖孤品托管费</span><b>${money(quote.auctionUpkeep)}</b></div>`:''}
      ${quote.tax>0?`<div class="quote-row"><span>所在城市与区域税款</span><b>${money(quote.tax)}</b></div>`:''}
@@ -235,6 +236,36 @@ export class LifeUI extends JourneyUI{
     <p class="life-note">身家包括手头现金、固定资产、定制服饰与在途资金。达到对应身家时自动激活新系统并触发庆祝弹窗。</p>
   `,{wide:true});
  }
+ openDecorationsModal(){
+  const s=this.s,w=worth(s),owned=s.decorations||[],curEquipped=s.equippedDecoration||'';
+  const list=DECORATIONS.map(d=>{
+   const isOwned=owned.includes(d.id);
+   const canAfford=s.cash>d.price*100;
+   const canUnlock=w>=d.at*100;
+   const isEquipped=curEquipped===d.id;
+   return `<article class="deco-showcase-tile ${isOwned?'owned':canUnlock?'available':'locked'} ${isEquipped?'equipped':''}">
+     <span class="deco-icon">${d.icon||'✨'}</span>
+     <div class="deco-meta">
+       <div class="deco-header-row">
+         <h3>${safe(d.name?.zh||d.name)}</h3>
+         <span class="deco-tag">${isEquipped?'佩戴中':isOwned?'已收藏':canUnlock?'可购买':'未解锁'}</span>
+       </div>
+       <p>${safe(d.desc?.zh||d.desc)}</p>
+       <div class="deco-props">
+         <span class="lv-badge">+${d.lvPoints} LP 转世点</span>
+         <span class="upkeep-badge">${d.upkeep?`保养费 ${money(d.upkeep*100)}/期`:'无持续维护费'}</span>
+       </div>
+       <div class="deco-action-bar">
+         ${isEquipped?`<button class="life-button small-button equipped-btn" disabled>✓ 佩戴中</button>`:isOwned?`<button class="life-button small-button highlight" data-action="life-equip-deco" data-value="${d.id}">佩戴镶边</button>`:canUnlock?`<button class="life-button small-button primary" data-action="life-buy-deco" data-value="${d.id}" ${canAfford?'':'disabled'}>${canAfford?`购买 ${money(d.price*100)}`:'现金不足'}</button>`:`<span class="tag-locked">🔒 身家达到 ${money(d.at*100)} 解锁</span>`}
+       </div>
+     </div>
+   </article>`;
+  }).join('');
+  this.c.open('decorations-modal','UI 金边装潢与卡片边框','定制你的主操作卡片与面板边框，购置后永久点亮并附赠稀缺转世点 (LP)',`
+   <div class="decorations-grid">${list}</div>
+   <p class="life-note">购买金边装饰即刻奖励少量转世点（0.02 ~ 5.0 LP），并在每次休整时计入微量维护保养费；佩戴后将在主操作卡片呈现专属材质光晕！</p>
+  `,{wide:true});
+ }
  openThemesModal(){
   const cur=this.c.meta().theme||'minimalist';
   const themes=[
@@ -267,7 +298,7 @@ export class LifeUI extends JourneyUI{
  purchasePerk(id){try{buyPerk(this.c.meta(),id);this.c.save();this.openLegacy(this.legacyFromTitle);}catch(e){this.c.toast(e.message);}}
  chooseSkin(id){const l=initLegacy(this.c.meta());if(id!=='default'&&(!l.unlocks.includes(id)||PERKS.find(p=>p.id===id)?.type!=='皮肤'))return;l.skin=id;this.c.save();this.renderHud();this.openLegacy(this.legacyFromTitle);}
  guide(){this.c.open('life-guide','财富越高，人生越不轻松。','Last $100: Swipe to Rich / 保留 3.1 操作',`<div class="life-guide"><h3>体力与城市</h3><p>初始 200 体力，可分四次升级至 400。前进 −5、投资 −3、购买 −2、旅行 −10。昼夜随体力变化；耗尽后休息，完成后回满。六座城市各有 16 个当地项目，其中四个需要较高身家；每十步实际绕过街角，并转动镜头。城市配乐来自独立授权录音且离线内置。</p><h3>当前身家，决定生活难度</h3><p>身家＝现金＋持有资产、服装和商品的购入价＋尚未交割的本金；不是最高纪录，也不重复计算已扣的费用。机制按当前身家启停，变穷会退回简单界面。已经购买的高级服务暂时停用，重新富裕后恢复。奢侈消费不计入资产。</p><h3>强制账单</h3><p>平时显示下次休息预估，菜单可以展开明细。入休时锁定维护、地区税、保镖工资和管理费用；事件可能另行扣款或奖励。先完成事件，再交账单。现金无法覆盖账单并保留一美分，即结束本局；没有公共救助。已缴费后免费等待十分钟，或选择付费活动缩短时间。高层地区税率更高，拒税会损害议政署关系。</p><h3>健康与简单选择</h3><p>初始健康 5 格、衰退概率 0%。每次休息概率增加 1 个百分点，第一次为 1%；抽中只减少一格，归零死亡。体检和危险事件在触发时锁定抽签，刷新不会重抽。高财富可购买康复与延寿。财务风波分三次简单选项：完成合规有奖励，中途拒绝有巨额罚款。</p><h3>派系与安保</h3><p>达到门槛后出现社群、科技、工业、议政署、地下帮派和资本公会。捐赠、合作、拒绝都会影响关系；好友可能回馈，敌对者可能冻结财产或报复。保镖和你选择的安保姿态影响劫案与躲避；地下暗杀失败会死亡，不是普通投资亏损。</p><h3>只消费，不生息</h3><p>地区奢侈品只消耗游戏币、奖励奢侈点，没有现金收益；本局结束或主动重开后，点数一次性转入转世事务所。机制解锁在下局生效，皮肤可以立即换。每次死亡都会保存到本机人生排行榜，不是联网全球榜。</p><h3>稀有街区与投资</h3><p>地区邀请是进入或离开的选择，不是投资。进入后直到体力耗尽，只做当地工作：稳妥工作 −8 体力拿固定报酬；大胆尝试 −12，65% 获得 2.3 倍，否则 0.35 倍基础报酬。普通投资失败只损失投入；东京与纽约有双重审核，新加坡有延迟交割。街头项目最高 $500，高级项目 $1,000–$100,000，顶级项目 $100,000 起。系统金额安全上限 9 万亿美元，路线无最终站。</p><h3>可读性与保存</h3><p>主菜单「界面与文字」调整面板 75%–125%、文字 14–22px；财富材质也可在主菜单关闭。世界地图直接点击，不需要拖拉。手机面板内容可上下滚动，场景独立占位。电脑和手机分别存档，同一浏览器地址下自动保存；清除浏览器数据会清除进度。所有事件、健康概率和税制均为虚构游戏规则，无充值、兑现或医疗投资建议。</p></div>`);}
- menuExtras(){const t=lateTier(this.s),curTheme=this.c.meta().theme||'minimalist',themeNames={minimalist:'极简黑白',imperial:'帝国鎏金',cyber:'赛博霓虹',swiss:'瑞士现代'};return super.menuExtras()+`<section class="capital-menu"><div class="life-eyebrow">LIFE HAS CONSEQUENCES / 人生的后半程</div><div class="capital-menu-grid">${btn('status','身家与下期账单')}${btn('mechanisms','财富机制蓝图')}${btn('theme-picker','视觉风格：'+(themeNames[curTheme]||curTheme))}${btn('legacy','转世事务所 · '+(this.c.meta().legacy?.points||0)+' LP')}${t>=2?btn('factions','派系关系'):''}${t>=3?btn('security','雇佣保镖 / 安保姿态')+btn('medical','健康 / 昂贵延寿'):''}${t>=4?btn('regions','城市深层区域'):''}${t>=5?btn('luxury','地区奢侈消费'):''}${btn('textures','财富配色与贴图：'+(this.c.meta().wealthTextures?'开启':'关闭'))}</div><p>功能按当前总身家启停。最贫穷阶段没有额外常驻面板；必要的健康与账单只在休息弹窗出现。</p></section>`;}
+ menuExtras(){const t=lateTier(this.s),curTheme=this.c.meta().theme||'minimalist',themeNames={minimalist:'极简黑白',imperial:'帝国鎏金',cyber:'赛博霓虹',swiss:'瑞士现代'};return super.menuExtras()+`<section class="capital-menu"><div class="life-eyebrow">LIFE HAS CONSEQUENCES / 人生的后半程</div><div class="capital-menu-grid">${btn('status','身家与下期账单')}${btn('mechanisms','财富机制蓝图')}${btn('theme-picker','视觉风格：'+(themeNames[curTheme]||curTheme))}${btn('decorations','金边UI装饰与美化 (+LP)')}${btn('legacy','转世事务所 · '+(this.c.meta().legacy?.points||0)+' LP')}${t>=2?btn('factions','派系关系'):''}${t>=3?btn('security','雇佣保镖 / 安保姿态')+btn('medical','健康 / 昂贵延寿'):''}${t>=4?btn('regions','城市深层区域'):''}${t>=5?btn('luxury','地区奢侈消费'):''}${btn('textures','财富配色与贴图：'+(this.c.meta().wealthTextures?'开启':'关闭'))}</div><p>功能按当前总身家启停。最贫穷阶段没有额外常驻面板；必要的健康与账单只在休息弹窗出现。</p></section>`;}
  tick(){super.tick();if(this.c.started?.()===false)return;const now=performance.now();if(now<this.nextLateTick)return;this.nextLateTick=now+300;if(pendingEvent(this.s)&&!this.c.modal?.()&&!this.c.busy?.()&&(!this.s.ended||pendingEvent(this.s)?.resolved))this.openEvent();}
  async handle(a,v){
   const actions=['culture','open-event','event-choice','event-ack','status','security','guards','factions','regions','region','medical','medical-buy','luxury','luxury-buy','legacy','perk','skin','textures','rest-all','rest-do','news','activate-noble','show-medals','mechanisms','theme-picker','theme-switch','prompt-rest','confirm-start-rest'];
@@ -299,6 +330,31 @@ export class LifeUI extends JourneyUI{
     this.c.close();
     this.renderHud();
     this.c.toast('已切换至主题：'+({minimalist:'极简冷灰',imperial:'帝国鎏金',cyber:'赛博霓虹',swiss:'瑞士现代'}[v]||v));
+    break;
+   }
+   case 'decorations':this.openDecorationsModal();break;
+   case 'buy-deco':{
+    try{
+      const d=buyDecoration(this.s,v);
+      const g=document.getElementById('game');
+      if(g)g.dataset.decoration=this.s.equippedDecoration;
+      this.c.save();
+      this.c.refresh();
+      this.c.toast(`已购入【${d.name?.zh||d.name}】！UI装饰已佩戴，附赠 +${d.lvPoints} LP！`);
+      this.openDecorationsModal();
+    }catch(err){
+      this.c.toast(err.message||'购买失败');
+    }
+    break;
+   }
+   case 'equip-deco':{
+    this.s.equippedDecoration=v;
+    const g=document.getElementById('game');
+    if(g)g.dataset.decoration=v;
+    this.c.save();
+    this.c.refresh();
+    this.c.toast('已佩戴该UI装饰边框！');
+    this.openDecorationsModal();
     break;
    }
    case 'prompt-rest':this.promptRest();break;

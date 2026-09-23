@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { newRun } from '../src/engine.js';
 import { UNLOCK_MILESTONES, nextUnlock, checkNewUnlocks, activateNoble, decorateOffer, initLife } from '../src/life-core.js';
-import { availableAuctionLot, bidAuctionLot, passAuctionLot, billQuote } from '../src/endgame-core.js';
-import { AUCTION_LOTS, NOBLE_ITEMS, getAuctionLot, getNobleItem, getOutfit } from '../src/catalog.js';
+import { availableAuctionLot, bidAuctionLot, passAuctionLot, billQuote, buyDecoration } from '../src/endgame-core.js';
+import { AUCTION_LOTS, NOBLE_ITEMS, DECORATIONS, getAuctionLot, getNobleItem, getOutfit, getDecoration } from '../src/catalog.js';
 
 test('Milestone unlock progression: nextUnlock and checkNewUnlocks', () => {
  const run = newRun();
@@ -107,4 +107,29 @@ test('Outfits: LV bonus and upkeep integration', () => {
  const quote = billQuote(run);
  assert.equal(quote.outfitUpkeep, 500);
  assert.ok(quote.maintenance > quote.baseMaintenance);
+});
+
+test('UI Cosmetics: purchase, LV bonus, upkeep, and equipping', () => {
+ const run = newRun();
+ initLife(run);
+ run.cash = 50000; // $500.00
+ 
+ // deco-bronze is at $300, price $200 (20000 cents), +0.02 LP
+ const d = buyDecoration(run, 'deco-bronze');
+ assert.equal(d.id, 'deco-bronze');
+ assert.equal(run.cash, 30000);
+ assert.ok(run.decorations.includes('deco-bronze'));
+ assert.equal(run.equippedDecoration, 'deco-bronze');
+ assert.equal(run.estate.luxuryEarned, 0.02);
+ 
+ // Test deco-silver with upkeep
+ run.cash = 500000; // $5,000.00
+ const d2 = buyDecoration(run, 'deco-silver');
+ assert.equal(d2.id, 'deco-silver');
+ assert.equal(run.equippedDecoration, 'deco-silver');
+ assert.ok(run.decorations.includes('deco-silver'));
+ assert.equal(Math.round((run.estate.luxuryEarned || 0) * 100) / 100, 0.08); // 0.02 + 0.06
+ 
+ const quote = billQuote(run);
+ assert.equal(quote.decoUpkeep, 50);
 });
