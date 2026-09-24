@@ -389,8 +389,13 @@ export class World{
   if(market){const booth=new T.Group();booth.position.set(-5.2,0,-.65);box(booth,1.35,.75,.75,0x729b80,0,.4,0);box(booth,1.65,.12,1.0,0xe7ce92,0,1.55,0);for(const x of [-.65,.65])box(booth,.05,1.5,.05,0x887d59,x,.78,0);label(booth,'TALENT',1.05,.28,0,1.30,.45,'#305747','#fff2c9');this.streetCast.add(booth);this.streetMarket=booth;}else this.streetMarket=null;
  }
  updateStreetCast(t,dt){
-  if(!this.streetCast)return;this.streetCast.visible=!this.titleMode&&!this.restStage;this.streetCast.rotation.y=this.blockAngle||0;
-  const localHero=this.actor.root.position.clone().applyAxisAngle(new T.Vector3(0,1,0),-(this.blockAngle||0));
+  if(!this.streetCast)return;
+  // R12: pedestrians live in WORLD space. While the hero rounds a corner the cast stays on the old street (no orbiting with
+  // the camera); it is hidden for the last part of the swing and re-appears on the new street once the turn settles.
+  const cp=this.corner?Math.min(1,(performance.now()-this.corner.start)/this.corner.duration):1;const castAngle=this.corner?this.corner.from:(this.blockAngle||0);
+  if(this.corner)this.castHideUntil=performance.now()+350;
+  this.streetCast.visible=!this.titleMode&&!this.restStage&&!(this.corner&&cp>.72)&&!(this.castHideUntil&&performance.now()<this.castHideUntil&&!this.corner);this.streetCast.rotation.y=castAngle;
+  const localHero=this.actor.root.position.clone().applyAxisAngle(new T.Vector3(0,1,0),-castAngle);
   for(const p of this.streetActors){const a=p.a;if(p.kind==='npc'&&this.motion){const tt=t+p.i*3.1,cyc=12+p.i%3*2,walking=tt%cyc<3.5,step=Math.floor(tt/cyc)*3.5+Math.min(tt%cyc,3.5),phase=step*.25+p.i*1.9;let nx=p.base[0]+Math.sin(phase)*.95;const bz=p.base[1];const shiftX=this.castShift||0;
    // keep walkers out of the hero / manager / crew footprint so bodies never overlap
    const blockers=[[localHero.x,localHero.z,1.25],[1.1,1.35,1.05]];for(const q of this.streetActors)if(q.kind==='crew')blockers.push([q.a.root.position.x,q.a.root.position.z,.9]);for(const q of this.streetActors)if(q!==p&&q.kind==='npc'&&q.i<p.i)blockers.push([q.a.root.position.x,q.a.root.position.z,.85]);
