@@ -266,3 +266,25 @@ Note: v11 phases 1–3 (commits 744fddf, 1c5cf17, 04cc10f) already did 51/52/53/
 ## Round 8 — session 3 (2026-09-24): user re-sent the full round-8 feedback (same items 51–79)
 - Treat the message as confirmation of items 51–79; v12.1 (5751fe3) and v12.2 (80fa149) had already done 58 (shabby cardboard promo popup), 61 (black market/casino descriptive text), 65 (wide hospital) and part of 70 (per-city buildings/palettes).
 - This session's focus (still open): 54/77 master-level intro trailer, 55 residual Chinese (English mode, incl. 3D scene), 57/79 generated-image big buttons, 62/75 more animated feedback, 67 per-type project styles, 68 more zones/regions/types, 69 estates → LV points, 70 stronger city identity.
+
+---
+# 第九轮用户反馈 / Round 9 feedback (2026-09-24, "最后一次改动，准备发布 HTML"; items 85–104, append-only)
+Standing constraints unchanged (see top). Work clone in /tmp/repo (NOT /home/user). Checkpoint → commit → push after each small group.
+- [ ] 85 BUG: every time the player moves, ALL surrounding characters move along with them (NPCs must stay put in the world / walk independently).
+- [ ] 86 Balance: decline-risk reduction, energy etc. are the MOST valuable goods (tied to run length) → each purchase DOUBLES price, restores less. Icons + descriptions must change with tier (no mismatch).
+- [ ] 87 Shop district also sells MECHANISM UNLOCKS (items that unlock mechanics). Icons/descriptions match.
+- [ ] 88 Hospital price doubles each use (verify/keep).
+- [ ] 89 Repeated district/regional events — must not repeat (dedupe per run).
+- [ ] 90 Story (dialogue) UI: text colour too close to background → high contrast redesign.
+- [ ] 91 CrazyGames ads: rewarded ad in a PROMINENT spot in rest phase (skip rest) + roadside ad spots blended into the environment (billboard/sponsor walk banner as a project/location). Hide gracefully outside CrazyGames.
+- [ ] 92 Residual Chinese in English mode — keep hunting.
+- [ ] 93 Feedback scales with amount: small amounts → subtle feedback; big amounts → big feedback.
+- [ ] 94 Improve late-game experience.
+- [ ] 95 Opening CG: use game-style 3D-model little-people images, NOT photoreal humans.
+- [ ] 96 First-run: simplest tutorial + goal guidance.
+- [ ] 97 Visual polish pass (match audience taste).
+- [ ] 98 Each run should feel different (run modifiers / random start).
+- [ ] 99 Mobile gets stuck on loading → load much faster (36 MB single HTML was the cause).
+### Round 9 loading architecture (item 99)
+- Music is NO LONGER inlined in index.html. `build.mjs` writes `music-pack/<id>.js` (base64 wrapped as a script) and `src/music.js` injects a `<script src="music-pack/<id>.js">` on demand (works on file:// and on GitHub Pages / CrazyGames). If the folder is missing the game still runs silently.
+- So the playable download = `index.html` + `music-pack/` folder (downloading the repo zip gives both). index.html alone still plays (no music).
