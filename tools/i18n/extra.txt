@@ -194,3 +194,63 @@
 恢复 1 格健康，不改变下一次抽签概率。|Restores 1 heart; next draw odds unchanged.
 衰退概率降低 6 个百分点；每次休息仍继续增长。|Decline risk −6 points; it still grows every rest.
 健康恢复至上限，衰退概率降低 12 个百分点。|Health fully restored and decline risk −12 points.
+雨夜送伞|Umbrellas in the rain
+暴雨突然落下，公交站挤满没带伞的人。便利店老板想找人帮忙分发旧伞。|A sudden downpour packs the bus stop with people who forgot umbrellas. The corner-store owner wants help handing out old ones.
+帮忙分伞|Hand out umbrellas
+买一箱雨衣|Buy a box of raincoats
+旧货摊搬家|The junk stall moves
+老奶奶的旧货摊要搬到隔壁街，一车杂物需要人手。|Grandma's junk stall is moving one street over, and a cartload of odds and ends needs hands.
+帮忙搬运|Help carry
+付一趟货车钱|Pay for a van
+社区黑板报|Community noticeboard
+街道办要重画社区公告栏，找会写字画画的年轻人。|The neighbourhood office wants the noticeboard repainted and is looking for someone who can draw.
+动手画画|Paint it yourself
+赞助颜料|Sponsor the paint
+小店开业|Opening day
+一家新面包店明天开业，老板缺一个能扛货又会招呼客人的帮手。|A new bakery opens tomorrow and the owner needs someone who can haul stock and greet customers.
+帮忙开业|Help with opening
+赞助开业花篮|Sponsor opening flowers
+少年球队|Youth football team
+街区少年足球队缺球衣和教练，孩子们在空地上等了很久。|The neighbourhood youth team has no kits and no coach; the kids have been waiting on the empty lot for ages.
+周末当教练|Coach on weekends
+赞助整套球衣|Sponsor a full kit
+夜校讲座|Night-school talk
+社区夜校邀请你讲一堂“如何攒下第一桶金”。|The community night school invites you to teach "How to save your first pot of gold".
+上台讲课|Give the lecture
+资助夜校教材|Fund the textbooks
+老剧院改造|Old theatre revival
+一座百年剧院面临拆除，保护协会希望有人出面。|A century-old theatre faces demolition, and the preservation society needs someone to step up.
+参与改造方案|Join the redesign
+出资修缮屋顶|Pay for the roof
+科技孵化周|Startup incubator week
+年轻创业团队在车库里做路演，想找一位真正的投资人听听。|Young founders are pitching in a garage and want a real investor to listen.
+担任评委|Be a judge
+设立创业奖金|Fund a startup prize
+港口慈善夜|Harbour charity night
+慈善晚宴筹款重建渔港码头，主持人点名请你发言。|A charity gala is raising money to rebuild the fishing pier, and the host calls you up to speak.
+上台致辞|Give a speech
+认捐一段码头|Sponsor a stretch of pier
+老街坊办百家宴|Neighbourhood potluck
+为街坊宴席和孩子们的课后班出钱|Pay for the street feast and the kids' after-school club
+菜市场屋顶漏雨|The market roof leaks
+资助市场修缮，摊贩们会记住你|Fund the market repairs; the stallholders will remember you
+黑客马拉松缺赞助|Hackathon needs a sponsor
+为 48 小时编程赛提供奖金池|Put up the prize pool for a 48-hour coding contest
+开源实验室求助|Open-source lab asks for help
+为公共实验室的服务器买单|Pay for the public lab's servers
+工厂夜班缺设备|Night shift short of equipment
+资助一条老生产线的安全改造|Fund safety upgrades for an old production line
+码头工会找上门|The dockworkers' union calls
+为工人的保险基金注资|Top up the workers' insurance fund
+市政厅的剪彩邀请|Ribbon-cutting at City Hall
+为新公园冠名出资|Pay to name the new park
+选举季的捐款信|An election-season donation letter
+为一位候选人的竞选活动出钱|Fund a candidate's campaign
+停车场里的黑色轿车|Black sedan in the car park
+车窗摇下：“保护费，这个月涨了。”|The window rolls down: "Protection money went up this month."
+赌档老板请你喝茶|The gambling-den boss offers tea
+茶很好，价钱写在杯底|The tea is good. The price is written under the cup.
+私人俱乐部的会费单|Private club dues
+一张烫金的入会邀请|A gold-embossed membership invitation
+家族办公室的联合投资|A family office co-investment
+跟投一轮“只对朋友开放”的基金|Join a fund round "open to friends only"

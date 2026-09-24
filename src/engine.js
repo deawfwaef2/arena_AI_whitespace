@@ -48,7 +48,7 @@ export function makeOffer(s,options={},rng=random){
  if(!forced&&s.life.district)return districtOffer(s,rng);
  if(!forced){const d=draw(s,rng);if(d.offer)return d.offer;
   if(d.hint==='event'){const c=[];if(liquid(s)>=300000&&s.page-(s.life.lastMarketPage||0)>=3)c.push('market');if(s.life.energy>=8)c.push('story');if(lateTier(s)>=2)c.push('street');if(liquid(s)>=300000)c.push('gate');c.push('interlude');
-   for(const k of c.sort(()=>rng()-.5)){if(k==='market'){s.life.lastMarketPage=s.page;return {id:uid(),type:'talent-market',city:s.life.city,rarity:'rare',settled:false};}if(k==='story'){s.life.lastStoryPage=s.page;return createRegionalStory(s,lateTier(s),rng);}if(k==='street'){const e=streetEvent(s,rng);if(e)return e;}if(k==='gate'&&s.life.energy>25)return {id:uid(),type:'district-gate',city:s.life.city,district:s.life.city,rarity:'epic',settled:false};if(k==='interlude')return {id:uid(),type:'interlude',city:s.life.city,scene:['bridge','waterfront','park','alley'][Math.floor(rng()*4)],rarity:'common',settled:false};}}
+   for(const k of c.sort(()=>rng()-.5)){if(k==='market'){s.life.lastMarketPage=s.page;return {id:uid(),type:'talent-market',city:s.life.city,rarity:'rare',settled:false};}if(k==='story'){const r=createRegionalStory(s,lateTier(s),rng);if(r){s.life.lastStoryPage=s.page;return r;}}if(k==='street'){const e=streetEvent(s,rng);if(e)return e;}if(k==='gate'&&s.life.energy>25)return {id:uid(),type:'district-gate',city:s.life.city,district:s.life.city,rarity:'epic',settled:false};if(k==='interlude')return {id:uid(),type:'interlude',city:s.life.city,scene:['bridge','waterfront','park','alley'][Math.floor(rng()*4)],rarity:'common',settled:false};}}
   o=decorateOffer(s,makeBaseOffer(s,options,rng),rng,false);
   if(o.type==='project'){if(d.elite&&worth(s)>=100000){o.grade=worth(s)>=100000000?'elite':'advanced';o.rarity=o.grade==='elite'?'legendary':'epic';o.up=Math.round((o.up+(o.grade==='elite'?1.1:.6))*100)/100;o.minStake=o.grade==='elite'?Math.max(o.minStake,10000000):Math.max(o.minStake,1000000);o.maxStake=LIMIT_MAX;}
    if(o.grade==='street'){o.minStake=Math.max(o.minStake||1,PROJECT_MIN);o.maxStake=Math.max(o.maxStake||0,5000000);}else o.minStake=Math.max(o.minStake||1,PROJECT_MIN);
@@ -56,7 +56,7 @@ export function makeOffer(s,options={},rng=random){
   return o;}
  if(!forced&&!s.activeChallenge&&worth(s)>=25000&&s.page>2&&s.page-(s.life.lastMarketPage||0)>=3&&(rng()<.13||s.page-(s.life.lastMarketPage||s.life.marketEligibleAt||s.page)>12)){s.life.lastMarketPage=s.page;return {id:uid(),type:'talent-market',city:s.life.city,rarity:'rare',settled:false};}
  if(worth(s)>=25000)s.life.marketEligibleAt??=s.page;
- if(!forced&&!s.activeChallenge&&s.page>2&&s.life.energy>=8&&s.page-(s.life.lastStoryPage||0)>=3&&rng()<.12){s.life.lastStoryPage=s.page;return createRegionalStory(s,lateTier(s),rng);}
+ if(!forced&&!s.activeChallenge&&s.page>2&&s.life.energy>=8&&s.page-(s.life.lastStoryPage||0)>=3&&rng()<.12){s.life.lastStoryPage=s.page;const r=createRegionalStory(s,lateTier(s),rng);if(r)return r;}
  if(!forced){const encounter=streetEvent(s,rng);if(encounter)return encounter;}
  if(!forced&&!s.activeChallenge&&s.page>3&&s.life.energy>25&&rng()<.045)return {id:uid(),type:'district-gate',city:s.life.city,district:s.life.city,rarity:'epic',settled:false};
  if(!forced&&!s.activeChallenge&&s.page>2&&rng()<.06)return {id:uid(),type:'interlude',city:s.life.city,scene:rng()<.5?'bridge':['waterfront','park','alley'][Math.floor(rng()*3)],rarity:'common',settled:false};
