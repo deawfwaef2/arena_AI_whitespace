@@ -374,7 +374,7 @@ export class World{
   const dock=document.getElementById('game-dock');
   let foot=desktop?h*.73:Math.max(h*.40,(dock?.getBoundingClientRect().top-this.container.getBoundingClientRect().top||h*.62)-20);let f=desktop?12.2:15.5;if(this.titleMode){f=11;foot=h*.74;}f*=1-(this.cornerZoom||0);
   this.frustum=f;const c=this.camera;c.left=-f*w/h/2;c.right=f*w/h/2;c.top=f/2;c.bottom=-f/2;
-  c.position.set(8,8.7,13);c.position.applyAxisAngle(new T.Vector3(0,1,0),(this.blockAngle||0)+(this.cameraOrbit||0));c.lookAt(0,.8,0);c.updateProjectionMatrix();c.updateMatrixWorld(true);
+  c.position.set(8,8.7,13);c.position.applyAxisAngle(new T.Vector3(0,1,0),(this.blockAngle||0)+(this.viewOff||0)+(this.cameraOrbit||0));c.lookAt(0,.8,0);c.updateProjectionMatrix();c.updateMatrixWorld(true);
   const p=new T.Vector3(this.actor?.root.position.x??-1.65,.18,this.actor?.root.position.z??2.2).project(c),cx=(p.x+1)*w/2,cy=(1-p.y)*h/2;
   const dx=this.titleMode?w*.38:w*.34;
   const up=new T.Vector3(0,1,0).applyQuaternion(c.quaternion),right=new T.Vector3(1,0,0).applyQuaternion(c.quaternion);c.position.addScaledVector(up,-(cy-foot)/h*f);c.position.addScaledVector(right,(cx-dx)/w*(f*w/h));c.updateMatrixWorld(true);
@@ -446,11 +446,39 @@ export class World{
   box(g,3,.08,40,0x758993,9,-.06,-4);box(g,1.1,.1,40,0xd6ddce,7.2,.02,-4);for(let z=-20;z<15;z+=2.7)box(g,.06,.012,1.2,0xf1e6c7,9,.005,z);
   g.traverse(o=>{o.castShadow=false;});
  }
+ // R14 #149: with the orbiting corner camera some viewpoints look over building backs. Hide any block piece that sits
+ // between the camera and the hero (ray cast along the ortho view direction), restore it once it no longer occludes.
+ r14Occlude(){
+  if(!this.camera||!this.actor||this.titleMode)return;this.occF=(this.occF||0)+1;if(this.occF%6)return;
+  const hidden=this.occHidden||(this.occHidden=new Set());const roots=[this.neighborhood,this.plot,this.incoming].filter(Boolean);
+  const want=new Set();
+  if(this.viewOff||this.corner){
+   const rc=this.occRay||(this.occRay=new T.Raycaster());const dir=new T.Vector3();this.camera.getWorldDirection(dir);
+   const right=new T.Vector3(1,0,0).applyQuaternion(this.camera.quaternion);const hp=this.actor.root.position;
+   for(const y of [.35,1.1,1.9])for(const s of [-.55,0,.55]){
+    const tgt=new T.Vector3(hp.x,y,hp.z).addScaledVector(right,s);rc.set(tgt.clone().addScaledVector(dir,-60),dir);rc.far=59.4;
+    for(const h of rc.intersectObjects(roots,true)){const o=this.r14Piece(h.object,roots);if(o&&!want.has(o))want.add(o);}
+   }
+  }
+  // hidden objects no longer get hit by rays, so keep them while still in front (test with their world bbox)
+  for(const o of hidden){if(!want.has(o)){if(o.parent&&(this.viewOff||this.corner)&&this.r14StillBlocks(o))want.add(o);else{o.visible=true;}}}
+  for(const o of want)o.visible=false;this.occHidden=want;
+ }
+ r14Piece(m,roots){if(m.userData.r14p!==undefined)return m.userData.r14p;let best=null,o=m;const sz=x=>new T.Box3().setFromObject(x,true).getSize(new T.Vector3());
+  while(o&&!roots.includes(o)){const s=sz(o);if(s.x<7.5&&s.z<7.5)best=s.y>.9?o:best;else break;o=o.parent;}
+  m.userData.r14p=best;return best;}
+ r14Hideable(o){if(o.userData.r14h!==undefined)return o.userData.r14h;const s=new T.Box3().setFromObject(o,true).getSize(new T.Vector3());return o.userData.r14h=(s.y>.9&&s.x<14&&s.z<14);}
+ r14StillBlocks(o){
+  const box=new T.Box3().setFromObject(o,true);if(box.isEmpty())return false;const size=box.getSize(new T.Vector3());if(size.x>14||size.z>14)return false;
+  const dir=new T.Vector3();this.camera.getWorldDirection(dir);const right=new T.Vector3(1,0,0).applyQuaternion(this.camera.quaternion);const hp=this.actor.root.position;
+  const rc=new T.Ray();for(const y of [.35,1.1,1.9])for(const s of [-.55,0,.55]){const tgt=new T.Vector3(hp.x,y,hp.z).addScaledVector(right,s);rc.set(tgt.clone().addScaledVector(dir,-60),dir);const hit=rc.intersectBox(box,new T.Vector3());if(hit&&hit.distanceTo(tgt)>.6&&hit.clone().sub(tgt).dot(dir)<0)return true;}
+  return false;
+ }
  streetPoint(x,z,angle=this.blockAngle||0){return new T.Vector3(x,0,z).applyAxisAngle(new T.Vector3(0,1,0),angle);}
  turnCorner(){
   if(this.fallback)return Promise.resolve();
   if(!this.motion){
-    this.blockAngle=(this.blockAngle||0)+Math.PI/2;
+    this.blockAngle=(this.blockAngle||0)+Math.PI/2;this.viewTurns=((this.viewTurns||0)+1)%4;this.viewOff=this.viewTurns*Math.PI/2;
     this.actor.root.position.copy(this.streetPoint(-1.65,2.2));
     this.actor.root.rotation.y=(this.blockAngle||0)+0.59;
     this.justTurned=true;
@@ -460,7 +488,7 @@ export class World{
   this.corner={
     from:this.blockAngle||0,
     start:performance.now(),
-    duration:2600
+    duration:3000
   };
   return new Promise(resolve=>this.corner.resolve=resolve);
  }
@@ -559,11 +587,12 @@ export class World{
     const settleEase=settle*settle*(3-2*settle);
     this.cornerFacing=T.MathUtils.lerp(walkHeading, newBlockHeading, settleEase);
     this.blockAngle=c.from+(Math.PI/2)*ease;
-    this.cameraOrbit=Math.sin(Math.PI*p)*1.05;this.cornerZoom=Math.sin(Math.PI*p)*.28;
+    // R14 #149: camera orbits the hero to a NEW viewpoint, +90° relative to the street per corner (4 corners = full circle).
+    this.viewOff=((this.viewTurns||0)+ease)*Math.PI/2;this.cameraOrbit=0;this.cornerZoom=Math.sin(Math.PI*p)*.22;
     this.resize(true);
     if(p===1){
       const resolve=c.resolve;
-      this.corner=null;this.cameraOrbit=0;this.cornerZoom=0;
+      this.corner=null;this.cameraOrbit=0;this.cornerZoom=0;this.viewTurns=((this.viewTurns||0)+1)%4;this.viewOff=this.viewTurns*Math.PI/2;
       this.justTurned=true;
       this.blockAngle=c.from+Math.PI/2;
       this.actor.root.position.copy(this.streetPoint(-1.65,2.2));
@@ -572,7 +601,7 @@ export class World{
       resolve?.();
     }
   }
-  if(this.restStage){if(!this.sceneSuspended)animateRest(this.restStage,dt,this.motion);this.renderer.render(this.restStage.scene,this.restStage.camera);return;}if(this.paused&&!this.titleMode){this.renderer.render(this.scene,this.camera);return;}this.time+=dt;const t=this.time;let walking=false;
+  if(this.restStage){if(!this.sceneSuspended)animateRest(this.restStage,dt,this.motion);this.renderer.render(this.restStage.scene,this.restStage.camera);return;}if(this.paused&&!this.titleMode){this.r14Occlude();this.renderer.render(this.scene,this.camera);return;}this.time+=dt;const t=this.time;let walking=false;
   if(this.travelTime!==null){
     this.travelTime=now-this.travelStarted;
     const p=Math.min(1,this.travelTime/this.duration),e=p*p*(3-2*p);
@@ -683,7 +712,7 @@ export class World{
   }
   for(const root of [this.plot,this.incoming])root?.traverse(o=>{if(o.userData.billboard){const q=this.billboardParentQ??=new T.Quaternion();o.parent.getWorldQuaternion(q);o.quaternion.copy(q.invert()).multiply(this.camera.quaternion);}});
   if(this.plot){const p=new T.Vector3(.4,3.2,-.1);p.applyMatrix4(this.plot.matrixWorld);p.project(this.camera);const rect=this.container.getBoundingClientRect();this.onProjectPosition(rect.left+(p.x+1)*rect.width/2,rect.top+(1-p.y)*rect.height/2);}
-  this.updateStreetCast(t,dt);this.renderer.render(this.scene,this.camera);this.fps=1/Math.max(rawDt,.001);
+  this.updateStreetCast(t,dt);this.r14Occlude();this.renderer.render(this.scene,this.camera);this.fps=1/Math.max(rawDt,.001);
   const p=this.actor.root.position.clone();p.y+=3.05;p.project(this.camera);const rect=this.container.getBoundingClientRect();this.onHeroPosition(rect.left+(p.x+1)*rect.width/2,rect.top+(1-p.y)*rect.height/2);
  }
 }

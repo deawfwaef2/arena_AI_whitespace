@@ -50,6 +50,7 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
 const effects=new Effects($('effects'));const music=new Music();
 const cashFlow=new CashFlow();cashFlow.setMotion(()=>meta.motion);
 const world=new World($('world'),{onError:()=>toast(L('3D could not load here. Game controls still work.','当前环境无法加载 3D，但游戏功能仍可使用。'))});
+window.__r14world=world;
 world.onHeroPosition=(x,y)=>{$('avatar-tag').style.visibility=y<document.querySelector('.portrait-hud').getBoundingClientRect().bottom+8?'hidden':'visible';$('avatar-tag').style.transform=`translate(${x}px,${y}px) translate(-50%,-100%)`;};
 document.documentElement.lang=meta.lang==='zh'?'zh-CN':'en';world.setLanguage(meta.lang);world.setOffer(run.offer);
 function toast(message){const d=document.createElement('div');d.className='toast';d.textContent=message;$('toast-stack').appendChild(d);setTimeout(()=>{d.classList.add('leaving');setTimeout(()=>d.remove(),350);},4800);while($('toast-stack').children.length>3)$('toast-stack').firstChild.remove();}
