@@ -237,3 +237,23 @@ Standing constraints (unchanged): save/commit/push in phases, root `index.html` 
 - [ ] 60 Health → 5 hearts.
 - [ ] 61 Black-market project UI: write the textual details out (describe it in words).
 - [ ] 62 More animation/images across the UI for feedback.
+
+## 第八轮补充反馈（2026-09-24 同日第二条；items 63–84，追加）
+Note: v11 phases 1–3 (commits 744fddf, 1c5cf17, 04cc10f) already did 51/52/53/59 partially + 5 hearts; user now says **health back to 3**.
+- [ ] 63 **Health → 3 hearts** (overrides item 60).
+- [ ] 64 Luxury **LV** UI (trophy cabinet) unlocks **much later** (not at the start).
+- [ ] 65 Hospital: **price doubles on every use** (per run); hospital UI with rich descriptive text (reception, doctor lines, ward description) — not only simple tiles.
+- [ ] 66 Project **min/max stake written on the card**, not hidden in details. Low-tier projects: smaller swing + low cap; high-tier clearly different; a **high-tier project zone**.
+- [ ] 67 Different project types may use different visual styles.
+- [ ] 68 More map-specific projects, regions, **more zones**, more types → richer play.
+- [ ] 69 Building/estate assets give **LV points**.
+- [ ] 70 Cities differ much more strongly (style, rules, features) so travelling is desirable.
+- [ ] 71 **Class up AND class down**: popups that must be clicked, immersive text.
+- [ ] 72 More partners with distinct features; some let the player **choose how much to invest**; some special partners / special events.
+- [ ] 73 **Shops**: redesigned clear goods grid **without scrolling**; categories; random refresh each visit; **small shop vs big shop**; a **shop district** zone.
+- [ ] 74 Money gain/loss feedback scaled by amount + a **hidden combo system** (only intensifies feedback; never shown as UI).
+- [ ] 75 More feedback everywhere (animations, images).
+- [ ] 76 Poor-stage unlock/reward UI shabby & colour-consistent (= 58).
+- [ ] 77 Opening animation master-level trailer (= 54); residual Chinese in English mode incl. 3D scene (= 55).
+- [ ] 78 **CrazyGames ads SDK** (v3): rewarded ad in a prominent spot in the rest phase → **watch ad to skip rest**; plus roadside **ad locations** blended into the environment as a project (e.g. billboard sponsor stop → rewarded ad for a bonus). Must degrade gracefully offline / outside CrazyGames (no SDK → hide or fallback).
+- [ ] 79 Buttons: generated images (not emoji), big image+text buttons, panoramic backgrounds.
