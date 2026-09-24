@@ -60,6 +60,22 @@ def cam_allin(h):
         else: out.append((640, 360, 1.0))
     return out
 
+def money_events(fs):
+    import numpy as np
+    prev = None; ev = []
+    for i, f in enumerate(fs):
+        a = np.asarray(Image.open(f).convert('L').crop((10, 8, 340, 80)), dtype=np.int16)
+        if prev is not None and np.abs(a - prev).mean() * 10 > 120 and (not ev or i - ev[-1] > 4): ev.append(i)
+        prev = a
+    return ev
+
+def follow_money(cams, ev, before=9, after=9, z=2.1):
+    cams = list(cams)
+    for m in ev:
+        for i in range(max(0, m - before), min(len(cams), m + after)):
+            cams[i] = (MONEY[0] + 130, MONEY[1] + 75, z)
+    return cams
+
 def smooth(tr, a=0.18):
     out = []; c = list(tr[0])
     for t in tr:
@@ -67,6 +83,7 @@ def smooth(tr, a=0.18):
     return out
 
 # caption schedule per scene: list of (start_frac, end_frac, text, sub, colour)
+TRIM = {'tap': 80}
 SCENES = [
     ('tap',    cam_tap,    1, [(0.02, .45, 'TAP TAP TAP!', 'work the street for your first dollars', '#ffd54a'), (.45, .98, 'CASH IN!', 'every coin flies into your pocket', '#7dffa0')]),
     ('level',  cam_level,  1, [(0.05, .95, 'LEVEL UP!', 'new classes · new cities · new toys', '#ffd54a')]),
@@ -101,10 +118,15 @@ def compose_scene_frames():
     """returns list of scenes, each a list of (PIL src frame, cam(cx,cy,z), captions-at-frame)"""
     scenes = []
     for name, camf, rep, caps in SCENES:
+        if os.environ.get('ONLY') and name not in os.environ['ONLY'].split(','): continue
         fs, h = load(name)
         if not fs: continue
         if len(h) < len(fs): h = h + [{}] * (len(fs) - len(h))
-        cams = smooth(camf(h))
+        fs = fs[:TRIM.get(name, len(fs))]; h = h[:len(fs)]
+        ev = money_events(fs)
+        cams = camf(h)
+        cams = follow_money(cams, ev, 9, 12 if name != 'tap' else 9)
+        cams = smooth(cams)
         items = []
         n = len(fs)
         for i, f in enumerate(fs):
@@ -136,14 +158,14 @@ def render(W, H, out):
         z = z * extra_zoom
         if not vertical:
             fr = crop(im, cx, cy, z, 16 / 9).resize((W, H), Image.LANCZOS)
-            cap_y, big = int(H * 0.72), 104
+            cap_y, big = int(H * 0.70), 128
         else:
             bg = im.resize((int(H * 16 / 9), H), Image.BILINEAR).filter(ImageFilter.GaussianBlur(28))
             bg = ImageEnhance.Brightness(bg).enhance(.45).crop(((bg.width - W) // 2, 0, (bg.width - W) // 2 + W, H))
             fg = crop(im, cx, cy, max(1.0, z * 0.95), 3 / 4).resize((W, int(W * 4 / 3)), Image.LANCZOS)
             fr = bg; fy = (H - fg.height) // 2 + 40; fr.paste(fg, (0, fy))
             d0 = ImageDraw.Draw(fr); d0.rectangle((0, fy - 4, W, fy), fill='#ffd54a'); d0.rectangle((0, fy + fg.height, W, fy + fg.height + 4), fill='#ffd54a')
-            cap_y, big = 110, 92
+            cap_y, big = 120, 108
         ov = Image.new('RGBA', (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(ov)
         for (a, b, t, s, col) in caps:
             if a <= k <= b: caption(d, W, cap_y if not vertical else (cap_y if t else 0), t, s, col, (k - a) / (b - a), big)

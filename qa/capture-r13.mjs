@@ -24,7 +24,7 @@ async function seg(name,{cash=100,city='taipei',secs=5,seed,act}){
  for(let i=0;i<n;i++){
   const h=await act(i,p,box)||{};hints.push(h);
   await p.clock.fastForward(STEP-17);await p.clock.runFor(17);
-  const shot=await cdp.send('Page.captureScreenshot',{format:'jpeg',quality:90,optimizeForSpeed:true});fs.writeFileSync(`${dir}/${String(i).padStart(4,'0')}.jpg`,Buffer.from(shot.data,'base64'));
+  let shot;for(let t=0;t<4;t++){try{shot=await cdp.send('Page.captureScreenshot',{format:'jpeg',quality:90,optimizeForSpeed:true});break;}catch(e){console.log(name,'retry shot',i,e.message);await new Promise(r=>setTimeout(r,1500));}}if(!shot)continue;fs.writeFileSync(`${dir}/${String(i).padStart(4,'0')}.jpg`,Buffer.from(shot.data,'base64'));
   if(i%20===0)console.log(name,i,'/',n,((Date.now()-t0)/(i+1)|0)+'ms/f');
  }
  fs.writeFileSync(`/tmp/frames/${name}.json`,JSON.stringify(hints));await c.close();console.log('done',name,n);}
