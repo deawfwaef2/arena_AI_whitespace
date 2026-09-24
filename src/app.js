@@ -261,8 +261,8 @@ function openModal(type,title,subtitle,body,{wide=false,noClose=false,custom=fal
  if(type==='menu')body+=`<div class="onboard-menu-actions"><button class="small-button" data-action="onboard-tour">重看快速教程</button><button class="small-button" data-action="onboard-home">返回开始界面</button></div>`;if(type==='developer')body+=`<div class="life-dev-tools"><button class="small-button" data-action="life-dev-rest">测试：进入假期</button><button class="small-button" data-action="life-dev-ready">测试：完成计时</button><button class="small-button" data-action="life-dev-goods">测试：获得全部机制商品</button></div>`;
  card.innerHTML=custom?body:`<div class="modal-head"><div><span class="modal-eyebrow">${L('Broke to Billionaire · PAUSED','Broke to Billionaire · 已暂停')}</span><h2 id="modal-title">${safe(title)}</h2><p>${safe(subtitle)}</p></div>${noClose?'':`<button class="modal-close" data-action="close" aria-label="${L('Close','关闭')}">${icon('close')}</button>`}</div>${body}`;
  if(type==='rules'&&run.offer.type==='project'){const o=run.offer;card.querySelector('.modal-head')?.insertAdjacentHTML('afterend',`<div class="panel-notice">项目下限 ${money(o.minStake||1)}；${o.maxStake>=MAX_CENTS?'不设玩法上限（系统上限 9 万亿美元）':'上限 '+money(o.maxStake||50000)}。${o.stages?'必须连续通过两轮审核：'+o.stages.join('% × ')+'%，综合 '+o.p+'%。':''}${o.delay?'投入后锁定 20 秒，刷新不会重抽结果。':''}</div>`);}
- // Content is visible from the first frame, even if animation scheduling stalls.
- if(meta.motion)card.animate([{transform:'translateY(12px)'},{transform:'translateY(0)'}],{duration:220,easing:'ease-out'});
+ // The modal container has no compositor animation at all. It must be stable
+ // and hit-testable on frame one; ceremony/button child effects still animate.
  pause();requestAnimationFrame(()=>{if(serial===modalSerial&&modalType)card.querySelector('button:not(:disabled),input,select')?.focus({preventScroll:true});});
 }
 // Ceremony dialogs must be dismissed with their own button, never by a stray tap on the backdrop or Escape.

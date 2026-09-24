@@ -444,3 +444,6 @@ Standing constraints unchanged (commit+push per small step, root index.html alwa
 - 本沙箱 workspace /home/user/game，保持 <128MB；大型 git 元数据、浏览器、依赖、构建临时目录在 /tmp（不持久）。本地 sparse checkout 排除视频、旧 QA 图片、启动器二进制、store-kit，**不是从 GitHub 删除**。重建会话从 GitHub 恢复这些文件及 git 元数据。
 - 包必须分阶段更新：npm run checkpoint → CRAZYGAMES_TMPDIR=/tmp python3 tools/make-crazygames-zip.py → commit/push；ZIP 验证后才原子替换。预留旧+新 ZIP 空间。
 - 阶段 A 测试：56/56 规则测试通过；真实 Chromium 复现并确认修复后菜单 opacity=1。完整浏览器压力回归仍在后续阶段进行，不能提前声称全通过。
+- 阶段 B：Chromium 桌面、手机横屏各通过 12 次菜单→子页→关闭 + 15 次在旧 330ms 定时窗口内快速重开；手机 CDP touch 真实触控拖动通过，主线 Esc/遮罩不关闭，关闭释放 inert，页面错误 0。截图已人工查看。
+- 离线压力测试暴露容器 translateY 入场也可能延迟启动，虽然已经不透明，但会影响拖动起点；现删除容器 WAAPI 入场，CSS 同时禁用容器动画。按钮/剧情子元素动画照旧。
+- qa/r17-windows.mjs 支持 desktop/phone/large/reduced/offline；BASE_URL=file:///.../index.html + HTTP route abort 测解压包禁网；截图/结果输出 /tmp/r17-shots。QUICK=1 只跑 1+1 次，不得当作完整压力回归。
