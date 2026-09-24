@@ -3,7 +3,7 @@
 > 下一位模型编程前必须先读 [HANDOFF.md](HANDOFF.md)。本轮变更、验证和截图见 [STREET-REPORT.md](STREET-REPORT.md)。
 > 下方旧文档中的三布局/界面预览说明已被本轮单一画内沉浸布局取代。
 
-# Last $100: Swipe to Rich
+# Broke to Billionaire: The $100 Start
 ## 3.1 · 财富与代价 / Windows 局域网版
 
 基于提供的 **3.1 工程和操作方式**继续修改，不是切换到后续版本的界面，也没有增加新模式。投资滑杆保留现有行为。

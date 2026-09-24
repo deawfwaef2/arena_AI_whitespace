@@ -102,7 +102,7 @@
 1561|Energy cap maxed · 400
 1562|Raise energy cap {} → {} · {}
 1563|PERSONAL SETTINGS / growth
-1564|Last $100: Swipe to Rich / 3.1 City Edition
+1564|Broke to Billionaire: The $100 Start / 3.1 City Edition
 1565|Energy & day cycle
 1566|Start at 200; upgrade 4 times in the menu up to 400, +50 each, costing $1,500 / $4,000 / $10,000 / $25,000, each also restoring 50 energy. Move −5, invest −3, shop −2, travel −10. Remaining energy sets morning, afternoon, dusk and night. At zero you rest, then refill to the cap at morning.
 1567|Different cities, different lives

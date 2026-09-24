@@ -132,7 +132,7 @@
 131|Test: start holiday
 132|Test: finish timer
 133|Test: get all mechanism items
-134|Last $100 · Paused
+134|Broke to Billionaire · Paused
 135|Close
 136|No gameplay cap (system cap $9 trillion)
 137|Cap

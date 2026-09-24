@@ -85,7 +85,7 @@
 644|· total {} · pending this life {}
 645|Use default skin
 646|Mechanisms apply from your next run; skins apply now. No real top-ups; local saves aren't anti-cheat accounts.
-647|Last $100: Swipe to Rich
+647|Broke to Billionaire: The $100 Start
 648|Energy & cities
 649|Start with 200 energy, upgradable four times to 400. Walk −5, invest −3, buy −2, travel −10. Day and night follow your energy; rest when empty to refill. Six cities each have 16 local deals, four needing higher net worth; every ten steps you turn a real street corner. City music is licensed and built in offline.
 650|Current net worth sets how hard life is

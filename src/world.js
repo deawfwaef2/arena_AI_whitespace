@@ -13,7 +13,7 @@ const cyl=(g,rt,rb,h,color,x=0,y=0,z=0,n=16)=>mesh(g,new T.CylinderGeometry(rt,r
 const sphere=(g,r,color,x=0,y=0,z=0)=>mesh(g,new T.SphereGeometry(r,16,12),color,x,y,z);
 const torus=(g,r,t,color,x=0,y=0,z=0)=>mesh(g,new T.TorusGeometry(r,t,8,48),color,x,y,z);
 function roundSlab(g,w,d,h,r,color,x=0,y=0,z=0){const s=new T.Shape();const a=-w/2,b=-d/2;s.moveTo(a+r,b);s.lineTo(a+w-r,b);s.quadraticCurveTo(a+w,b,a+w,b+r);s.lineTo(a+w,b+d-r);s.quadraticCurveTo(a+w,b+d,a+w-r,b+d);s.lineTo(a+r,b+d);s.quadraticCurveTo(a,b+d,a,b+d-r);s.lineTo(a,b+r);s.quadraticCurveTo(a,b,a+r,b);const geo=new T.ExtrudeGeometry(s,{depth:h,bevelEnabled:true,bevelSegments:2,steps:1,bevelSize:.05,bevelThickness:.05,curveSegments:5});geo.rotateX(-Math.PI/2);return mesh(g,geo,color,x,y,z);}
-function label(g,text,w=1.6,h=.42,x=0,y=1,z=0,bg='#314944',fg='#f0f1df'){
+function label(g,text,w=1.6,h=.42,x=0,y=1,z=0,bg='#314944',fg='#f0f1df'){if(document.documentElement.lang!=='zh-CN'&&globalThis.__tr)text=globalThis.__tr(String(text));
  const c=document.createElement('canvas');c.width=512;c.height=160;const ctx=c.getContext('2d');ctx.fillStyle=bg;ctx.fillRect(0,0,512,160);ctx.fillStyle=fg;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold 62px sans-serif';ctx.fillText(text,256,83,480);
  const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;const m=mesh(g,new T.PlaneGeometry(w,h),new T.MeshStandardMaterial({map:tex,roughness:.8,side:T.DoubleSide}),x,y,z);return m;
 }

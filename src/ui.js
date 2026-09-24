@@ -54,7 +54,7 @@ export const shell=`
   <button id="challenge-hud" class="challenge-hud" data-action="challenge-details" hidden aria-label="Active timed challenge"></button>
   <div class="test-badge" id="test-badge" hidden>TEST RUN · UNRANKED</div>
  </div>
- <div class="street-title"><span>LAST $100</span><small id="tier-label">STREET LEVEL</small></div>
+ <div class="street-title"><span>BROKE TO BILLIONAIRE</span><small id="tier-label">STREET LEVEL</small></div>
  <div class="avatar-tag" id="avatar-tag"><span></span><strong id="avatar-name">YOU</strong></div>
  <div class="scene-toast" id="scene-toast" role="status" aria-live="polite"></div>
  <div class="discovery" id="discovery" aria-live="polite"></div>

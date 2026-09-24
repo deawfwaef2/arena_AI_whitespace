@@ -400,3 +400,9 @@
 
 /* v10 i18n: English dock labels fit */
 #app[data-v9lang='en'] .v7-mech-name{letter-spacing:0!important;max-width:100px;overflow:hidden;text-overflow:ellipsis}
+/* round 8: English overrides for CSS-generated Chinese */
+html:not([lang='zh-CN']) .v7-go.delayed span:after{content:' · Sign'}
+html:not([lang='zh-CN']) .overland .flight-window-label:after{content:' · Ground transport'}
+html:not([lang='zh-CN']) #app #game .city-panorama:after{content:'⤢ Open panorama'}
+html:not([lang='zh-CN']) #game .game-dock::before{content:'Scroll the panel to see all actions'}
+html:not([lang='zh-CN']) .wealth-badge.reclaimed:after{content:'Reclaimed'}

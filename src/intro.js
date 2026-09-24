@@ -19,7 +19,7 @@ export function runIntro({meta,save,done,motion=true}){
    <div class="v8i-shot rich" style="background-image:url('${ART()['cg-rich']||''}')"></div>
    <div class="v8i-cap" id="v8i-cap"></div>
    <div class="v8i-panel" id="v8i-panel" data-r="0"><small id="v8i-rank"></small><b id="v8i-money">$100</b><div class="v8i-icons">${Array.from({length:6},(_,i)=>`<i style="--i:${i}"></i>`).join('')}</div></div>
-   <div class="v8i-title" id="v8i-title"><small>Deawfwaef Games</small><h1>Last $100</h1><p>${T('Every golden frame must be earned.','每一份华丽，都要一步一步赢回来。')}</p><button id="v8i-go">${T('ENTER','进入游戏')}</button></div>
+   <div class="v8i-title" id="v8i-title"><small>Deawfwaef Games</small><h1>Broke to Billionaire</h1><h2 class="v8i-sub">The $100 Start</h2><p>${T('Every golden frame must be earned.','每一份华丽，都要一步一步赢回来。')}</p><button id="v8i-go">${T('ENTER','进入游戏')}</button></div>
   </div><button class="v8i-skip">${T('Skip','跳过')} ›</button>`;
   el.querySelector('.v8i-skip').onclick=finish;
   const cap=el.querySelector('#v8i-cap'),panel=el.querySelector('#v8i-panel'),cgEl=el.querySelector('.v8i-cg');
