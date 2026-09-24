@@ -2,6 +2,14 @@ import CITY_CREDITS from '../assets/music/CITY-CREDITS.json';
 import ORIGINAL_SCORES from '../assets/music/ORIGINAL-SCORES.json';
 // Six CC BY 4.0 city recordings, two legacy CC0 tracks and six original rest-class scores.
 export const MUSIC_CREDITS=[...CITY_CREDITS,...ORIGINAL_SCORES.filter(s=>s.id.startsWith('class'))];
+// Round 9: music packs are loaded lazily with a <script> tag (works on file:// too) so the main HTML stays small.
+const packTasks=new Map();
+export function loadPack(id){
+ if(window.UPSHIFT_AUDIO?.[id])return Promise.resolve(window.UPSHIFT_AUDIO[id]);
+ if(packTasks.has(id))return packTasks.get(id);
+ const t=new Promise((ok,fail)=>{const s=document.createElement('script');s.src='music-pack/'+encodeURIComponent(id)+'.js';s.async=true;s.onload=()=>{const d=window.UPSHIFT_AUDIO?.[id];d?ok(d):fail(Error('Music pack empty'));};s.onerror=()=>{packTasks.delete(id);fail(Error('Music pack not found (music-pack folder missing)'));};document.head.append(s);});
+ packTasks.set(id,t);return t;
+}
 export class Music{
  constructor(){this.enabled=true;this.volume=.28;this.muted=false;this.hidden=false;this.ducked=false;this.mode='taipei';this.unlocked=false;this.buffers=new Map();this.nodes=new Map();this.pending=new Map();this.error='';this.epoch=0;}
  async unlock(){
@@ -18,8 +26,7 @@ export class Music{
  setMode(mode){if(mode===this.mode)return;this.mode=mode;if(this.unlocked)this.start(mode);}
  async decode(id){
   if(this.buffers.has(id))return this.buffers.get(id);if(this.pending.has(id))return this.pending.get(id);
-  const data=window.UPSHIFT_AUDIO?.[id];if(!data)throw Error('Embedded music missing');
-  const task=(async()=>{const raw=atob(data.substring(data.indexOf(',')+1)),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);const buffer=await this.ctx.decodeAudioData(bytes.buffer);this.buffers.set(id,buffer);if(this.buffers.size>2){for(const key of this.buffers.keys()){if(key!==id&&key!==this.mode){this.buffers.delete(key);if(this.buffers.size<=2)break;}}}this.pending.delete(id);return buffer;})();this.pending.set(id,task);return task;
+  const task=(async()=>{const data=await loadPack(id);const raw=atob(data.substring(data.indexOf(',')+1)),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);const buffer=await this.ctx.decodeAudioData(bytes.buffer);try{delete window.UPSHIFT_AUDIO[id];packTasks.delete(id);}catch{}this.buffers.set(id,buffer);if(this.buffers.size>2){for(const key of this.buffers.keys()){if(key!==id&&key!==this.mode){this.buffers.delete(key);if(this.buffers.size<=2)break;}}}this.pending.delete(id);return buffer;})();task.catch(()=>this.pending.delete(id));this.pending.set(id,task);return task;
  }
  async start(id){
   if(!this.ctx||!this.unlocked||!this.enabled)return;
