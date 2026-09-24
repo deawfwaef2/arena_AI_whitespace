@@ -38,7 +38,7 @@ export class V9{
   if(started&&!s.ended){if(this.lastTier!==null&&t<this.lastTier)this.queue.push({k:'reclaim',from:this.lastTier,to:t});
    if(this.lastTier!==null&&t>this.lastTier)this.queue.push({k:'promote',from:this.lastTier,to:t,t:'p'+t});
    if(t>v.maxTier){for(let i=v.maxTier+1;i<=t;i++)if(!v.story.seen.includes(i))this.queue.push({k:'story',t:i});v.maxTier=t;}
-   if(!v.story.seen.includes(0)&&s.page>=6&&s.page<=40)this.queue.push({k:'story',t:0});}
+   if(!v.story.seen.includes(0)&&s.page<=40)this.queue.push({k:'story',t:0});}
   const resting=!!s.life.rest;if(resting&&this.prevRest===false)this.onRestStart();this.prevRest=resting;
   this.lastTier=t;this.flush();}
  flush(){if(!this.queue.length||this.c.modal()||this.c.busy()||!this.c.started())return;const q=this.queue.shift();this.queue=this.queue.filter(x=>!(x.k===q.k&&x.t===q.t));if(q.k==='reclaim')this.showReclaim(q);else if(q.k==='promote')this.ext?.showPromote(q);else if(q.k==='story'){if(!C.st(this.s).story.seen.includes(q.t))this.showStory(q.t);}}

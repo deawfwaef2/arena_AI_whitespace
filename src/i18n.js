@@ -46,7 +46,7 @@ const ATTRS=['title','placeholder','aria-label','alt','data-tip'];
 function walk(node){
   if(node.nodeType===3){const v=node.nodeValue;if(done.get(node)!==v&&CJK.test(v)){const t=tr(v);done.set(node,t);if(t!==v)node.nodeValue=t;}return;}
   if(node.nodeType!==1)return;
-  const tag=node.nodeName;if(tag==='SCRIPT'||tag==='STYLE'||tag==='TEXTAREA')return;
+  if(node.hasAttribute&&node.hasAttribute('data-notr'))return;const tag=node.nodeName;if(tag==='SCRIPT'||tag==='STYLE'||tag==='TEXTAREA')return;
   for(const a of ATTRS){const v=node.getAttribute&&node.getAttribute(a);if(v&&CJK.test(v)){const t=tr(v);if(t!==v)node.setAttribute(a,t);}}
   if(tag==='INPUT'){const v=node.value;if((node.type==='button'||node.type==='submit')&&CJK.test(v))node.value=tr(v);}
   for(let c=node.firstChild;c;c=c.nextSibling)walk(c);
