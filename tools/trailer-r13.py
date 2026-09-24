@@ -84,13 +84,13 @@ def smooth(tr, a=0.18):
     return out
 
 # caption schedule per scene: list of (start_frac, end_frac, text, sub, colour)
-TRIM = {'tap': 80, 'bigwin': 46}
+TRIM = {'tap': 80, 'bigwin': 46, 'invest': 62, 'allin': 54}
 SCENES = [
     ('tap',    cam_tap,    1, [(0.02, .45, 'TAP TAP TAP!', 'work the street for your first dollars', '#ffd54a'), (.45, .98, 'CASH IN!', 'every coin flies into your pocket', '#7dffa0')]),
     ('level',  cam_level,  1, [(0.05, .95, 'LEVEL UP!', 'new classes · new cities · new toys', '#ffd54a')]),
     ('invest', cam_invest, 1, [(0.02, .45, 'RISK IT…', 'slide your stake', '#ffffff'), (.47, .98, 'BIG PROFIT!', 'the right bet changes everything', '#7dffa0')]),
-    ('bigwin', cam_invest, 1, [(0.02, .98, 'BIGGER BETS. BIGGER WINS.', 'from street deals to Vegas', '#ffd54a')]),
-    ('allin',  cam_allin,  1, [(0.02, .42, 'ALL IN?', 'one slide… 100%', '#ffffff'), (.42, .98, '…GONE.', 'the city takes it all back', '#ff5a4a')]),
+    ('bigwin', cam_invest, 1, [(0.02, .62, 'BIGGER BETS…', 'from street deals to Vegas', '#ffd54a'), (.63, .98, 'CHAIN UNLOCK ×9!', 'your whole world levels up', '#7dffa0')]),
+    ('allin',  cam_allin,  1, [(0.02, .52, 'ALL IN?', 'one slide… 100% of everything', '#ffffff'), (.53, .98, '…BANKRUPT.', 'lose it all — then start again with $100', '#ff5a4a')]),
 ]
 
 def crop(img, cx, cy, z, aspect):
@@ -163,7 +163,10 @@ def render(W, H, out):
         else:
             bg = im.resize((int(H * 16 / 9), H), Image.BILINEAR).filter(ImageFilter.GaussianBlur(28))
             bg = ImageEnhance.Brightness(bg).enhance(.45).crop(((bg.width - W) // 2, 0, (bg.width - W) // 2 + W, H))
-            fg = crop(im, cx, cy, max(1.0, z * 0.95), 3 / 4).resize((W, int(W * 4 / 3)), Image.LANCZOS)
+            zv = max(1.0, z * 0.72); hv = SRC_H / zv; wv = hv * 3 / 4
+            m = min(1.0, max(0.0, (z - 1.3) / 0.8))   # when following cash, slide the window so the whole counter stays in view
+            cx = cx * (1 - m) + (wv / 2) * m; cy = cy * (1 - m) + (hv / 2) * m
+            fg = crop(im, cx, cy, zv, 3 / 4).resize((W, int(W * 4 / 3)), Image.LANCZOS)
             fr = bg; fy = (H - fg.height) // 2 + 40; fr.paste(fg, (0, fy))
             d0 = ImageDraw.Draw(fr); d0.rectangle((0, fy - 4, W, fy), fill='#ffd54a'); d0.rectangle((0, fy + fg.height, W, fy + fg.height + 4), fill='#ffd54a')
             cap_y, big = 120, 108
@@ -198,8 +201,13 @@ def render(W, H, out):
         t = i / FPS
         z = 1.0 + 0.04 * t
         if vertical:
-            base = art.resize((int(H * art.width / art.height * z), int(H * z)), Image.LANCZOS)
-            x0 = (base.width - W) // 2; base = base.crop((x0, 0, x0 + W, H))
+            if 'vbg' not in cache:
+                b = art.resize((int(H * art.width / art.height), H), Image.BILINEAR).filter(ImageFilter.GaussianBlur(24))
+                cache['vbg'] = ImageEnhance.Brightness(b).enhance(.6).crop(((b.width - W) // 2, 0, (b.width - W) // 2 + W, H))
+            base = cache['vbg'].copy()
+            aw = int(W * (1 + 0.012 * t)); ah = int(aw * art.height / art.width)
+            a2 = art.resize((aw, ah), Image.LANCZOS).crop(((aw - W) // 2, 0, (aw - W) // 2 + W, ah))
+            base.paste(a2, (0, int(H * .5) - ah - 20))
         else:
             base = art.resize((int(W * z), int(W * z * art.height / art.width)), Image.LANCZOS)
             x0 = (base.width - W) // 2; y0 = max(0, (base.height - H) // 2); base = base.crop((x0, y0, x0 + W, y0 + H))
