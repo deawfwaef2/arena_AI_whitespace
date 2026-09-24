@@ -30,4 +30,5 @@ await shot('promote',{cash:480,seed:r=>{r.offer={id:'w',type:'v9-work',job:'can'
 await shot('pchoose',{cash:3000000,seed:r=>{r.life.v9.partners={chef:{bond:1,met:1,last:1}};r.offer={id:'pd',type:'v9-pdeal',partner:'chef',settled:false,city:'taipei',rarity:'epic'};}});
 await shot('pawn',{cash:60000,seed:r=>{r.offer={id:'pw1',type:'v9-place',place:'pawn',opts:['loan','flip','intel'],settled:false,city:'taipei',rarity:'rare'};}});
 await shot('casino',{cash:60000,seed:r=>{r.offer={id:'cs1',type:'v9-place',place:'casino',opts:['roulette','slots','poker'],settled:false,city:'taipei',rarity:'rare'};}});
+for(const cy of ['taipei','tokyo','vegas','singapore','newyork','monaco'])await shot('c-'+cy,{cash:3000000,seed:r=>{r.life.city=cy;r.offer=X.cityOffer(r,R);}});
 console.log('ERRORS',JSON.stringify(errors,null,1));await browser.close();

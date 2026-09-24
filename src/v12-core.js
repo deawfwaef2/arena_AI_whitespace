@@ -129,7 +129,7 @@ export const CITY_DEALS={
 };
 // scale(): richer players see bigger versions of the same city deals, low-tier ones stay small
 const tierScale=t=>t<=2?1:10**Math.min(6,(t-2)*.8);
-export function cityOffer(s,rng=Math.random){const city=s.life.city in CITY_DEALS?s.life.city:'taipei';const L=liquid(s),t=liquidTier(s),k=tierScale(t);
+export function cityOffer(s,rng=Math.random){const city=s.life.city in CITY_DEALS?s.life.city:'taipei';const L=liquid(s),t=liquidTier(s);const minBase=Math.min(...CITY_DEALS[city].map(d=>d.min));const k=Math.max(1,Math.min(tierScale(t),(L*.3)/(minBase*100)));
  const list=CITY_DEALS[city].map(d=>({...d,min:Math.round(d.min*k),max:Math.round(d.max*k)})).filter(d=>d.min*100<=L*.8);
  if(!list.length)return null;const d=list[Math.min(list.length-1,Math.floor(rng()*list.length*1.2))]||list[0];const S=CITY_STYLE[city];
  const p=clamp(d.p+(S.pmod>0?0:0),5,95);
@@ -137,7 +137,7 @@ export function cityOffer(s,rng=Math.random){const city=s.life.city in CITY_DEAL
 export function playCity(s,stake,rng=Math.random){const o=s.offer;if(o.type!=='v12-city'||o.settled)throw Error('done');stake=Math.floor(Number(stake)||0);if(stake<o.min||stake>o.max||stake>=s.cash)throw Error('range');if(s.life.energy<3)throw Error('energy');s.life.energy-=3;
  const S=CITY_STYLE[o.city]||{};let up=o.up;if(S.lever)up=+(o.up+.6*((stake-o.min)/Math.max(1,o.max-o.min))).toFixed(2);
  let won;const rolls=[];if(S.double){const p1=Math.sqrt(o.p/100)*100;const a=rng()*100,b=rng()*100;rolls.push(a,b);won=a<p1&&b<p1;}else{const a=rng()*100;rolls.push(a);won=a<o.p;}
- const d=won?Math.floor(stake*up)-stake:-(S.half?Math.floor(stake/2):stake);s.cash=clamp(s.cash+d,0,CAP);
+ const d=won?Math.floor(stake*up+1e-6)-stake:-(S.half?Math.floor(stake/2):stake);s.cash=clamp(s.cash+d,0,CAP);
  s.investments=(s.investments||0)+1;if(won){s.wins=(s.wins||0)+1;s.streak=(s.streak||0)+1;}else s.streak=0;
  const v=st(s);if(won&&o.lv){v.lvBonus=(v.lvBonus||0)+o.lv;}
  s.history?.unshift({won,multiplier:won?up:0,stake,returned:won?stake+d:Math.max(0,stake+d),profit:d,cashAfterBet:s.cash,lossScope:'stake',page:s.page,project:'coffee',special:null,rarity:'epic',at:Date.now()});if(s.history)s.history=s.history.slice(0,40);
