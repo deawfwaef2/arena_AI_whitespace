@@ -44,6 +44,7 @@ export class Platform {
  load(key){
   try{if(this.sdk)return this.sdk.data.getItem(key);return localStorage.getItem(key);}catch(e){this.storageMode='session';this.error=e.message;return this.memory.get(key)||null;}
  }
+ remove(key){this.memory.delete(key);try{if(this.sdk){this.sdk.data.removeItem?.(key);this.sdk.data.setItem?.(key,'null');}localStorage.removeItem(key);}catch(e){this.error=e.message;}}
  save(key,value){
   this.memory.set(key,value);
   try{if(this.sdk){this.sdk.data.setItem(key,value);return true;}localStorage.setItem(key,value);return true;}catch(e){this.storageMode='session';this.error=e.message;return false;}
@@ -81,6 +82,7 @@ export class Platform {
  }
  // R11: static display banner inside an in-world frame. Returns true when CrazyGames filled it.
  async banner(id,w,h){if(!this.sdk?.banner?.requestBanner||!this.config.crazygames?.ads)return false;try{await this.sdk.banner.requestBanner({id,width:w,height:h});return true;}catch(e){this.error=e?.message||String(e);return false;}}
+ clearBanner(id){try{this.sdk?.banner?.clearBanner?.(id);}catch{}}
  clearBanners(){try{this.sdk?.banner?.clearAllBanners?.();}catch{}}
  async rewarded(){
   if(!this.canReward()||this.rewardBusy)return false;

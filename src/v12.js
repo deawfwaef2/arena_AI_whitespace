@@ -20,10 +20,10 @@ export class V12{
  T(zh,en){return this.zh?zh:en;}
  P(pair){return Array.isArray(pair)?(this.zh?pair[0]:pair[1]):pair;}
  money(c){return this.c.money(c);}
- tick(){globalThis.__adsOK=!!this.c.platform?.canReward?.();if(this.bannerOn&&!$('r11-banner')){this.bannerOn=false;this.c.platform?.clearBanners?.();}}
+ tick(){globalThis.__adsOK=!!this.c.platform?.canReward?.();if(this.bannerOn&&!$('r11-banner')){this.bannerOn=false;this.c.platform?.clearBanner?.('r11-banner');}}
 
  /* ---------- dock rendering hook (called by V9.interceptDock) ---------- */
- dock(o){if(o.type==='v13-stroll'){setTimeout(()=>this.fillBanner(),60);return this.dockStroll(o);}if(o.type==='v13-promo')return this.dockPromo(o);if(o.type==='v12-shop')return this.dockShop(o);if(o.type==='v12-ad')return this.dockAd(o);if(o.type==='v12-city')return this.dockCity(o);
+ dock(o){if(o.type==='v14-sponsor')return this.dockSponsor(o);if(o.type==='v13-stroll'){setTimeout(()=>this.fillBanner(),60);return this.dockStroll(o);}if(o.type==='v13-promo')return this.dockPromo(o);if(o.type==='v12-shop')return this.dockShop(o);if(o.type==='v12-ad')return this.dockAd(o);if(o.type==='v12-city')return this.dockCity(o);
   if(o.type==='v9-place'&&o.place==='hospital'&&!o.settled)return this.dockHospital(o);if(o.type==='v9-place'&&(o.place==='pawn'||o.place==='casino')&&!o.settled)return this.dockDen(o);return null;}
 
  /* ---------- shop: category-sorted grid, fits without scrolling ---------- */
@@ -49,6 +49,14 @@ export class V12{
    <div class="v9-choice-row"><button class="v9-choice" data-action="v12-stroll" data-value="walk">${img('compass')}<b>${this.T('慢慢走过去','Take it slow')}</b><small>${img('bolt','v9-ic sm')}+3</small></button><button class="v9-choice gold" data-action="v12-stroll" data-value="drink" ${s.cash>drink?'':'disabled'}>${img('coffee')}<b>${this.T('买杯饮料坐一会','Grab a drink & sit')}</b><small>−${this.money(drink)} · ${img('bolt','v9-ic sm')}+9</small></button></div></div>`;}
  fillBanner(){const el=$('r11-banner');if(!el||el.dataset.req)return;el.dataset.req='1';this.bannerOn=true;const p=this.c.platform;if(!p?.banner)return;
   p.banner('r11-banner',320,100).then(ok=>{if(!ok&&el.isConnected)el.dataset.fallback='1';});}
+ /* ---------- R13: billboard partnership (accept → draggable ad window, % income every rest) ---------- */
+ dockSponsor(o){const x=X.SPONSOR_DEALS.find(q=>q.id===o.deal)||X.SPONSOR_DEALS[0],s=this.s,pay=X.sponsorPay(s),bonus=X.sponsorBonus(s);
+  const tag=`<span class="v9-tag">${img(x.icon,'v9-ic sm')}${this.T('广告合作','Ad partnership')}</span>`;
+  if(o.settled){const r=o.result||{};return `<div class="r11-promo done r13-sp-card">${tag}<h1>${safe(this.P([x.zh,x.en]))}</h1><p class="r11-line">${r.accept?this.T('合同签好了！广告牌窗口可以拖到任何位置，不想要时点 × 关掉即可。','Deal signed! Drag the billboard window anywhere; close it with × whenever you like.'):this.T('你礼貌地拒绝了。','You politely decline.')}</p>${r.accept?`<p class="r11-res"><b class="w">+${this.money(r.cash)}</b> ${this.T('签约金','signing bonus')}</p>`:''}<button class="v9-next" data-action="next">${img('compass','v9-ic sm')}<span>${this.T('下一站','Next stop')}</span></button></div>`;}
+  return `<div class="r11-promo r13-sp-card">${tag}<h1>${safe(this.P([x.zh,x.en]))}</h1><p class="r11-line">${safe(this.P(x.line))}</p>
+   <div class="r13-sp-terms"><span><small>${this.T('签约金','SIGNING BONUS')}</small><b>+${this.money(bonus)}</b></span><span><small>${this.T('每次休息','EVERY REST')}</small><b>+${this.money(pay)}</b><em>${Math.round(X.SPONSOR_PCT*100)}% ${this.T('现金','of cash')}</em></span></div>
+   <div class="r11-promo-opts"><button class="v9-opt" data-action="v12-sponsor" data-value="yes">${img('goldkey')}<span class="o-t"><b>${this.T('接受，扛起广告牌','Accept — carry the board')}</b><small>${this.T('出现一个可拖动的广告窗口，随时可关','A draggable ad window appears — close it any time')}</small></span></button>
+   <button class="v9-opt" data-action="v12-sponsor" data-value="no">${img('work')}<span class="o-t"><b>${this.T('不用了，谢谢','No thanks')}</b><small>${this.T('继续赶路','Keep walking')}</small></span></button></div></div>`;}
  /* ---------- R11: promoters ambush — watch (midgame ad) or pay to slip past ---------- */
  dockPromo(o){const x=X.PROMO_CREWS.find(q=>q.id===o.crew)||X.PROMO_CREWS[0],s=this.s,fee=X.promoFee(s),g=X.promoGift(s);
   if(o.settled){const r=o.result||{};const msg=r.how==='pay'?this.T(`你塞了 ${this.money(r.cost)} 给领队，他挥挥手让你过去了。`,`You slip the team lead ${this.money(r.cost)}. He waves you through.`):r.how==='watched'?this.T('看完了。推广员把试用礼包塞进你怀里，人群散开。','Done. A promoter pushes a sample kit into your arms and the crowd melts away.'):r.how==='dodge'?this.T('你低头硬挤了出去，被传单和人群撞得够呛。','You shoulder your way out, battered by flyers and elbows.'):this.T('屏幕突然黑了，推广员尴尬地笑笑，放你走了。','The screen glitches to black; the promoters laugh awkwardly and let you go.');
@@ -98,6 +106,7 @@ export class V12{
    case 'v12-buy':{const r=X.buyGood(s,Number(v));this.c.cash(-r.spent,$('game-dock'));let msg=this.P([r.look.zh,r.look.en]);if(r.item)msg+=this.T(' · 新机制已解锁！',' · new mechanism unlocked!');if(r.energy)msg+=this.T(` · 体力 +${r.energy}`,` · +${r.energy} energy`);if(r.lv)msg+=` · +${r.lv} LV`;if(r.intel)msg+=this.T(` · ${r.intel} 次 +6%`,` · ${r.intel}× +6% odds`);if(r.riskCut)msg+=this.T(` · 衰退 −${r.riskCut}%`,` · decline −${r.riskCut}%`);if(r.win!=null)msg+=r.win?this.T(` · 中奖 ${this.money(r.win)}！`,` · won ${this.money(r.win)}!`):this.T(' · 没中',' · no win');if(r.win)this.c.cash(r.win,$('game-dock'));this.c.toast(msg);this.c.effects?.tone?.(r.win||r.lv?'rare':'tap',2);this.c.save();this.c.refresh();this.c.renderDock();break;}
    case 'v12-ad-watch':{if(o.type!=='v12-ad'||o.settled||this.adBusy)break;this.adBusy=true;this.c.renderDock();let ok=false;try{ok=await this.c.platform.rewarded();}finally{this.adBusy=false;}if(this.s!==s||s.offer!==o)break;if(ok){const r=X.claimAd(s);this.c.cash(r.cash,$('game-dock'));this.c.effects?.tone?.('rare',3);this.c.save();}else this.c.toast(this.T('广告未完成，未发放奖励。','Ad not completed — no reward.'));this.c.refresh();this.c.renderDock();break;}
    case 'v12-stroll':{if(o.type!=='v13-stroll'||o.settled)break;const r=X.takeStroll(s,v);if(r.cost)this.c.cash(-r.cost,$('game-dock'));this.c.effects?.tone?.('tap',1);this.c.save();this.c.refresh();this.c.renderDock();break;}
+   case 'v12-sponsor':{if(o.type!=='v14-sponsor'||o.settled)break;const r=X.settleSponsor(s,v==='yes');if(r.cash)this.c.cash(r.cash,$('game-dock'));this.c.effects?.tone?.(r.accept?'rare':'tap',2);this.c.save();this.c.refresh();this.c.renderDock();globalThis.__r13?.syncSponsor(true);break;}
    case 'v12-promo':{if(o.type!=='v13-promo'||o.settled||this.adBusy)break;let r;
     if(v==='watch'){this.adBusy=true;this.c.renderDock();let ok=false;try{ok=await this.c.platform.midgame();}finally{this.adBusy=false;}if(this.s!==s||s.offer!==o)break;r=X.settlePromo(s,ok?'watched':'nofill');if(r.cash)this.c.cash(r.cash,$('game-dock'));}
     else{r=X.settlePromo(s,v==='pay'?'pay':'dodge');if(r.cost)this.c.cash(-r.cost,$('game-dock'));}

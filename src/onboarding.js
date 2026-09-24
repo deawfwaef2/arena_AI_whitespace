@@ -19,7 +19,7 @@ export class Onboarding{
   if(this.mode==='tutorial')requestAnimationFrame(()=>this.element.querySelector('.start-primary')?.focus());
  }
  fillAd(){const el=document.getElementById('r12-menu-banner');const p=this.c.platform;if(!el||!p?.banner)return;p.banner('r12-menu-banner',320,100).then(ok=>{if(!ok&&el.isConnected)el.dataset.fallback='1';}).catch(()=>{});}
- finish(){this.c.platform?.clearBanners?.();applyLayout(this.c.meta());this.c.meta().tutorial31=true;this.active=false;this.element.hidden=true;document.getElementById('game').inert=false;document.getElementById('game').classList.remove('at-start');this.c.world.setTitle(false);this.c.block(false);this.c.save();this.c.enter();}
+ finish(){this.c.platform?.clearBanner?.('r12-menu-banner');applyLayout(this.c.meta());this.c.meta().tutorial31=true;this.active=false;this.element.hidden=true;document.getElementById('game').inert=false;document.getElementById('game').classList.remove('at-start');this.c.world.setTitle(false);this.c.block(false);this.c.save();this.c.enter();}
  handle(a,v){
  if(a==='studio-toggle-device'){this.c.meta().device=this.c.meta().device==='phone'?'desktop':'phone';this.preview.device=this.c.meta().device;applyLayout(this.c.meta());this.c.save();this.c.world.resize();return true;}
  if(a.startsWith('studio-')){if(!this.active)return true;

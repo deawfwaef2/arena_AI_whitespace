@@ -213,12 +213,13 @@ export function draw(s,rng=Math.random){const v=st(s),L=liquid(s);
  if(card==='luxury'){const o=luxOffer(s,rng);if(o)return {offer:o};card='project';}
  if(card==='shop'&&HOOKS.shop)return {offer:HOOKS.shop(s,rng)};
  if(card==='ad'){if(HOOKS.ad&&HOOKS.adsOK?.())return {offer:HOOKS.ad(s,rng)};card=L>=PROJECT_UNLOCK?'project':'work';}
+ if((card==='promo'||card==='ad'||card==='stroll')&&HOOKS.sponsorOK?.(s)&&rng()<.45)return {offer:HOOKS.sponsor(s,rng)};
  if(card==='stroll'&&HOOKS.stroll)return {offer:HOOKS.stroll(s,rng)};
  if(card==='promo'){if(HOOKS.promo&&HOOKS.promoOK?.(s))return {offer:HOOKS.promo(s,rng)};card=L>=PROJECT_UNLOCK?'project':'work';}
  if(card==='city'&&HOOKS.city){const o=HOOKS.city(s,rng);if(o)return {offer:o};card=L>=PROJECT_UNLOCK?'project':'work';}
  if((card==='project'||card==='elite')&&L<PROJECT_UNLOCK)return {offer:workOffer(s,rng)};
  return {hint:card,elite:card==='elite'};}
-export const V9_TYPES=['v9-work','v9-fork','v9-partner','v9-pdeal','v9-lux','v9-place','v12-shop','v12-ad','v12-city','v13-stroll','v13-promo'];
+export const V9_TYPES=['v9-work','v9-fork','v9-partner','v9-pdeal','v9-lux','v9-place','v12-shop','v12-ad','v12-city','v13-stroll','v13-promo','v14-sponsor'];
 
 /* ---------- main story: one chapter per social class, player picks mood / motive ---------- */
 export const MOODS={

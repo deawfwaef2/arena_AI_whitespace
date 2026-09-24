@@ -277,3 +277,22 @@ export const PLACE_TEXT={
    poker:['德州一手：押 35% 现金，和三个陌生人比牌。接近五五开，赢了拿 ×1.9。','One hand of poker: stake 35% against three strangers. Close to a coin flip; a win pays ×1.9.'],
    vip:['贵宾厅豪赌：押 60% 现金，厚地毯、雪茄和不说话的对手。赢了 ×2.3，输了你会记很久。','VIP high roller: stake 60% of cash — thick carpet, cigars, silent opponents. Win ×2.3; lose and you\u2019ll remember it.']}}
 };
+
+/* ---------- R13: billboard partnership — a brand pays you to "carry" their board.
+   Accept → a draggable in-game window shows a static display ad; every paid rest while it is open
+   pays a small % of liquid cash. Close the window any time (ends the deal). ---------- */
+export const SPONSOR_DEALS=[
+ {id:'cola',icon:'can',sponsor:'cola',zh:'「极冰可乐」品牌经理',en:'"Glacier Cola" brand manager',line:['“帮我们扛个广告牌吧！随身带着就行，每次你休息，我们都按比例打一笔推广费。”','"Carry our billboard around! Just keep it with you — every time you rest, we pay a cut."']},
+ {id:'phone',icon:'briefcase',sponsor:'phone',zh:'新机品牌市场部',en:'Phone brand marketing team',line:['“我们在找街头代言人。挂上我们的广告牌，休息时就有被动收入。随时可以解约。”','"We need a street ambassador. Hang our board and earn while you rest. Cancel any time."']},
+ {id:'car',icon:'carkey',sponsor:'car',zh:'汽车品牌合作专员',en:'Car brand partnership rep',line:['“你人气不错。挂我们的广告牌，每次休息都给你分成。”','"People notice you. Carry our board and get a share every time you rest."']},
+ {id:'bank',icon:'goldkey',sponsor:'bank',zh:'私人银行品牌顾问',en:'Private-bank brand adviser',line:['“一块低调的广告牌，一份体面的分成。休息时自动入账。”','"A discreet billboard, a respectable cut. Paid automatically while you rest."']}];
+export const SPONSOR_PCT=.01;
+export const sponsorPay=s=>Math.min(500000000,Math.max(1500,Math.floor(liquid(s)*SPONSOR_PCT)));
+export const sponsorBonus=s=>Math.max(800,Math.floor(liquid(s)*.002));
+export function sponsorOffer(s,rng=Math.random){const x=pick(SPONSOR_DEALS,rng);st(s).lastSponsorPage=s.page;return {id:uid(),type:'v14-sponsor',deal:x.id,sponsor:x.sponsor,settled:false,city:s.life.city,rarity:'rare'};}
+export function settleSponsor(s,accept){const o=s.offer;if(o?.type!=='v14-sponsor'||o.settled)throw Error('done');const out={accept:!!accept};
+ if(accept){const b=sponsorBonus(s);s.cash=Math.min(CAP,s.cash+b);out.cash=b;st(s).sponsorDeal={deal:o.deal,sponsor:o.sponsor,since:s.page,earned:0,rests:0,lastRest:s.life.rest?.id||null};}
+ o.settled=true;o.result=out;return out;}
+export function endSponsor(s){const d=st(s).sponsorDeal;st(s).sponsorDeal=null;return d;}
+export function sponsorTick(s){const d=st(s).sponsorDeal,r=s.life?.rest;if(!d||!r?.paid||!r.id||d.lastRest===r.id)return 0;const pay=sponsorPay(s);d.lastRest=r.id;d.rests++;d.earned+=pay;s.cash=Math.min(CAP,s.cash+pay);return pay;}
+HOOKS.sponsor=sponsorOffer;HOOKS.sponsorOK=s=>!st(s).sponsorDeal&&s.page>=10&&(s.page-(st(s).lastSponsorPage||-99))>=14;
