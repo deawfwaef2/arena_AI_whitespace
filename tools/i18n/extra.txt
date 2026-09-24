@@ -44,3 +44,150 @@
 看一段广告 · 立即结束休息|Watch an ad · end rest now
 完整清空剩余计时，体力回满 · 每次休息一次|Clears the remaining timer, full energy · once per rest
 广告完成：休息已结束，领取体力继续出发！|Ad complete: rest is over — collect your energy and go!
+# Round 9 — city project names, districts, regional story buttons, misc
+巷口现蒸小笼包|Alley steamed soup dumplings
+大稻埕乌龙茶铺|Dadaocheng oolong tea shop
+饶河夜市胡椒饼|Raohe night-market pepper buns
+永康街手摇茶|Yongkang St. shaken tea
+北投温泉小旅行|Beitou hot-spring day trips
+迪化街年货布庄|Dihua St. festival fabric shop
+华山周末印刷市集|Huashan weekend print fair
+河滨自行车维修|Riverside bike repair
+猫空茶园接驳|Maokong tea-farm shuttle
+庙口花灯工坊|Temple lantern workshop
+独立书店夜读|Indie bookshop night reads
+街角机车雨衣站|Corner scooter raincoat stand
+下北泽独立唱片|Shimokitazawa indie records
+秋叶原扭蛋研究所|Akihabara capsule-toy lab
+浅草和纸灯笼|Asakusa washi lanterns
+涩谷深夜拉面|Shibuya late-night ramen
+神保町古书修复|Jimbocho old-book repair
+代官山胶片冲洗|Daikanyama film lab
+筑地玉子烧窗口|Tsukiji tamagoyaki window
+原宿限定球鞋改造|Harajuku sneaker customs
+上野盆栽小店|Ueno bonsai shop
+中目黑樱花摄影|Nakameguro sakura photos
+新宿街机修复室|Shinjuku arcade restoration
+品川机器人试作|Shinagawa robot prototypes
+大道霓虹招牌修复|Strip neon sign repair
+沙漠公路餐车|Desert highway food truck
+驻场魔术工坊|Resident magic workshop
+弗里蒙特灯光秀|Fremont light show
+红岩峡谷摄影团|Red Rock photo tours
+复古婚礼礼服间|Retro wedding dress studio
+大道轮滑表演|Strip roller-skate show
+沙漠太阳能维护|Desert solar maintenance
+夜场复古街机|Night-club retro arcade
+酒店鲜花布景|Hotel floral sets
+巡演黑胶快闪|Tour vinyl pop-up
+沙漠天文露营|Desert stargazing camp
+牛车水咖椰吐司|Chinatown kaya toast
+小印度香料商行|Little India spice traders
+加东娘惹瓷砖|Katong Peranakan tiles
+海峡集装箱拼运|Strait container sharing
+滨海垂直菜园|Marina vertical farm
+裕廊精密机器人|Jurong precision robotics
+甘榜格南织物铺|Kampong Glam textiles
+熟食中心餐盘回收|Hawker tray return service
+赤道冷链配送|Equator cold-chain delivery
+滨海兰花培育|Marina orchid nursery
+港湾太阳能浮台|Harbour floating solar
+社区多语出版|Community multilingual press
+布鲁克林贝果车|Brooklyn bagel cart
+哈莱姆爵士排练室|Harlem jazz rehearsal room
+苏豪丝网印刷|SoHo screen printing
+皇后区多语书摊|Queens multilingual book stall
+曼哈顿屋顶菜园|Manhattan rooftop garden
+百老汇服装修补|Broadway costume repair
+唐人街手工蒸点|Chinatown handmade dim sum
+中央公园街头肖像|Central Park street portraits
+独立电影器材租赁|Indie film gear rental
+布鲁克林单车信使|Brooklyn bike messengers
+曼哈顿数据防护|Manhattan data security
+切尔西画廊装裱|Chelsea gallery framing
+赫尔克里港帆船养护|Port Hercule sailboat care
+蒙特卡洛古董表修复|Monte Carlo vintage watch repair
+海岸高级定制沙龙|Riviera couture salon
+山崖柑橘香氛|Clifftop citrus perfumery
+港口游艇鲜花|Harbour yacht florist
+海景爵士晚餐|Seaview jazz supper
+发夹弯赛事模型|Hairpin-bend racing models
+私人画作装裱|Private art framing
+蔚蓝海岸帆船课|Côte d'Azur sailing lessons
+庄园橄榄油品鉴|Estate olive-oil tasting
+精品皮具修复|Fine leather restoration
+私人天文露台|Private observatory terrace
+信义私人茶窖|Xinyi private tea cellar
+大安生物材料协作|Da'an biomaterials alliance
+河岸跨境艺术信托|Riverside cross-border art trust
+云端茶会远程席位|Cloud tea-ceremony remote seats
+银座机械表工房|Ginza mechanical watch atelier
+湾岸工业机器人合约|Bayside industrial robot contract
+千代田数据许可交易|Chiyoda data-licence exchange
+轨道文化舱发行|Orbital culture-pod launch
+尊享幻术剧场联营|Premium illusion theatre venture
+红岩能源储备协议|Red Rock energy reserve deal
+国际会展总承包|International expo prime contract
+浮空夜城冠名经营|Floating night-city naming rights
+滨海游艇礼宾网络|Marina yacht concierge network
+裕廊晶圆设备维护|Jurong wafer-tool maintenance
+主权贸易区冷链总包|Sovereign trade-zone cold chain
+赤道轨道补给合约|Equatorial orbit resupply contract
+上东区私藏展览|Upper East Side private collection show
+曼哈顿跨境清算服务|Manhattan cross-border clearing
+藏家湾古董表服务|Collector's Bay vintage watch service
+海岸精工定制引擎|Riviera bespoke engines
+资本飞地私人港务|Capital-enclave private port
+近地会所生命保障|Near-orbit club life support
+大稻埕老街|Dadaocheng Old Street
+信义商圈|Xinyi shopping district
+士林夜市|Shilin Night Market
+秋叶原电器街|Akihabara Electric Town
+谷中银座|Yanaka Ginza
+涩谷十字路口|Shibuya Crossing
+老城弗里蒙特街|Old-town Fremont Street
+大道中段|Mid-Strip
+艺术区|Arts District
+牛车水|Chinatown
+滨海湾金融区|Marina Bay financial district
+小印度|Little India
+布鲁克林|Brooklyn
+华尔街|Wall Street
+切尔西画廊区|Chelsea gallery district
+蒙特卡洛|Monte Carlo
+摩纳哥港|Port of Monaco
+摩纳哥城堡区|Monaco-Ville castle quarter
+钱能买到时间|Money buys time
+添一盏灯|Add a lamp
+赞助遮雨棚|Sponsor the rain awning
+资助公共舞台|Fund a public stage
+补齐保温箱|Top up the cool boxes
+提供测试经费|Fund the testing
+设立工艺名额|Create craft apprenticeships
+借出设备费|Lend equipment money
+购置舞台装置|Buy stage rigging
+赞助安全舞台|Sponsor a safe stage
+支持防雨物资|Supply rain gear
+资助回收站|Fund a recycling point
+赞助试验航线|Sponsor a trial route
+租一支话筒|Rent a microphone
+提供试用经费|Fund a trial run
+资助公共空间|Fund a public space
+补充救生用品|Restock life-saving kit
+提供展位资金|Fund a booth
+认领保护项目|Adopt a conservation project
+逆转机能 · 延寿疗法|Reverse ageing · longevity therapy
+新一局最大健康格从 3 提高为 4。|Next run's max hearts rise from 3 to 4.
+结果在进入休息时已锁定，刷新不会重抽。|The result was locked when rest began; refreshing won't reroll it.
+当前体力已归零（0 / {}）。继续前行需要进入生活休整以恢复体力。 休整期将结算阶层维护账单并进行健康抽签审查。 是否现在确认进入休整？|Energy is at zero (0 / {}). You need to rest to recover before moving on. Resting settles your class upkeep bill and runs a health check. Rest now?
+保留 3.1 操作|classic controls
+3.1 城市增强版|city edition
+本季市场情绪：影响所有项目成功率|Season market mood: shifts all project odds
+解除合伙|End partnership
+抽签数 {} / 100，衰退阈值 {}（其中过劳 +{}）。{}，现在 {}/{} 格。|Roll {} / 100, decline threshold {} (overwork +{}). {}, now {}/{} hearts.
+抽签数 {} / 100，衰退阈值 {}。{}，现在 {}/{} 格。|Roll {} / 100, decline threshold {}. {}, now {}/{} hearts.
+过劳让你倒下：健康 −1|Overwork knocked you down: health −1
+平安度过，健康未减少|You made it through; no health lost
+当前健康 {}/{}。本次衰退概率 {}%，抽中仅损失 1 格，归零则人生结束。|Health now {}/{}. Decline chance this rest {}%; a hit costs 1 heart and zero ends the life. 
+即时揭晓|Instant reveal
+延时合同|Delayed contract
