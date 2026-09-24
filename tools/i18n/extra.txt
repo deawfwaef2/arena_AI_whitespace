@@ -262,3 +262,5 @@ Loading… 正在加载|Loading…
 60% 概率：健康恢复至上限，衰退概率降低 8 个百分点；失败也照样收费。|60% chance: full health and decline risk −8 points; billed even if it fails.
 疗程成功！|Treatment worked!
 疗程没有效果，费用已扣除。|The treatment had no effect. You were still billed.
+放弃本局，从 $100 重新开始（会先确认）。|Abandon this run and start over from $100 (asks first).
+重新开始|Restart

@@ -25,6 +25,7 @@ const G={
  showdown:'<circle cx="8" cy="12" r="5"/><circle cx="16" cy="12" r="5"/><path d="M8 9.5v5M16 9.5v5"/>',
  advanced:'<path d="m7 3-5 6 10 12L22 9l-5-6Z"/><path d="M2 9h20M12 21 7 9l5-6 5 6Z"/>',
  filter:'<path d="M3 13l2-5h14l2 5v5H3Z"/><circle cx="7.5" cy="18" r="2"/><circle cx="16.5" cy="18" r="2"/><path d="M6 13h12"/>',
+ restart:'<path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 3v4.5h4.5"/><path d="M10 9.5v5l4-2.5Z"/>',
  music:'<path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>',
  security:'<path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
  factions:'<circle cx="12" cy="6" r="3"/><circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/><path d="M10.5 8.5 6.5 14.5M13.5 8.5l4 6M8 17h8"/>',
@@ -68,6 +69,7 @@ const glyph=(k,cls='')=>`<svg class="v7-glyph ${cls}" viewBox="0 0 24 24" fill="
 /* ---------- mechanism catalogue: every unlock owns a big icon on the screen edge ----------
  kind: 'click' opens a feature, 'toggle' switches an effect, 'hover' only shows details. */
 export const MECHS=[
+ {id:'restart',at:0,slot:'bottom',kind:'click',g:'restart',name:'重新开始',desc:'放弃本局，从 $100 重新开始（会先确认）。',action:'restart'},
  {id:'rest',at:0,slot:'bottom',kind:'click',g:'rest',name:'休息',desc:'体力用完就要休息。休息时有阶级小游戏可以缩短时间。',action:'life-prompt-rest'},
  {id:'settings',at:0,slot:'bottom',kind:'click',g:'settings',name:'设置',desc:'存档、音乐、画质与教程。',action:'menu'},
  {id:'bill',at:250,slot:'top',kind:'hover',g:'bill',name:'生活账单',desc:'live-bill'},
@@ -98,7 +100,7 @@ export const MECHS=[
  {id:'crown',at:1000000000,slot:'top',kind:'toggle',g:'crown',name:'无形王冠',desc:'开：金钱牌上戴一顶王冠。装饰。',fx:'crown',deco:true}
 ];
 const ITEM_REQ={travel:'passport',radio:'radio',filter:'car',music:'music',atlas:'hex'};
-const EN_NAMES={rest:'Rest',settings:'Settings',bill:'Bills',talent:'Contacts',headphones:'Headphones',travel:'Travel',status:'Net worth',ledger:'Ledger',radio:'Radio',chain:'Gold chain',atlas:'Atlas',showdown:'Showdowns',neon:'Neon sign',advanced:'Elite deals',champagne:'Champagne',filter:'Filter',music:'Music',driver:'Chauffeur',security:'Security',factions:'Factions',painting:'Paintings',cigar:'Cigars',regions:'VIP zones',medals:'Honours',yacht:'Yacht badge',jet:'Private jet',vault:'Family vault',crown:'Crown'};
+const EN_NAMES={restart:'Restart',rest:'Rest',settings:'Settings',bill:'Bills',talent:'Contacts',headphones:'Headphones',travel:'Travel',status:'Net worth',ledger:'Ledger',radio:'Radio',chain:'Gold chain',atlas:'Atlas',showdown:'Showdowns',neon:'Neon sign',advanced:'Elite deals',champagne:'Champagne',filter:'Filter',music:'Music',driver:'Chauffeur',security:'Security',factions:'Factions',painting:'Paintings',cigar:'Cigars',regions:'VIP zones',medals:'Honours',yacht:'Yacht badge',jet:'Private jet',vault:'Family vault',crown:'Crown'};
 for(const m of MECHS){if(ITEM_REQ[m.id])m.item=ITEM_REQ[m.id];m.quiet=!!m.deco||m.kind==='hover';m.slot=m.quiet?'top':'bottom';}
 const GATES=[...new Set(MECHS.map(m=>m.at))].sort((a,b)=>a-b);
 
@@ -176,7 +178,7 @@ export class V7{
  rank(){return Math.min(5,liquidTier(this.s));}
  isPhone(){return matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<700;}
  async lockLandscape(quiet){try{if(!document.fullscreenElement&&document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen({navigationUI:'hide'});}catch{}try{await screen.orientation?.lock?.('landscape');}catch{if(!quiet)this.c.toast('浏览器不允许自动旋转，请手动把手机横过来。');}this.layout();}
- layout(){const phone=this.isPhone()||(innerHeight<=500&&innerWidth>innerHeight);document.body.dataset.v7phone=phone?'yes':'no';const portrait=this.isPhone()&&innerHeight>innerWidth;$('v7-rotate').hidden=!portrait;this.fx.width=innerWidth;this.fx.height=innerHeight;}
+ layout(){const phone=!window.__vdesk&&(this.isPhone()||(innerHeight<=500&&innerWidth>innerHeight));document.body.dataset.v7phone=phone?'yes':'no';const portrait=this.isPhone()&&innerHeight>innerWidth;$('v7-rotate').hidden=!portrait;this.fx.width=innerWidth;this.fx.height=innerHeight;}
 
  /* ---------- main refresh (called from renderHud) ---------- */
  refresh(){try{this.paint();}catch(e){console.error('v7',e);}}
