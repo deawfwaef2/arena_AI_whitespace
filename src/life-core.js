@@ -125,6 +125,7 @@ export function tickRest(s,now=Date.now()){
 }
 export function restActivity(s,id){tickRest(s);const r=s.life?.rest,a=r?.activities.find(x=>x.id===id);if(!r?.paid||r.remaining<=0||!a||a.used)throw Error('活动当前不可用。');if(s.cash<=a.price)throw Error('现金不足，需保留至少 $0.01。');s.cash-=a.price;r.total+=a.price;a.used=true;r.remaining=a.instant?0:Math.max(0,r.remaining-a.seconds*1000);r.pose=a.pose;r.lastActivity=a.name;return a;}
 export function rewardRest(s,restId){const r=s.life?.rest;if(!r||r.id!==restId||!r.paid||r.ads>=3)return false;tickRest(s);r.remaining=Math.max(0,r.remaining-120000);r.ads++;return true;}
+export function adSkipRest(s,restId){const r=s.life?.rest;if(!r||r.id!==restId||!r.paid||r.adSkip)return false;tickRest(s);r.remaining=0;r.adSkip=true;return true;}
 export function finishRest(s){tickRest(s);const r=s.life?.rest;if(!r?.paid||r.remaining>0)throw Error('请先完成休息进度。');s.life.restLog.unshift({class:r.class,total:r.total,at:Date.now(),aid:r.aid});s.life.restLog=s.life.restLog.slice(0,8);s.life.rest=null;s.life.energy=s.life.energyCap||MAX_ENERGY;}
 export function distance(a,b){const rad=Math.PI/180,dy=(b.coords[0]-a.coords[0])*rad,dx=(b.coords[1]-a.coords[1])*rad;return 6371*2*Math.asin(Math.min(1,Math.sqrt(Math.sin(dy/2)**2+Math.cos(a.coords[0]*rad)*Math.cos(b.coords[0]*rad)*Math.sin(dx/2)**2)));}
 export function routes(s,to){

@@ -10,7 +10,7 @@ export async function encryptScore(score,keyBase64){
  return btoa(String.fromCharCode(...joined));
 }
 export class Platform {
- constructor(config={}){this.config=config;this.sdk=null;this.user=null;this.status='offline';this.error='';this.memory=new Map();this.storageMode='local';this.lastSubmit=0;this.active=false;this.muted=false;this.onSettings=()=>{};this.onAuth=()=>{};this.onAdState=()=>{};}
+ constructor(config={}){this.config=config;this.sdk=null;this.user=null;this.status='offline';this.error='';this.memory=new Map();this.storageMode='local';this.lastSubmit=0;this.active=false;this.muted=false;this.onSettings=()=>{};this.onAuth=()=>{};this.onAdState=()=>{};try{this.demo=new URLSearchParams(location.search).has('adtest');}catch{this.demo=false;}}
  async init(){
   const c=this.config.crazygames||{};
   const host=location.hostname+' '+document.referrer;
@@ -67,9 +67,12 @@ export class Platform {
   }catch(e){this.error=e.message;return {code:'error',error:e.message};}
  }
  async login(){if(!this.sdk?.user?.isUserAccountAvailable)return false;try{this.user=await this.sdk.user.showAuthPrompt();return !!this.user;}catch{return false;}}
- canReward(){return !!(this.config.crazygames?.ads&&this.sdk?.ad?.requestAd);}
+ canReward(){return !!(this.config.crazygames?.ads&&this.sdk?.ad?.requestAd)||this.demo;}
+ // local test mode (?adtest=1): a fake 3-second ad so the reward flow can be tested outside CrazyGames
+ demoAd(){return new Promise(resolve=>{const el=document.createElement('div');el.id='demo-ad';el.innerHTML='<div><b>AD</b><p>CrazyGames rewarded ad (test mode)</p><i></i></div>';document.body.append(el);setTimeout(()=>{el.remove();resolve(true);},3000);});}
  async rewarded(){
   if(!this.canReward()||this.rewardBusy)return false;
+  if(!this.sdk&&this.demo){this.rewardBusy=true;this.onAdState(true);const ok=await this.demoAd();this.rewardBusy=false;this.onAdState(false);return ok;}
   this.rewardBusy=true;this.play(false);this.onAdState(true);
   return new Promise(resolve=>{
    let done=false;const finish=success=>{if(done)return;done=true;clearTimeout(timer);this.rewardBusy=false;this.onAdState(false);resolve(success);};

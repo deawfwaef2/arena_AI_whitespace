@@ -25,18 +25,18 @@ export const PERKS=[
  {id:'instinct',name:'危险直觉',cost:25,desc:'新一局安全事件躲避率 +5 个百分点。',type:'机制'},
  {id:'insurance',name:'转世风险共保',cost:40,desc:'新一局每次抢劫现金损失自动返还 25%（不复活）。',type:'机制'},
  {id:'contacts',name:'前世的人情',cost:45,desc:'新一局六大派系初始关系 +10；派系仍需达到财富门槛。',type:'机制'},
- {id:'constitution',name:'更好的底子',cost:60,desc:'新一局最大健康格从 5 提高为 6。',type:'机制'},
+ {id:'constitution',name:'更好的底子',cost:60,desc:'新一局最大健康格从 3 提高为 4。',type:'机制'},
  {id:'jade',name:'翡翠夜航',cost:8,desc:'解锁玉绿配色外观，不改变概率或费用。',type:'皮肤'},
  {id:'noir',name:'黑金来世',cost:18,desc:'解锁深蓝金色外观，不改变概率或费用。',type:'皮肤'},
  {id:'rose',name:'玫瑰香槟',cost:18,desc:'解锁玫瑰铜色外观，不改变概率或费用。',type:'皮肤'}
 ];
 export function initLegacy(meta){const old=meta.legacy||{};meta.legacy={points:Math.max(0,Math.round((Number(old.points)||0)*100)/100),lifetime:Math.max(0,Math.round((Number(old.lifetime)||0)*100)/100),unlocks:[...new Set((old.unlocks||[]).filter(id=>PERKS.some(p=>p.id===id)))],skin:['default','jade','noir','rose'].includes(old.skin)?old.skin:'default'};return meta.legacy;}
 export function ensureEstate(s){
- const old=s.estate||{};s.estate={version:1,health:5,maxHealth:5,age:s.life?.restCount||0,riskReduction:0,guards:0,stance:'balanced',relations:Object.fromEntries(FACTIONS.map(f=>[f.id,0])),queue:[],luxuryEarned:0,luxuries:[],region:'street',perks:[],medicalUses:0,settled:false,auctionMedals:[],missedAuctions:[],...old};const e=s.estate;
- e.perks=(Array.isArray(e.perks)?e.perks:[]).filter(id=>PERKS.some(p=>p.id===id));e.maxHealth=e.perks.includes('constitution')?6:5;e.health=clamp(Number(e.health)||0,0,e.maxHealth);e.age=Math.max(0,Math.floor(Number(e.age)||0));e.riskReduction=clamp(Number(e.riskReduction)||0,0,100000);e.guards=clamp(Math.floor(Number(e.guards)||0),0,3);if(!['cautious','balanced','assertive'].includes(e.stance))e.stance='balanced';
+ const old=s.estate||{};s.estate={version:1,health:3,maxHealth:3,age:s.life?.restCount||0,riskReduction:0,guards:0,stance:'balanced',relations:Object.fromEntries(FACTIONS.map(f=>[f.id,0])),queue:[],luxuryEarned:0,luxuries:[],region:'street',perks:[],medicalUses:0,settled:false,auctionMedals:[],missedAuctions:[],...old};const e=s.estate;
+ e.perks=(Array.isArray(e.perks)?e.perks:[]).filter(id=>PERKS.some(p=>p.id===id));e.maxHealth=e.perks.includes('constitution')?4:3;e.health=clamp(Number(e.health)||0,0,e.maxHealth);e.age=Math.max(0,Math.floor(Number(e.age)||0));e.riskReduction=clamp(Number(e.riskReduction)||0,0,100000);e.guards=clamp(Math.floor(Number(e.guards)||0),0,3);if(!['cautious','balanced','assertive'].includes(e.stance))e.stance='balanced';
  e.relations=Object.fromEntries(FACTIONS.map(f=>[f.id,clamp(Number(e.relations?.[f.id])||0,-100,100)]));e.queue=Array.isArray(e.queue)?e.queue.filter(x=>x&&['health','tax','scandal','faction','security','luxury','windfall'].includes(x.kind)).slice(-20):[];e.luxuries=Array.isArray(e.luxuries)?e.luxuries:[];e.auctionMedals=Array.isArray(e.auctionMedals)?e.auctionMedals:[];e.missedAuctions=Array.isArray(e.missedAuctions)?e.missedAuctions:[];e.luxuryEarned=Math.max(0,Math.round((Number(e.luxuryEarned)||0)*100)/100);if(!regions(s.life?.city||'taipei').some(z=>z.id===e.region))e.region='street';return e;
 }
-export function applyLegacy(s,meta){const l=initLegacy(meta),e=ensureEstate(s);e.perks=l.unlocks.filter(id=>PERKS.find(p=>p.id===id)?.type==='机制');e.maxHealth=e.perks.includes('constitution')?6:5;e.health=e.maxHealth;if(e.perks.includes('contacts'))e.relations=Object.fromEntries(FACTIONS.map(f=>[f.id,10]));}
+export function applyLegacy(s,meta){const l=initLegacy(meta),e=ensureEstate(s);e.perks=l.unlocks.filter(id=>PERKS.find(p=>p.id===id)?.type==='机制');e.maxHealth=e.perks.includes('constitution')?4:3;e.health=e.maxHealth;if(e.perks.includes('contacts'))e.relations=Object.fromEntries(FACTIONS.map(f=>[f.id,10]));}
 export function collectLegacy(s,meta){if(!s.ended)return;const e=ensureEstate(s),l=initLegacy(meta);if(e.settled)return;e.settled=true;l.points=Math.round((l.points+e.luxuryEarned)*100)/100;l.lifetime=Math.round((l.lifetime+e.luxuryEarned)*100)/100;}
 export function buyPerk(meta,id){const l=initLegacy(meta),p=PERKS.find(x=>x.id===id);if(!p||l.unlocks.includes(id))throw Error('已解锁或不存在的转世内容。');if(l.points<p.cost)throw Error('奢侈点不足。消费当地奢侈品后，在人生结算时入账。');l.points-=p.cost;l.unlocks.push(id);return p;}
 export function endLife(s,cause){if(s.ended)return;const e=ensureEstate(s);e.death={cause,worth:worth(s),cash:s.cash,peak:s.peak,age:e.age,page:s.page,at:Date.now()};s.ended=true;s.activeChallenge=null;s.life.rest=null;s.life.travel=null;s.life.district=null;}

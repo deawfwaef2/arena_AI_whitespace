@@ -2,7 +2,7 @@
   "title": "Broke to Billionaire: The $100 Start",
   "allowDeveloperMode": false,
   "crazygames": {
-    "enabled": false,
+    "enabled": "auto",
     "encryptionKey": "",
     "cooldownSeconds": 15,
     "maxScore": 9000000000000,

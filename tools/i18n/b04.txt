@@ -141,7 +141,7 @@
 1300|Past-life favours
 1301|Next run: all six factions start at +10; wealth thresholds still apply.
 1302|Better constitution
-1303|Next run: max hearts go from 5 to 6.
+1303|Next run: max hearts go from 3 to 4.
 1304|Jade night cruise
 1305|Unlocks a jade-green look; odds and costs unchanged.
 1306|Black-gold afterlife

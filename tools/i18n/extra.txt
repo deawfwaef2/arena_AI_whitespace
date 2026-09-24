@@ -41,3 +41,6 @@
 泡面|Instant noodles
 车票|Ticket
 健康|Health
+看一段广告 · 立即结束休息|Watch an ad · end rest now
+完整清空剩余计时，体力回满 · 每次休息一次|Clears the remaining timer, full energy · once per rest
+广告完成：休息已结束，领取体力继续出发！|Ad complete: rest is over — collect your energy and go!

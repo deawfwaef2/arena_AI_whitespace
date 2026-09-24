@@ -35,15 +35,19 @@ export const ZONES={
  casino:{icon:'chips',zh:'赌场',en:'Casino',desc:['全是对赌，赢要快，输更快。','All-in games. Win fast, lose faster.'],place:true,at:PROJECT_UNLOCK},
  pawn:{icon:'pawn',zh:'当铺黑市',en:'Pawn & Black Market',desc:['借钱、捡漏、买内幕。','Loans, bargains, insider tips.'],place:true,at:30000}
 };
+export const HOOKS={};
 function buildDeck(s,zone,rng){const L=liquid(s),poor=L<PROJECT_UNLOCK;let c=[];
- if(zone==='work'){c=Array(poor?6:5).fill('work');c.push('event');if(!poor)c.push('project');}
- else if(zone==='market'){c=['project','project','project','project','project','work','event','event'];if(L>=500000)c.push('partner');if(L>=2000000&&rng()<.25)c.push('luxury');}
- else if(zone==='elite'){c=['elite','elite','elite','elite','project','event','partner'];if(rng()<.55)c.push('luxury');}
+ if(zone==='work'){c=Array(poor?6:5).fill('work');c.push('event');if(!poor)c.push('project');if(L>=30000&&rng()<.5)c.push('shop');if(HOOKS.adsOK?.()&&rng()<.4)c.push('ad');}
+ else if(zone==='market'){c=['project','project','project','project','project','work','event','event'];if(L>=500000)c.push('partner');if(L>=2000000&&rng()<.25)c.push('luxury');c.push('city');if(rng()<.5)c.push('shop');if(HOOKS.adsOK?.()&&rng()<.6)c.push('ad');}
+ else if(zone==='elite'){c=['elite','elite','elite','elite','project','event','partner','city'];if(rng()<.55)c.push('luxury');if(HOOKS.adsOK?.())c.push('ad');}
+ else if(zone==='mall'){c=['shop','shop','shop','shop','event'];if(HOOKS.adsOK?.())c.push('ad');if(L>=PROJECT_UNLOCK)c.push('project');}
+ else if(zone==='city'){c=['city','city','city','city','project','event'];if(L>=500000)c.push('partner');}
  else c=[zone,zone,zone];
  for(let i=c.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[c[i],c[j]]=[c[j],c[i]];}
  return {zone,cards:c,total:c.length,id:uid()};}
 export function forkChoices(s,rng=Math.random){const L=liquid(s),out=[];
  if(L<50000000)out.push('work');if(L>=PROJECT_UNLOCK)out.push('market');if(L>=5000000&&rng()<.6)out.push('elite');
+ if(ZONES.mall&&L>=ZONES.mall.at&&rng()<.4)out.push('mall');if(ZONES.city&&L>=ZONES.city.at&&rng()<.5)out.push('city');
  const places=['hospital','casino','pawn'].filter(p=>L>=ZONES[p].at);if(places.length&&rng()<.45)out.push(places[Math.floor(rng()*places.length)]);
  if(out.length<2){const extra=['market','work','hospital'].find(z=>!out.includes(z)&&L>=(ZONES[z].at||0));if(extra)out.push(extra);}
  return out.slice(0,4);}
@@ -70,12 +74,12 @@ export function finishWork(s){const o=s.offer;if(o.type!=='v9-work'||o.settled)t
 /* ---------- special places ---------- */
 export const PLACE_OPTS={
  hospital:[
-  {id:'clinic',icon:'heart',zh:'社区诊所',en:'Community clinic',heal:1,price:15000,healP:20,desc:['挂号+开药，便宜但不一定有用。','Cheap visit. Might not help.']},
-  {id:'specialist',icon:'hospital',zh:'专科门诊',en:'Specialist',heal:1,price:200000,healP:45,desc:['专家会诊，一半机会好转。','Expert consult. Coin-flip recovery.']},
-  {id:'ward',icon:'hospital',zh:'私立医院住院',en:'Private ward stay',heal:1,price:2500000,healP:75,at:3000000,desc:['一周住院疗养，大概率康复。','A week in hospital. Good odds.']},
-  {id:'elite',icon:'crown',zh:'顶级医疗团队',en:'World-class medical team',heal:1,price:40000000,healP:92,at:50000000,desc:['全球专家飞来会诊。','Top specialists fly in.']},
-  {id:'checkup',icon:'check',zh:'年度体检',en:'Annual check-up',price:80000,riskCut:1,desc:['以后每次休息衰退率 −1%。','Future decline risk −1% per rest.']},
-  {id:'pharmacy',icon:'bolt',zh:'药房能量补给',en:'Pharmacy energy boost',energy:40,price:3000,desc:['体力 +40。','+40 energy.']},
+  {id:'clinic',icon:'heart',zh:'社区诊所',en:'Community clinic',heal:1,hosp:1,price:15000,healP:20,desc:['挂号+开药，便宜但不一定有用。','Cheap visit. Might not help.']},
+  {id:'specialist',icon:'hospital',zh:'专科门诊',en:'Specialist',heal:1,hosp:1,price:200000,healP:45,desc:['专家会诊，一半机会好转。','Expert consult. Coin-flip recovery.']},
+  {id:'ward',icon:'hospital',zh:'私立医院住院',en:'Private ward stay',heal:1,hosp:1,price:2500000,healP:75,at:3000000,desc:['一周住院疗养，大概率康复。','A week in hospital. Good odds.']},
+  {id:'elite',icon:'crown',zh:'顶级医疗团队',en:'World-class medical team',heal:1,hosp:1,price:40000000,healP:92,at:50000000,desc:['全球专家飞来会诊。','Top specialists fly in.']},
+  {id:'checkup',icon:'check',zh:'年度体检',en:'Annual check-up',hosp:1,price:80000,riskCut:1,desc:['以后每次休息衰退率 −1%。','Future decline risk −1% per rest.']},
+  {id:'pharmacy',icon:'bolt',zh:'药房能量补给',en:'Pharmacy energy boost',energy:40,hosp:1,price:3000,desc:['体力 +40。','+40 energy.']},
   {id:'trial',icon:'story',zh:'临床试验志愿者',en:'Clinical trial volunteer',gain:120000,risk:40,desc:['拿 $1,200 报酬，但 40% 概率健康 −1。','Paid $1,200. 40% chance to lose a heart.']}],
  casino:[
   {id:'roulette',icon:'chips',zh:'轮盘押红',en:'Roulette: red',stakePct:.2,p:47,up:2,casino:true,desc:['投入 20% 现金。','Stake 20% of cash.']},
@@ -153,10 +157,10 @@ export const SKINS=[{id:'default',lv:0,color:null,zh:'素色',en:'Plain'},{id:'m
 /* ---------- generic choice resolution (partner deals, place options) ---------- */
 export function quoteOpt(s,opt){const stake=opt.stakePct?Math.max(1,Math.floor(s.cash*opt.stakePct)):0;let p=opt.p||0,up=opt.up||1;const m=mood(s).m;
  if(opt.moodBet)p=clamp(50+opt.moodBet*m*6,8,92);if(opt.casino&&origin(s)==='gambler')up+=.3;
- const cost=opt.price||(opt.costPct?Math.max(opt.min||0,Math.floor(s.cash*opt.costPct)):0);
+ const cost=opt.price?Math.min(CAP,opt.price*(opt.hosp?2**Math.min(20,st(s).hospUses||0):1)):(opt.costPct?Math.max(opt.min||0,Math.floor(s.cash*opt.costPct)):0);
  return {stake,p:Math.round(p),up:+up.toFixed(2),win:Math.floor(stake*up)-stake,cost,gain:opt.gain||(opt.gainPct?Math.max(opt.gainMin||0,Math.floor(s.cash*opt.gainPct)):opt.loanPct?Math.floor(s.cash*opt.loanPct):0),healP:opt.healP||0,riskP:opt.riskP||0};}
 export function resolveOpt(s,opt,rng=Math.random){const q=quoteOpt(s,opt),v=st(s),e=s.estate,out={won:true,delta:0,heal:0,hurt:0,energy:0,lv:0};
- if(q.cost){if(s.cash<=q.cost)throw Error('cash');s.cash-=q.cost;out.delta-=q.cost;}
+ if(q.cost){if(s.cash<=q.cost)throw Error('cash');s.cash-=q.cost;out.delta-=q.cost;if(opt.hosp)v.hospUses=(v.hospUses||0)+1;}
  if(opt.heal){if(e.health>=e.maxHealth)throw Error('full');const roll=rng()*100;out.roll=roll;out.healP=opt.healP??100;if(roll<(opt.healP??100)){e.health=Math.min(e.maxHealth,e.health+1);v.heals++;out.heal=1;}else out.healFail=1;}
  if(opt.riskCut){const ok=!opt.riskP||rng()*100<opt.riskP;out.riskCut=ok?opt.riskCut:0;out.riskFail=!ok;if(ok)e.riskReduction=(e.riskReduction||0)+opt.riskCut;}
  if(opt.energy){s.life.energy=Math.min(s.life.energyCap,s.life.energy+opt.energy);out.energy=opt.energy;}
@@ -189,8 +193,12 @@ export function draw(s,rng=Math.random){const v=st(s),L=liquid(s);
  if(ZONES[card]?.place)return {offer:placeOffer(s,card,rng)};
  if(card==='partner'){const cand=PARTNERS.filter(p=>L>=p.at&&!v.partners[p.id]);if(cand.length){const p=cand[Math.floor(rng()*cand.length)];return {offer:{id:uid(),type:'v9-partner',partner:p.id,fee:partnerFee(s),settled:false,city:s.life.city,rarity:'epic'}};}card='project';}
  if(card==='luxury'){const o=luxOffer(s,rng);if(o)return {offer:o};card='project';}
+ if(card==='shop'&&HOOKS.shop)return {offer:HOOKS.shop(s,rng)};
+ if(card==='ad'){if(HOOKS.ad&&HOOKS.adsOK?.())return {offer:HOOKS.ad(s,rng)};card=L>=PROJECT_UNLOCK?'project':'work';}
+ if(card==='city'&&HOOKS.city){const o=HOOKS.city(s,rng);if(o)return {offer:o};card=L>=PROJECT_UNLOCK?'project':'work';}
+ if((card==='project'||card==='elite')&&L<PROJECT_UNLOCK)return {offer:workOffer(s,rng)};
  return {hint:card,elite:card==='elite'};}
-export const V9_TYPES=['v9-work','v9-fork','v9-partner','v9-pdeal','v9-lux','v9-place'];
+export const V9_TYPES=['v9-work','v9-fork','v9-partner','v9-pdeal','v9-lux','v9-place','v12-shop','v12-ad','v12-city'];
 
 /* ---------- main story: one chapter per social class, player picks mood / motive ---------- */
 export const MOODS={
