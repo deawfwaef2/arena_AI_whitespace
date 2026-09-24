@@ -1,0 +1,5 @@
+/* Round 9 layer — loaded last (highest priority). */
+.v12-g-x2{position:absolute;top:24px;right:4px;font:800 10px/1 system-ui,sans-serif;letter-spacing:.02em;padding:3px 6px;border-radius:99px;background:#c0392b;color:#fff;box-shadow:0 1px 0 #0004;z-index:2}
+.v12-g-x2.unl{background:#138a7c}
+.v12-good.is-unlock{background:linear-gradient(180deg,#f2fffb,#dff4ee);outline:2px dashed #1f9e8f;outline-offset:-5px}
+.v12-good.is-unlock .v12-g-img{filter:drop-shadow(0 0 6px #37d2bd88)}

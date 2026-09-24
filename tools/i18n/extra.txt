@@ -191,3 +191,6 @@
 当前健康 {}/{}。本次衰退概率 {}%，抽中仅损失 1 格，归零则人生结束。|Health now {}/{}. Decline chance this rest {}%; a hit costs 1 heart and zero ends the life. 
 即时揭晓|Instant reveal
 延时合同|Delayed contract
+恢复 1 格健康，不改变下一次抽签概率。|Restores 1 heart; next draw odds unchanged.
+衰退概率降低 6 个百分点；每次休息仍继续增长。|Decline risk −6 points; it still grows every rest.
+健康恢复至上限，衰退概率降低 12 个百分点。|Health fully restored and decline risk −12 points.
