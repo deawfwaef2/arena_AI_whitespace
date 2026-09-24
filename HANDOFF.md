@@ -221,3 +221,19 @@ Playwright 需要 `npx playwright install --with-deps chromium`（沙箱重建�
   - NEVER re-run the extractor without re-mapping indices: b*.txt lines are keyed by key index. Add new strings to `extra.txt` instead.
   - QA: `node qa/en.mjs` (fresh intro → English) and `SHOT_LANG=en node qa/v10shot.mjs` write leftover Chinese to `qa/en-leftovers.txt` / `qa/v10-missing.txt` (both empty/near-empty at this commit). Runtime misses: `window.__i18nMissing`.
   - Money compact units in English use M/B/T (v7 fmt, capital-ui/life-ui short).
+
+---
+# 第八轮用户反馈 / Round 8 feedback (append-only; items 51–64)
+Standing constraints (unchanged): save/commit/push in phases, root `index.html` always playable offline with a start button (use `npm run checkpoint` BEFORE commit), workspace < 128MB (work in /tmp/game), never overwrite this file, never write the token into files, no emoji-style icons — use generated images (image+text big buttons OK), Playwright screenshots and actually look at them.
+- [ ] 51 Moving should feel like the SCENE changes/travels past, not walking in place.
+- [ ] 52 When turning a street corner/block the camera should also rotate — livelier.
+- [ ] 53 Rename game to **Broke to Billionaire: The $100 Start** (title, menu, HTML <title>, docs).
+- [ ] 54 Opening animation: redesign at master level — attractive trailer, show the game, foreshadow; user says it got rougher over time. Introduce the game to the viewer.
+- [ ] 55 Still lots of residual Chinese, incl. in the 3D scene in English mode (signs/canvas text).
+- [ ] 56 Class promotion: popup with immersive text describing the new class.
+- [ ] 57 More big buttons + graphic language; images must be generated (built-in image engine), not emoji or emoji-like; button background / panoramic-picture feel (emoji "feel" may be kept).
+- [ ] 58 Poor stage reward/unlock UI should also be shabby, colour-consistent.
+- [ ] 59 Screen-edge class decoration is bad — want strongly shaped ornamental frame borders (lace/filigree box frames).
+- [ ] 60 Health → 5 hearts.
+- [ ] 61 Black-market project UI: write the textual details out (describe it in words).
+- [ ] 62 More animation/images across the UI for feedback.
