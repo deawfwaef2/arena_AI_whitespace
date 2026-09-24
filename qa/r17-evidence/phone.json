@@ -1,0 +1,116 @@
+{
+  "mode": "phone",
+  "log": [
+    {
+      "name": "story refuses Escape and backdrop",
+      "data": true
+    },
+    {
+      "name": "backdrop cannot accidentally close menu",
+      "data": true
+    },
+    {
+      "name": "1 real menu → page → close cycles",
+      "data": true
+    },
+    {
+      "name": "motion off/on while dialog open",
+      "data": true
+    },
+    {
+      "name": "1 close/reopen races stay visible past old timer",
+      "data": true
+    },
+    {
+      "name": "2px jitter never relocates window",
+      "data": true
+    },
+    {
+      "name": "drag to all edges remains fully on screen",
+      "data": {
+        "x": 8.000000293438251,
+        "y": 40.000000782502006,
+        "w": 860.0000250400641,
+        "h": 512.0000187800481,
+        "opacity": 1,
+        "display": "block",
+        "hidden": false,
+        "kind": "menu",
+        "inert": true,
+        "vw": 1212,
+        "vh": 560,
+        "scale": 0.6964285714285714
+      }
+    },
+    {
+      "name": "blur releases drag",
+      "data": true
+    },
+    {
+      "name": "real touch drag stays in bounds",
+      "data": {
+        "x": 343.9843969100561,
+        "y": 39.984376173753006,
+        "w": 860.0000250400641,
+        "h": 512.0000187800481,
+        "opacity": 1,
+        "display": "block",
+        "hidden": false,
+        "kind": "menu",
+        "inert": true,
+        "vw": 1212,
+        "vh": 560,
+        "scale": 0.6964285714285714
+      }
+    },
+    {
+      "name": "reopen resets position",
+      "data": true
+    },
+    {
+      "name": "resize resets dragged layout",
+      "data": {
+        "x": 181.499989333662,
+        "y": 23.99999970371283,
+        "w": 859.99992889108,
+        "h": 511.9999798524727,
+        "opacity": 1,
+        "display": "block",
+        "hidden": false,
+        "kind": "menu",
+        "inert": true,
+        "vw": 1223,
+        "vh": 560,
+        "scale": 0.7357142857142858
+      }
+    },
+    {
+      "name": "gameplay buttons work after modal stress",
+      "data": {
+        "before": "0/18",
+        "after": "3/18"
+      }
+    },
+    {
+      "name": "page errors",
+      "data": []
+    },
+    {
+      "name": "final",
+      "data": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "opacity": 1,
+        "display": "block",
+        "hidden": true,
+        "inert": false,
+        "vw": 1212,
+        "vh": 560,
+        "scale": 0.6964285714285714
+      }
+    }
+  ],
+  "errors": []
+}

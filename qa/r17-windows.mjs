@@ -22,12 +22,12 @@ async function menu(){await action('menu','#game');await visible('menu');}
 async function close(){await action('close');await closed();}
 try{
  await p.goto(process.env.BASE_URL||'http://127.0.0.1:8080/',{timeout:120000});await p.waitForFunction(()=>!document.getElementById('loading'),null,{timeout:120000});
- await p.screenshot({path:`${out}/${mode}-start.png`});
+ await p.screenshot({timeout:60000,path:`${out}/${mode}-start.png`});
  await p.locator('[data-action="onboard-play"]').first().click();
  await visible('v9-story');
  await p.keyboard.press('Escape');await p.mouse.click(2,2);assert.equal((await state()).kind,'v9-story');assert.equal((await state()).hidden,false);record('story refuses Escape and backdrop');
  await p.locator('.v9-s-tile').first().click();await closed();
- await menu();await p.screenshot({path:`${out}/${mode}-menu.png`});
+ await menu();await p.screenshot({timeout:60000,path:`${out}/${mode}-menu.png`});
  await p.mouse.click(2,2);await visible('menu');record('backdrop cannot accidentally close menu');
  await close();
  // Keep UI/event-loop code untouched; throttle only expensive software WebGL
@@ -75,14 +75,21 @@ try{
   record('real touch drag stays in bounds',ts);
  }
  await p.evaluate(()=>window.__r17restore?.());
- await p.screenshot({path:`${out}/${mode}-drag.png`});await close();await menu();
+ await p.screenshot({timeout:60000,path:`${out}/${mode}-drag.png`});await close();await menu();
  assert.equal(await p.locator('#modal-card[data-moved]').count(),0);record('reopen resets position');
  // Resize after moving: no old inline pixel position may strand the window.
  h=await p.locator('#modal-card .v7-handle').boundingBox();await p.mouse.move(h.x+35,h.y+15);await p.mouse.down();await p.mouse.move(h.x+70,h.y+30);await p.mouse.up();
  await p.setViewportSize(phone?{width:900,height:412}:{width:1180,height:740});await p.waitForTimeout(450);await visible('menu');
  await p.waitForFunction(()=>!document.querySelector('#modal-card[data-moved]'));record('resize resets dragged layout',await state());
  await p.setViewportSize(opts.viewport);await p.waitForTimeout(450);
- await close();await p.screenshot({path:`${out}/${mode}-game.png`});
+ await close();
+ const work=p.locator('[data-action="v9-tap"]:visible').first();
+ if(await work.count()){
+  const before=await p.locator('.v9-work-bar').textContent();
+  await work.click();await work.click();await work.click();
+  const after=await p.locator('.v9-work-bar').textContent();assert.notEqual(after,before);record('gameplay buttons work after modal stress',{before,after});
+ }
+ await p.screenshot({timeout:60000,path:`${out}/${mode}-game.png`});
  if(mode==='offline'){
   await menu();await action('music');await visible('music');await action('music-toggle');
   await p.waitForFunction(()=>window.__r14music.status().playing,null,{timeout:20000});record('offline MP3 playback',await p.evaluate(()=>window.__r14music.status()));await close();

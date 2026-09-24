@@ -1,0 +1,113 @@
+{
+  "mode": "offline",
+  "log": [
+    {
+      "name": "story refuses Escape and backdrop",
+      "data": true
+    },
+    {
+      "name": "backdrop cannot accidentally close menu",
+      "data": true
+    },
+    {
+      "name": "12 real menu → page → close cycles",
+      "data": true
+    },
+    {
+      "name": "motion off/on while dialog open",
+      "data": true
+    },
+    {
+      "name": "15 close/reopen races stay visible past old timer",
+      "data": true
+    },
+    {
+      "name": "2px jitter never relocates window",
+      "data": true
+    },
+    {
+      "name": "drag to all edges remains fully on screen",
+      "data": {
+        "x": 8.000000014901161,
+        "y": 40.000000953674316,
+        "w": 859.9999923706055,
+        "h": 689.9999742507935,
+        "opacity": 1,
+        "display": "block",
+        "hidden": false,
+        "kind": "menu",
+        "inert": true,
+        "vw": 1180,
+        "vh": 738,
+        "scale": 1.0847457627118644
+      }
+    },
+    {
+      "name": "blur releases drag",
+      "data": true
+    },
+    {
+      "name": "reopen resets position",
+      "data": true
+    },
+    {
+      "name": "resize resets dragged layout",
+      "data": {
+        "x": 160.00000381469727,
+        "y": 23.999999165534973,
+        "w": 859.9999923706055,
+        "h": 690.0000305175781,
+        "opacity": 1,
+        "display": "block",
+        "hidden": false,
+        "kind": "menu",
+        "inert": true,
+        "vw": 1180,
+        "vh": 738,
+        "scale": 1.0847457627118644
+      }
+    },
+    {
+      "name": "gameplay buttons work after modal stress",
+      "data": {
+        "before": "0/24",
+        "after": "3/24"
+      }
+    },
+    {
+      "name": "offline MP3 playback",
+      "data": {
+        "enabled": true,
+        "mode": "taipei",
+        "unlocked": true,
+        "blocked": false,
+        "playing": true,
+        "context": "playing",
+        "decoded": [],
+        "volume": 0.28,
+        "error": ""
+      }
+    },
+    {
+      "name": "page errors",
+      "data": []
+    },
+    {
+      "name": "final",
+      "data": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "opacity": 1,
+        "display": "block",
+        "hidden": true,
+        "inert": false,
+        "vw": 1180,
+        "vh": 738,
+        "scale": 1.0847457627118644
+      }
+    }
+  ],
+  "errors": []
+}

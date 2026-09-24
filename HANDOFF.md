@@ -447,3 +447,10 @@ Standing constraints unchanged (commit+push per small step, root index.html alwa
 - 阶段 B：Chromium 桌面、手机横屏各通过 12 次菜单→子页→关闭 + 15 次在旧 330ms 定时窗口内快速重开；手机 CDP touch 真实触控拖动通过，主线 Esc/遮罩不关闭，关闭释放 inert，页面错误 0。截图已人工查看。
 - 离线压力测试暴露容器 translateY 入场也可能延迟启动，虽然已经不透明，但会影响拖动起点；现删除容器 WAAPI 入场，CSS 同时禁用容器动画。按钮/剧情子元素动画照旧。
 - qa/r17-windows.mjs 支持 desktop/phone/large/reduced/offline；BASE_URL=file:///.../index.html + HTTP route abort 测解压包禁网；截图/结果输出 /tmp/r17-shots。QUICK=1 只跑 1+1 次，不得当作完整压力回归。
+
+### R17 最终验证与交付（追加）
+- 游戏修复提交 `21bcdcd`；最终 ZIP 23 个文件、30,898,109 bytes，根入口 index.html。已真实解压 ZIP 并禁用 HTTP/HTTPS，以 file:// 完成 12 次子菜单流程 + 15 次快速重开；关闭后打工计数正常变化，本地 MP3 播放通过，页面脚本错误 0。
+- 最终手机触控与 motion=false 复查是 QUICK=1（各 1+1），第一阶段桌面/手机是完整 12+15。测试报告必须区分它们，不得虚报。
+- 证据和局限：R17-TEST-REPORT.md、qa/r17-evidence；源码 qa/r17-windows.mjs。未做实体 Safari 或 CrazyGames 后台真实广告/审核，不应称已上线 CrazyGames。
+- 本沙箱 /tmp 是内存型空间；安装 Playwright 时保留 headless shell 即可，另一个完整 Chromium 占约 393MB，曾导致 2GB 环境 WebGL context loss / screenshot timeout。清理未使用浏览器后重新验证通过。该环境问题不应伪记为游戏测试通过。
+- 工具依赖和 .git 元数据不会跨本平台快照保留；源码/可玩包在 /home/user/game，GitHub main 已阶段推送。后续先读本交接，再重新获取 Git 元数据，禁止把 sparse checkout 排除的视频/旧图误提交为删除。
