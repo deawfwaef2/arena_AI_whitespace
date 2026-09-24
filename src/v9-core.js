@@ -79,7 +79,7 @@ export const PLACE_OPTS={
   {id:'ward',icon:'hospital',zh:'私立医院住院',en:'Private ward stay',heal:1,hosp:1,price:6000000,hospPct:.2,healP:70,at:3000000,desc:['一周住院疗养，大概率康复。','A week in hospital. Good odds.']},
   {id:'elite',icon:'crown',zh:'顶级医疗团队',en:'World-class medical team',heal:1,hosp:1,price:90000000,hospPct:.3,healP:90,at:50000000,desc:['全球专家飞来会诊。','Top specialists fly in.']},
   {id:'checkup',icon:'check',zh:'年度体检',en:'Annual check-up',hosp:1,price:250000,hospPct:.05,riskCut:.3,riskP:60,desc:['60% 概率：衰退率永久 −0.3%。','60% chance: decline risk −0.3% for good.']},
-  {id:'pharmacy',icon:'bolt',zh:'药房能量补给',en:'Pharmacy energy boost',energy:25,hosp:1,price:3000,hospPct:.01,desc:['体力 +25。','+25 energy.']},
+  {id:'pharmacy',icon:'bolt',zh:'药房能量补给',en:'Pharmacy energy boost',energy:12,hosp:1,price:8000,hospPct:.04,desc:['体力 +12。','+12 energy.']},
   {id:'trial',icon:'story',zh:'临床试验志愿者',en:'Clinical trial volunteer',gain:120000,risk:40,desc:['拿 $1,200 报酬，但 40% 概率健康 −1。','Paid $1,200. 40% chance to lose a heart.']}],
  casino:[
   {id:'roulette',icon:'chips',zh:'轮盘押红',en:'Roulette: red',stakePct:.2,p:47,up:2,casino:true,desc:['投入 20% 现金。','Stake 20% of cash.']},

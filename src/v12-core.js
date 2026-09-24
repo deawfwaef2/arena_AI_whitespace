@@ -46,7 +46,7 @@ export const HOSP_DETAIL={
  ward:{zh:'私立医院住院：独立病房、落地窗、营养师配餐。一周后你大概率能站着走出去。',en:'Private ward: single room, floor-to-ceiling window, a dietitian plans your meals. After a week you\u2019ll most likely walk out on your own.'},
  elite:{zh:'顶级医疗团队：三国专家连夜飞来，手术室为你一人开放。几乎一定有效——价格也几乎不讲道理。',en:'World-class team: specialists fly in overnight from three countries; an operating theatre opens just for you. Almost certain — and almost unreasonable in price.'},
  checkup:{zh:'年度体检：抽血、CT、心电图。报告很厚，结论很短：注意休息。60% 概率衰退率永久 −0.3%，没效果也照样收费。',en:'Annual check-up: blood work, CT, ECG. A thick report with a short conclusion: rest more. 60% chance: decline risk −0.3% for good — billed either way.'},
- pharmacy:{zh:'药房能量补给：维生素、电解质和一杯很苦的中药。体力 +40。',en:'Pharmacy boost: vitamins, electrolytes and a very bitter herbal tea. +40 energy.'},
+ pharmacy:{zh:'药房能量补给：维生素、电解质和一杯很苦的中药。体力 +12。',en:'Pharmacy boost: vitamins, electrolytes and a very bitter herbal tea. +12 energy.'},
  trial:{zh:'临床试验志愿者：签一份十页的同意书，换一笔报酬。副作用写在第九页的小字里。',en:'Clinical trial: sign a ten-page consent form for a payout. Side effects are in the small print on page nine.'}
 };
 
@@ -55,17 +55,17 @@ export const HOSP_DETAIL={
 export const SHOP_CATS={unlock:{zh:'机制解锁',en:'Unlocks',color:'#1f9e8f'},food:{zh:'食物饮料',en:'Food & drink',color:'#e0843a'},gear:{zh:'装备道具',en:'Gear',color:'#3a7fe0'},health:{zh:'健康',en:'Health',color:'#d8435a'},collect:{zh:'收藏品',en:'Collectibles',color:'#9a5bd8'},estate:{zh:'房产地契',en:'Property',color:'#b8912f'}};
 export const GOODS=[
  // small-shop goods (cheap, fixed prices)
- {id:'energydrink',cat:'food',icon:'can',size:'s',price:600,energy:18,zh:'能量饮料',en:'Energy drink',d:['体力 +18','+18 energy']},
- {id:'bento',cat:'food',icon:'noodle',size:'s',price:1500,energy:30,tb:1,zh:'热便当',en:'Hot bento',d:['体力 +45','+45 energy']},
- {id:'coffee2',cat:'food',icon:'coffee',size:'s',price:900,energy:22,zh:'手冲咖啡',en:'Pour-over coffee',d:['体力 +30','+30 energy']},
+ {id:'energydrink',cat:'food',icon:'can',size:'s',price:2000,pct:.04,energy:8,zh:'能量饮料',en:'Energy drink',d:['体力 +8','+8 energy']},
+ {id:'bento',cat:'food',icon:'noodle',size:'s',price:5000,pct:.08,energy:16,tb:1,zh:'热便当',en:'Hot bento',d:['体力 +16','+16 energy']},
+ {id:'coffee2',cat:'food',icon:'coffee',size:'s',price:3000,pct:.05,energy:11,zh:'手冲咖啡',en:'Pour-over coffee',d:['体力 +11','+11 energy']},
  {id:'charm',cat:'gear',icon:'medal',size:'s',price:4000,intel:2,zh:'幸运御守',en:'Lucky charm',d:['接下来 2 个项目成功率 +6%','Next 2 projects +6% odds']},
- {id:'umbrella',cat:'gear',icon:'ticket',size:'s',price:1500,energy:10,zh:'折叠伞',en:'Folding umbrella',d:['雨天不淋湿：体力 +15','Stay dry: +15 energy']},
+ {id:'umbrella',cat:'gear',icon:'ticket',size:'s',price:2500,pct:.03,energy:4,zh:'折叠伞',en:'Folding umbrella',d:['雨天不淋湿：体力 +4','Stay dry: +4 energy']},
  {id:'vitamins',cat:'health',icon:'heart',size:'s',price:12000,pct:.04,riskCut:.05,zh:'复合维生素',en:'Multivitamins',d:['衰退率永久 −0.05%','Decline risk −0.05% for good']},
  {id:'lotto',cat:'collect',icon:'ticket',size:'s',price:200,lotto:true,zh:'刮刮乐',en:'Scratch card',d:['10% 概率赢 $20，1% 概率赢 $500','10%: win $20 · 1%: win $500']},
  {id:'postcard',cat:'collect',icon:'story',size:'s',price:600,lv:1,zh:'城市明信片',en:'City postcard',d:['LV +1','LV +1']},
  // big-shop goods (scale with wealth)
- {id:'spa',cat:'food',icon:'champagne',size:'b',pct:.012,min:60000,energy:70,tb:3,zh:'顶楼水疗套餐',en:'Rooftop spa package',d:['体力 +120','+120 energy']},
- {id:'feast',cat:'food',icon:'champagne',size:'b',pct:.006,min:25000,energy:45,tb:2,zh:'主厨晚宴',en:'Chef\u2019s tasting menu',d:['体力 +70','+70 energy']},
+ {id:'spa',cat:'food',icon:'champagne',size:'b',pct:.06,min:300000,energy:40,tb:3,zh:'顶楼水疗套餐',en:'Rooftop spa package',d:['体力 +120','+120 energy']},
+ {id:'feast',cat:'food',icon:'champagne',size:'b',pct:.04,min:120000,energy:26,tb:2,zh:'主厨晚宴',en:'Chef\u2019s tasting menu',d:['体力 +70','+70 energy']},
  {id:'advisor',cat:'gear',icon:'briefcase',size:'b',pct:.015,min:40000,intel:4,tb:2,zh:'投资顾问月卡',en:'Advisor retainer',d:['接下来 4 个项目成功率 +6%','Next 4 projects +6% odds']},
  {id:'suitcase',cat:'collect',icon:'suit',size:'b',pct:.006,min:50000,lv:3,zh:'定制西装',en:'Tailored suit',d:['体面的行头 · LV +3','Looks the part · LV +3']},
  {id:'checkup2',cat:'health',icon:'hospital',size:'b',pct:.08,min:1500000,riskCut:.6,tb:1,zh:'高端体检套餐',en:'Executive health screen',d:['衰退率永久 −0.6%','Decline risk −0.6% for good']},
@@ -90,7 +90,7 @@ export const FAM_LOOK={
  risk:[{icon:'heart',zh:'复合维生素',en:'Multivitamins'},{icon:'check',zh:'全面体检',en:'Full health screening'},{icon:'bolt',zh:'私人健康教练',en:'Personal health coach'},{icon:'hospital',zh:'长寿门诊会员',en:'Longevity clinic membership'},{icon:'diamond',zh:'细胞修复疗法',en:'Cellular repair therapy'},{icon:'crown',zh:'基因延寿计划',en:'Gene longevity programme'}],
  intel:[{icon:'medal',zh:'幸运御守',en:'Lucky charm'},{icon:'story',zh:'内部简报订阅',en:'Insider newsletter'},{icon:'briefcase',zh:'投资顾问月卡',en:'Advisor retainer'},{icon:'invest',zh:'量化交易终端',en:'Quant trading terminal'},{icon:'handshake',zh:'对冲基金耳语',en:'Hedge-fund whisper'}]};
 export const fmtPct=x=>String(Math.round(x*100)/100);
-export const famEffect=(s,g)=>{const n=famCount(s,famOf(g));return {energy:g.energy?Math.max(4,Math.round(g.energy*.8**n)):0,riskCut:g.riskCut?Math.max(.01,Math.round(g.riskCut*.75**n*100)/100):0,intel:g.intel?Math.max(1,g.intel-Math.floor(n/2)):0};};
+export const famEffect=(s,g)=>{const n=famCount(s,famOf(g));return {energy:g.energy?Math.max(2,Math.round(g.energy*.7**n)):0,riskCut:g.riskCut?Math.max(.01,Math.round(g.riskCut*.75**n*100)/100):0,intel:g.intel?Math.max(1,g.intel-Math.floor(n/2)):0};};
 export function goodLook(s,g){const f=famOf(g);if(!f)return {icon:g.icon,zh:g.zh,en:g.en,d:g.d,n:0};const n=famCount(s,f),L=FAM_LOOK[f],t=L[Math.min(L.length-1,n+(g.tb||0))],e=famEffect(s,g);
  const d=f==='energy'?[`体力 +${e.energy}`,`+${e.energy} energy`]:f==='risk'?[`衰退率永久 −${fmtPct(e.riskCut)}%`,`Decline risk −${fmtPct(e.riskCut)}% for good`]:[`接下来 ${e.intel} 个项目成功率 +6%`,`Next ${e.intel} projects +6% odds`];
  return {icon:t.icon,zh:t.zh,en:t.en,d,n};}
@@ -132,7 +132,7 @@ export const SPONSORS=[
  {id:'car',icon:'carkey',zh:'汽车品牌路演',en:'Car brand roadshow',line:['一辆闪亮的概念车旁，主持人举着话筒：“看一段宣传片，就能拿参与奖金！”','Beside a shiny concept car the host lifts the mic: "Watch one promo clip and take the participation bonus!"']},
  {id:'bank',icon:'goldkey',zh:'私人银行品牌活动',en:'Private bank brand event',line:['穿制服的礼宾递来平板：“请欣赏我们的品牌影片，作为答谢会有一笔礼金。”','A uniformed concierge offers a tablet: "Please enjoy our brand film; a thank-you gift follows."']}
 ];
-export const adReward=s=>{const L=liquid(s);return {cash:clamp(Math.floor(L*.06),3000,50000000000),energy:40};};
+export const adReward=s=>{const L=liquid(s);return {cash:clamp(Math.floor(L*.06),3000,50000000000),energy:15};};
 export function adOffer(s,rng=Math.random){const L=liquid(s);const list=L>=5000000?SPONSORS:SPONSORS.slice(0,3);const sp=pick(list,rng);return {id:uid(),type:'v12-ad',sponsor:sp.id,settled:false,city:s.life.city,rarity:'rare'};}
 export function claimAd(s){const o=s.offer;if(o.type!=='v12-ad'||o.settled)throw Error('done');const r=adReward(s);s.cash=Math.min(CAP,s.cash+r.cash);s.life.energy=Math.min(s.life.energyCap||200,s.life.energy+r.energy);o.settled=true;o.result=r;s.peak=Math.max(s.peak||0,worth(s));return r;}
 
@@ -226,9 +226,9 @@ export const STROLLS=[
  {id:'harbour',icon:'yacht',sponsor:'bank',zh:'海港木栈道',en:'Harbour boardwalk',line:['海鸥在桅杆上叫，栈道边的广告灯箱映在水里，一晃一晃。','Gulls cry on the masts; the ad light-boxes along the boardwalk ripple in the water.']}
 ];
 export function strollOffer(s,rng=Math.random){const x=pick(STROLLS,rng);return {id:uid(),type:'v13-stroll',spot:x.id,sponsor:x.sponsor,settled:false,city:s.life.city,rarity:'common'};}
-export const strollDrink=s=>Math.max(300,Math.floor(liquid(s)*.004));
-export function takeStroll(s,mode){const o=s.offer;if(o?.type!=='v13-stroll'||o.settled)throw Error('done');const cap=s.life.energyCap||200;let energy=10,cost=0;
- if(mode==='drink'){cost=strollDrink(s);if(s.cash<=cost)throw Error('cash');s.cash-=cost;energy=24;}
+export const strollDrink=s=>Math.max(1500,Math.floor(liquid(s)*.03));
+export function takeStroll(s,mode){const o=s.offer;if(o?.type!=='v13-stroll'||o.settled)throw Error('done');const cap=s.life.energyCap||200;let energy=3,cost=0;
+ if(mode==='drink'){cost=strollDrink(s);if(s.cash<=cost)throw Error('cash');s.cash-=cost;energy=9;}
  s.life.energy=Math.min(cap,s.life.energy+energy);o.settled=true;o.result={energy,cost,mode};return o.result;}
 export const PROMO_CREWS=[
  {id:'flash',icon:'can',sponsor:'cola',zh:'快闪推广队',en:'Flash-mob promo crew',line:['一群穿荧光马甲的推广员突然围成一圈，把你堵在中间：“帅哥/美女，一分钟！就一分钟！”巨型屏幕已经推到你面前。','A ring of promoters in neon vests suddenly closes around you: "One minute! Just one minute!" A giant screen is already rolled up in your face.']},

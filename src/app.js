@@ -29,7 +29,7 @@ const SAVE_KEY='upshift-save-v3';
 let lifeUI,onboarding,designUI,streetUI,prosperityUI,v7,v9,v12,r9;let started=false;
 $('app').innerHTML=shell;
 const platform=new Platform(CONFIG);await platform.init();
-const defaults={lang:'zh',theme:'minimalist',layout:'journal',device:'desktop',scale:1,sound:true,music:true,volume:.28,musicMode:'auto',motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,low:false,name:'',records:[],bots:[],runCount:1};
+const defaults={lang:'en',theme:'minimalist',layout:'journal',device:'desktop',scale:1,sound:true,music:true,volume:.28,musicMode:'auto',motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,low:false,name:'',records:[],bots:[],runCount:1};
 function normalizeMeta(input={}){const m={...defaults,...input};m.lang=m.lang==='zh'?'zh':'en';m.name=String(m.name||'').slice(0,20);m.theme=['minimalist','imperial','cyber','swiss'].includes(m.theme)?m.theme:'minimalist';m.scale=Math.max(.75,Math.min(1.25,Number(m.scale)||1));m.records=Array.isArray(m.records)?m.records.filter(x=>x&&Number.isFinite(x.peak)).slice(0,25):[];m.bots=Array.isArray(m.bots)?m.bots.filter(x=>x&&x.simulated&&Number.isFinite(x.peak)).slice(0,100):[];m.volume=Math.max(0,Math.min(1,Number(m.volume)||0));m.musicMode=['auto','city','rush'].includes(m.musicMode)?m.musicMode:'auto';initLegacy(m);return m;}
 let stored;try{stored=JSON.parse(platform.load(SAVE_KEY)||platform.load('upshift-save-v2')||'null');}catch{}
 let meta=normalizeMeta(stored?.meta);if(!stored?.meta?.lang&&false&&platform.locale)meta.lang=String(platform.locale).startsWith('zh')?'zh':'en';
