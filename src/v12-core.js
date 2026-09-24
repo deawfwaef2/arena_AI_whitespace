@@ -189,3 +189,34 @@ export const NEW_ZONES={
 import {HOOKS,ZONES} from './v9-core.js';
 Object.assign(ZONES,NEW_ZONES);
 HOOKS.shop=(s,rng)=>shopOffer(s,rng);HOOKS.ad=adOffer;HOOKS.city=cityOffer;HOOKS.adsOK=()=>!!globalThis.__adsOK;
+
+/* ---------- v12.1: descriptive black market (pawn) + casino text ---------- */
+export const PLACE_TEXT={
+ pawn:{name:['老鼠巷当铺 · 地下黑市','Rat Alley Pawn & Black Market'],
+  zh:{smell:'铁卷帘只拉起一半。昏黄灯泡下挂满手表、吉他和没人来赎的婚戒，空气里是机油和旧烟味。',
+   desk:'柜台后的老周眯着眼，用放大镜敲了敲玻璃：“来当东西，还是来买消息？这里不问来路，也不给收据。”',
+   voice:['角落里有人压低声音：“最近有批货，便宜。看你敢不敢。”','老周把账本推过来：“老规矩——借一块，休息后还一块三。跑不掉的。”','后门口的男人递来一张折好的纸条：“内幕。准不准，看你的命。”'],
+   wall:'墙上用红漆写着：概不赊账 · 离柜不认 · 借款下次休息自动扣还 ×1.3'},
+  en:{smell:'The steel shutter is only half up. Under a yellow bulb hang watches, guitars and wedding rings nobody came back for. It smells of machine oil and old smoke.',
+   desk:'Old Zhou squints behind the counter and taps the glass with his loupe: "Pawning, or buying information? No questions about where it came from. No receipts either."',
+   voice:['Someone in the corner whispers: "Got a batch in. Cheap. If you dare."','Old Zhou slides the ledger over: "Usual rules — borrow one, pay back one-thirty after your rest. Nobody skips out."','A man at the back door hands you a folded note: "Insider stuff. Whether it\u2019s right is up to your luck."'],
+   wall:'Painted in red on the wall: NO CREDIT · NO REFUNDS · LOANS REPAID ×1.3 AUTOMATICALLY AT NEXT REST'},
+  detail:{
+   loan:['典当借款：把你身上最值钱的东西押在柜台上，立刻拿到现金的 25%。下次休息时自动扣还 1.3 倍——还不起就直接扣到你破产。','Pawn loan: leave your most valuable thing on the counter and walk out with 25% of your cash right now. At your next rest ×1.3 is taken back automatically — even if it bankrupts you.'],
+   flip:['捡漏古董：一只落灰的木箱，老周说“可能是清代的，也可能是上周的”。押 30% 现金，40% 概率是真货（×2.8），否则血本无归。','Antique bargain: a dusty wooden box. Old Zhou says "could be Qing dynasty, could be last week." Stake 30% of cash: 40% chance it\u2019s real (×2.8), otherwise it\u2019s all gone.'],
+   intel:['买内幕消息：花 5% 现金（至少 $50）买一张纸条。接下来 3 个项目成功率 +6%。不退款，不保证，不许问是谁写的。','Insider tips: pay 5% of cash (min $50) for a folded note. Your next 3 projects get +6% odds. No refunds, no guarantees, no asking who wrote it.']}},
+ casino:{name:['金狮娱乐城','Golden Lion Casino'],
+  zh:{smell:'没有窗户，没有钟。地毯吸走脚步声，只剩筹码碰撞和老虎机永不停歇的音乐。',
+   desk:'荷官戴着白手套，微笑得恰到好处：“欢迎光临。本场所有赔率公开，赢了是你的，输了——也是你的。”',
+   voice:['邻桌的人刚赢了一把，喊得整层楼都能听到。你没看到他之前输了多少。','经理递来一杯免费香槟：“贵宾，今晚手气看起来不错。”','保安看了你一眼，又看了看你的钱包。'],
+   wall:'入口铜牌：庄家永远有优势 · 每一局赔率写在桌上 · 输掉的筹码概不退还'},
+  en:{smell:'No windows, no clocks. The carpet swallows footsteps; there\u2019s only the clack of chips and slot music that never stops.',
+   desk:'The dealer in white gloves smiles just enough: "Welcome. All odds are posted. What you win is yours. What you lose — also yours."',
+   voice:['Someone at the next table just won and the whole floor can hear it. You didn\u2019t see how much he lost before.','The manager hands you a free champagne: "You look lucky tonight, sir."','Security glances at you, then at your wallet.'],
+   wall:'Brass plaque at the door: THE HOUSE ALWAYS HAS THE EDGE · ODDS POSTED ON EVERY TABLE · LOST CHIPS ARE NOT RETURNED'},
+  detail:{
+   roulette:['轮盘押红：押 20% 现金。小球落红你翻倍，落黑或绿，这笔钱就留在桌上。','Roulette on red: stake 20% of cash. Red doubles it; black or green and it stays on the table.'],
+   slots:['老虎机：押 5% 现金拉一次杆。大多数时候什么也没有，偶尔三个 7 连成一线（×8）。','Slot machine: stake 5% of cash per pull. Mostly nothing — now and then three 7s line up (×8).'],
+   poker:['德州一手：押 35% 现金，和三个陌生人比牌。接近五五开，赢了拿 ×1.9。','One hand of poker: stake 35% against three strangers. Close to a coin flip; a win pays ×1.9.'],
+   vip:['贵宾厅豪赌：押 60% 现金，厚地毯、雪茄和不说话的对手。赢了 ×2.3，输了你会记很久。','VIP high roller: stake 60% of cash — thick carpet, cigars, silent opponents. Win ×2.3; lose and you\u2019ll remember it.']}}
+};

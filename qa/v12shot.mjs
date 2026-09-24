@@ -28,4 +28,6 @@ await shot('citytk',{cash:9000000,seed:r=>{r.life.city='tokyo';r.offer=X.cityOff
 await shot('hospital',{cash:80000,seed:r=>{r.estate&&(r.estate.health=1);r.life.v9.hospUses=2;r.offer={id:'h1',type:'v9-place',place:'hospital',opts:['clinic','specialist','ward','checkup'],settled:false,city:'taipei',rarity:'rare'};}});
 await shot('promote',{cash:480,seed:r=>{r.offer={id:'w',type:'v9-work',job:'can',need:18,taps:17,pay:3000,settled:false,city:'taipei',rarity:'common'};},after:async p=>{const el=p.locator('[data-action="v9-tap"]');const b=await el.boundingBox();await p.mouse.click(b.x+b.width/2,b.y+b.height/2);await p.waitForTimeout(2500);}});
 await shot('pchoose',{cash:3000000,seed:r=>{r.life.v9.partners={chef:{bond:1,met:1,last:1}};r.offer={id:'pd',type:'v9-pdeal',partner:'chef',settled:false,city:'taipei',rarity:'epic'};}});
+await shot('pawn',{cash:60000,seed:r=>{r.offer={id:'pw1',type:'v9-place',place:'pawn',opts:['loan','flip','intel'],settled:false,city:'taipei',rarity:'rare'};}});
+await shot('casino',{cash:60000,seed:r=>{r.offer={id:'cs1',type:'v9-place',place:'casino',opts:['roulette','slots','poker'],settled:false,city:'taipei',rarity:'rare'};}});
 console.log('ERRORS',JSON.stringify(errors,null,1));await browser.close();
