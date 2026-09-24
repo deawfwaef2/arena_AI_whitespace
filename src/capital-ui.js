@@ -13,7 +13,7 @@ const clock=n=>{const total=Math.max(0,Math.ceil(n/1000));return Math.floor(tota
 const btn=(id,text,v='',disabled=false,cls='')=>`<button class="life-button ${cls}" data-action="life-${id}" data-value="${v}" ${disabled?'disabled':''}>${text}</button>`;
 
 export class LifeUI extends JourneyUI{
- constructor(c){super(c);this.contextExpanded=false;this.eventBusy=false;this.nextLateTick=0;this.eventOpened='';this.c.meta().wealthTextures??=true;for(const name of ['luxury','ivory'])document.documentElement.style.setProperty('--'+name+'-material',`url('${window.UPSHIFT_ART?.[name+'-texture']||''}')`);initLegacy(this.c.meta());
+ constructor(c){super(c);this.contextExpanded=false;this.eventBusy=false;this.nextLateTick=0;this.eventOpened='';this.c.meta().wealthTextures??=true;{const tex=()=>{for(const name of ['luxury','ivory'])document.documentElement.style.setProperty('--'+name+'-material',`url('${window.UPSHIFT_ART?.[name+'-texture']||''}')`)};tex();window.addEventListener('upshift-art',tex);};initLegacy(this.c.meta());
   $('menu-button').classList.add('global-menu');$('game').append($('menu-button'));
   $('energy-hud').insertAdjacentHTML('afterend',`<button id="capital-summary" class="capital-summary" data-action="life-status" hidden></button>`);
   this.settings.scale=Math.max(.75,Math.min(1.25,this.settings.scale));this.applyUI();

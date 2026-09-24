@@ -37,6 +37,7 @@ export function runIntro({meta,save,done,motion=true}){
    later(()=>{if(finished)return;el.insertAdjacentHTML('afterbegin',`<div class="r12-story"><div class="r12-story-img" style="background-image:url('${ART()['cg-poor']||''}')"></div><p class="r12-story-cap">${T('Rainy morning. $100 in your pocket.<br><b>The whole city is still for sale.</b>','下雨的清晨，口袋里只有 $100。<br><b>整座城市，还等着你去买下。</b>')}</p></div>`);el.querySelector('.r12-tap')?.remove();
     el.addEventListener('pointerdown',()=>finish(),{once:true});later(finish,4600);},420);}
  }
+ window.addEventListener('upshift-art',()=>{const i=el.querySelector('.v8i-logo img');if(i&&!i.getAttribute('src'))i.src=ART().logo||'';el.querySelectorAll('.v8i-shot.poor,.r12-story-img').forEach(e=>{if(!e.style.backgroundImage||e.style.backgroundImage.includes("url(\"\")"))e.style.backgroundImage=`url('${ART()['cg-poor']||''}')`;});el.querySelectorAll('.v8i-shot.rich').forEach(e=>e.style.backgroundImage=`url('${ART()['cg-rich']||''}')`);},{once:true});
  function logo(){el.innerHTML=`<div class="v8i-logo"><img src="${ART().logo||''}" alt=""><h1>Deawfwaef Games</h1><small>${T('presents','出品')}</small></div><button class="v8i-skip big">${T('Skip','跳过')} ›</button>`;el.querySelector('.v8i-skip').onclick=finish;later(cg,2600);}
  function cg(){
   el.innerHTML=`<div class="v8i-cg">
