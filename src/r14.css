@@ -5,3 +5,9 @@
 html body #modal .r14-lang button[data-action]{min-height:0!important;box-shadow:none!important;display:flex!important;flex-direction:column;align-items:center;gap:2px;padding:12px 8px!important;border-radius:12px!important;border:2px solid rgba(255,255,255,.25)!important;background:rgba(255,255,255,.08)!important;color:#fff!important;cursor:pointer;font:inherit}
 #modal .r14-lang button b{font-size:22px}.r14-lang button small{font-size:12px;opacity:.75}
 html body #modal .r14-lang button[data-action].on{background:linear-gradient(180deg,#ffe9a6,#d9a441)!important;color:#2b1c02!important;border-color:#fff3c4!important;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+/* R15 audio start veil */
+#r15-gate{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:end center;padding-bottom:12vh;background:linear-gradient(180deg,rgba(10,16,14,.05),rgba(10,16,14,.55));cursor:pointer;animation:r15in .35s ease backwards;-webkit-tap-highlight-color:transparent}
+#r15-gate.out{opacity:0;transition:opacity .35s}
+#r15-gate .r15-gate-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:18px 44px;border-radius:999px;background:linear-gradient(180deg,#ffe9a6,#d9a441);color:#2b1c02;box-shadow:0 10px 40px rgba(0,0,0,.45),0 0 0 4px rgba(255,243,196,.5);animation:r15pulse 1.6s ease-in-out infinite}
+#r15-gate b{font-size:30px;letter-spacing:.06em}#r15-gate small{font-size:14px;opacity:.8}
+@keyframes r15pulse{50%{transform:scale(1.05)}}@keyframes r15in{from{opacity:0}}

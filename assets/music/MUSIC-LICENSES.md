@@ -110,3 +110,19 @@ The source author explicitly permits the alternate credit name OMF-Games and doe
 
 The artist describes the pack as “5 tracks, all seamlessly looping!”
 
+
+### menu — Life of Riley (R15 main-menu BGM)
+
+"Life of Riley"
+Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0
+https://creativecommons.org/licenses/by/4.0/
+
+来源：https://incompetech.com/music/royalty-free/mp3-royaltyfree/Life%20of%20Riley.mp3
+
+修改：原曲完整保留，转码为 MP3 96 kbps / 44.1 kHz；主菜单循环播放。
+
+## R15 environmental sound effects
+
+All street/tier ambience and one-shots are real field recordings from Freesound.org released under CC0 1.0;
+menu click sounds are Kenney.nl CC0 packs. Full per-file list with sources: assets/sfx/SFX-CREDITS.json.

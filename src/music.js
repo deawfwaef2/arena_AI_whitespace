@@ -1,41 +1,44 @@
 import CITY_CREDITS from '../assets/music/CITY-CREDITS.json';
 import ORIGINAL_SCORES from '../assets/music/ORIGINAL-SCORES.json';
-// Six CC BY 4.0 city recordings, two legacy CC0 tracks and six original rest-class scores.
-export const MUSIC_CREDITS=[...CITY_CREDITS,...ORIGINAL_SCORES.filter(s=>s.id.startsWith('class'))];
-// Round 9: music packs are loaded lazily with a <script> tag (works on file:// too) so the main HTML stays small.
-const packTasks=new Map();
-export function loadPack(id){
- if(window.UPSHIFT_AUDIO?.[id])return Promise.resolve(window.UPSHIFT_AUDIO[id]);
- if(packTasks.has(id))return packTasks.get(id);
- const t=new Promise((ok,fail)=>{const s=document.createElement('script');s.src='music-pack/'+encodeURIComponent(id)+'.js';s.async=true;s.onload=()=>{const d=window.UPSHIFT_AUDIO?.[id];d?ok(d):fail(Error('Music pack empty'));};s.onerror=()=>{packTasks.delete(id);fail(Error('Music pack not found (music-pack folder missing)'));};document.head.append(s);});
- packTasks.set(id,t);return t;
-}
+import MENU_CREDITS from '../assets/music/MENU-CREDITS.json';
+// Menu theme, six CC BY 4.0 city recordings and six original rest-class scores.
+export const MUSIC_CREDITS=[...MENU_CREDITS,...CITY_CREDITS,...ORIGINAL_SCORES.filter(s=>s.id.startsWith('class'))];
+const KNOWN=new Set(MUSIC_CREDITS.map(c=>c.id));
+/* R15: BGM is streamed with <audio> elements from plain MP3 files in music-pack/ (works on http(s) AND file://).
+   Why not WebAudio any more: decoding a 3-minute MP3 into PCM needs ~60 MB on a phone and only starts after the
+   whole file downloaded; WebAudio is also silenced by the iPhone ring/silent switch. Media elements stream
+   (music starts after a few KB), use no decode memory and play through the silent switch.
+   Autoplay: we try to start the menu theme immediately; if the browser blocks it, the first tap/click/key
+   (see unlock(), which MUST run synchronously inside the gesture) starts it. */
 export class Music{
- constructor(){this.enabled=true;this.volume=.28;this.muted=false;this.hidden=false;this.ducked=false;this.mode='taipei';this.unlocked=false;this.buffers=new Map();this.nodes=new Map();this.pending=new Map();this.error='';this.epoch=0;}
- async unlock(){
-  if(!this.enabled||this.muted||this.hidden)return;
-  try{this.ctx??=new(window.AudioContext||window.webkitAudioContext)();this.master??=this.ctx.createGain();if(!this.connected){this.master.connect(this.ctx.destination);this.connected=true;}this.master.gain.value=this.level();await this.ctx.resume();this.unlocked=this.ctx.state==='running';if(this.unlocked)await this.start(this.mode);}catch(e){this.error=e.message;}
- }
+ constructor(){this.enabled=true;this.volume=.28;this.muted=false;this.hidden=false;this.ducked=false;this.mode='menu';this.unlocked=false;this.error='';this.els=[];this.cur=null;this.fadeT=0;this.blocked=false;this.listeners=new Set();}
+ src(id){return 'music-pack/'+encodeURIComponent(KNOWN.has(id)?id:'taipei')+'.mp3';}
  level(){return this.enabled&&!this.muted&&!this.hidden?this.volume*(this.ducked?.4:1):0;}
- apply(){if(this.master&&this.ctx){this.master.gain.cancelScheduledValues(this.ctx.currentTime);if(this.level()===0)this.master.gain.setValueAtTime(0,this.ctx.currentTime);else this.master.gain.setTargetAtTime(this.level(),this.ctx.currentTime,.12);}}
- setEnabled(on){this.enabled=on;this.apply();if(on)this.unlock();}
+ el(){const a=new Audio();a.loop=true;a.preload='auto';a.setAttribute('playsinline','');a.crossOrigin=null;a.addEventListener('error',()=>{if(a===this.cur?.a)this.error=location.protocol==='file:'?'music-pack folder missing next to index.html':'track failed to load';this.emit();});a.addEventListener('playing',()=>{if(a===this.cur?.a){this.error='';this.unlocked=true;this.blocked=false;this.emit();}});return a;}
+ on(fn){this.listeners.add(fn);return()=>this.listeners.delete(fn);}
+ emit(){for(const f of this.listeners)try{f(this.status());}catch{}}
+ /* start/refresh the current track; returns the play() promise */
+ play(){
+  if(!this.enabled||this.level()===0&&this.muted)return Promise.resolve(false);
+  const id=this.mode;if(!this.cur||this.cur.id!==id){const old=this.cur;const a=this.el();a.src=this.src(id);a.volume=0;this.cur={id,a,v:0};if(old)this.fadeOut(old);}
+  const a=this.cur.a;if(!a.paused){this.fade();return Promise.resolve(true);}
+  let p;try{p=a.play();}catch(e){p=Promise.reject(e);}
+  return Promise.resolve(p).then(()=>{this.unlocked=true;this.blocked=false;this.fade();this.emit();return true;},e=>{if(e&&e.name==='NotAllowedError')this.blocked=true;else if(e&&e.name!=='AbortError')this.error=e.message||String(e);this.emit();return false;});
+ }
+ /* call from inside a user gesture (pointerdown/touchend/click/keydown) */
+ unlock(){if(!this.enabled||this.hidden)return;if(this.cur&&!this.cur.a.paused&&this.unlocked)return;this.play();}
+ tryAutoplay(){return this.play();}
+ fade(){
+  clearInterval(this.fadeT);const step=()=>{const c=this.cur;if(!c)return clearInterval(this.fadeT);const target=this.level();c.v+=Math.sign(target-c.v)*Math.min(Math.abs(target-c.v),.04);try{c.a.volume=Math.max(0,Math.min(1,c.v));}catch{}c.a.muted=target===0;if(Math.abs(c.v-target)<.001)clearInterval(this.fadeT);};
+  this.fadeT=setInterval(step,40);step();
+ }
+ fadeOut(c){const t=setInterval(()=>{c.v=Math.max(0,c.v-.035);try{c.a.volume=c.v;}catch{}if(c.v<=0){clearInterval(t);c.a.pause();c.a.removeAttribute('src');try{c.a.load();}catch{}}},40);}
+ apply(){if(!this.cur)return;if(this.level()===0){this.cur.a.muted=true;this.fade();}else{this.cur.a.muted=false;this.fade();if(this.unlocked&&this.cur.a.paused&&!this.hidden)this.play();}}
+ setEnabled(on){this.enabled=on;if(!on&&this.cur){this.cur.a.pause();}this.apply();if(on)this.unlock();this.emit();}
  setVolume(value){this.volume=Math.max(0,Math.min(1,value));this.apply();}
- setMuted(value){this.muted=value;this.apply();if(!value&&this.unlocked&&!this.hidden)this.ctx?.resume().catch(()=>{});}
+ setMuted(value){this.muted=value;this.apply();}
  setDucked(value){this.ducked=value;this.apply();}
- setHidden(value){this.hidden=value;this.apply();if(value)this.ctx?.suspend().catch(()=>{});else if(this.unlocked&&this.enabled&&!this.muted)this.ctx?.resume().catch(()=>{});}
- setMode(mode){if(mode===this.mode)return;this.mode=mode;if(this.unlocked)this.start(mode);}
- async decode(id){
-  if(this.buffers.has(id))return this.buffers.get(id);if(this.pending.has(id))return this.pending.get(id);
-  const task=(async()=>{const data=await loadPack(id);const raw=atob(data.substring(data.indexOf(',')+1)),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);const buffer=await this.ctx.decodeAudioData(bytes.buffer);try{delete window.UPSHIFT_AUDIO[id];packTasks.delete(id);}catch{}this.buffers.set(id,buffer);if(this.buffers.size>2){for(const key of this.buffers.keys()){if(key!==id&&key!==this.mode){this.buffers.delete(key);if(this.buffers.size<=2)break;}}}this.pending.delete(id);return buffer;})();task.catch(()=>this.pending.delete(id));this.pending.set(id,task);return task;
- }
- async start(id){
-  if(!this.ctx||!this.unlocked||!this.enabled)return;
-  try{
-   const stamp=++this.epoch,buffer=await this.decode(id);if(stamp!==this.epoch||id!==this.mode)return;
-   if(this.nodes.has(id)){const n=this.nodes.get(id);n.gain.gain.cancelScheduledValues(this.ctx.currentTime);n.gain.gain.setTargetAtTime(1,this.ctx.currentTime,.18);return;}
-   const source=this.ctx.createBufferSource(),gain=this.ctx.createGain();source.buffer=buffer;source.loop=true;source.loopStart=0;source.loopEnd=buffer.duration;gain.gain.setValueAtTime(0,this.ctx.currentTime);gain.gain.linearRampToValueAtTime(1,this.ctx.currentTime+.55);source.connect(gain);gain.connect(this.master);source.start();this.nodes.set(id,{source,gain});
-   for(const [key,n] of this.nodes){if(key===id)continue;n.gain.gain.cancelScheduledValues(this.ctx.currentTime);n.gain.gain.setTargetAtTime(0,this.ctx.currentTime,.16);this.nodes.delete(key);setTimeout(()=>{try{n.source.stop();n.source.disconnect();n.gain.disconnect();}catch{}},750);}
-  }catch(e){this.error=e.message;}
- }
- status(){return {enabled:this.enabled,mode:this.mode,unlocked:this.unlocked,playing:!!this.nodes.get(this.mode)&&this.ctx?.state==='running'&&this.level()>0,context:this.ctx?.state||'not-started',decoded:[...this.buffers.keys()],volume:this.volume,error:this.error};}
+ setHidden(value){this.hidden=value;if(value){this.cur?.a.pause();}else if(this.unlocked&&this.enabled)this.play();this.apply();}
+ setMode(mode){if(!mode||mode===this.mode)return;this.mode=mode;if(this.unlocked&&this.enabled&&!this.hidden)this.play();}
+ status(){const a=this.cur?.a;return {enabled:this.enabled,mode:this.mode,unlocked:this.unlocked,blocked:this.blocked,playing:!!a&&!a.paused&&a.readyState>=3&&this.level()>0,context:a?(a.paused?'paused':'playing'):'not-started',decoded:[],volume:this.volume,error:this.error};}
 }

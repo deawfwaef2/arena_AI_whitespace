@@ -1,0 +1,14 @@
+[
+ {
+  "id": "menu",
+  "title": "Life of Riley",
+  "artist": "Kevin MacLeod (incompetech.com)",
+  "license": "CC BY 4.0",
+  "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Life%20of%20Riley.mp3",
+  "licenseURL": "https://creativecommons.org/licenses/by/4.0/",
+  "licenseEvidence": "https://incompetech.com/music/royalty-free/licenses/",
+  "changes": "Re-encoded to MP3 96 kbps / 44.1 kHz; full composition retained; loops on the main menu.",
+  "includedSHA256": "93fcd6cb85c767e251060085623abe5900a20dba8ca6ba9edcfebea332b46c27",
+  "retrieved": "2026-09-24"
+ }
+]

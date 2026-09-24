@@ -10,10 +10,17 @@ const art={};for(const city of ['taipei','tokyo','vegas','singapore','newyork','
 for(const f of await fs.readdir('assets/art/ic'))if(f.endsWith('.webp'))art['ic-'+f.replace('.webp','')]='data:image/webp;base64,'+(await fs.readFile('assets/art/ic/'+f)).toString('base64');
 for(const f of await fs.readdir('assets/art/mg'))if(f.endsWith('.webp'))art['mg-'+f.replace('.webp','')]='data:image/webp;base64,'+(await fs.readFile('assets/art/mg/'+f)).toString('base64');
 const scores=JSON.parse(await fs.readFile('assets/music/ORIGINAL-SCORES.json','utf8'));for(const score of scores)musicIds.push(score.id);
+musicIds.unshift('menu');
+// R15: BGM ships as plain MP3 files streamed by <audio> (was base64 JS packs decoded by WebAudio — too heavy on phones).
 await fs.mkdir('music-pack',{recursive:true});
-for(const id of musicIds){const body='(window.UPSHIFT_AUDIO=window.UPSHIFT_AUDIO||{})['+JSON.stringify(id)+']="data:audio/mpeg;base64,'+(await fs.readFile('assets/music/'+id+'.mp3')).toString('base64')+'";window.dispatchEvent(new CustomEvent("upshift-audio",{detail:'+JSON.stringify(id)+'}));';let old='';try{old=await fs.readFile('music-pack/'+id+'.js','utf8');}catch{}if(old!==body)await fs.writeFile('music-pack/'+id+'.js',body);}
-const licenses='RECORDED MUSIC\n'+await fs.readFile('assets/music/MUSIC-LICENSES.md','utf8')+'\nTHREE.JS\n'+await fs.readFile('assets/THREE-LICENSE.txt','utf8')+'\nSPACE GROTESK\n'+await fs.readFile('assets/SPACE-GROTESK-LICENSE.txt','utf8');
-const result=await build({entryPoints:['src/app.js'],bundle:true,minify:true,format:'iife',target:['es2020'],write:false,legalComments:'eof'});
+for(const f of await fs.readdir('music-pack'))if(f.endsWith('.js')||f.endsWith('.mp3')&&!musicIds.includes(f.slice(0,-4)))await fs.rm('music-pack/'+f);
+for(const id of musicIds){const src=await fs.readFile('assets/music/'+id+'.mp3');let old=null;try{old=await fs.readFile('music-pack/'+id+'.mp3');}catch{}if(!old||!old.equals(src))await fs.writeFile('music-pack/'+id+'.mp3',src);}
+// R15: sound effects. UI clicks are inlined (assets/sfx/ui.json, imported by src/sound.js); tier beds + street one-shots are lazy packs.
+{const uri=async f=>'data:audio/mpeg;base64,'+(await fs.readFile('assets/sfx/'+f)).toString('base64');const ui={};for(const f of await fs.readdir('assets/sfx'))if(f.startsWith('ui-')&&f.endsWith('.mp3'))ui[f.slice(3,-4)]=await uri(f);await fs.writeFile('assets/sfx/ui.json',JSON.stringify(ui));
+ await fs.mkdir('sfx-pack',{recursive:true});const put=async(id,val)=>{const body='(window.UPSHIFT_SFX=window.UPSHIFT_SFX||{})['+JSON.stringify(id)+']='+JSON.stringify(val)+';';let old='';try{old=await fs.readFile('sfx-pack/'+id+'.js','utf8');}catch{}if(old!==body)await fs.writeFile('sfx-pack/'+id+'.js',body);};
+ for(let i=0;i<6;i++)await put('bed'+i,await uri('bed'+i+'.mp3'));const shots={};for(const f of await fs.readdir('assets/sfx'))if(!f.startsWith('ui-')&&!f.startsWith('bed')&&f.endsWith('.mp3'))shots[f.slice(0,-4)]=await uri(f);await put('shots',shots);}
+const licenses='RECORDED MUSIC\n'+await fs.readFile('assets/music/MUSIC-LICENSES.md','utf8')+'\nSOUND EFFECTS (CC0)\n'+JSON.parse(await fs.readFile('assets/sfx/SFX-CREDITS.json','utf8')).map(c=>`${c.id}: "${c.title}" by ${c.author} — ${c.license} — ${c.source}`).join('\n')+'\n'+'\nTHREE.JS\n'+await fs.readFile('assets/THREE-LICENSE.txt','utf8')+'\nSPACE GROTESK\n'+await fs.readFile('assets/SPACE-GROTESK-LICENSE.txt','utf8');
+const result=await build({entryPoints:['src/app.js'],bundle:true,minify:true,format:'iife',target:['es2020'],write:false,charset:'utf8',legalComments:'eof'});
 const js=result.outputFiles[0].text.replaceAll('</script','<\\/script');
 const font=await fs.readFile('assets/space-grotesk.woff2'); // R13: lossless WOFF2 (was 137 KB TTF)
 const format=font.subarray(0,4).toString()==='wOF2'?'woff2':font.subarray(0,4).toString()==='wOFF'?'woff':'truetype';
