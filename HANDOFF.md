@@ -365,3 +365,14 @@ Standing constraints unchanged. Work clone in /tmp/repo. Checkpoint → commit �
 - Openings: c<3 loading bar poor→rich (top tiers ???), 3–6 tap-to-start + cg-poor story frame, ≥7 original logo+CG (Skip button .big). No logo before 7.
 - Menus: c<7 new centred menu (assets/art/menu-bg.webp = user art, marquee text, coins, big START, unlock notice 3/7); ≥7 original studioMarkup. Every menu has .r12-ad (#r12-menu-banner 320x100 via platform.banner, house poster offline).
 - New CSS layer: src/r12.css (latest). QA scripts: qa/r12menu.mjs, r12story.mjs, r12phone.mjs, r12play.mjs, r12en2.mjs.
+
+# 第十三轮用户反馈 / Round 13 (2026-09-24, append-only; items 135–143)
+NOTE: sandbox /tmp can be wiped (it happened once) — re-clone, never lose work: commit+push per small step; keep `git format-patch` copies in /home/user/pending-patches if push is unavailable.
+- [ ] 135 URGENT: project (investment) MIN and MAX stake amounts must be shown clearly on the card, not hidden in details.
+- [ ] 136 More guidance: every time the player reaches a NEW UI for the first time, explain what it is for and what to press (point at it).
+- [ ] 137 Settings: option to wipe ALL save data (incl. run counters / runsDone / meta) with confirmation.
+- [ ] 138 In-run event "billboard / ad partnership": someone asks you to carry/host their billboard; accept → a DRAGGABLE window containing a CrazyGames static display ad; gives a small % passive income during rest phases while open; player can close it anytime (ends the income).
+- [ ] 139 Load time matters (every +3 s loses 10–15 % players): shrink size, delete unused files, but keep ALL game content and NO image-quality loss. Package into root when done.
+- [ ] 140 NEW MENU DESIGN: no opening animation for new players → straight to main menu. Menu has a drag handle mid-left; player drags it along a "Z/2-shaped" track (not straight) to the finish; while dragging, the poor→rich progress UI transforms per stage (text + UI changes), final stage stays mysterious; reaching the right end starts the game. Keep the run-count unlock mechanics (3 runs / 7 runs variants).
+- [ ] 141 Main menu: START big, centred, title visible, animated background text/motion (user disliked previous style).
+- [ ] 142 NEW TRAILERS 1920x1080 + 1080x1920: show the THRILL — tap-work button rapidly → money flies, camera follows the money to the top-left counter; levelling up; smooth transition to investing (drag stake slider %, huge win); finally ALL-IN and lose everything; end with a call to click/play. Smooth, no hard cuts.
