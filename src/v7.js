@@ -329,7 +329,7 @@ export class V7{
  /* ---------- rest mini-games ---------- */
  ensureGames(){const s=this.s,r=s.life.rest;const host=$('v7-windows');let p=$('v7-games');if(!r?.paid||r.remaining<=0){p?.remove();return;}const g=GAMES[clamp(r.class,0,5)],v=this.st(),played=v.mg[r.id]||0,left=Math.max(0,3-played),cost=Math.floor(s.cash*.3);
   const key=[r.id,played,Math.floor(cost/100)].join();if(p&&p.dataset.key===key)return;if(!p){p=document.createElement('div');p.id='v7-games';p.className='v7-win v7-draggable';host.append(p);if(this.c.motion())p.animate([{opacity:0,transform:'translate(-50%,20px)'},{opacity:1,transform:'translate(-50%,0)'}],{duration:500});}p.dataset.key=key;p.dataset.rank=r.class;
-  p.innerHTML=`<div class="v7-handle"><span>${CLASSES[r.class].name} · 休息小游戏</span><em>拖动 ⠿</em></div><div class="v7-g-body"><div class="v7-g-icon">${mgImg(g.items[0])}</div><div><h3>${g.name}</h3><p>${g.hint}</p><small>玩得越好，休息时间减得越多（最多 −4 分钟）。本次休息还能玩 ${left} 次。</small></div></div><div class="v7-g-actions"><button class="v7-g-play" data-action="v7-game" ${left?'':'disabled'}>${left?'开始小游戏':'今天玩够了'}</button><button class="v7-g-buy" data-action="v7-skip-rest" title="一次性花掉现金的 30%">包场跳过 · ${fmt(cost)}<small>花掉 30% 现金，立即结束休息</small></button></div>`;}
+  p.innerHTML=`<div class="v7-handle"><span>${CLASSES[r.class].name} · 休息小游戏</span><em>拖动 ⠿</em></div><div class="v7-g-body"><div class="v7-g-icon">${mgImg(g.items[0])}</div><div><h3>${g.name}</h3><p>${g.hint}</p><small>玩得越好，休息时间减得越多（最多 −4 分钟）。本次休息还能玩 ${left} 次。</small></div></div><div class="v7-g-actions"><button class="v7-g-play" data-action="v7-game" ${left?'':'disabled'}>${left?'开始小游戏':'今天玩够了'}</button></div>`;}
  closeGames(){$('v7-games')?.remove();$('v7-game-win')?.remove();clearInterval(this.mgTimer);}
  skipRest(){const s=this.s,r=s.life.rest;if(!r?.paid||r.remaining<=0)return;const cost=Math.floor(s.cash*.3);this.c.confirm?.('包场跳过休息？',`花掉 ${fmt(cost)}（现金的 30%），休息立刻结束。`,()=>{if(!s.life.rest?.paid||s.cash-cost<1)return;s.cash-=cost;r.total=(r.total||0)+cost;r.remaining=0;this.c.cash(-cost,$('v7-games'));this.closeGames();this.c.save();this.c.refresh();this.c.renderDock();this.flash('钱能买到时间','up');})||0;}
  startGame(){const s=this.s,r=s.life.rest;if(!r?.paid)return;const v=this.st();if((v.mg[r.id]||0)>=3)return;const g=GAMES[clamp(r.class,0,5)];$('v7-game-win')?.remove();clearInterval(this.mgTimer);
@@ -402,7 +402,7 @@ export class V7{
   if(a==='v7-district'){this.pickDistrict(Number(v));return true;}
   if(a==='v7-game'){this.startGame();return true;}
   if(a==='v7-game-quit'){if(this.mg)this.endGame(true);else $('v7-game-win')?.remove();return true;}
-  if(a==='v7-skip-rest'){this.skipRest();return true;}
+  if(a==='v7-skip-rest')return true;/*R16c: paid 'book it out' rest-skip removed*/
   if(a==='v9-sealed'){const en=$('app').dataset.v9lang==='en';this.c.toast(en?'Sealed: buy it at a roadside shop first.':'已封条：必须先在路边商店购买才能启用。');return true;}
   if(a==='v7-toggle'){if(MECHS.find(x=>x.id===v)?.deco)return true;const st=this.st();st.toggles[v]=st.toggles[v]===false;this.c.save();this.paint();const m=MECHS.find(x=>x.id===v);this.flash(`${m.name}：${st.toggles[v]!==false?'开启':'关闭'}`,'up');return true;}
   return false;

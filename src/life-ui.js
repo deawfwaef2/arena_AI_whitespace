@@ -83,7 +83,7 @@ export class LifeUI{
  }
  renderRest(){
   const r=this.s.life.rest;if(!r)return;const c=CLASSES[r.class],d=$('game-dock');tickRest(this.s);d.dataset.kind='rest';
-  const bill=r.maintenance+r.tax,instant=r.activities.find(a=>a.instant),regular=r.activities.filter(a=>!a.instant);
+  const bill=r.maintenance+r.tax,instant=null/*R16c removed*/,regular=r.activities.filter(a=>!a.instant);
   const duration=n=>`${Math.floor(n/60)}分${n%60?`${n%60}秒`:''}`;
   const tile=a=>`<article class="rest-action-card"><button class="rest-model-button" data-action="life-preview" data-value="${a.id}" aria-label="预览${a.name}姿势，不扣款"><img src="${this.c.world.restPreview(a.pose,r.class)}" alt="${a.name}的 3D 人物姿势"/><span>预览姿势</span></button><div class="rest-action-info"><h3>${a.name}</h3><p>减少 ${duration(a.seconds)}</p>${action('activity',a.used?'已体验':`支付 ${cash(a.price)}`,a.id,a.used||this.s.cash<=a.price||r.remaining<=0)}</div></article>`;
   d.innerHTML=`<div class="rest-panel-head"><span>${c.name} · 假期</span><h1>${r.paid?'慢下来，也是一种前进。':'先安顿好，再好好休息。'}</h1></div><div class="rest-progress-head"><span id="rest-status">${r.paid?'正在恢复':'缴费后开始恢复'}</span><strong id="rest-clock">${time(r.remaining)}</strong></div><div class="rest-track" role="progressbar" aria-label="休息恢复进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="rest-fill"></i></div>
@@ -147,7 +147,7 @@ export class LifeUI{
     case 'pay':{const before=s.cash;payRest(s);this.c.cash?.(s.cash-before,document.getElementById('game-dock'));this.persist();this.renderRest();break;}
     case 'aid':{const before=s.cash;payRest(s,true);this.c.cash?.(s.cash-before,document.getElementById('game-dock'));this.persist();this.renderRest();break;}
     case 'activity':{const a=restActivity(s,Number(v));this.persist();this.renderRest();this.c.toast(`${a.name} · 已减少 ${Math.floor(a.seconds/60)} 分钟${a.seconds%60?`${a.seconds%60} 秒`:''}`);break;}
-    case 'instant':{const r=s.life.rest,a=r?.activities.find(x=>x.id===Number(v));if(!r?.paid||!a?.instant||r.remaining<=0)break;this.c.confirm('立即完成本次休息？',`支付 ${cash(a.price)} 游戏币购买「${a.name}」，剩余休息计时立即归零。不会使用真钱。`,()=>{try{if(this.s!==s||s.life.rest!==r)throw Error('当前假期已变更。');restActivity(s,a.id);this.persist();this.renderRest();this.c.toast('休息已立即完成。领取 '+s.life.energyCap+' 体力就能继续出发。');}catch(e){this.c.toast(e.message);}});break;}
+    case 'instant':{break;const r=s.life.rest,a=r?.activities.find(x=>x.id===Number(v));if(!r?.paid||!a?.instant||r.remaining<=0)break;this.c.confirm('立即完成本次休息？',`支付 ${cash(a.price)} 游戏币购买「${a.name}」，剩余休息计时立即归零。不会使用真钱。`,()=>{try{if(this.s!==s||s.life.rest!==r)throw Error('当前假期已变更。');restActivity(s,a.id);this.persist();this.renderRest();this.c.toast('休息已立即完成。领取 '+s.life.energyCap+' 体力就能继续出发。');}catch(e){this.c.toast(e.message);}});break;}
     case 'preview':{const r=s.life.rest,a=r?.activities.find(x=>x.id===Number(v));if(a){r.pose=a.pose;r.lastActivity='预览：'+a.name;this.c.world.setRest(r);this.renderHud();this.c.save();}break;}
     case 'camera':if(s.life.rest){s.life.rest.camera=Math.max(0,Math.min(2,Number(v)||0));this.c.world.setRest(s.life.rest);this.renderHud();this.c.save();}break;
     case 'adskip':{const r=s.life.rest;if(!r?.paid||r.adSkip||r.remaining<=0||this.adBusy)break;this.adBusy=true;this.renderRest();const id=r.id,runId=s.id;let ok=false;try{ok=await this.c.platform.rewarded();}finally{this.adBusy=false;}if(s.id===runId&&this.s===s){if(ok&&adSkipRest(s,id)){this.persist();this.c.toast('广告完成：休息已结束，领取体力继续出发！');}else this.c.toast('广告未完成或暂不可用，未发放奖励。');this.c.refresh();this.renderRest();}break;}
