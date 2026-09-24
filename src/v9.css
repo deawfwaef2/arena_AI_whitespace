@@ -406,3 +406,23 @@ html:not([lang='zh-CN']) .overland .flight-window-label:after{content:' · Groun
 html:not([lang='zh-CN']) #app #game .city-panorama:after{content:'⤢ Open panorama'}
 html:not([lang='zh-CN']) #game .game-dock::before{content:'Scroll the panel to see all actions'}
 html:not([lang='zh-CN']) .wealth-badge.reclaimed:after{content:'Reclaimed'}
+/* ===== round 8 (item 59): generated ornamental frame borders per class ===== */
+#v9-frame .v9-edge{display:none!important}
+#v9-frame::before{content:'';position:absolute;inset:0;border-style:solid;border-color:transparent;border-image-source:var(--v9frame);border-image-repeat:round;pointer-events:none;filter:drop-shadow(0 3px 8px #0007)}
+#v9-frame{--fw:30px;--cs:110px;--sl:16%}
+#v9-frame[data-rank='0']{--fw:26px;--cs:96px;--sl:16%}
+#v9-frame[data-rank='1']{--fw:30px;--cs:104px;--sl:15%}
+#v9-frame[data-rank='2']{--fw:40px;--cs:130px;--sl:23%}
+#v9-frame[data-rank='3']{--fw:46px;--cs:150px;--sl:23%}
+#v9-frame[data-rank='4']{--fw:50px;--cs:160px;--sl:22%}
+#v9-frame[data-rank='5']{--fw:56px;--cs:180px;--sl:21%}
+#v9-frame::before{border-width:var(--fw);border-image-slice:var(--sl)}
+/* oversized corner ornaments cut from the same generated frame */
+#v9-frame .v9-corner{display:block!important;position:absolute;width:var(--cs)!important;height:var(--cs)!important;border:0!important;border-radius:0!important;transform:none!important;box-shadow:none!important;background:var(--v9frame) no-repeat!important;background-size:calc(var(--cs) / .30) calc(var(--cs) / .30)!important;filter:drop-shadow(0 4px 10px #0008)!important;opacity:1!important;z-index:1}
+#v9-frame .v9-corner.tl{left:0!important;top:0!important;right:auto!important;bottom:auto!important;background-position:left top!important}
+#v9-frame .v9-corner.tr{right:0!important;top:0!important;left:auto!important;bottom:auto!important;background-position:right top!important}
+#v9-frame .v9-corner.bl{left:0!important;bottom:0!important;top:auto!important;right:auto!important;background-position:left bottom!important}
+#v9-frame .v9-corner.br{right:0!important;bottom:0!important;top:auto!important;left:auto!important;background-position:right bottom!important}
+#v9-frame[data-rank='5']::before,#v9-frame[data-rank='5'] .v9-corner{animation:v9jewel 3s ease-in-out infinite}
+@keyframes v9jewel{50%{filter:drop-shadow(0 0 12px #bfe9ff) drop-shadow(0 0 5px #ffd1ec) brightness(1.1)}}
+body[data-v7phone='yes'] #v9-frame{--fw:14px!important;--cs:60px!important}

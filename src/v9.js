@@ -47,7 +47,7 @@ export class V9{
  guardDock(){const s=this.s;if(!this.c.started()||s.life.rest||s.life.travel||s.ended||this.c.modal()||this.c.busy())return;const d=$('game-dock');if(!d||d.hidden)return;const btns=[...d.querySelectorAll('button,[data-action]')].filter(b=>b.offsetParent&&!b.disabled);if(btns.length||d.querySelector('.v9-rescue'))return;d.insertAdjacentHTML('beforeend',`<button class="v9-next v9-rescue" data-action="next">${img('compass','v9-ic sm')}<span>${this.T('继续前行','Keep going')}</span></button>`);}
 
  /* ---------- frame with identity objects ---------- */
- paintFrame(rank,started){const f=$('v9-frame');f.hidden=!started;f.dataset.rank=rank;const key=rank+(this.zh?'z':'e');if(f.dataset.key===key)return;f.dataset.key=key;
+ paintFrame(rank,started){const f=$('v9-frame');f.hidden=!started;f.dataset.rank=rank;const key=rank+(this.zh?'z':'e');if(f.dataset.key===key)return;f.dataset.key=key;f.style.setProperty('--v9frame',`url("${ART('frame'+rank)}")`);
   f.querySelector('.v9-props').innerHTML=FRAME[rank].map((k,i)=>`<span class="v9-prop p${i}" title="${safe(this.P(FRAME_NAMES[k]))}">${img(k,'v9-prop-img')}</span>`).join('');}
 
  /* ---------- deck strip under the status bar ---------- */
