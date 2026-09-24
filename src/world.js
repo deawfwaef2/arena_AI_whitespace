@@ -1,5 +1,6 @@
 import {localModel,eventPlot} from './local-models.js';
 import {peopleProject,animatePerson,disposeGroup,person} from './people.js';
+function wrapX(x){const W=28;return ((x+W/2)%W+W)%W-W/2;}
 import {buildRestScene,setRestPose,resizeRest,animateRest,activityMiniature,disposeRest} from './rest-world.js';
 import {CITY_DATA,classIndex} from './life-core.js';
 import * as T from 'three';
@@ -362,11 +363,11 @@ export class World{
  updateStreetCast(t,dt){
   if(!this.streetCast)return;this.streetCast.visible=!this.titleMode&&!this.restStage;this.streetCast.rotation.y=this.blockAngle||0;
   const localHero=this.actor.root.position.clone().applyAxisAngle(new T.Vector3(0,1,0),-(this.blockAngle||0));
-  for(const p of this.streetActors){const a=p.a;if(p.kind==='npc'&&this.motion){const walking=t%12<4,step=Math.floor(t/12)*4+Math.min(t%12,4),phase=step*.25+p.i*1.9;let nx=p.base[0]+Math.sin(phase)*.95;const bz=p.base[1];
+  for(const p of this.streetActors){const a=p.a;if(p.kind==='npc'&&this.motion){const tt=t+p.i*3.1,cyc=12+p.i%3*2,walking=tt%cyc<3.5,step=Math.floor(tt/cyc)*3.5+Math.min(tt%cyc,3.5),phase=step*.25+p.i*1.9;let nx=p.base[0]+Math.sin(phase)*.95;const bz=p.base[1];const shiftX=this.castShift||0;
    // keep walkers out of the hero / manager / crew footprint so bodies never overlap
    const blockers=[[localHero.x,localHero.z,1.25],[1.1,1.35,1.05]];for(const q of this.streetActors)if(q.kind==='crew')blockers.push([q.a.root.position.x,q.a.root.position.z,.9]);for(const q of this.streetActors)if(q!==p&&q.kind==='npc'&&q.i<p.i)blockers.push([q.a.root.position.x,q.a.root.position.z,.85]);
    for(const [bx,bz2,r] of blockers){if(Math.abs(bz-bz2)<r&&Math.abs(nx-bx)<r){nx=nx<bx?bx-r:bx+r;}}
-   const prevX=a.root.position.x;a.root.position.x=T.MathUtils.lerp(prevX,nx,.2);const vx=a.root.position.x-prevX;if(Math.abs(vx)>.0005)p.face=vx>0?1.45:-1.45;a.root.rotation.y=T.MathUtils.lerp(a.root.rotation.y,p.face??1.45,.15);for(let j=0;j<2;j++){a.legs[j].root.rotation.x=walking?Math.sin(t*4+p.i+j*Math.PI)*.28:0;a.arms[j].root.rotation.x=walking?-Math.sin(t*4+p.i+j*Math.PI)*.2:0;}}else if(p.kind==='crew'){{const tx=localHero.x-1.05-p.i*.8,tz=localHero.z+.55+(p.i%2)*.6;a.root.position.x=T.MathUtils.lerp(a.root.position.x||tx,tx,.18);a.root.position.z=T.MathUtils.lerp(a.root.position.z||tz,tz,.18);a.root.position.y=.05;a.root.rotation.y=.35;}animatePerson(a,t,this.motion);}else animatePerson(a,t,this.motion);}
+   const prevX=a.root.position.x-(p.lastShift||0);const lx=prevX+wrapX(nx-prevX)*.2;const vx=lx-prevX;a.root.position.x=wrapX(lx+shiftX);p.lastShift=a.root.position.x-lx;if(Math.abs(vx)>.0005)p.face=vx>0?1.45:-1.45;a.root.rotation.y=T.MathUtils.lerp(a.root.rotation.y,p.face??1.45,.15);for(let j=0;j<2;j++){a.legs[j].root.rotation.x=walking?Math.sin(t*4+p.i+j*Math.PI)*.28:0;a.arms[j].root.rotation.x=walking?-Math.sin(t*4+p.i+j*Math.PI)*.2:0;}}else if(p.kind==='crew'){{const tx=localHero.x-1.05-p.i*.8,tz=localHero.z+.55+(p.i%2)*.6;a.root.position.x=T.MathUtils.lerp(a.root.position.x||tx,tx,.18);a.root.position.z=T.MathUtils.lerp(a.root.position.z||tz,tz,.18);a.root.position.y=.05;a.root.rotation.y=.35;}animatePerson(a,t,this.motion);}else{if(p.kind==='manager'){const sx=this.castShift||0;a.root.position.x=1.1+(sx<-9?sx+18:sx);}else if(p.kind==='npc'){a.root.position.x=wrapX(p.base[0]+(this.castShift||0));}animatePerson(a,t,this.motion);}}
   this.streetCast.updateMatrixWorld(true);const rect=this.container.getBoundingClientRect();const points=this.streetActors.map(p=>{const v=new T.Vector3(0,2.55,0);p.a.root.localToWorld(v);v.project(this.camera);return {id:p.id,x:rect.left+(v.x+1)*rect.width/2,y:rect.top+(1-v.y)*rect.height/2,visible:this.streetCast.visible&&v.z>-1&&v.z<1};});
   if(this.streetMarket){const v=new T.Vector3(0,1.8,0);this.streetMarket.localToWorld(v);v.project(this.camera);points.push({id:'market',x:rect.left+(v.x+1)*rect.width/2,y:rect.top+(1-v.y)*rect.height/2,visible:this.streetCast.visible});}
   this.onStreetPositions?.(points);
@@ -549,8 +550,10 @@ export class World{
     this.incoming.scale.set(1,1,1);this.incoming.visible=true;this.incoming.position.copy(this.streetPoint(D+sh,0));
     if(this.neighborhood){this.neighborhood.position.copy(this.streetPoint(sh,0));if(!this.hideTile&&this.hoodTiles){const target=this.streetPoint(D,0);this.hideTile=this.hoodTiles.find(o=>Math.abs(o.position.x-target.x)<1&&Math.abs(o.position.z-target.z)<1);if(this.hideTile)this.hideTile.visible=false;}}
     this.actor.root.position.copy(this.streetPoint(-1.65+Math.sin(p*Math.PI)*0.35,2.2));
+    this.castShift=sh; /* R9: pedestrians are part of the street — they slide past with the scenery instead of travelling with the hero */
     walking=true;
     if(p>=1){
+      this.castShift=0;for(const q of this.streetActors||[])if(q.kind==='npc'){q.base=[wrapX(q.base[0]-D),q.base[1]];q.lastShift=0;q.a.root.position.x=wrapX(q.a.root.position.x);}
       dispose(this.plot);
       this.plot=this.incoming;
       this.incoming=null;
