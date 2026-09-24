@@ -262,3 +262,7 @@ Note: v11 phases 1–3 (commits 744fddf, 1c5cf17, 04cc10f) already did 51/52/53/
 - v11 phases 1–3 + v12 phase 1 (c8c34a8) cover: 51, 52, 53, 59, 63 (3 hearts), 64, 65, 56/71 (class up popup + fall text), 66 (min/max on cards, zones), 72, 73, 74, 78 (CrazyGames SDK rewarded: rest skip + sponsor billboard; `?adtest=1` demo).
 - Still open at session start: 54/77 master intro trailer, 55 residual Chinese (esp. English mode 3D/canvas), 57/79 generated-image big buttons, 58/76 shabby poor-stage unlock UI, 61 black-market details in words, 62/75 more animation feedback, 67 per-type styles, 68 more zones, 69 estates → LV, 70 stronger city identity.
 - Workflow reminder: re-clone to /tmp/game each session; `npm ci && npx playwright install --with-deps chromium`; `npm run checkpoint` then commit+push after every small group.
+
+## Round 8 — session 3 (2026-09-24): user re-sent the full round-8 feedback (same items 51–79)
+- Treat the message as confirmation of items 51–79; v12.1 (5751fe3) and v12.2 (80fa149) had already done 58 (shabby cardboard promo popup), 61 (black market/casino descriptive text), 65 (wide hospital) and part of 70 (per-city buildings/palettes).
+- This session's focus (still open): 54/77 master-level intro trailer, 55 residual Chinese (English mode, incl. 3D scene), 57/79 generated-image big buttons, 62/75 more animated feedback, 67 per-type project styles, 68 more zones/regions/types, 69 estates → LV points, 70 stronger city identity.
