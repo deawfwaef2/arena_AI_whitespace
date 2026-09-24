@@ -402,3 +402,11 @@ Standing constraints unchanged (commit+push per small step, root index.html alwa
 - 147 ✅ Big "Language · 语言" row (English / 中文) at the top of BOTH the pause menu (dock "Settings" button) and Display & saves. `langRow()` in app.js; inline !important styles because modal button CSS overrides everything; `data-notr` makes i18n skip the subtree (new generic hook in i18n.js).
 - 148 ✅ `broke-to-billionaire-crazygames.zip` in repo root (index.html + art-pack.js + music-pack/, zopfli deflate, ~26MB). Rebuild after every checkpoint with `python3 tools/make-crazygames-zip.py` (pip install zopfli; falls back to zlib -9).
 - 149 ✅ Corner camera: world.js `viewTurns`/`viewOff` — each corner the camera orbits +90° around the hero relative to the street (sweep during the 3s corner), 4 corners = original view. `r14Occlude()` hides building pieces between camera and hero on the rotated views. QA: `qa/r14corner.mjs`.
+
+# 第十五轮用户反馈 / Round 15 (2026-09-24, append-only; items 150–156)
+- [ ] 150 Phone loading still takes far too long — measure on a throttled mobile profile and cut it hard.
+- [ ] 151 Main menu has NO feedback SFX and NO BGM. A menu BGM must be audible as soon as the player enters the main menu (menu buttons need click/hover feedback sounds).
+- [ ] 152 Phone BGM is completely gone — fix (mobile audio unlock / decoding).
+- [ ] 153 Phone UI is now TOO SMALL (R14 scaled desktop). Design a dedicated phone scheme: text not small, not crowded, 3D view clearly visible.
+- [ ] 154 Desktop: scale ALL UI up ~30% but never overflow the screen.
+- [ ] 155 In-game ambience SFX: street crowd, cars, rich environmental sounds; each wealth tier/class gets its own ambience bed. Use REAL recorded samples found online (not synthesized) with licences recorded (CC0 preferred).
