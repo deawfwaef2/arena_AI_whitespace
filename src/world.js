@@ -272,7 +272,7 @@ export class World{
   if(this.restStage){resizeRest(this.restStage,w,h,this.restAngle||0);return;}
   const desktop=w>=760;
   const dock=document.getElementById('game-dock');
-  let foot=desktop?h*.73:Math.max(h*.40,(dock?.getBoundingClientRect().top-this.container.getBoundingClientRect().top||h*.62)-20);let f=desktop?12.2:15.5;if(this.titleMode){f=11;foot=h*.74;}
+  let foot=desktop?h*.73:Math.max(h*.40,(dock?.getBoundingClientRect().top-this.container.getBoundingClientRect().top||h*.62)-20);let f=desktop?12.2:15.5;if(this.titleMode){f=11;foot=h*.74;}f*=1-(this.cornerZoom||0);
   this.frustum=f;const c=this.camera;c.left=-f*w/h/2;c.right=f*w/h/2;c.top=f/2;c.bottom=-f/2;
   c.position.set(8,8.7,13);c.position.applyAxisAngle(new T.Vector3(0,1,0),(this.blockAngle||0)+(this.cameraOrbit||0));c.lookAt(0,.8,0);c.updateProjectionMatrix();c.updateMatrixWorld(true);
   const p=new T.Vector3(this.actor?.root.position.x??-1.65,.18,this.actor?.root.position.z??2.2).project(c),cx=(p.x+1)*w/2,cy=(1-p.y)*h/2;
@@ -329,8 +329,8 @@ export class World{
  buildSurroundings(city){
   if(!this.scene)return;if(this.neighborhood)dispose(this.neighborhood);const g=new T.Group();this.scene.add(g);this.neighborhood=g;
   const palette={taipei:[0xb6b89d,0x91ab98,0xc9a88b],tokyo:[0xa6adc1,0xb7a4bc,0x839aaa],vegas:[0xb397b6,0xc2a38c,0x8c829f],singapore:[0x87b7b3,0xadc6bc,0xd5bba1],newyork:[0xa1adb7,0xb59379,0x9c9d95],monaco:[0xdfcfb5,0xc69f87,0xb9cbd0]}[city]||[0xb4c4b5];
-  for(let x=-2;x<=2;x++)for(let z=-2;z<=2;z++){if(x===0&&z===0)continue;const tile=new T.Group();g.add(tile);tile.position.set(x*18,-.08,z*18);box(tile,18,.15,18,0xaab7a4,0,-.18,0);box(tile,18,.05,3.1,0x758993,0,-.045,4.5);box(tile,2.8,.05,18,0x758993,-8,.0,0);box(tile,18,.08,1.05,0xc5cec0,0,.04,2.4);
-   for(let i=0;i<3;i++){const h=1.7+((x*x+z*z+i*3)%5)*.55,b=palette[Math.abs(x+z+i)%palette.length],xx=-5.2+i*4.8;box(tile,3.2,h,3.5,b,xx,h/2,-3.5);box(tile,3.45,.18,3.75,0xdad3bf,xx,h+.1,-3.5);for(let j=0;j<3;j++)box(tile,.48,.7,.03,0x64838a,xx-1+j,h*.65,-1.73);}
+  this.hoodTiles=[];for(let x=-3;x<=3;x++)for(let z=-3;z<=3;z++){if(x===0&&z===0)continue;const tile=new T.Group();g.add(tile);tile.position.set(x*18,-.08,z*18);tile.userData.gx=x;tile.userData.gz=z;this.hoodTiles.push(tile);box(tile,18,.15,18,0xaab7a4,0,-.18,0);box(tile,18,.05,3.1,0x758993,0,-.045,4.5);box(tile,2.8,.05,18,0x758993,-8,.0,0);box(tile,18,.08,1.05,0xc5cec0,0,.04,2.4);
+   for(let i=0;i<3;i++){const h=1.7+((i*3+1)%5)*.55,b=palette[i%palette.length],xx=-5.2+i*4.8;box(tile,3.2,h,3.5,b,xx,h/2,-3.5);box(tile,3.45,.18,3.75,0xdad3bf,xx,h+.1,-3.5);for(let j=0;j<3;j++)box(tile,.48,.7,.03,0x64838a,xx-1+j,h*.65,-1.73);}
    for(let i=0;i<5;i++)box(tile,1.3,.012,.05,0xf0e6c8,-7+i*3,.01,4.5);
   }
   // A permanent perpendicular street connects the current block to the next block.
@@ -351,15 +351,15 @@ export class World{
   this.corner={
     from:this.blockAngle||0,
     start:performance.now(),
-    duration:2200
+    duration:2600
   };
   return new Promise(resolve=>this.corner.resolve=resolve);
  }
  setLanguage(lang){this.lang=lang;}
  setSkin(color){this.skinColor=color??null;if(this.actor&&color!=null)this.actor.clothes.color.set(color);}
  setBeauty(rank){if(this.fallback||!this.renderer)return;this.beauty=rank;const r=Math.max(0,Math.min(5,rank));this.scene.fog.density=.026-r*.0035;if(this.ground)this.ground.material.color.lerp(new T.Color(r>=3?0x9fcf9a:0xaabca3),.5);if(this.dayRatio!=null)this.setDaylight(this.dayRatio*200,200);const sky=document.querySelector('.sky-backdrop');if(sky)sky.style.filter=`saturate(${.55+r*.18}) brightness(${.94+r*.03})`;}
- setOffer(offer){if(this.fallback)return;if(this.travelResolve){this.travelResolve();this.travelResolve=null;}if(this.plot)dispose(this.plot);if(this.incoming)dispose(this.incoming);this.incoming=null;this.plot=makePlot(offer,this.lang);this.plot.rotation.y=this.blockAngle||0;this.scene.add(this.plot);this.travelTime=null;this.drag=0;this.justTurned=false;this.actor.root.position.copy(this.streetPoint(-1.65,2.2));this.resize();}
- travel(offer,duration=850){if(this.fallback)return Promise.resolve();if(this.incoming)dispose(this.incoming);this.incoming=makePlot(offer,this.lang);this.incoming.rotation.y=this.blockAngle||0;this.justTurned=false;this.incoming.position.set(0,0,0);this.incoming.scale.set(1,.001,1);this.incoming.visible=false;this.scene.add(this.incoming);this.travelTime=0;this.travelStarted=performance.now();this.duration=this.motion?duration/this.speed:80;this.drag=0;return new Promise(r=>{this.travelResolve=r;});}
+ setOffer(offer){if(this.fallback)return;if(this.neighborhood)this.neighborhood.position.set(0,0,0);if(this.hideTile){this.hideTile.visible=true;this.hideTile=null;}if(this.travelResolve){this.travelResolve();this.travelResolve=null;}if(this.plot)dispose(this.plot);if(this.incoming)dispose(this.incoming);this.incoming=null;this.plot=makePlot(offer,this.lang);this.plot.rotation.y=this.blockAngle||0;this.scene.add(this.plot);this.travelTime=null;this.drag=0;this.justTurned=false;this.actor.root.position.copy(this.streetPoint(-1.65,2.2));this.resize();}
+ travel(offer,duration=850){if(this.fallback)return Promise.resolve();if(this.incoming)dispose(this.incoming);this.incoming=makePlot(offer,this.lang);this.incoming.rotation.y=this.blockAngle||0;this.justTurned=false;this.incoming.position.copy(this.streetPoint(18,0));this.incoming.scale.set(1,1,1);this.incoming.visible=true;this.scene.add(this.incoming);this.travelTime=0;this.travelStarted=performance.now();this.duration=this.motion?duration/this.speed:80;this.drag=0;return new Promise(r=>{this.travelResolve=r;});}
  setDrag(n){this.drag=n;}
  updateStyle(s){
   if(this.fallback)return;const o=getOutfit(s.equipped);if(this.heroIdentity)this.heroIdentity.visible=o.kind!=='royal'&&o.kind!=='gold';this.actor.clothes.color.set(o.color);this.actor.trousers.color.set(['suit','gold','cyber','royal'].includes(o.kind)?o.color:0xf0f4f0);this.actor.dress.children.slice().forEach(dispose);const d=this.actor.dress;
@@ -450,11 +450,11 @@ export class World{
     const settleEase=settle*settle*(3-2*settle);
     this.cornerFacing=T.MathUtils.lerp(walkHeading, newBlockHeading, settleEase);
     this.blockAngle=c.from+(Math.PI/2)*ease;
-    this.cameraOrbit=Math.sin(Math.PI*p)*.68;
+    this.cameraOrbit=Math.sin(Math.PI*p)*1.05;this.cornerZoom=Math.sin(Math.PI*p)*.28;
     this.resize(true);
     if(p===1){
       const resolve=c.resolve;
-      this.corner=null;this.cameraOrbit=0;
+      this.corner=null;this.cameraOrbit=0;this.cornerZoom=0;
       this.justTurned=true;
       this.blockAngle=c.from+Math.PI/2;
       this.actor.root.position.copy(this.streetPoint(-1.65,2.2));
@@ -468,16 +468,19 @@ export class World{
     this.travelTime=now-this.travelStarted;
     const p=Math.min(1,this.travelTime/this.duration),e=p*p*(3-2*p);
     /* v10: the street stays still — old buildings sink, new ones rise in place (no whole-screen slide) */
-    const out=Math.min(1,p*2),inn=Math.max(0,p*2-1),bo=inn<1?1-Math.pow(1-inn,3)+Math.sin(inn*Math.PI)*.08:1;
-    this.plot.position.set(0,0,0);this.plot.scale.set(1,Math.max(.001,1-out*out),1);this.plot.visible=out<1;
-    this.incoming.position.set(0,0,0);this.incoming.scale.set(1,Math.max(.001,bo),1);this.incoming.visible=inn>0;
-    this.actor.root.position.copy(this.streetPoint(-1.65+Math.sin(p*Math.PI)*0.22,2.2));
+    /* v11: the scenery travels past the hero (camera fixed): old block slides out, next block slides in, neighbourhood scrolls */
+    const D=18,sh=-D*e;
+    this.plot.scale.set(1,1,1);this.plot.visible=true;this.plot.position.copy(this.streetPoint(sh,0));
+    this.incoming.scale.set(1,1,1);this.incoming.visible=true;this.incoming.position.copy(this.streetPoint(D+sh,0));
+    if(this.neighborhood){this.neighborhood.position.copy(this.streetPoint(sh,0));if(!this.hideTile&&this.hoodTiles){const target=this.streetPoint(D,0);this.hideTile=this.hoodTiles.find(o=>Math.abs(o.position.x-target.x)<1&&Math.abs(o.position.z-target.z)<1);if(this.hideTile)this.hideTile.visible=false;}}
+    this.actor.root.position.copy(this.streetPoint(-1.65+Math.sin(p*Math.PI)*0.35,2.2));
     walking=true;
     if(p>=1){
       dispose(this.plot);
       this.plot=this.incoming;
       this.incoming=null;
       this.plot.position.set(0,0,0);this.plot.scale.set(1,1,1);this.plot.visible=true;
+      if(this.neighborhood)this.neighborhood.position.set(0,0,0);if(this.hideTile){this.hideTile.visible=true;this.hideTile=null;}
       this.travelTime=null;
       this.travelResolve?.();
       this.travelResolve=null;
