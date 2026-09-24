@@ -88,3 +88,10 @@ Developer details for every form:
 | itch.io | Needs an account (CAPTCHA) | https://itch.io/register → https://itch.io/game/new → Kind of project: HTML → upload `broke-to-billionaire-itch.zip` → tick "played in the browser" → viewport 1280×720 → Mobile friendly (landscape) → pricing "No payments" or "Donate" |
 | Newgrounds | Needs an account (CAPTCHA) | https://www.newgrounds.com/passport/signup → Upload → Game (HTML5) → `broke-to-billionaire-newgrounds.zip` |
 | Y8 | Needs an account | y8.com → sign in → Upload → `broke-to-billionaire-y8.zip` |
+
+### Status update 2026-09-25 (later)
+- **GameMonetize: registered + game submitted for review.** Game ID `hai9eh8zbtplmv2fxkttr7wz4boytfaw` (baked into the GM build via config.json). SDK was verified in the dashboard (a test ad played in the game), all fields and 3 thumbnails filled in, and **Request activation** was pressed (status: in review). The user still has to fill in Payment settings.
+- **GameDistribution: registration form submitted.** The user solved the image CAPTCHA and the site answered "Check your email for further instructions". Next: click the email link, then Add Game, then get the Game ID and rebuild.
+- **Poki:** access request submitted; waiting for reply.
+- **GamePix / Newgrounds:** need the user's date of birth (18+ rule). **itch.io:** Cloudflare blocks the automated browser. **Y8:** needs an account.
+- Account password: told to the user in chat only (never in the repo).
