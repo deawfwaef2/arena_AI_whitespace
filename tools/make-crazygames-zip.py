@@ -1,4 +1,4 @@
-"""R14 #148: build the CrazyGames upload ZIP (index.html + art-pack.js + music-pack/) with zopfli deflate (max compression,
+"""R14 #148 / R15: build the CrazyGames upload ZIP (index.html + art-pack.js + art-cities.js + music-pack/*.mp3 + sfx-pack/) with zopfli deflate (max compression,
 standard ZIP readers can open it). Usage: python3 tools/make-crazygames-zip.py  -> broke-to-billionaire-crazygames.zip"""
 import os, zipfile, zlib, sys
 try:
@@ -8,12 +8,16 @@ except ImportError:
     def deflate(b): c = zlib.compressobj(9, zlib.DEFLATED, -15, 9); return c.compress(b) + c.flush()
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 out = os.path.join(root, 'broke-to-billionaire-crazygames.zip')
-files = ['index.html', 'art-pack.js'] + sorted('music-pack/' + f for f in os.listdir(os.path.join(root, 'music-pack')))
+files = ['index.html', 'art-pack.js', 'art-cities.js'] + sorted('music-pack/' + f for f in os.listdir(os.path.join(root, 'music-pack'))) + sorted('sfx-pack/' + f for f in os.listdir(os.path.join(root, 'sfx-pack')))
 tmp = out + '.tmp'
 with zipfile.ZipFile(tmp, 'w', zipfile.ZIP_STORED) as z:
     for name in files:
         data = open(os.path.join(root, name), 'rb').read()
-        comp = deflate(data)
+        comp = deflate(data) if not name.endswith('.mp3') else None
+        if comp is None or len(comp) > len(data) * 0.98:
+            # already-compressed audio: store as-is
+            zi = zipfile.ZipInfo(name, (2026, 1, 1, 0, 0, 0)); zi.external_attr = 0o644 << 16
+            z.writestr(zi, data, compress_type=zipfile.ZIP_STORED); print(f'{name}: stored {len(data)}', file=sys.stderr); continue
         zi = zipfile.ZipInfo(name, (2026, 1, 1, 0, 0, 0)); zi.compress_type = zipfile.ZIP_DEFLATED; zi.external_attr = 0o644 << 16
         # write pre-deflated data: use low-level API
         zi.file_size = len(data); zi.CRC = zlib.crc32(data) & 0xffffffff; zi.compress_size = len(comp)
