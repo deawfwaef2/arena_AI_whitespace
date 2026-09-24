@@ -111,3 +111,8 @@
 .r12-spot-arrow{position:absolute;right:100%;top:50%;width:44px;height:56px;margin-top:-28px;margin-right:14px;transform:rotate(-90deg);filter:drop-shadow(0 4px 8px #000a);animation:r12bob .7s ease-in-out infinite alternate}
 @keyframes r12bob{from{transform:translateX(-12px) rotate(-90deg)}to{transform:translateX(0) rotate(-90deg)}}
 @media (prefers-reduced-motion:reduce){.r12-spot-ring,.r12-spot-arrow{animation:none}}
+/* short/phone views: keep START, notice and ad slot from colliding */
+.r12-menu{container-type:size}
+@container (max-height:480px){.r12-center{top:57%;width:min(430px,54%);gap:8px}.r12-start{padding:12px 40px 10px}.r12-start b{font-size:34px}.r12-notice p{font-size:12px}.r12-help{padding:5px 14px;font-size:12px}}
+#start-screen:has(.r12-menu) .r12-ad{transform-origin:right bottom}
+@media (max-height:480px){#start-screen .r12-ad{transform:scale(.62);right:6px;bottom:6px}}

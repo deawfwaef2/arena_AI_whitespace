@@ -356,3 +356,12 @@ Standing constraints unchanged. Work clone in /tmp/repo. Checkpoint → commit �
 - 132b Runs ≥7: the ORIGINAL cinematic (with Deawfwaef Games logo) + ORIGINAL main menu (do not delete them). Bigger Skip button.
 - 133 Every main menu variant has a static display-ad slot somewhere unobtrusive.
 - 134 Be creative; never annoy the player; pull them into playing.
+
+### Round 12 — progress log (append)
+- 120 done (street cast keeps world angle through corners). 121: could not reproduce — qa/r12reset.mjs proves restart resets famBuys/lvBuys/hospUses/med; ask user for exact steps if seen again.
+- 125 energy nerfs (shop/pharmacy/stroll/ads/district). 126b: story t0 moved to page 6–40; first-play spotlight ring + arrow (#r12-spot, r9 coach steps 1 & 3).
+- 123b: default English (old saves without introLang/langSet are migrated to en); no language picker; Chinese only via Settings (meta.langSet).
+- meta.runsDone = completed runs (counted in restart() when run ended or page>=3; old saves fall back to runCount-1). Helper runsDone() in src/intro.js.
+- Openings: c<3 loading bar poor→rich (top tiers ???), 3–6 tap-to-start + cg-poor story frame, ≥7 original logo+CG (Skip button .big). No logo before 7.
+- Menus: c<7 new centred menu (assets/art/menu-bg.webp = user art, marquee text, coins, big START, unlock notice 3/7); ≥7 original studioMarkup. Every menu has .r12-ad (#r12-menu-banner 320x100 via platform.banner, house poster offline).
+- New CSS layer: src/r12.css (latest). QA scripts: qa/r12menu.mjs, r12story.mjs, r12phone.mjs, r12play.mjs, r12en2.mjs.
