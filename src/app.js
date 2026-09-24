@@ -222,7 +222,7 @@ async function doInvest(confirmed=false){
  if(busy||modalType||visit||!validAction()||run.offer.settled||!['project','special'].includes(run.offer.type)||!lifeUI.beforeInvest())return;
  const raw=run.offer.pendingStake|| (run.offer.type==='special'?requiredStake(run):Number($('stake-input')?.value)*100),amount=Math.round(raw);
  if(!Number.isFinite(amount)||amount<1||(!run.offer.pendingStake&&amount>run.cash)||Math.abs(raw-amount)>.00001){toast(L('Choose an amount between $0.01 and your cash balance.','请输入 $0.01 至现金余额之间的金额。'));return;}
- if(run.offer.type==='project'&&!run.offer.pendingStake){const limits=stakeBounds(run);if(amount<limits.min||amount>limits.max){toast(`本项目投入范围：${money(limits.min)} 至 ${money(limits.max)}`);return;}}
+ if(run.offer.type==='project'&&!run.offer.pendingStake){const limits=stakeBounds(run);if(amount<limits.min||amount>limits.max){toast(L(`Stake must be between ${money(limits.min)} and ${money(limits.max)}.`,`本项目投入范围：${money(limits.min)} 至 ${money(limits.max)}`));return;}}
  const q=quote(run,amount);
  if(run.offer.type==='special'&&q.scope==='wallet'&&!confirmed){showCashRisk(q,()=>doInvest(true));return;}
  busy=true;const id=run.id,oldTier=tier(run),rank=RARITIES.findIndex(r=>r.id===run.offer.rarity);let result;try{result=invest(run,amount,{force:dev.force});}catch(error){busy=false;toast(error.message);return;}if(result.pending){busy=false;save();renderHud();renderDock();return;}if(result.challenge)pendingChallenge.push(result.challenge);save();renderDock();effects.tone('tap');
