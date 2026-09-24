@@ -1,0 +1,10 @@
+import {chromium} from '@playwright/test';
+const b=await chromium.launch({args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader']});
+const c=await b.newContext({viewport:{width:1280,height:720}});
+await c.addInitScript(m=>{if(!sessionStorage.getItem('seeded')){localStorage.setItem('upshift-save-v3',JSON.stringify({version:3,meta:m}));sessionStorage.setItem('seeded','1');}},{music:false,sound:false,low:true,motion:true,runsDone:4,runCount:5});
+const p=await c.newPage();await p.goto('http://127.0.0.1:8080/',{waitUntil:'load',timeout:120000});
+await p.locator('.r12-tap').waitFor({timeout:90000});await p.mouse.click(640,300);
+await p.locator('.r12-story').waitFor({timeout:20000});await p.waitForTimeout(1200);await p.screenshot({path:'/tmp/shots/story.png'});
+await p.locator('.r12-menu').waitFor({timeout:30000});
+await p.waitForTimeout(1500);await p.screenshot({path:'/tmp/shots/menu2.png'});
+console.log('ok, lang',await p.evaluate(()=>document.documentElement.lang));await b.close();
