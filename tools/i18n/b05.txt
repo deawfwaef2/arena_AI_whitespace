@@ -1,0 +1,300 @@
+1460|Can't pay the storm fine
+1461|Refused reform: 14% fine, council −20.
+1462|All three steps done. Cooperation reward ${} credited, capital guild +12.
+1463|The storm passes; your reputation stays.
+1464|Settlement paid; you leave safely. Underground +4.
+1465|Evade threshold {}%, roll {}.
+1466|You got away — no cash lost.
+1467|You didn't escape the underground revenge.
+1468|Assassinated by the underground gang
+1469|(co-insurance refund included)
+1470|Lost ${}{} cash.
+1471|Relationship gift ${} received.
+1472|Cash unchanged, common folk +12, this faction +5.
+1473|Purchased: +{} luxury points, moved to the rebirth menu when life ends. No cash return.
+1474|You kept your cash and left the view where it is.
+1475|Bankrupted by a hostile faction's freeze
+1476|Hostile freeze loss applied.
+1477|{} relations {}. {}
+1478|Make a choice first.
+1479|That decoration doesn't exist.
+1480|Net worth too low for this decoration.
+1481|Not enough cash — keep at least $0.01 after buying.
+1482|Alley pour-over coffee
+1483|Finish settlement first.
+1484|Out of energy — take a holiday.
+1485|Wait for the settlement countdown.
+1486|Out of energy — you must rest next.
+1487|Stake is outside the allowed range.
+1488|Out of cash — bankrupt
+1489|SELECT LANGUAGE
+1490|Chinese
+1491|Simplified Chinese
+1492|presents
+1493|Every bit of splendour must be won back, step by step.
+1494|Enter game
+1495|A rainy morning. You have only $100 in your pocket.
+1496|This is your interface today… grey, dull, empty.
+1497|…and this is what it could become.
+1498|Yachts, private jets, a crown no one sees. — Locked, for now.
+1499|The interface, your way.
+1500|3.1 Layout · adjust panels and text separately
+1501|− Smaller
+1502|+ Larger
+1503|Reset
+1504|Panel size {}%
+1505|Text size {}px
+1506|Panels 75%–125%, body text 14–22px. Saved automatically; game values unaffected.
+1507|{} · move −5
+1508|· Holiday
+1509|Life by class / recovery & living
+1510|Tap to open world map
+1511|World map
+1512|OVERLAND CONNECTION
+1513|ABOVE THE CLOUDS
+1514|{} / Life radio
+1515|WORLD DESK / Simulated world news
+1516|This holiday's broadcast · updates next rest
+1517|Street deal
+1518|A new chance on the corner
+1519|Check the odds and rules first, then decide whether to join.
+1520|News effect: {}
+1521|You cross a bridge.
+1522|The river quotes no prices, only wind. A short blank stretch, then back to the city.
+1523|You walk by the water.
+1524|No deals for now. Leave a moment for the shimmer and the distant boats.
+1525|Through the city park.
+1526|No profit forecasts in the shade. Catch your breath, then keep going.
+1527|You turn into an alley.
+1528|Old posters, laundry lines — this is the city too.
+1529|Strolling…
+1530|CITY INTERLUDE
+1531|No investment · no cash cost · next stop still costs 5 energy
+1532|This time, pass by
+1533|Go in →
+1534|Not an investment, no entry fee.
+1535|Once inside, every remaining stop becomes a special task until this round's energy runs out; no city travel meanwhile. Energy left: {}.
+1536|Event complete.
+1537|Out of energy · rest
+1538|Next special task →
+1539|Play safe · −8 energy · fixed pay
+1540|Go bold · −12 energy · 65% extra tips, else base pay
+1541|Out of energy · rest
+1542|Skip task, keep exploring (−5 energy)
+1543|Trade energy for pay; no cash spent. Settles once right after choosing.
+1544|{} / {} · the special district ends when energy runs out
+1545|RARE DISTRICT
+1546|Finish the current stage before opening the world map.
+1547|You can view the map any time; travel needs a World Pass from a roadside shop ($350, unlocks at $500 net worth).
+1548|Travelling here needs net worth of {}.
+1549|Special district in progress — you can travel only after running out of energy and resting.
+1550|THE WORLD / tap a city to choose
+1551|Where to next?
+1552|{} / {} local deals
+1553|Rare district: {}
+1554|Soundtrack: {}
+1555|Departing {} · base map: Natural Earth, public domain · distances estimated from coordinates
+1556|{} · {}s · −10 energy
+1557|200 energy
+1558|Energy
+1559|UI scale / text size
+1560|Tap to explore the world
+1561|Energy cap maxed · 400
+1562|Raise energy cap {} → {} · {}
+1563|PERSONAL SETTINGS / growth
+1564|Last $100: Swipe to Rich / 3.1 City Edition
+1565|Energy & day cycle
+1566|Start at 200; upgrade 4 times in the menu up to 400, +50 each, costing $1,500 / $4,000 / $10,000 / $25,000, each also restoring 50 energy. Move −5, invest −3, shop −2, travel −10. Remaining energy sets morning, afternoon, dusk and night. At zero you rest, then refill to the cap at morning.
+1567|Different cities, different lives
+1568|Six cities, each with 12 local deals, its own panorama and music. Every 10 steps you turn a corner; sometimes you pass a bridge, park, waterfront or alley with no deals. Tap the map directly; travel still needs the pass and wealth thresholds.
+1569|Rare regional events
+1570|From stop 4, with over 25 energy and no timed challenge, each stop has a 4.5% chance of an invitation. Enter or leave freely; inside, only that district's tasks appear until energy runs out, with no city travel. Tasks cost no cash: play safe for 8 energy and fixed pay; go bold for 12 energy with 65% chance of 2.3× pay, else 0.35× base pay. Skipping still costs 5 energy.
+1571|Rest & news
+1572|Holiday bills, paid activities and instant recovery packs work as in 3.1; if you can't pay, apply for public aid. Top-right is fictional game news, not real news. Each rest brings one event that affects a city's next round of normal deals (odds or multiplier) until the next rest; the effect is shown before you invest.
+1573|Interface & sound
+1574|Top-right UI − / + resizes panels, Aa resizes text. Text contrast is fixed and won't dim at night. All city music is built in offline and starts on first tap; mute or adjust in music settings.
+1575|All money and events are fictional game content. No top-ups, no withdrawals, no financial advice. City images are AI-generated illustrations, not navigation maps.
+1576|Expand your energy cap?
+1577|Pay {} coins: energy cap {} → {}, plus 50 energy now. This upgrade is lost if you go bankrupt and restart.
+1578|This run has changed.
+1579|Energy cap raised to
+1580|You entered
+1581|. Until your energy runs out, it's all special district tasks.
+1582|Task pay +{} · no capital needed
+1583|Taiwan
+1584|Corner business · simple and direct
+1585|Start from a breakfast stall. Small, one-off settlements — a path for every beginning.
+1586|Morning rice-ball shop
+1587|Rooftop herb garden
+1588|Alley errand squad
+1589|Night market crowds
+1590|Local food deals: odds +8 points.
+1591|Japan
+1592|Creative & tech · two review rounds
+1593|Indie records and tech prototypes. Advanced deals must pass both tech and market review.
+1594|Shimokitazawa first-press vinyl
+1595|Akihabara arcade
+1596|Shibuya materials lab
+1597|Akihabara maker partner
+1598|Harajuku street-dance crew
+1599|Creators' festival
+1600|Local deals: success multiplier +0.25.
+1601|USA · Nevada
+1602|High volatility · all-in risk
+1603|Neon doesn't guarantee luck. Normal deals leave unstaked money alone; special all-in contracts can wipe your cash.
+1604|Strip nightclub
+1605|Resident show
+1606|Desert prospecting
+1607|Strip resident dance troupe
+1608|Desert expedition partner
+1609|Grand opening
+1610|Multiplier +0.6, odds −8 points.
+1611|Port trade · timed settlement
+1612|From small freight to regional supply chains. Advanced deals wait 20 seconds to settle, with money at risk meanwhile.
+1613|Strait containers
+1614|Marina data centre
+1615|Equatorial green energy
+1616|Port express team
+1617|Marina research group
+1618|Shipping window
+1619|Local trade deals: odds +5 points.
+1620|USA · New York
+1621|Capital markets · double due diligence
+1622|From neighbourhood coffee to big mergers. Advanced deals need double due diligence; top deals have no stake cap.
+1623|Brooklyn coffee
+1624|Manhattan cloud services
+1625|Broadway production
+1626|Indie film crew
+1627|Garage startup partner
+1628|Venture week
+1629|Advanced deals: success multiplier +0.4.
+1630|Private capital · top-tier entry
+1631|Yachts, art and private capital. Higher bar, more room to invest; wealth doesn't mean zero risk.
+1632|Côte d'Azur yacht charter
+1633|Haute couture collection show
+1634|Private gold mining rights
+1635|Coastal expedition team
+1636|Private brand partner
+1637|Yacht show season
+1638|Travel & luxury deals: success multiplier +0.5.
+1639|World Pass
+1640|Unlocks travel between cities; tap the world map to browse, city music plays automatically.
+1641|City news radio
+1642|Unlocks a live ticker: local events, stake limits and mechanic tips.
+1643|Atelier modern UI
+1644|Buy a modern cream-white UI with custom icons, fine-line ornaments and wealth effects. Switch back to basic UI any time.
+1645|Mechanic scope
+1646|Shows a hexagon mechanic chart in the sidebar: owned, buyable, locked.
+1647|Interest account
+1648|When you return, offline cash grows 1% per day, pro-rated, up to 7 days.
+1649|Used touring car
+1650|Enables the low-tier deal filter; swipe right to auto-skip low deals, each stop still costs energy. Short trips get cheaper.
+1651|Private music butler
+1652|City music switches automatically for free; after buying, pick from 6 wealth-class tracks for rest time.
+1653|Yield boost voucher
+1654|Needs an interest account. Offline daily rate rises from 1% to 1.5%.
+1655|Noble decree: summon a guild agent — the next district goes straight to a rare auction or luxury boutique!
+1656|Noble decree: the next stop becomes a high-net-worth banking deal with a higher multiplier.
+1657|Noble decree: summon a royal medical team to set up a private recovery station and restore health!
+1658|Noble decree: the next stop is a frontier quantum lab — much higher odds of a big tech breakthrough.
+1659|Marina custody trust
+1660|Singapore only, needs an interest account. Adds 0.5 points to the daily rate.
+1661|Private aviation membership
+1662|Monaco only. Unlocks private charter flights: any destination in 5 seconds.
+1663|Survival class
+1664|A bench, a bowl of hot soup. Today, just take care of yourself.
+1665|Street soup
+1666|Park stretching
+1667|Reading at the used-book stall
+1668|Public bathhouse
+1669|Suburban bus day trip
+1670|Budget hotel nap
+1671|Sound sleep package
+1672|Working class
+1673|Let the alarm ring later. An ordinary weekend that's all yours.
+1674|A weekend coffee
+1675|Community reading afternoon
+1676|Gym & stretching
+1677|Short city trip
+1678|Budget hotel weekend
+1679|Half-day hot spring
+1680|Full recovery holiday
+1681|Middle class
+1682|Sea breeze, an unfinished book, and time slowing down.
+1683|Dinner for two
+1684|Seaside reading time
+1685|Outdoor yoga class
+1686|Boutique spa
+1687|Beach weekend
+1688|Family holiday package
+1689|All-inclusive recovery trip
+1690|Affluent class
+1691|Leave work in the city and give today to somewhere far away.
+1692|Sea-view breakfast
+1693|Personal trainer stretch
+1694|Boutique spa treatment
+1695|Five-star island trip
+1696|Mountain retreat weekend
+1697|Business-class overseas holiday
+1698|Exclusive deep recovery
+1699|High net worth class
+1700|A secluded bay where the world speaks softly.
+1701|Private chef dinner
+1702|Afternoon reading at sea
+1703|Private wellness session
+1704|Onboard spa service
+1705|Superyacht weekend
+1706|Private jet trip
+1707|Fully managed recovery holiday
+1708|Top wealth
+1709|The whole island goes on holiday. Beyond luxury, time is still equal.
+1710|Estate art salon
+1711|Solitude in the private library
+1712|Personal wellness team
+1713|All-day private spa
+1714|Private island trip
+1715|Bespoke world tour
+1716|Ultimate all-inclusive recovery
+1717|Rest activity
+1718|Can't do this during rest or travel.
+1719|Zurich private offshore vault
+1720|Royal private recovery clinic
+1721|Pioneer quantum deep-dive lab
+1722|You don't own this noble privilege item.
+1723|Buy unlocked goods at a random local shop.
+1724|Not enough balance — keep at least $0.01 cash after buying.
+1725|Arrive at the destination first.
+1726|Activity unavailable right now.
+1727|Finish resting first.
+1728|Overland & sea · slow
+1729|Bus / rail · slow
+1730|Economy flight
+1731|Priority business flight
+1732|Member private charter
+1733|The special district lasts until energy runs out; travel after this trip is finished.
+1734|Destination locked.
+1735|End the timed challenge before travelling.
+1736|Finish settling the current deal first.
+1737|Out of energy — take a holiday first.
+1738|Not enough for the fare — keep at least $0.01.
+1739|The trip isn't over yet.
+1740|Energy / holiday
+1741|Move −5 · invest −3 · shop −2 · travel −10
+1742|World map
+1743|News radio
+1744|Modern UI
+1745|Advanced deals
+1746|Stake $1,000–$100,000, location-specific combo rules
+1747|Offline interest
+1748|Car filter
+1749|Class music
+1750|Yield upgrade
+1751|Top deals
+1752|Minimum stake $100,000, no cap
+1753|Marina trust
+1754|Private aviation
+1755|Energy cap already at 400.
+1756|Not enough cash — keep at least $0.01 after upgrading.
+1757|Street network & talent market
+1758|The talent market opens in the scene; pay to sign followers. Tap one to see skills, wages and fire them. Passers-by's goodwill affects their opinion.
+1759|World Pass & city travel

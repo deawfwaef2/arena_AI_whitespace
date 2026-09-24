@@ -1,0 +1,300 @@
+260|A normal investment has exactly two outcomes: success returns the shown multiplier; failure returns $0 of your stake.
+261|Cash you didn't stake is not affected.
+262|Example: stake $25 at ×1.80 — success returns $45 (net +$20); failure loses $25, not your whole wallet.
+263|If you stake all your cash and fail, cash hits zero and the run ends.
+264|Shown odds are the real odds. Each deal can be invested in only once.
+265|The timer starts only after you accept. Skipping costs 5 energy; once accepted it can't be cancelled.
+266|Reward and penalty are fixed amounts shown before you accept.
+267|Menu, ads and background pause the timer. After a refresh the saved time left continues.
+268|Penalties can drain your cash and bankrupt you, but never create debt.
+269|Only one challenge at a time. Buying decorations doesn't raise net worth.
+270|New items can only be bought at the current roadside encounter. Owned items can be worn or toured from the menu. Buildings and outfits are cosmetic; mechanism items have their listed functions (map, interest, filter…). Nothing can be resold.
+271|Buildings are fictional assets priced at real-world dollar scale, not live valuations.
+272|See clearly what you're betting on.
+273|No hidden loss rules. No real money.
+274|Got it
+275|Walk to the next stop, reach new heights.
+276|Everything happens in this city.
+277|Swipe right
+278|on the scene or deal card to walk to the next stop. Skipping is free but costs 5 energy; you can also press →.
+279|Normal investment
+280|Failure loses this whole stake but never touches unstaked cash. Multipliers include the stake; returns round down to the cent.
+281|Special bets
+282|May require 25%, 50%, 75% or all your cash. Red half-wallet contracts wipe your WHOLE wallet on failure, including the unstaked half, and ask for a second confirmation.
+283|Timed challenges
+284|Test wealth growth or win streaks. Success pays the agreed reward, failure the agreed penalty. Menu and background pause the timer.
+285|Shops & buildings
+286|are random roadside encounters, not a permanent shop menu. Outfits and property only change looks and prestige.
+287|Zero cash = bankruptcy
+288|. All buildings and outfits are wiped and you restart with $100. Old records are kept for show only and can't be spent.
+289|Fictional game money only. No top-ups, withdrawals, real assets or financial advice. Money/score cap is $9 trillion; the game never ends.
+290|Let's go
+291|Street deals cap at $500; premium deals $1,000–$100,000; top deals from $100,000 with no gameplay cap. Premium and top deals unlock by current net worth and are lost again if you get poorer.
+292|See rules for energy, map, rest and items
+293|Your diary for this run.
+294|Every gain, every risk.
+295|Stops walked
+296|Wins
+297|Challenges won
+298|Challenges failed
+299|Your first decision is just ahead.
+300|Exclusive auction medals won in this life:
+301|Out of cash — bankrupt
+302|LIFE CLOSED / Financial death & final settlement
+303|Your story stops earning interest.
+304|Cause of exit: {}
+305|Peak net worth in life
+306|Cash at settlement
+307|Rest cycles lived
+308|{}×
+309|Legacy points this run +{} LP · Legacy account total
+310|Permanently written into this device's life records; spend points at the Rebirth Office to boost your next life.
+311|Take next life's $100 starting cash · Be reborn →
+312|Rebirth Office
+313|Hall of lives
+314|Fate is fickle, bills are forever. Maybe next life you'll buy a whole spaceport.
+315|End this run and apply for rebirth
+316|A fresh start, $100.
+317|Developer sandbox.
+318|Test every scene, risk and timer.
+319|Editing money, odds, timers or assets permanently marks this run as TEST. Imported saves are TEST too and can't submit scores.
+320|Money & prestige
+321|Set cash
+322|Instant billionaire
+323|Normal deal
+324|Go now
+325|Explosive special contracts
+326|Half-wallet all-risk, all-in jackpot, coin duel, fixed 75% stake.
+327|Generate contract
+328|Timed bet
+329|Test time limit (sec, 1–600)
+330|Generate challenge
+331|Complete goal now
+332|Time out now
+333|Roadside shops & buildings
+334|Meet an outfit shop
+335|Meet a building
+336|Gift a building
+337|Own all decorations
+338|Outcome control
+339|True random
+340|Force success · TEST
+341|Force failure · TEST
+342|Apply
+343|Go bankrupt now
+344|Failure multiplier is fixed at ×0; special whole-wallet terms still apply.
+345|Odds lab
+346|Success odds % and success multiplier. Edits the current deal or special contract.
+347|Edit odds · TEST
+348|Simulate 10,000 times
+349|Virtual leaderboard
+350|Every virtual player is clearly marked SIM.
+351|Generate / reshuffle
+352|Clear virtual players
+353|Speed & spawn chance
+354|Animation
+355|Building spawn chance, default 4%.
+356|Apply chance · TEST
+357|Saves & diagnostics
+358|Export JSON
+359|Import JSON
+360|Run diagnostics
+361|Clean new run
+362|Ready. Timer and economy edits mark this run as TEST.
+363|Score sent; CrazyGames verifies it independently. The SDK doesn't confirm verification.
+364|Test runs can't submit scores.
+365|Please submit inside CrazyGames.
+366|The publisher needs to enable and configure the leaderboard.
+367|Please log in to CrazyGames first.
+368|Please wait a few seconds before submitting again.
+369|Score is outside the configured range.
+370|Couldn't send — check the platform configuration.
+371|My assets · Tour
+372|Challenge timers pause while touring assets.
+373|Back to current stop
+374|Backup created — keep the downloaded JSON file safe.
+375|Interface scale set to {}%
+376|Nickname saved.
+377|Start again from $100?
+378|Cash, all assets, outfits and any running challenge are wiped. Old records are kept.
+379|Treatment bought — health restored!
+380|Enter a valid cash amount.
+381|Accept a challenge first.
+382|Outcome control updated.
+383|Meet an investment deal first.
+384|Odds must be 1–99 and multiplier 1–20.
+385|Read-only 10,000-run simulation; money unchanged.\n
+386|Building spawn chance changed for this test run.
+387|Start a clean new run?
+388|Clears decorations and the current challenge, resets debug odds and forced outcomes.
+389|Backup is over 500 KB
+390|No valid game progress found
+391|Replace your current journey with this backup?
+392|Export your current save first. Confirming loads stop
+393|, cash
+394|Backup restored.
+395|Not imported:
+396|. Current save unchanged.
+397|Imported as a TEST run.
+398|Invalid v2/v3 save; current progress unchanged.
+399|Account progress loaded.
+400|Health ran out
+401|Preview mode: progress is saved for this session only.
+402|This bill
+403|Next rest
+404|{} · Net worth {}
+405|See net worth, estimated bill, health and current mechanisms
+406|Recovering on holiday
+407|· next rest
+408|New mechanism
+409|Next life pass · {}%
+410|Net worth {} / {}
+411|{} to go
+412|Net worth {} / unlock at {}. Click for the full mechanism blueprint
+413|Core thresholds reached · View mechanisms
+414|All core thresholds reached; items you must buy are still paid separately. Click to view the map
+415|Unique medals
+416|Collapse
+417|Expand
+418|World news · Game events
+419|Read news →
+420|Out of energy (0/{}) · can't move on
+421|Go rest
+422|Meeting over.
+423|This interlude is recorded. Explore the next street.
+424|Answer this interlude with a few choices — no complex panels needed.
+425|Keep going →
+426|Respond to this meeting →
+427|CITY ENCOUNTER
+428|Decline {}%
+429|Go to life settlement
+430|Noted, continue →
+431|No prepayment
+432|May cost {}
+433|Cash {} · each choice settles once
+434|Done
+435|Minus {} min {} sec
+436|Let your body keep up with your ambition.
+437|Pay the bills first, then talk about life.
+438|Recovering
+439|Bill unpaid
+440|Handle the rest event first →
+441|Can't pay · settle this run
+442|Pay {} · start recovering
+443|Fixed class living cost + separate rest service fee; the bill locks when rest starts, extra activities are optional. Not enough cash ends the run.
+444|Collect {} energy and set off →
+445|More rest activities
+446|Medical / longevity
+447|Recover now · {}
+448|Character
+449|Panorama
+450|Side view
+451|Rest / {}
+452|Net worth now
+453|Street stalls & shared flat
+454|BASIC LIVING
+455|Lunchboxes, bus pass & old flat
+456|WORKING CLASS
+457|Restaurants, gym & two-bedroom
+458|MIDDLE CLASS
+459|Private chef, clubs & city-view flat
+460|AFFLUENT
+461|Butler, driver & private floor
+462|MAGNATE
+463|Estate, flight crew & resident staff
+464|PRIVATE CAPITAL
+465|Done deal.
+466|Didn't work out.
+467|Settled
+468|Not enough cash
+469|Stake {}
+470|Win {}
+471|{}% success
+472|While you rest, someone brings you a deal
+473|Each pitch can be discussed once per rest; the result settles instantly and is saved — refreshing won't reroll.
+474|Recovery complete
+475|Recovery continues offline
+476|Rest, a different way.
+477|Activities cost game money and shorten the remaining timer.
+478|+{} LP · upkeep {} per rest
+479|Unique auction medals won ({})
+480|Active
+481|Use now
+482|Noble charters held ({})
+483|See clearly what you have left.
+484|{} / all amounts are game money
+485|Locked bill for this rest
+486|Next rest estimate
+487|Fixed class rules · no asset-percentage tax
+488|Legacy locked regional tax
+489|Basic investing & rest
+490|City travel & items
+491|Social life
+492|Security / regional tax / recovery
+493|Financial storms / factions
+494|Local luxury / longevity
+495|Industrial zone
+496|Sovereign zone
+497|Cell renewal
+498|Cloud district
+499|Extreme wealth pressure
+500|Assets, outfits & items bought
+501|Pending stake (counted once)
+502|Living upkeep (incl. crew wages {})
+503|Bodyguard wages
+504|Rest-time service fee
+505|Rebirth discount
+506|Total
+507|Health {}{}
+508|Rested {} times. Next decline chance {}%; +1 point per rest. A hit costs 1 heart; zero means death.
+509|Mechanisms available now
+510|Mechanisms follow current net worth, not your peak. Drop back and premium features pause; recover and they return.
+511|Legacy locked living upkeep
+512|10-minute rest service
+513|Crew wages
+514|Collection storage
+515|Clothing care
+516|Decoration upkeep
+517|Butler & past-life discount
+518|Locked bill
+519|Your life has a new standard
+520|(survival base $8)
+521|Class threshold {} × 30%{}
+522|Uses the legacy amount locked when rest started
+523|Separate time service fee · not charged per second
+524|Settled every rest; stops when dismissed
+525|Fixed cost this cycle
+526|Class retention threshold
+527|Cash needed to keep your class after paying
+528|Non-cash assets already deducted; if cash can't cover the total bill, the run ends.
+529|{} class
+530|Total this time
+531|Reach your destination before resting.
+532|Settle the deal before resting.
+533|Check the bill before you rest
+534|Out of energy — rest before moving on.
+535|You can rest early, but you still pay the bill and take the health check.
+536|Energy {} / {}
+537|Before you rest:
+538|The bill locks when rest starts; after events you confirm payment, and a health review runs (current decline chance {}%). You must clear the bill to set off at full energy.
+539|Later
+540|Start resting ➔
+541|Won forever · honour lit
+542|Missed this run · never returns
+543|Street auction rarity · estimate {}
+544|+{} LP legacy points
+545|Upkeep {} per rest
+546|Honour medal wall · THE IMPERIAL TREASURY
+547|Won {} / {} world-unique pieces · permanent legacy +{} LP
+548|Each unique piece won at a street auction becomes permanent legacy points (LP) and decorates your honour wall; pass and it never returns this run. All medals charge upkeep at every rest settlement.
+549|Active
+550|Not reached
+551|Wealth mechanisms & evolution blueprint
+552|As your net worth climbs each step, new gameplay and systems unlock
+553|Net worth includes cash, fixed assets, custom outfits and money in transit. Reaching a level activates the new system and a celebration popup.
+554|Wearing
+555|Collected
+556|Available
+557|Locked
+558|Upkeep {}/rest
+559|No ongoing upkeep

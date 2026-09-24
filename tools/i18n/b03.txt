@@ -1,0 +1,300 @@
+860|Royal convalescence booking
+861|Summon a royal medical team to set up a private recovery station, restoring health and lowering decline risk.
+862|Deep-tech special permit
+863|Directs the next stop to a frontier tech lab, greatly boosting breakthrough odds.
+864|"Da Vinci Manuscript Fragment"
+865|A unique Renaissance original. All the cash becomes legacy points and lights your honour wall forever.
+866|"Titanic Gold Astronomical Pocket Watch"
+867|A solid-gold precision watch salvaged from the deep, frozen witness to history's final chapter.
+868|"1716 Stradivarius 'Messiah' Violin"
+869|The peak of violin making; three centuries of elegance echo in its maple back.
+870|"1945 Romanée-Conti Grand Cru"
+871|A legendary post-war vintage — liquid gold, with only two bottles left on earth.
+872|"Mars Exploration Zone 1 Land Deed"
+873|The original deed from the age of interplanetary settlement, with a sealed Martian soil sample.
+874|"Fabergé Imperial Coronation Egg"
+875|The Tsar's enamel-and-gold egg, with a removable solid-gold coronation carriage inside.
+876|"Azure Empire Sovereign Sapphire"
+877|An 880-carat uncut sapphire engraved with the glory of an ancient dynasty.
+878|"Black Swan Castle on the Rhine"
+879|An eight-hundred-year hereditary duchy with a private vineyard and sovereign crest.
+880|"Orion Meteorite Black-Gold Seal"
+881|A seal cold-forged from deep-space meteorite iron — icy to the touch, absolute capital power.
+882|"Mughal Sun Peacock Crown"
+883|An imperial crown set with 120 pigeon-blood rubies and Colombian emeralds.
+884|"Near-Earth Dyson Ring Naming Rights"
+885|Naming medal for the pioneer of humanity's stellar energy miracle, engraved forever in solar orbit.
+886|"Suborbital Private Space Shuttle"
+887|A Mach-12 suborbital shuttle with a panoramic starlight dome and anti-gravity cabin.
+888|"Primordial Quantum Compute Key"
+889|A solid-gold key chip to the world's core compute hub — the gateway to digital immortality.
+890|"South Pacific Sovereign Atoll"
+891|A deep-sea atoll with diplomatic immunity and permanent tax-free sovereignty.
+892|"Augustus's Golden Laurel"
+893|The gold laurel from the peak of an ancient empire — the ultimate symbol of eternal power.
+894|"180 m Nuclear Polar Icebreaker Yacht"
+895|The ultimate floating palace for all seven seas and both poles, with unlimited range and a private hangar.
+896|Self-made
+897|Tiny capital.\nEndless possibilities.
+898|Rising
+899|Building confidence.\nLooking far ahead.
+900|Climbing
+901|Every choice.\nGoing up.
+902|On a roll
+903|The view.\nKeeps getting better.
+904|Millionaire
+905|Your very own.\nGolden age.
+906|Business titan
+907|No more looking up.\nYou are the sky.
+908|Beyond the peak
+909|Some accumulate wealth.\nYou created a world.
+910|Brushed bronze frame
+911|Industrial brushed-bronze corners for a solid, steady feel. +0.02 legacy points.
+912|Engraved silver lining
+913|Precision-etched sterling filigree for a refined middle-class look. +0.06 legacy points.
+914|24K double gold trim
+915|Pure-gold double trim; your cards shimmer with old-money class. +0.25 legacy points.
+916|Obsidian molten-gold frame
+917|Volcanic obsidian veined with molten gold — proof of a cold, dominant capitalist. +0.80 legacy points.
+918|Aurora sovereign frame
+919|A flowing aurora-star holy border, the final emblem of reaching the peak of wealth. +5.0 legacy points.
+920|Stake half, risk it all.
+921|Half-wallet death match
+922|You must stake 50% of your cash. Success returns 4× the stake; failure wipes ALL cash, including the unstaked half.
+923|All-in jackpot rush
+924|All-in jackpot
+925|Stake all your cash. 30% chance of a 7× return; otherwise the run ends.
+926|Double or nothing
+927|Coin duel
+928|Fixed 25% stake. 50% chance to double it, 50% to lose it; the rest of your cash is safe.
+929|Red-line sprint
+930|Turbo contract
+931|Fixed 75% stake, 72% chance of 2.8× return. Failure loses the whole stake; you keep the other 25%.
+932|Double in two minutes
+933|Two-minute wealth race
+934|30-second lightning sprint
+935|30-second sprint
+936|Three minutes, triple net worth
+937|Three-minute moonshot
+938|Three-win bet
+939|90-second triple streak
+940|A breakfast stall of stacked bamboo steamers, starting the day with steam and regulars.
+941|Food
+942|An old tea house sells roast aroma, teaware and a slower afternoon.
+943|Tea culture
+944|Oven-baked pepper buns — the baking time gathers a bigger crowd than any ad.
+945|Night market
+946|Pearls, tea base and ice level: a tiny shop turns everyday taste into its own signature.
+947|Drinks
+948|The hot-spring district at the foot of the hills is perfect for a lazy half-day; weekend bookings matter.
+949|Travel
+950|Fabric, dried goods and old arcades get busy before the festival season.
+951|Old street
+952|Indie creators bring illustration, printing and handmade goods to weekend stalls.
+953|Design
+954|What riverside cyclists need most may just be a patched inner tube.
+955|Repair
+956|A mountain shuttle links tea farms and tourists; great views, but it must run on time.
+957|Transport
+958|Paper, bamboo and light: artisans rush festival orders ahead of time.
+959|Crafts
+960|Not just books — small talks, curated magazines and a reader community in the alley.
+961|Publishing
+962|Under rainy-season arcades, repairs, umbrellas and a friendly goodbye are all business.
+963|Street services
+964|A small record shop connects the music scene with picks, listening and gig news.
+965|Music
+966|A wall of capsule machines rotates themes; collector hype isn't a steady return.
+967|Collectibles
+968|A washi lantern workshop turns traditional shapes into modern street gifts.
+969|A counter, hot soup and limited seats: turnover decides tonight's income.
+970|On the old-book street the craft isn't making books new, it's keeping time.
+971|Film developing needs steady craft — and customers willing to wait.
+972|Photography
+973|A tiny takeaway window serving early risers with rhythm and fresh ingredients.
+974|Paint and customisation turn mass-made sneakers into self-expression; trends change fast.
+975|Streetwear
+976|Bonsai is a slow business; care takes more patience than photos.
+977|Gardening
+978|Blossom season is short; photo bookings are as hard to predict as the weather.
+979|Seasonal experience
+980|Old machines' buttons, circuits and memories — someone will fix them properly.
+981|Retro tech
+982|A prototype needs both engineering and customer approval before market.
+983|Tech
+984|Neon tubes and old signs keep this city's old stories glowing.
+985|Off the main strip, hot food and cold drinks beat shiny ads.
+986|The stage machinery can be explained; whether the audience buys tickets can't.
+987|Shows
+988|Big screens, music and night crowds on the promenade make every night feel like opening night.
+989|Nightlife
+990|Desert photo trips need water, weather checks and route planning.
+991|Outdoors
+992|Small tux-and-dress rentals give a rushed, romantic ceremony some dignity.
+993|Weddings
+994|Performers rehearse far longer than their few minutes on stage.
+995|Performance
+996|Beyond the fierce sun, dust and equipment upkeep decide running costs.
+997|Energy
+998|An arcade sells experience and time spent, not guaranteed profit.
+999|Entertainment
+1000|Banquets and events change sets constantly; supply and setup must be on time.
+1001|Services
+1002|The crowd leaving a show gives nearby stalls a brief chance.
+1003|Leave the sea of lights to find the stars; night trips need careful supplies.
+1004|Experiences
+1005|Toast, kaya jam and coffee — the familiar local breakfast combo.
+1006|A colourful spice stall keeps regulars with good picks and steady supply.
+1007|Street trade
+1008|Colourful tiles and shophouses inspire restoration and design.
+1009|Consolidate scattered cargo into a full voyage; settlement takes longer than one order.
+1010|Shipping
+1011|Vertical farming saves land but adds lighting and maintenance costs.
+1012|Agri-tech
+1013|Precision manufacturing is about reliable repetition; a working prototype isn't the last step.
+1014|Manufacturing
+1015|Colour, fabrics and small design shops make a slow, careful business.
+1016|Behind busy mealtimes: cleaning, recycling and crowd management.
+1017|City services
+1018|Hot weather makes the cold chain vital; temperature logs and timing matter equally.
+1019|Logistics
+1020|Orchid growing needs patience and climate control; beauty has running costs too.
+1021|Floating solar mixes water space and clean energy, but faces equipment and weather tests.
+1022|A multilingual city means small publishers need careful editing and translation.
+1023|Breakfast for morning commuters: speed, taste and location all matter.
+1024|Small rehearsal and gig spaces let musicians meet — and face the rent.
+1025|Short runs of posters and indie clothes keep small studios flexible.
+1026|Books and papers in many languages quietly connect communities.
+1027|Rooftop space is precious; growing must balance load, water and seasons.
+1028|Urban farming
+1029|The last stitch before the show is work you never see on stage.
+1030|Backstage services
+1031|Bamboo baskets and dim sum stretch breakfast into social time; regulars beat gimmicks.
+1032|Drawing a portrait takes skill — and patience on a street corner.
+1033|Street art
+1034|Small film crews rent gear — and reliable handovers and maintenance.
+1035|Film & TV
+1036|Deliveries across bridges and streets demand good routing and safety.
+1037|Corporate IT services need due diligence; a pretty demo doesn't replace security.
+1038|Framing protects artwork and completes a small exhibition's visual language.
+1039|Art services
+1040|Salt spray and sun make boat care a long, careful job in the harbour.
+1041|Yacht services
+1042|To restore a mechanical watch, first understand the time and marks it carries.
+1043|Precision craft
+1044|Bespoke isn't just a suit — it's measuring, fitting and altering.
+1045|Haute couture
+1046|Mediterranean plant scents go into perfume design; formula and packaging need polish.
+1047|Perfume
+1048|Flower orders for private dinners demand timing, quality and detail all at once.
+1049|Concierge
+1050|Dinner and live music share an evening; few seats, high standards.
+1051|Dining & shows
+1052|Racing culture becomes precision models; collector hype still rises and falls.
+1053|Art services focus on storage, materials and trust — no promise the art gains value.
+1054|Art
+1055|The first lesson at sea is understanding wind; the second is respecting weather.
+1056|Travel experience
+1057|Estate tours tell guests about the land, relying on steady quality and bookings.
+1058|Terroir experience
+1059|Pricey goods wear out too; expert restoration makes them last longer.
+1060|A stargazing night beyond the city lights needs a clear, calm sky.
+1061|Private experience
+1062|Lantern Night Market Festival
+1063|Pick up a lantern and walk into another street.
+1064|Lantern
+1065|You're not an investor tonight, you're a night-market helper. Put on an apron and earn festival pay with skill and choices.
+1066|Before the lanterns light
+1067|Hang lanterns for shops
+1068|Fix a child's lantern
+1069|Steamer rush hour
+1070|Help serve food
+1071|Sort the orders
+1072|Street stage
+1073|Carry gear for performers
+1074|Join the rhythm show
+1075|Tea-scented alley
+1076|Help brew tea
+1077|Show tourists the teaware
+1078|Before closing
+1079|Collect dishes
+1080|Record night-market stories
+1081|Rainy Night Craft Works
+1082|After the last train, the artisans' city wakes up.
+1083|Craft
+1084|A creative street open only on rainy nights. No stocks or bets here — just repair jobs and timed creations.
+1085|A record's second life
+1086|Restore record sleeves
+1087|Sort the listening catalogue
+1088|Under washi lamps
+1089|Fold a lantern
+1090|Paint the lantern face
+1091|Late-night repair shop
+1092|Calibrate arcade buttons
+1093|Clean old lenses
+1094|Little theatre in the rain
+1095|Make stage props
+1096|Paint show posters
+1097|Before dawn
+1098|Bind a small book
+1099|Pack and ship works
+1100|Illusion backstage pass
+1101|Behind the neon, it's your turn on stage.
+1102|Illusion
+1103|Hired last-minute backstage. Finish jobs for pay; step on stage boldly for a chance at extra tips — no stake needed.
+1104|The vanishing prop box
+1105|Check stage machinery
+1106|Fill in as assistant
+1107|Spotlight countdown
+1108|Tune the spotlight
+1109|Improvise a link
+1110|The magician's rabbit
+1111|Look after prop animals
+1112|Join audience interaction
+1113|Curtain-call fireworks
+1114|Set safe distances
+1115|Take on the rhythm act
+1116|The final show
+1117|Check the set list
+1118|Try the grand finale
+1119|Monsoon Harbour Rescue
+1120|Before the storm, every pair of hands counts.
+1121|Harbour
+1122|The monsoon wrecks the port schedule. As a temporary coordinator, finish rescue and support tasks for a harbour allowance — no investing.
+1123|Pre-rain dispatch
+1124|Check the manifests
+1125|Fix signal equipment
+1126|Community supplies
+1127|Pack drinking water
+1128|Coordinate emergency vehicles
+1129|Shelter the plants
+1130|Secure the orchid shed
+1131|Build rain covers
+1132|Harbour night shift
+1133|Count lifesaving supplies
+1134|Move temporary shelves
+1135|After the tide
+1136|Sort recyclables
+1137|Help the harbour reopen
+1138|Late-Night Underground Jazz Fest
+1139|Push open an ordinary door and the whole street is a stage.
+1140|Jazz
+1141|An underground music festival needs temporary crew. Do logistics or take the stage, trading energy for pay; no investments involved.
+1142|Ten minutes to showtime
+1143|Test the mics
+1144|Improvised percussion jam
+1145|Record stall
+1146|Sort record crates
+1147|Plan a listening session
+1148|Underground stage
+1149|Check the running order
+1150|Host an improv segment
+1151|Street parade
+1152|Carry instruments
+1153|Join the rhythm line
+1154|Encore time
+1155|Log the show
+1156|Try the final solo
+1157|Midnight Yacht Masquerade
+1158|A golden invitation, no price.
+1159|Gala

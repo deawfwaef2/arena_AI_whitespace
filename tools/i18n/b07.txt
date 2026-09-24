@@ -1,0 +1,300 @@
+2060|Green harbour roundtable
+2061|You're invited to a green shipping roundtable on turning promises into action.
+2062|Coordinate a plan
+2063|The corner jazz player's first gig
+2064|A musician is hauling gear. Tonight's small show could be his start.
+2065|Help open the show
+2066|Garage team pitch
+2067|No fancy office, but the small team has a full product trial ready.
+2068|Try it and give feedback
+2069|Neighbourhood revival partner seat
+2070|The urban renewal plan saved a chair for you. Residents and shops all want to be heard.
+2071|Chair the hearing
+2072|Knots on the harbour sailboats
+2073|A youth sailing team is fixing lines, with one more practice before sunset.
+2074|Sort the gear
+2075|Coastal craft salon
+2076|Local artisans prepare work for a coastal salon, looking for someone who takes craft seriously.
+2077|Set up the exhibition
+2078|Ocean conservation commission
+2079|Beyond the private-bay banquet, an ocean conservation commission lies before you.
+2080|Coordinate action
+2081|Invalid regional event.
+2082|This event is over or can't be handled right now.
+2083|Choose a response.
+2084|You leave the chance to someone else and walk on to the next street.
+2085|Needs at least 8 energy.
+2086|The plan went well. You got paid and left a name people will remember.
+2087|It didn't go perfectly, but you still got the agreed base pay.
+2088|Not enough funds — keep at least $0.01.
+2089|Cooperation voucher received. The next 3 normal deals in this city get +2 points of odds (max 95%).
+2090|City voucher: odds +2 points
+2091|Regional cooperation
+2092|Night-market vendor · Ah-Li
+2093|Want to buy a share? We open first thing tomorrow.
+2094|Night-market stall share
+2095|One night's takings — not much, but you can see it.
+2096|Delivery rider · Kobayashi
+2097|Chip in for two scooters and I'll cut you in. No tricks.
+2098|Two delivery scooters
+2099|Rainy days double the orders — and the accidents.
+2100|Laundromat owner · Auntie Chen
+2101|Coin machines are steady; I just need new ones first.
+2102|Self-service laundry machines
+2103|Slow to pay back, but almost never hits zero.
+2104|Culture
+2105|Street band · Aji
+2106|Pay for our studio time and you get 30% of album income.
+2107|The street band's first album
+2108|Will it be a hit? Nobody knows. But it sounds great.
+2109|Coffee shop owner · Yuki
+2110|The lease on our second shop is next week; I need a partner.
+2111|A second coffee shop
+2112|The brand exists; the location is the gamble.
+2113|Indie developer · Noah
+2114|Three years of work — just short of the launch fee.
+2115|Indie game launch
+2116|Either nobody notices, or it goes viral overnight.
+2117|Cold-chain dispatcher · Old Cui
+2118|The shipper for this route has signed; we just need the fleet deposit.
+2119|Cold-chain freight route
+2120|The contract's in hand; the risk is on the road.
+2121|Engineer · Maya
+2122|We could buy the whole building's roof together for solar.
+2123|Rooftop solar plant
+2124|Steady returns, long cycle, policy may change.
+2125|Antique dealer · Sophie
+2126|These watches have a clean provenance, I promise.
+2127|Antique watch lot
+2128|You only know if they're real when you open the box.
+2129|Property
+2130|Developer · Mr Han
+2131|Old factory into a boutique hotel — the plans are approved.
+2132|Factory-to-boutique-hotel conversion
+2133|Renovations always fear one thing: overruns.
+2134|Medical
+2135|Researcher · Dr Carmen
+2136|Phase II data looks great, but we lack money to finish.
+2137|Biotech Series B
+2138|Success changes an industry; failure is nothing.
+2139|Producer · Roland
+2140|Back three films at once and the risk evens out.
+2141|Three-film slate
+2142|Box office is voodoo; a slate isn't.
+2143|Infrastructure
+2144|Port adviser · Chen
+2145|The third berth's concession is about to open for bids.
+2146|Port berth three
+2147|Rock-solid cash flow, sky-high entry bar.
+2148|Fashion
+2149|Design director · Isa
+2150|I got the Paris slot; what I lack is money for the season.
+2151|A fashion house's full season
+2152|You only know about orders after the show.
+2153|Aerospace
+2154|Launch director · Vera
+2155|One launch window; we want long-term spectrum.
+2156|Low-orbit comms relay satellite
+2157|One rocket decides ten years of books.
+2158|Urban planner · Onne
+2159|Redevelopment rights for the whole block — one offer only.
+2160|City block redevelopment rights
+2161|You'll rewrite what this street looks like.
+2162|Finance
+2163|Sovereign fund rep · Amir
+2164|Returns aren't high, but it almost never disappears.
+2165|Sovereign fund co-placement
+2166|The most boring deal is also the safest.
+2167|Chief scientist · Lindau
+2168|If it works, energy prices get rewritten.
+2169|Fusion demonstration reactor
+2170|A bet on humanity's scale.
+2171|Foundation trustee · Duran
+2172|This isn't investing; it's putting your name on the wall.
+2173|Private museum fund
+2174|Limited returns, notable prestige.
+2175|Pay the rest bill first, then we'll talk investing.
+2176|This proposal was already discussed.
+2177|This visitor has already left.
+2178|Not enough cash — you must have some left after investing.
+2179|Ah-He
+2180|Street guide
+2181|Each move costs only 4 energy (was 5).
+2182|I know the shortcuts on this street.
+2183|Sister Lin
+2184|Market broker
+2185|Later normal street deals: multiplier +0.10.
+2186|Favours are favours; accounts are accounts.
+2187|Rin
+2188|Due-diligence analyst
+2189|Later normal deals: odds +3 points, included in shown odds.
+2190|Check the data first, then talk gut feeling.
+2191|Mia
+2192|Show producer
+2193|Later normal deals: multiplier +0.15; special wagers unaffected.
+2194|Before the lights go out, get the budget straight.
+2195|Xu An
+2196|Life butler
+2197|Base living upkeep −15% each rest; taxes and wages unchanged.
+2198|An orderly life leaves time to see the world.
+2199|Joe
+2200|Community liaison
+2201|Greeting passers-by gives +4 faction goodwill (was +2).
+2202|Don't just swap business cards — remember a name.
+2203|Elaine
+2204|Private therapist
+2205|Later rests: health decline risk −3 points, not below 0%.
+2206|However busy, save yourself one deep breath.
+2207|Return to the street to sign.
+2208|Find a talent market along the way first.
+2209|This talent signs only at the local market.
+2210|This partner is already with you.
+2211|Up to three followers at once.
+2212|Net worth threshold not met, or no cash left after signing.
+2213|Return to the street to fire. This rest's bill is already locked.
+2214|This follower isn't in your team.
+2215|Rin: odds +3%
+2216|Follower: return ×
+2217|Arcade talent tea stall
+2218|Stall owner · Boss Lin
+2219|Fresh steam from the basket works better than a business card.
+2220|Corner business
+2221|Start with one basket, one order. Small profit, clear rules.
+2222|Station-front job agency
+2223|Manager · Sato
+2224|Before opening, I checked the books again.
+2225|Artisan quarter
+2226|Deadlines, quality and cash flow — miss one and you're done.
+2227|Neon talent agency
+2228|Producer · Monica
+2229|The neon's on; the budget mustn't go wild with it.
+2230|Entertainment capital
+2231|The buzz is on stage; the risk is in the contract.
+2232|Marina talent office
+2233|Project manager · Chen
+2234|Welcome. Check the delivery milestones and funding first.
+2235|Harbour trade
+2236|A busy port still ships on time; don't ignore settlement dates.
+2237|Neighbourhood partner centre
+2238|Founder · Alex
+2239|The coffee's still hot; let's talk about real needs.
+2240|Venture quarter
+2241|A good idea still needs a plan that survives hard questions.
+2242|Harbour private service club
+2243|Adviser · Camille
+2244|The sea breeze is lovely, but investing still needs a cool head.
+2245|Coastal private capital
+2246|Expensive doesn't mean safe. Decide how much you're willing to bear.
+2247|Xiao Zhou
+2248|Natsuki
+2249|Anna
+2250|Chen Yu
+2251|Roy
+2252|Evan
+2253|Milo
+2254|Ah-Lan
+2255|Looks like me — just starting out.
+2256|Rich from $100? Let's see how he does.
+2257|The morning market smells the same today.
+2258|I started from one street too.
+2259|No rush, take it slow.
+2260|Looks like he's made a bit lately.
+2261|Heard the deals over there pay well.
+2262|This street's got lively lately.
+2263|Some talent, but not steady yet.
+2264|Any bigger bets and it gets dangerous.
+2265|That one's genuinely rich.
+2266|Heard he can swallow a whole street in one deal.
+2267|Rich people need breakfast too.
+2268|Style is style; risk is risk.
+2269|Wish I had his luck.
+2270|Hey, you again!
+2271|I remember the help you gave last time.
+2272|Our people all vouch for you.
+2273|Need a hand? Just say so.
+2274|Hmph, he's not welcome on our side.
+2275|Last time's business isn't settled.
+2276|Better keep away from him.
+2277|Seeing him walk by makes me mad.
+2278|Why does he get so lucky?
+2279|Just luck.
+2280|This world…
+2281|Hope his day goes well.
+2282|Not many are willing to share.
+2283|Take it easy, don't trip.
+2284|We still don't see eye to eye; let's keep our distance.
+2285|A familiar friend. Rich or poor, happy to chat.
+2286|Still starting out, I guess. I remember my first savings too.
+2287|Looks like they've done something; not sure they'll listen to me.
+2288|About as wealthy as me; maybe we have things in common.
+2289|You need to rest first.
+2290|You already talked with this passer-by here.
+2291|You've chatted enough here; head to the next street.
+2292|Expand the city panorama
+2293|Street mutual aid
+2294|Community partnership
+2295|City commission
+2296|See the echo
+2297|Step into the story
+2298|{} city story · {}
+2299|Your wealth status changes this encounter
+2300|Chance encounter / job agency
+2301|You've reached a talent recruitment spot. The chance is only at this stop; move on and it's gone.
+2302|Talent waiting for the right contract
+2303|Keep walking →
+2304|Enter the market
+2305|Sign here →
+2306|With you · tap to manage
+2307|{} visitor
+2308|Tap to talk deals ↗
+2309|Done! This partnership will remember you.
+2310|It didn't work out. Don't let one result decide everything.
+2311|✓ This left an echo
+2312|Faction relations +{}
+2313|Carry the story onward →
+2314|−8 energy · 70% pay {}
+2315|Even if it fails, {} base pay
+2316|Faction +10 · next 3 normal deals in this city: odds +2 points
+2317|Pass by this time
+2318|No money, no energy
+2319|The result locks when you meet; refreshing won't reroll and each encounter settles once.
+2320|· City panorama
+2321|The city on the main street, not another map.
+2322|City window that grows with wealth · AI-generated city art
+2323|You need to encounter a talent market along the way to sign.
+2324|Meet one person, gain one more way to get things done.
+2325|With you
+2326|Locked
+2327|Not enough to sign
+2328|Sign ·
+2329|Sign
+2330|Per rest
+2331|Net worth threshold {}
+2332|Current wage per rest
+2333|{} · {}/3 follower slots
+2334|Signing fee is paid once; wages are charged each rest as upkeep. Followers aren't resellable assets. After signing, tap followers in the street to manage or fire them.
+2335|{}Other cities have local talent: Tokyo analysts, neon producers, marina butlers, New York liaisons, harbour therapists.
+2336|Followers / tap people in the scene to manage
+2337|Fire this follower
+2338|Follower skill
+2339|Wage per rest
+2340|Next rest total bill
+2341|Firing doesn't refund the signing fee; the skill stops now and no more wages are charged. Deals already generated keep their terms. You can't change hires while the rest bill is locked.
+2342|Street meeting
+2343|You're just starting; no need to bet all your cash for face.
+2344|You've built something; you negotiate with more confidence now.
+2345|You have resources, but every promise still has to be kept.
+2346|Current follower bonus: {}
+2347|This deal is settled; you can move on.
+2348|The odds, multiplier and risk notes on the deal card are what count.
+2349|Deal history · stop {}
+2350|What he thinks of you
+2351|Chatting doesn't change the shown deal terms. {}
+2352|Visitor
+2353|Say hello · build relations
+2354|This passer-by's wealth · fictional game value
+2355|○ ○ Inner thoughts
+2356|Your faction relation: {}. You can greet each person once per stop, up to 5 per stop. Costs 1 energy.
+2357|City echo: pay +
+2358|Cooperation voucher received · next 3 deals in this city get a bonus
+2359|This street remembers your choice.

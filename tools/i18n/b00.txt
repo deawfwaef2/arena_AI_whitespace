@@ -1,0 +1,260 @@
+0|You
+1|T
+2|00M
+3|0K
+4|3D can't load in this environment, but the game still works.
+5|Run over
+6|Paused
+7|Win streak
+8|Goal
+9|At least
+10|Net worth
+11|Available cash
+12|Game cash
+13|No.
+14|Stop
+15|Rank
+16|Leaderboard
+17|Menu & pause
+18|Switch music
+19|City soundtrack · CC BY 4.0
+20|Test run · scores not submitted
+21|Asset tour · swipe right to continue
+22|Swipe right to keep going
+23|Rules
+24|Skip
+25|Success
+26|Fail
+27|Returns
+28|All cash wiped
+29|Your whole stake is lost
+30|Special contract
+31|Revealing the result…
+32|Revealing…
+33|Nice!
+34|Wiped out!
+35|This stake was lost
+36|Cash left:
+37|Go to next stop
+38|Fixed stake
+39|Fail → all
+40|Cash hits zero: instant bankruptcy.
+41|Loss on failure
+42|; cash you didn't stake is kept.
+43|Accept contract
+44|This is all your cash. Failing ends the run.
+45|You only risk this stake.
+46|Stake
+47|Amount to invest, USD
+48|All
+49|Drag to choose your stake
+50|Invest
+51|Cash not staked is kept:
+52|Rare asset
+53|Reference price (USD)
+54|Decoration only: no income, no odds change.
+55|This property is yours now.
+56|Still need
+57|cash.
+58|Next stop
+59|Buy
+60|Roadside pop-up shop
+61|Street outfit stand
+62|Sold only at this stop. Outfits are cosmetic.
+63|Owned
+64|Wear this
+65|Limited
+66|Target net worth
+67|Win streak
+68|3-win streak
+69|Reward
+70|Penalty
+71|Exact target:
+72|Each valid stake at least
+73|; a loss breaks the streak.
+74|Only play time counts; the menu and background pause the timer. Penalties can bankrupt you.
+75|Challenge running — keep going!
+76|Finish the current challenge first.
+77|Keep going
+78|Accept challenge
+79|Secret underground auction
+80|Auction won! Your medal is now in the honours bar.
+81|The one-of-a-kind lot of this run. Win it for a permanent honour medal and legacy points; pass and it's gone for this run.
+82|Need
+83|Opening estimate
+84|Legacy points
+85|Rest upkeep
+86|Pass
+87|Raise paddle
+88|Royal anti-ageing clinic
+89|Health now: {}{}
+90|Next decline risk: {}%
+91|A royal private clinic offering cellular rejuvenation and decline blocking to the ultra-rich.
+92|Leave clinic
+93|Keep going
+94|Not enough cash to bid on this lot.
+95|Treasure it and move on
+96|HAMMER DOWN / SOLD
+97|Congratulations — this legendary treasure is yours!
+98|Your medal is displayed forever on your honours wall.
+99|Note: every rest from now on costs
+100|in upkeep.
+101|You passed. This lot won't appear again this run.
+102|Chain unlock ×
+103|Net worth threshold {}
+104|Your world just got bigger
+105|New places and purchases are open. Items still cost money, and risk doesn't vanish when you level up.
+106|Take this new life and go →
+107|Rare asset found!
+108|Different rules this time — check the risk first.
+109|A special opportunity found you.
+110|Car filter: skipped {} low-level deals; energy still spent.
+111|Street corner — turning.
+112|Enter an amount between $0.01 and your cash.
+113|Stake range for this deal: {} to {}
+114|Net profit
+115|All cash wiped
+116|This stake was fully lost
+117|Result
+118|. Cash left
+119|Welcome home!
+120|You can't buy this asset right now.
+121|This purchase will end your run.
+122|Buying this leaves you with $0 — instant bankruptcy that wipes this building and all assets. Continue anyway?
+123|New look, same odds.
+124|New outfits are only sold at roadside shops.
+125|Spend your very last cash?
+126|Zero cash means bankruptcy, and every outfit is lost too.
+127|Countdown started — go!
+128|Finish the current challenge before taking a new one.
+129|Replay quick tutorial
+130|Back to title screen
+131|Test: start holiday
+132|Test: finish timer
+133|Test: get all mechanism items
+134|Last $100 · Paused
+135|Close
+136|No gameplay cap (system cap $9 trillion)
+137|Cap
+138|Must pass two review rounds in a row:
+139|%, overall
+140|Locked for 20 seconds after investing; refreshing won't reroll.
+141|Deal minimum {}; {}. {}{}
+142|Confirm with the buttons above — this page won't close by accident.
+143|Cancel
+144|Confirm
+145|You're staking ALL your cash.
+146|These are not normal investment rules.
+147|You stake
+148|, but failing wipes ALL
+149|cash, including money you didn't stake.
+150|Fail → $0
+151|Bankruptcy wipes all buildings and outfits and ends the run.
+152|Back
+153|I accept the full risk
+154|You won the bet!
+155|Time's up.
+156|The reward has been added to your cash.
+157|The agreed penalty has been deducted.
+158|Cash now:
+159|No active challenge — look for one along the way.
+160|The countdown pauses while this menu is open.
+161|Time left
+162|Penalty
+163|Net worth now:
+164|Reach the target net worth before the countdown ends. Net worth = cash + purchase price of assets and items + locked stakes not yet settled. Buying things doesn't create net worth out of thin air.
+165|Three wins in a row. Each counted stake must be at least
+166|; any loss breaks the streak.
+167|Only one challenge at a time, and it can't be cancelled. Penalties never create debt but can drain your cash and bankrupt you.
+168|Continue challenge
+169|Leave some room in the journey.
+170|Everything lives here; the street keeps only the important choices.
+171|My assets
+172|Owned buildings & 3D tours
+173|My wardrobe
+174|Wear outfits you own
+175|Journey log
+176|Results and events this run
+177|Life records
+178|Past lives saved on this device
+179|Music & sound
+180|Volume, soundtrack and effects
+181|Display & saves
+182|Readability, graphics, backup & restore
+183|Growth & life services
+184|Open →
+185|Growth and life services open up as you get richer. For now, focus on this investment.
+186|Full rules
+187|Start a new run
+188|Back to the street →
+189|Play your way.
+190|Switch layouts under "Interface". This page is for comfort and safety.
+191|Large text mode
+192|UI animation & particles
+193|Low-power graphics
+194|Persistent saving isn't available here — export a backup regularly.
+195|Autosave is on. Rest timers resume offline.
+196|Leaderboard nickname
+197|Save
+198|Layout & device
+199|Open interface studio →
+200|Keep a backup of your progress.
+201|Saves automatically in the same browser at the same address. Export a JSON save before changing computer, browser or file location.
+202|Export save ↓
+203|Import backup ↑
+204|Importing replaces current progress and asks again to confirm. Imported runs are marked as test runs and don't go to the official board.
+205|Storage: {}. {}
+206|Done ✓
+207|A real game soundtrack.
+208|Six cities, six independent tracks from the web. Switches with the city by default; all built in, no internet needed.
+209|Background music
+210|Sound effects
+211|Music volume
+212|Original project score
+213|The download includes sources, original licences and credits. Music starts after your first click.
+214|The platform requires mute right now; the game switch can't override it.
+215|City tracks switch automatically; class tracks can be chosen in the Life menu after buying the Music Butler.
+216|Audio failed to load:
+217|Now playing:
+218|Music is off.
+219|Platform muted.
+220|Music volume is 0%.
+221|Click or press a key to start playback.
+222|Loading recorded music…
+223|Your wardrobe.
+224|You can only wear outfits you own. New clothes come from shops found on the road.
+225|Wearing
+226|No permanent shop. Outfit stands appear randomly on the road. Outfits are cosmetic and all lost on bankruptcy.
+227|Your property map.
+228|Adds prestige only — no passive income.
+229|3D tour
+230|Your first property is out on the road.
+231|From stop 5, there's about a 4% chance per stop to find a building. Keep exploring — there's no permanent property shop.
+232|Back to the street
+233|Local records
+234|SIM players are generated demo data, not real people online.
+235|Player
+236|Peak net worth
+237|runs
+238|Founder
+239|Life over
+240|{} · {} rests · {} LP
+241|stops explored
+242|Sorted by peak net worth. Net worth = cash + purchase price of assets, outfits and items + pending stakes. Only finished lives are shown; this is a local record, not a global ranking.
+243|Take on the official ranking.
+244|The official ranking is shown in the CrazyGames leaderboard sidebar. Clean runs are submitted through the official encrypted API.
+245|SDK connected.
+246|Please connect inside CrazyGames.
+247|Encryption key configured.
+248|The publisher needs leaderboard access and a configured key.
+249|TEST run: debug edits and imported saves can't be submitted. Start a clean new run.
+250|Submit
+251|Log in to CrazyGames
+252|The wealth ladder.
+253|From a tiny stake, write your own story.
+254|Fixed stake:
+255|of your cash.
+256|chance of success. Returns:
+257|× your stake, including the stake itself.
+258|On failure ALL cash is wiped, including what you didn't stake. The run ends and all assets are lost.
+259|On failure you only lose this stake; unstaked cash is kept.

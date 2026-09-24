@@ -1,0 +1,286 @@
+2360|Joined the team! Tap followers in the street to see skills and wages.
+2361|with
+2362|End employment?
+2363|No refund of the signing fee. The skill stops and no more wages are billed.
+2364|The trip has changed.
+2365|has left the team.
+2366|Relations +
+2367|· energy −1
+2368|When energy runs out you rest. Class mini-games during rest shorten the wait.
+2369|Save, music, graphics and tutorial.
+2370|Living bills
+2371|Street network
+2372|You'll meet talent markets along the way to sign followers; tap them in the scene to manage.
+2373|Used headphones
+2374|On: the UI pulses gently with the music.
+2375|Open the world map and travel to other cities.
+2376|Net worth, bills, health and mechanics.
+2377|Ledger
+2378|Review every investment's gain or loss.
+2379|Street radio
+2380|On: a ticker under your money shows news your class can reach.
+2381|Little gold chain
+2382|On: your wallet glints with a little gold. Decoration; odds unchanged.
+2383|All mechanics and thresholds at a glance.
+2384|Wager contracts
+2385|High-risk specials like coin duels and turbo contracts appear on the road.
+2386|Neon sign
+2387|On: a neon glow outlines the UI. Decoration.
+2388|Middle-class start: multi-review advanced deals appear, higher stake cap.
+2389|Champagne tower
+2390|On: champagne bubbles float across the screen. Decoration.
+2391|Buy a used car to auto-skip low-tier deals.
+2392|Music butler
+2393|Choose city music and class soundtracks.
+2394|Private driver
+2395|Your driver waits by the road. Pure decoration — but you'll notice passers-by look at you differently.
+2396|Hire bodyguards, adjust stance.
+2397|Community relations
+2398|How each faction feels about you.
+2399|Masterpiece collection
+2400|On: the city panorama gets a gilded frame. Decoration.
+2401|Cigar lounge
+2402|On: a warm haze around the screen edges. Decoration.
+2403|Private zones
+2404|Enter the city's exclusive zones.
+2405|Unique auctions and the medal wall.
+2406|Yacht badge
+2407|On: sea shimmer rises along the bottom of the screen. Decoration.
+2408|Private jet
+2409|On: your jet flies across the sky now and then. Decoration.
+2410|Family vault
+2411|Invisible crown
+2412|On: a crown sits on your money badge. Decoration.
+2413|Spring
+2414|Summer
+2415|Autumn
+2416|Winter
+2417|Clear
+2418|Breezy
+2419|Drizzle
+2420|Morning fog
+2421|Spring rain
+2422|Scorching sun
+2423|Heatwave
+2424|Thunderstorm
+2425|Cloudy
+2426|Downpour
+2427|Crisp autumn
+2428|Windy
+2429|Overcast
+2430|Mist
+2431|Autumn rain
+2432|Clear and cold
+2433|Light snow
+2434|Blizzard
+2435|Cold and grey
+2436|Freezing fog
+2437|Convenience-store rice balls 30% off after 7 pm.
+2438|The park benches won't be cleared tonight.
+2439|The used-book stall owner says: finish it tomorrow if you like.
+2440|Monthly bus pass up by five bucks.
+2441|Leftovers go half price when the night market closes.
+2442|Building site hiring day labourers, paid daily.
+2443|Next week the office switches to face-scan clock-in.
+2444|The landlord says rent changes next month.
+2445|The metro adds night trains.
+2446|Last three days of interest-free card instalments.
+2447|Second coffee half price downstairs.
+2448|A colleague shares a finance course in the group chat.
+2449|School-district flats listed 3% higher again.
+2450|Weekend camping gear pre-sale opens.
+2451|Your bank's wealth manager invites you for coffee.
+2452|EV subsidies extended one more year.
+2453|A gourmet supermarket opens in your complex.
+2454|The neighbours are debating a new car.
+2455|Private bank raises its minimum investment.
+2456|Golf club memberships sell for a record high.
+2457|A gallery invites you to its opening reception.
+2458|The island resort accepts members only.
+2459|The family office starts hiring a CFO.
+2460|A new Michelin spot has a three-month wait.
+2461|New offshore trust rules take effect next month.
+2462|A yacht berth sells for a record price.
+2463|Private jet management fees go up.
+2464|Evening auction: a painting sells for nine figures.
+2465|A foundation invites you onto its board.
+2466|A Swiss clinic opens bookings for its longevity programme.
+2467|You're on the central bank governor's dinner list.
+2468|An island is quietly taking offers.
+2469|Your name was written into a financial yearbook.
+2470|A sovereign fund wants a word with you.
+2471|Someone proposes naming an asteroid after you.
+2472|There's no more news, only your decisions.
+2473|Old-shop neighbours trust you: odds +3%
+2474|Busy shopping district: multiplier +0.25
+2475|Lively night market, easy walking: less energy per stop
+2476|Tech-geek economy: multiplier +0.30
+2477|Old-town warmth: odds +4%
+2478|Huge crowds: odds −3%, return +0.5
+2479|Generous old-town gamblers: odds +2%
+2480|Brightest neon: odds −3%, return +0.5
+2481|Artist community: multiplier +0.20
+2482|Heritage brand reputation: odds +3%
+2483|Plenty of capital: multiplier +0.30
+2484|Walkable: less energy per stop
+2485|Community support: odds +3%
+2486|High leverage: odds −3%, return +0.5
+2487|Collectors gather: multiplier +0.25
+2488|Casino district: odds −3%, return +0.5
+2489|Yacht economy: multiplier +0.30
+2490|Old-money circle: odds +3%
+2491|Collect cans for change
+2492|Tap the cans that pop up — as many as you can in 20 seconds.
+2493|Lunch-rush delivery
+2494|Time your tap on "Go" so the needle stops in the green.
+2495|Weekend latte art
+2496|Stop the needle on the prettiest foam. Three tries.
+2497|Club golf putt
+2498|Get the power just right. Stop in the green to sink it.
+2499|Wine cellar blind pairing
+2500|Flip cards to find matching grand crus.
+2501|Private auction paddle
+2502|Flip and match to win paired treasures.
+2503|Money in your pocket
+2504|Please turn your phone sideways
+2505|This game is designed for landscape · continues after rotating
+2506|Play full-screen landscape
+2507|The browser can't auto-rotate; please turn your phone sideways.
+2508|Payroll card balance
+2509|Available funds
+2510|Liquid assets
+2511|Private account
+2512|Family capital
+2513|Class upkeep at next rest
+2514|Upkeep
+2515|Year {}
+2516|{}
+2517|Resting
+2518|Sealed
+2519|"{}" was reclaimed
+2520|All unlocked
+2521|You own everything
+2522|Higher still
+2523|Next threshold · {} to go
+2524|{} unlocks
+2525|Got "{}"
+2526|Sealed
+2527|Buy this at a roadside shop first to enable it.
+2528|Next rest costs {} (class living + service fee). Not enough cash ends the run.
+2529|{} lie in the vault. They don't speak, but quietly prove you were here.
+2530|Toggle · now {}
+2531|Passive effect · view only
+2532|Tap to open
+2533|· Decoration
+2534|Unlocks at {} · reclaimed if net worth falls below
+2535|☾ Rest phase
+2536|⚑ Street event
+2537|✺ City story
+2538|⌂ Talent market
+2539|◆ Regional exclusive
+2540|◆ Regional event
+2541|… On the way
+2542|◇ Event
+2543|Drag to move ⠿
+2544|Long delay · pays after 2 rests
+2545|Short delay · pays after next rest
+2546|{}Instant reveal
+2547|{}{} streak · return +{}
+2548|Level progress
+2549|Win to unlock new things!
+2550|Level {}% → {}%
+2551|All unlocked
+2552|Regulars recommend
+2553|Odds +5%
+2554|Influencer hotspot
+2555|Return +0.30
+2556|Owner-fled rumour
+2557|Odds −8%, but return +0.80
+2558|Landlord raises rent
+2559|Return −0.15
+2560|Crowded competition
+2561|Odds −4%
+2562|Favourable policy
+2563|Odds +3%, return +0.15
+2564|Rainy off-season
+2565|Bad weather: odds −3%, return +0.35
+2566|Sunny crowds
+2567|Sunny footfall: odds +4%
+2568|Delayed deal
+2569|Contract signed
+2570|Funds locked
+2571|Due
+2572|After {} rests
+2573|Success returns
+2574|The result is sealed in the contract; refreshing won't change it. The contract follows you as a small window — tap "Cash in" when it's due.
+2575|To the next stop →
+2576|You can hold at most 6 delayed contracts.
+2577|Delayed deals can't take all your cash — keep at least $0.01 to live on.
+2578|Out of energy — rest first.
+2579|Signed delayed contract:
+2580|Long
+2581|Short
+2582|Due · tap to cash in
+2583|{} more rests
+2584|{} {} contract
+2585|Locked {}
+2586|{} cashed in +{}
+2587|{} failed, {} went down the drain
+2588|The road splits into three streets. Which way?
+2589|The driver asks: which district next?
+2590|⚑ Crossroads
+2591|Drag ⠿
+2592|Pick a district for this season; the effect lasts until the next rest.
+2593|No turns, straight on
+2594|Turn into
+2595|Start mini-game
+2596|Enough for today
+2597|{} · rest mini-game
+2598|The better you play, the more rest time you save (up to −4 minutes). {} plays left this rest.
+2599|Book it out · {}
+2600|Spend 30% of cash to end rest now
+2601|Book it out and skip rest?
+2602|Spend {} (30% of cash) to end rest immediately.
+2603|Score
+2604|s
+2605|Go!
+2606|Putt!
+2607|Pour!
+2608|3 left
+2609|Perfect!
+2610|Nice!
+2611|Barely
+2612|Miss
+2613|· {} left
+2614|Three tries
+2615|pts
+2616|Score {}
+2617|Rest time −{}{}
+2618|OK
+2619|Win {} deals this season
+2620|Get a {}-win streak
+2621|Reach net worth {}
+2622|Sign 1 delayed contract
+2623|Pick a district at a crossroads
+2624|Season goal done: {}  +{}
+2625|All season goals cleared! Extra +{}
+2626|Season goals
+2627|+{} each · clear all for ×3
+2628|Year {} · a new stage
+2629|{} is here
+2630|Today's weather: {}
+2631|Sealed: buy it at a roadside shop first to enable it.
+2632|Energy +40.
+2633|65% chance: decline rate permanently −2%
+2634|40% chance: decline rate permanently −5%
+2635|Narrator
+2636|Landlord
+2637|Bank manager
+2638|Old classmate
+2639|Driver
+2640|Young founder
+2641|Reporter
+2642|Child
+2643|% harmful
+2644|This device can't display 3D models.
+2645|Game buttons still work; please use a browser with WebGL.

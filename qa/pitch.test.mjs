@@ -17,7 +17,7 @@ test('a pitch settles once and cannot be rerolled',()=>{
  assert.throws(()=>takePitch(s,id),/已经谈过/);
 });
 test('outcome is stable for the same run and rest',()=>{
- const a=seed(500000),b=seed(500000);b.id=a.id;
+ const a=seed(500000),b=JSON.parse(JSON.stringify(a));
  const id=pitchesFor(a)[0].id;
  assert.equal(takePitch(a,id).won,takePitch(b,id).won);
 });

@@ -1,0 +1,300 @@
+1160|A private dinner invites you onto the concierge team. Careful service and bold socialising pay differently; entry is free until your energy runs out.
+1161|Invitations & masks
+1162|Check the guest list
+1163|Host the ice-breakers
+1164|Starlight on deck
+1165|Dress the flower tables
+1166|Plan a stargazing talk
+1167|Watch salon
+1168|Guard the exhibits
+1169|Tell the craft stories
+1170|Perfume & sea breeze
+1171|Sort perfume strips
+1172|Lead the tasting
+1173|Seeing guests off at dawn
+1174|Arrange the shuttles
+1175|Give the closing speech
+1176|Bus passes went up; dreams didn't go on sale.
+1177|The community soup kitchen stays open longer: eat first, dream later.
+1178|Job tip of the day: don't mistake all your cash for courage.
+1179|Overtime pay arrived — and so did the rent reminder.
+1180|The community tool shed opens; old things can still be fixed.
+1181|This class's luxury: a weekend with no alarm.
+1182|Mortgage, insurance, school fees: the middle-class trio.
+1183|Short trips around the city are trending.
+1184|Studying asset allocation while hunting coffee coupons.
+1185|Boutique hotels launch a no-meetings package: you pay for nobody finding you.
+1186|Personal trainer reminder: your balance can't do squats for you.
+1187|Quality time is the new spending buzzword.
+1188|The yacht maintenance bill arrived — sea breeze is billed monthly.
+1189|The family office discusses liquidity; the butler discusses tonight's menu.
+1190|Business class upgraded to a private itinerary; the schedule is still packed.
+1191|Private island maintenance season: a whole beach needs plumbing too.
+1192|Your fortune made the list; you still only get one night's sleep.
+1193|Dinner topic: how to make time accept a merger.
+1194|Street food week opens
+1195|Local food stalls draw more crowds. Next round of Taipei street deals: odds +4%.
+1196|Indie creative season begins
+1197|Creative markets and shows open together. Next round of Tokyo deals: success multiplier +0.15.
+1198|Desert show season heats up
+1199|Ticket demand rises, competition too. Next round of Las Vegas deals: odds −3%, multiplier +0.30.
+1200|New shipping window in the strait
+1201|Port links improve. Next round of Singapore deals: odds +4%.
+1202|Community art fund expands
+1203|Small creative groups get more attention. Next round of New York deals: success multiplier +0.20.
+1204|Coastal expo week welcomes guests
+1205|Demand for yachts, concierge and craft services rises. Next round of Monaco deals: odds +3%.
+1206|Morning
+1207|Afternoon
+1208|Dusk
+1209|Night
+1210|This activity is over.
+1211|Solid work — you got paid.
+1212|Your bold try got applause — extra tips!
+1213|It didn't go smoothly, but you still got base pay.
+1214|A tea-cellar membership needs stable storage and collectors' trust.
+1215|Research contracts take long to sign off; secrecy, patents and delivery all cost money.
+1216|An art service's price tag isn't cash you can get at any time.
+1217|A fictional sky club: you trade scarce experiences, not guarantees.
+1218|Rare movements need expert repair and traceable parts.
+1219|From prototype to mass production, every step needs rigorous testing.
+1220|Compliance review and licence fees raise the bar on this contract.
+1221|A fictional space-culture project: big returns, bigger execution risk.
+1222|Big productions need upfront pay for crew, stage and venue.
+1223|Storage isn't generation; long-term equipment costs are very high.
+1224|You're contracting not just lights, but safety, capacity and liability.
+1225|A fictional floating entertainment zone turns the night into a very high-risk business.
+1226|Private boat services turn every small mistake into a pricey bill.
+1227|Service deals for precision gear must cover long-term tech support.
+1228|Large-scale cold chains need cross-border coordination and strict temperature logs.
+1229|A fictional orbital supply network: permits and transport far exceed normal streets.
+1230|Loans, insurance and shipping for exhibitions all need cash; prestige can't pay.
+1231|Linking real devices to the cloud means facing both tech and supply risk.
+1232|This kind of fictional contract comes with heavy review and regional taxes.
+1233|A fictional sky-city project: the bigger it gets, the more maintenance surprises.
+1234|An expert appraisal is often worth more than a pretty display case.
+1235|Tiny batches of fine manufacturing depend on a highly specialised supply chain.
+1236|Running a private port means huge tax bills and complex stakeholders.
+1237|A fictional orbital club: what supports luxury first is reliable life support.
+1238|Late game only
+1239|Survival
+1240|Worker
+1241|Middle class
+1242|Affluent
+1243|Big shot
+1244|Private capital
+1245|Oligarch
+1246|Sovereign guest
+1247|Global dynasty
+1248|Cloud council
+1249|Untouchable
+1250|Common folk
+1251|C
+1252|Tech alliance
+1253|T
+1254|Industrial union
+1255|I
+1256|Regional council
+1257|G
+1258|Underground gang
+1259|S
+1260|Capital guild
+1261|$
+1262|Taipei
+1263|Tokyo
+1264|Las Vegas
+1265|Singapore
+1266|New York
+1267|Monaco
+1268|Xinyi Private Club
+1269|Da'an R&D Zone
+1270|Riverside Council District
+1271|Cloud Lantern City
+1272|Ginza Collectors' Club
+1273|Bay Robot Archipelago
+1274|Chiyoda Finance Zone
+1275|Orbital Culture Pod
+1276|Desert Prestige Corridor
+1277|Red Rock Energy Belt
+1278|Strip Mega Expo Zone
+1279|Neon Sky City
+1280|Marina Private Pier
+1281|Jurong Innovation Isles
+1282|Sovereign Trade Zone
+1283|Equatorial Orbit Port
+1284|Upper East Private Row
+1285|Brooklyn Industrial Cloud
+1286|Manhattan Finance Zone
+1287|Hudson Sky City
+1288|Monte Carlo Collectors' Bay
+1289|Coastal Precision Park
+1290|Sovereign Capital Enclave
+1291|Azure Near-Earth Club
+1292|Regular streets
+1293|Emergency fund
+1294|Your first rest in a new run gets up to $30 off the bill; starting cash unchanged.
+1295|Mechanism
+1296|Danger sense
+1297|Next run: +5 points to evade security events.
+1298|Rebirth risk pool
+1299|Next run: 25% of every robbery loss is refunded (no revival).
+1300|Past-life favours
+1301|Next run: all six factions start at +10; wealth thresholds still apply.
+1302|Better constitution
+1303|Next run: max hearts go from 5 to 6.
+1304|Jade night cruise
+1305|Unlocks a jade-green look; odds and costs unchanged.
+1306|Black-gold afterlife
+1307|Unlocks a navy-and-gold look; odds and costs unchanged.
+1308|Rose champagne
+1309|Unlocks a rose-copper look; odds and costs unchanged.
+1310|Already unlocked or doesn't exist.
+1311|Not enough luxury points. Buy local luxuries; they're credited at life settlement.
+1312|Hostel bunk
+1313|Studio flat
+1314|Garden villa
+1315|Sky suite
+1316|Private estate
+1317|Hot soup & simple meals
+1318|Three meals a day
+1319|Quality meals
+1320|Chef's table
+1321|Private chef
+1322|Estate banquets
+1323|Bus & laundry
+1324|Commute & clothing care
+1325|Car service & housekeeping
+1326|Butler & travel
+1327|Dedicated lifestyle service
+1328|Estate concierge team
+1329|This lot is closed or doesn't exist.
+1330|Not enough cash — keep at least $0.01 after bidding.
+1331|This bill was already handled.
+1332|Finish the rest event first.
+1333|Can't pay the rest bill
+1334|Adjust security while on the street.
+1335|Security needs $100,000 net worth.
+1336|Invalid security plan.
+1337|Not enough cash — keep at least $0.01.
+1338|Master lantern private collection
+1339|Century-old tea ceremony, exclusive booking
+1340|Riverside private art museum
+1341|One-of-a-kind mechanical watch
+1342|Private garden concert
+1343|Bay building naming rights
+1344|All-night private illusion theatre
+1345|Private desert stargazing
+1346|Exclusive neon strip celebration
+1347|Private orchid-garden dinner
+1348|Monthly superyacht charter
+1349|Sky garden naming ceremony
+1350|Private jazz session
+1351|Penthouse art collection night
+1352|Private landmark light tribute
+1353|Haute joaillerie private piece
+1354|Superyacht exclusive booking
+1355|Côte d'Azur private celebration
+1356|This regional luxury isn't open yet or was already bought.
+1357|Not enough cash — keep at least $0.01.
+1358|Private recovery course
+1359|Restores 1 heart; next roll's odds unchanged.
+1360|Longevity research contract
+1361|Decline chance −12 points; it still grows each rest.
+1362|Cell renewal programme
+1363|Health back to max and decline chance −25 points.
+1364|Medical threshold not reached yet.
+1365|Finish the current event first — you can't change a result already drawn.
+1366|Health is already full.
+1367|Not enough cash.
+1368|Your net worth isn't high enough for this zone.
+1369|Finish the current stage first.
+1370|Street partner
+1371|EVENT RESOLVED
+1372|That page is turned.
+1373|HEALTH DRAW / Rest
+1374|#
+1375|Tonight, how will your body answer?
+1376|[Overwork] You pushed on exhausted: extra {}% chance to lose another heart.
+1377|Health now {}/{}. Decline chance this time {}%; a hit costs 1 heart, zero ends your life. {}The result was locked when rest started — refreshing won't reroll.
+1378|Reveal health check
+1379|No cash cost this time.
+1380|REGIONAL TAX
+1381|Wealth brought another letter.
+1382|{} assessed your tax on current net worth. It's already on this bill and won't be charged twice here. You can refuse, but council relations drop and freezes and fines may follow.
+1383|Add to bill, pay on time
+1384|Tax ${} · council +8
+1385|Refuse this tax
+1386|Remove tax from this bill · council −28
+1387|Off-book storm: the press starts digging
+1388|Off-book storm: hand over key records
+1389|Off-book storm: keep your reform promise
+1390|Pick one response per page. Complete three compliance steps for a 6% net-worth cooperation reward and better relations; refuse at any step and pay a 14% fine immediately. Amounts are fixed at net worth when the storm began.
+1391|Hire independent auditors
+1392|Complete expert review
+1393|Keep the reform promise
+1394|Step {}/3 · cost {}%
+1395|Refuse to continue
+1396|Instant 14% fine · council −20, may bankrupt you
+1397|LIFE AT RISK / Underground revenge
+1398|SECURITY / Your wealth is being watched
+1399|Footsteps in a dark alley.
+1400|Someone sold your schedule.
+1401|This is a deadly threat. Bodyguards and security stance affect your evasion chance; taking a detour adds 15 points. Failure ends your life.
+1402|Not every loss is in the investment terms. Resisting and failing costs 22% of your cash; settling lets you pay and leave for sure. Odds are locked — refreshing won't reroll.
+1403|Evade with your security plan
+1404|Evade {}% · bodyguard level {}
+1405|Drive them off
+1406|Death
+1407|Lose 22% cash
+1408|Success {}% · win: underground +5, else {}
+1409|Pay to settle, leave safely
+1410|Pay now, underground +4; no evasion roll
+1411|GOODWILL
+1412|remembers you.
+1413|Past cooperation brings a new gift. It's a relationship reward — no investment or deposit needed.
+1414|Accept the return gift
+1415|Get cash worth 1.2% of net worth at event start · relations +3
+1416|Leave the gift to the community
+1417|No money · common folk +12, this faction +5
+1418|A pricey, interest-free splurge. Pay for {} luxury points, credited to the main menu when this run ends. No cash returns and not counted in net worth.
+1419|Buy it and become a legend
+1420|+{} luxury points · once per run
+1421|Just admire it
+1422|No cost, no luxury points.
+1423|The community wants a hand
+1424|Fund the neighbourhood's public space
+1425|The tech alliance sends a proposal
+1426|Support open R&D and independent tech
+1427|The industrial union needs cash flow
+1428|Join the supply-chain guarantee plan
+1429|The regional council asks you to fund it
+1430|Take a share of public works
+1431|An unsigned bill
+1432|Pay for so-called "peace"
+1433|The capital guild invites you to sit down
+1434|Support the private capital network
+1435|Old debts come knocking too.
+1436|{} is very unhappy with you. Settling costs more; refusing triggers a freeze loss of {}% of net worth.
+1437|{}. The richer you are, the bigger the ask; good relations may bring gifts, bad ones may trigger punishment.
+1438|Pay the settlement
+1439|Full support
+1440|This faction +18
+1441|Pay only half
+1442|Pay half · this faction +5
+1443|Refuse outright
+1444|, and suffer an immediate freeze loss
+1445|This faction −18{}
+1446|This event has changed or been settled.
+1447|Invalid option.
+1448|Your choice took effect.
+1449|(overwork +{})
+1450|Overwork knocked you down: −1 heart
+1451|−1 heart
+1452|Safe tonight — no heart lost
+1453|Roll {} / 100, decline threshold {}{}. {}; now {}/{} hearts.
+1454|Your body took a heart.
+1455|Tonight, all is well.
+1456|Health ran out — life has ended
+1457|The holiday has changed.
+1458|Tax removed from this bill. Council −28. Refusing has consequences; freeze events may follow.
+1459|Council +8. Tax is still charged only once, when you pay the rest bill.

@@ -1,0 +1,300 @@
+560|Wearing
+561|Wear trim
+562|Buy {}
+563|Unlocks at net worth {}
+564|Gold UI trims & card borders
+565|Customise your main card and panel borders; bought trims stay lit forever and grant rare legacy points (LP)
+566|Buying a gold trim instantly grants a few legacy points (0.02–5.0 LP) and adds a tiny upkeep at every rest; wear it to give your main card a unique material glow!
+567|Minimalist grey
+568|A clean, restrained, high-contrast interface.
+569|Imperial Gold
+570|Baroque double gold trim and gold-leaf texture, for true tycoons.
+571|Cyber Neon
+572|Deep night black with high-voltage cyan and fluorescent pink.
+573|Swiss Clean
+574|Vintage parchment and elegant print style with old-world warmth.
+575|In use
+576|Switch
+577|Visual themes & interface style
+578|Switch layout, fonts, border materials and colours live
+579|Themes apply instantly and save automatically; they never change any numbers or odds.
+580|Once you're rich, safety comes with a bill.
+581|Cautious lowers encounter risk; bold raises resistance but draws attention.
+582|No hire
+583|Escort
+584|Pro squad
+585|Private security team
+586|Selected
+587|Hiring difference
+588|No refunds on changes
+589|{} · base {} per rest
+590|Low profile
+591|Robbery −6%, evasion +8%; wages ×1.4
+592|Normal escort
+593|Standard odds and wages
+594|Open deterrence
+595|Robbery +5%, resistance +14%; draws more attention
+596|Robbery chance at rest about {}%
+597|Base evasion {}% · detour +15% extra, cap 97%
+598|Your will
+599|Below $100,000 net worth, security pauses and charges no wages. All odds are game rules, not real safety advice.
+600|Hostile
+601|May trigger punishment events
+602|Tense
+603|They have a problem with you
+604|Friendly
+605|May bring gifts and chances
+606|Warm
+607|Happy to chat a bit longer
+608|Wary
+609|Support and refusal are both remembered
+610|Wealth makes you visible to more people.
+611|Relationships aren't permanent assets; every choice moves the line.
+612|Wealth threshold not reached yet — no interaction
+613|Greetings, city stories and rest events all move relationships. A hostile underground gang may send assassins; a hostile council brings freezes and fines. Each faction punishes differently.
+614|— there's a higher tier.
+615|Higher thresholds, higher tax, and local exclusive deals.
+616|Net worth threshold
+617|No wealth threshold
+618|You are here
+619|Not open yet
+620|Enter this zone
+621|Zone tax factor ×{} · deal risk +{}
+622|Current: {}. Falling below a zone's threshold sends you back to the normal streets. Sky / orbital zones are fictional late-game places.
+623|Time starts getting expensive.
+624|Health {}/{} · next decline chance {}%
+625|Buy treatment
+626|Threshold {} · this time {}
+627|Each purchase makes the next treatment pricier. You can't rewrite a locked result; longevity isn't immortality and can't revive the dead.
+628|— an expensive memory.
+629|No interest, no resale — only luxury points.
+630|Bought this run
+631|Buy the memory
+632|{} luxury points
+633|Net worth threshold {}
+634|Pending this run: {} points. Goes to your rebirth account when this life ends; each item can be bought once per run.
+635|Skins
+636|In use
+637|Use skin
+638|Unlocked · active next run
+639|Unlock ·
+640|pts
+641|AFTERLIFE ATELIER
+642|Money stays behind; habits don't.
+643|Luxury points available
+644|· total {} · pending this life {}
+645|Use default skin
+646|Mechanisms apply from your next run; skins apply now. No real top-ups; local saves aren't anti-cheat accounts.
+647|Last $100: Swipe to Rich
+648|Energy & cities
+649|Start with 200 energy, upgradable four times to 400. Walk −5, invest −3, buy −2, travel −10. Day and night follow your energy; rest when empty to refill. Six cities each have 16 local deals, four needing higher net worth; every ten steps you turn a real street corner. City music is licensed and built in offline.
+650|Current net worth sets how hard life is
+651|Net worth = cash + purchase price of assets, outfits and items + unsettled stakes; not your peak, and fees aren't double-counted. Mechanisms follow current net worth — get poorer and the interface simplifies. Premium services pause and return when you're rich again. Luxuries don't count as assets.
+652|Mandatory bills
+653|Normally you see the next rest estimate; the menu shows details. Rest locks upkeep, regional tax, bodyguard wages and fees; events may charge or reward extra. Finish events, then pay. If cash can't cover the bill and leave one cent, the run ends — there's no public bailout. After paying, wait ten minutes free or pay for activities to speed up. Higher zones tax more; refusing tax hurts council relations.
+654|Health & simple choices
+655|You start with 3 hearts and 0% decline chance. Each rest adds 1 point, starting at 1%; a hit costs one heart, zero means death. Health checks and dangerous events lock their roll when triggered — refreshing won't reroll. The rich can buy recovery and longevity. Financial storms come as three simple choices: comply for a reward, refuse midway for a huge fine.
+656|Factions & security
+657|Past the threshold you meet the community, tech, industry, council, underground and capital guilds. Donations, cooperation and refusals all matter; friends may pay back, enemies may freeze assets or retaliate. Bodyguards and your security stance affect robberies and escapes; a failed underground assassination means death, not an investment loss.
+658|Spend only, no interest
+659|Regional luxuries only cost game money and grant luxury points, no cash returns; when the run ends or restarts, points go once to the Rebirth Office. Mechanism unlocks apply next run; skins can change now. Every death is saved to this device's life leaderboard, not a global online board.
+660|Rare districts & deals
+661|District invitations are a choice to enter or leave, not an investment. Inside, until energy runs out you do local work only: steady work −8 energy for a fixed fee; a bold try −12 for a 65% chance of 2.3×, otherwise 0.35× base pay. Normal deal failures only lose the stake; Tokyo and New York have double reviews, Singapore has delayed settlement. Street deals max $500, premium $1,000–$100,000, top deals from $100,000. The system cap is $9 trillion and the road has no final stop.
+662|Readability & saving
+663|Use "Interface & text" in the main menu to set panels 75%–125% and text 14–22px; wealth materials can be turned off there too. Click the world map directly — no dragging. Phone panels scroll, the scene keeps its own space. Computer and phone save separately, automatically in the same browser address; clearing browser data clears progress. All events, health odds and taxes are fictional game rules — no top-ups, cash-out, medical or investment advice.
+664|Minimal black & white
+665|Imperial Gold
+666|Cyber Neon
+667|Swiss Clean
+668|Net worth & next bill
+669|Wealth mechanism blueprint
+670|Choose interface layout again
+671|Gold UI trims (+LP)
+672|Rebirth Office ·
+673|Faction relations
+674|Bodyguards / security stance
+675|Health / costly longevity
+676|Deep city zones
+677|Regional luxuries
+678|Wealth colours & textures:
+679|On
+680|LIFE HAS CONSEQUENCES
+681|Features follow current net worth. The poorest stage has no extra panels; health and bills appear only in rest popups.
+682|Entered
+683|; the next bill is recalculated for this zone.
+684|Spend {} game money now. {}
+685|This money won't come back.
+686|Spend {} for {} luxury points; no assets or cash returns.
+687|Wealth textures and colours
+688|; layout unchanged.
+689|{} worked! You received {}
+690|{} didn't work out; the {} you put in is gone.
+691|The other side of the world.
+692|Fictional game news that affects the next round of deals.
+693|Market steady
+694|Chosen destination
+695|Noble charter active! Next stop is set to: {}
+696|Theme switched to:
+697|Minimalist grey
+698|Bought [{}]! UI trim equipped, +{} LP bonus!
+699|Purchase failed
+700|UI trim equipped!
+701|Rest confirmed; energy refills when rest ends.
+702|This action isn't available right now.
+703|Coins
+704|Bills
+705|Stack of bills
+706|Money bag
+707|Armoured van
+708|Dollar case
+709|Street chance
+710|Quality chance
+711|Rare
+712|Epic
+713|Legendary
+714|Mythic
+715|Corner guitarist
+716|People & teams
+717|One person, one guitar, raising money for gear for the next corner gig.
+718|It worked
+719|It flopped
+720|Errand crew
+721|A few friends who know every alley want gear to take on bigger delivery orders.
+722|Maker duo
+723|Prototypes and tools on the desk, a partner beside them. Fund their small test batch.
+724|Street dance crew
+725|Three dancers prepare a public show, earning from tickets and partnerships.
+726|Indie film crew
+727|A director, cinematographer and producer set up on the street, waiting for their next backer.
+728|Research team
+729|The researchers are the heroes, not the building. Fund their small experiment.
+730|Startup founders
+731|Two founders pitch at a whiteboard, turning an idea into a real venture.
+732|Expedition team
+733|A small team, a map and backpacks. Share the cost and uncertainty of the journey.
+734|Corner coffee
+735|Corner · Retail
+736|A tiny coffee cart waiting for the morning rush. Back the block's next favourite shop.
+737|Morning rush sell-out
+738|Empty tables
+739|Sunlight Energy
+740|Future · Clean energy
+741|Turn empty land into a sea of solar panels. The forecast only tells half the story.
+742|Clear skies
+743|Grid delay
+744|Midnight Records
+745|Culture · Collectibles
+746|An indie record shop, an unknown vinyl, a shot at becoming a classic.
+747|Sold out
+748|Stuck with stock
+749|Cloud Nine
+750|Tech · Infrastructure
+751|Cold servers, hot demand. Own a small corner of the internet.
+752|Fully booked
+753|Over budget
+754|Slow Grow
+755|Nature · Farming
+756|Fresh herbs, patient gardeners, and a greenhouse with something to prove.
+757|Bumper harvest
+758|Poor harvest
+759|Orbital Supply
+760|Frontier · Space
+761|The smallest supplier in a grand space programme. Not every dream reaches orbit.
+762|Launch success
+763|Launch aborted
+764|Studio Eight
+765|Design · Fashion
+766|A lean fashion label. Your investment still carries risk, of course.
+767|New line sold out
+768|Trend faded
+769|Pacific Freight
+770|Trade · Logistics
+771|One container crossing the ocean. Will the market still want what's inside when it docks?
+772|Delivered on time
+773|Port congestion
+774|Pixel Block
+775|Play · Entertainment
+776|A tiny arcade about to open for its first night. Never underestimate nostalgia.
+777|Crowds pour in
+778|Quiet opening
+779|Gold Rush
+780|Resources · Prospecting
+781|A small claim in an old gold field. The glitter is real; the returns may not be.
+782|Rich vein found
+783|Came up empty
+784|Next Shot
+785|Media · Creators
+786|Lights, camera, a small crew hoping for their first viral hit.
+787|Went viral
+788|Nobody watched
+789|Blue Horizon
+790|Travel · Tourism
+791|A yacht, a coastline, and a route that might become a hot holiday pick.
+792|Fully booked
+793|Bookings cancelled
+794|Future Matter
+795|Discovery · Science
+796|A strange new material leaves the lab. Is the world ready for it?
+797|Breakthrough
+798|Prototype failed
+799|Morning Bakery
+800|Community · Food
+801|Warm bread, early streets, and a little bakery waiting to grow.
+802|Queue out the door
+803|Poor sales
+804|Street stall
+805|Converted container
+806|Garden greenhouse
+807|Tiny house
+808|Vintage food truck
+809|City apartment
+810|Lakeside villa
+811|Brooklyn townhouse
+812|Glass mansion
+813|Mountain villa
+814|Seaside villa
+815|Skyline penthouse
+816|Private vineyard
+817|Private art gallery
+818|Grand estate
+819|Private island
+820|Private marina
+821|Coastal resort
+822|Restored castle
+823|Landmark tower
+824|Modern palace
+825|City stadium
+826|Private spaceport
+827|Sky city complex
+828|Lights a founder badge next to your name.
+829|Adds explored pages to your leaderboard card.
+830|Soft petals fall with every step.
+831|Copper trim on your card and interface.
+832|A little confetti welcome at every arrival.
+833|Glass-blue card border and flowing footprints.
+834|Polished silver border and sparkling footprints.
+835|Ocean-light ripples circle your character.
+836|Animated neon border lights up the whole journey.
+837|Two concierges greet you at every stop.
+838|A four-person welcome team and a velvet carpet.
+839|Eight greeters, a red carpet and a royal entrance.
+840|Prism sparkles and a gallery-grade border.
+841|Gold-leaf border and golden footprints.
+842|Royal purple border and a floating crown.
+843|Diamond border, a title and a dazzling halo.
+844|Fireworks every time an investment pays off.
+845|Stars orbit you and the interface glows cosmic.
+846|Full imperial presence: crown, halo and escorts.
+847|Pure white start
+848|Mint fresh
+849|Street stroll
+850|Weekend jacket
+851|Bespoke suit
+852|Ivory tuxedo
+853|Gilded age
+854|Future noble
+855|Above all
+856|Noble black-gold letter
+857|Use a noble letter to order a rare luxury boutique or unique auction to open on the next street!
+858|Private bank charter
+859|Directs the next stop to a high-net-worth bank deal with a higher multiplier.

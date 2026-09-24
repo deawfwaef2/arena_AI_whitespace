@@ -1,0 +1,300 @@
+1760|The city panorama unfolds on the main screen, unlocking travel and net-worth entries. City travel still needs a $350 World Pass from a roadside shop.
+1761|Unlocks the business radio ticker: live local events, market tips and policy bonuses!
+1762|Mechanic map & UI scaling
+1763|Unlocks the full mechanic map and free UI scaling!
+1764|Special wager contracts
+1765|Unlocks high-risk, high-reward play like coin duels and turbo contracts!
+1766|Middle class & advanced deals
+1767|Opens the refined middle-class UI and unlocks multi-round, double-review advanced deals!
+1768|Used car & deal filter
+1769|Enables smart low-tier filtering; swipe right to auto-skip tiny deals and go straight to real chances!
+1770|Music butler & class soundtracks
+1771|Choose custom city music and class-exclusive ambient sound!
+1772|Affluent class & private security
+1773|Unlocks the gilded luxury UI! Hire bodyguards and set defence and settlement strategies!
+1774|Noble privileges & destination decrees
+1775|Unlocks noble decrees: make the next stop a luxury boutique, bank or tech hub!
+1776|Rare auction house & rebirth medal wall
+1777|Join exclusive one-of-a-kind auctions; cash turns into permanent rebirth points and lights up your medal wall!
+1778|J. K. Rowling
+1779|A creator who began with a manuscript
+1780|Charlie Chaplin
+1781|The start before the spotlight
+1782|Warren Buffett
+1783|A first investment as a boy
+1784|Oprah Winfrey
+1785|A career begun at local radio
+1786|Haruki Murakami
+1787|Writing years while running a jazz bar
+1788|Fujiko F. Fujio
+1789|Serial days in a small studio
+1790|Hayao Miyazaki
+1791|Turning work into a lifelong career
+1792|George Lucas
+1793|An independent producer's creative path
+1794|Rihanna
+1795|From the stage to a business brand
+1796|Michael Jordan
+1797|A brand career beyond sport
+1798|Bill Gates
+1799|Tech, business and philanthropy
+1800|A story of long-term investing
+1801|Explore the world
+1802|Move −5
+1803|Offline earnings credited {} · daily rate {}%
+1804|On holiday
+1805|Must rest next
+1806|Simulated global wealth rank
+1807|Richer than {}% of people
+1808|# {} / 8.2 billion · not real statistics
+1809|{} / Explore the world
+1810|Market steady · odds and returns shown before you invest
+1811|Energy {} / 200 · invest costs 3, moving costs 5
+1812|Offline account · daily rate {}% · max 7 days
+1813|Every stake carries risk; unstaked cash is safe in normal deals
+1814|Mechanic map
+1815|This moment is for you.
+1816|Holiday / {}
+1817|Close-up
+1818|Life panorama
+1819|Side profile
+1820|Heading to
+1821|Next stop, {}.
+1822|Every departure brings new possibilities.
+1823|Out of energy · rest now?
+1824|Your energy is at zero (0 / {}). To keep going you need to rest and recover.\\nResting settles your class upkeep bill and runs a health check.\\nRest now?
+1825|Funds are settling; continue when done.
+1826|Street deal
+1827|Partner deal ·
+1828|No stake cap
+1829|Cap {}
+1830|{}{} · from {} · {}
+1831|Must pass both rounds: {}% × {}% = {}%. Failing either loses your stake.
+1832|Funds lock for 20 seconds after investing, then reveal; no skipping or travel meanwhile.
+1833|Not enough funds · need at least {}
+1834|{} low-tier filter
+1835|Local exclusive
+1836|✓ Owned
+1837|Wear
+1838|At this stop, upgrade your life.
+1839|Roadside exclusive · stock reshuffles when you leave
+1840|Shop outfits / your original looks
+1841|Keep going {}
+1842|{}s
+1843|{}m{}
+1844|Pay {}
+1845|Preview pose
+1846|Save {}
+1847|Slowing down is moving forward too.
+1848|Settle in first, then rest well.
+1849|Recovery starts after payment
+1850|Pay {} · start resting
+1851|Not enough balance · apply for public aid (15 min)
+1852|Class is locked when the holiday starts. Prices vary by region and random offset, all in virtual dollars. Aid leaves you $0.01 and creates no debt.
+1853|Basic upkeep
+1854|Simulated tax
+1855|This rest
+1856|10 minutes → 200 energy
+1857|Fees & aid explained
+1858|Take 200 energy, set off →
+1859|Finish rest now · {}
+1860|Don't want to wait? Be done right now.
+1861|Clears all remaining time · confirm after tapping
+1862|Watch an ad · −2 minutes ({}/3)
+1863|Reward only after the ad finishes.
+1864|No ads available now; you can still wait or pick an activity.
+1865|Relax another way.
+1866|More activities · {} more options
+1867|{} · Holiday
+1868|Life story frame
+1869|Rest complete · 200 energy waiting
+1870|Life stage parallels / {} OF 2
+1871|Stories chosen by game class · not their real net worth · not their portrait
+1872|Funds are settling.
+1873|Locked stake
+1874|Revealed after 20 seconds. Odds {}%, success returns ×{}; failure loses the locked stake. Refreshing won't reroll.
+1875|Reveal settlement {}
+1876|Distance follows geography; travel time is game-compressed, not a real timetable. The trip continues offline; controls return on arrival.
+1877|Arrive · start exploring
+1878|Fare paid {}
+1879|Finish the current stage to open the travel map.
+1880|● You are here
+1881|Wealth threshold {}
+1882|Available
+1883|Local finds / {} · sold in random shops
+1884|{} · costs 10 energy
+1885|Timed challenge in progress — no city travel for now.
+1886|Out of energy — finish your holiday first.
+1887|In-game dollars · time compressed · unbought items don't unlock automatically
+1888|CHOOSE YOUR WAY
+1889|✓ Active
+1890|Locked
+1891|Threshold {}
+1892|Mechanic progression map
+1893|The unlock route from nothing to capital titan
+1894|Mechanics activate instantly by current net worth; after each class jump, more exclusive encounters and secret auctions appear along the way!
+1895|Travel map
+1896|Deal filter: {}
+1897|Basic
+1898|UI: {}
+1899|Adaptive
+1900|By city
+1901|By class
+1902|Music: {}
+1903|Offline daily rate {}%
+1904|Energy & life rules
+1905|LIFE
+1906|Energy {} / 200 · {} · {}
+1907|UPSHIFT / Life & wealth
+1908|Energy & holidays
+1909|Move −5, invest −3, buy −2, travel −10. About 40 moves drains you; the next stage after that is a fixed holiday. After paying upkeep and simulated tax, a 10-minute recovery starts. Each class has 6 normal activities and 1 instant pack; activities shorten the timer, the pack clears it. Up to 3 ad rewards per holiday, 2 minutes each. With no ads you can still wait for free.
+1910|Start simple
+1911|At first you only have cash, normal deals, energy and rest. As wealth grows you meet more goods, maps, challenges and high-tier deals. Advanced mechanics must be bought in random shops with game coins. Map, radio, UI, mechanic chart, interest account, car and music never unlock for free.
+1912|Deal rules
+1913|Street deals up to $500; advanced $1,000–$100,000; top deals from $100,000 with no cap (system safety cap $9 trillion). Tokyo and New York have double review; Singapore has delayed settlement; Las Vegas has more high-risk contracts. Normal failure loses only the stake; all-in contracts ask to confirm again.
+1914|Data & prices
+1915|All amounts are virtual dollars with no real top-up or cash-out. Travel is compressed from coordinate distance; spending uses real-world scale for reference, not live prices. The global wealth rank is a synthetic model of 8.2 billion people, not a real survey. Celebrity cards are life-stage parallels only and don't claim their net worth equals yours. Offline interest uses your cash when you left, simple interest, max 7 days. Changing the device clock or save can still cheat; the client has no server verification.
+1916|Bought {} · {}
+1917|Filter on: auto-skips low-tier deals; each stop still costs energy.
+1918|Filter off.
+1919|Atelier modern UI enabled.
+1920|Switched back to the basic UI.
+1921|Music butler switched to:
+1922|Let time make a little echo.
+1923|Interest account / virtual yield
+1924|Last offline earnings: +{}
+1925|Current cash {}. At this balance, 1 day offline earns about {}.
+1926|Settled by offline time each time you reopen, up to 7 days. Only cash counts — not buildings, clothes or goods — and no compounding. Under 1 minute isn't settled.
+1927|{} s
+1928|{} · {} minutes saved{}
+1929|Finish this rest right now?
+1930|Pay {} game coins for "{}"; the remaining rest timer drops to zero. No real money used.
+1931|The current holiday has changed.
+1932|Rest finished instantly. Collect
+1933|energy and set off.
+1934|Preview:
+1935|Ad reward: rest shortened by 2 minutes.
+1936|Ad not finished or unavailable; no reward.
+1937|Energy restored to
+1938|, new chances are waiting.
+1939|Welcome to {}. {}
+1940|Action unavailable right now.
+1941|Crossing a bridge · let the wind blow
+1942|Street interlude · no deals for now
+1943|Free entry · not an investment
+1944|BILLS DUE
+1945|"He was a man of taste — until he confidently bet everything on a mysterious 50% contract."
+1946|"Autopsy report: upon receiving his 12th mansion-and-private-island bill this week, the capitalist's blood pressure dropped straight to zero."
+1947|"Last words: 'Relax, guys, it's 88% odds — win this and we buy a suborbital launch site outright!'"
+1948|"Open letter from the liquidators: he passed peacefully; at least every dollar he had went right back into the street economy."
+1949|"Only 5 minutes after a toast on his Mediterranean yacht, he was lawfully declared dead for failing to pay $42 in excess harbour tax."
+1950|"He thought he was a destined investment shark — then met three professional auditors in a dark alley, armed with calculators."
+1951|"Greatest achievement: owned ten million in ten minutes, then rejoined the proletariat within the next thirty seconds."
+1952|"Reincarnation office notice: in honour of your tireless hustle last life, you're specially approved for another $100 starter fund!"
+1953|Bills
+1954|Upkeep
+1955|"Cause of death: after 72 hours of racing heartbeat trying to pay luxury fees and licence taxes, the heart was finally crushed by bills."
+1956|Assassination
+1957|Gang
+1958|"Cause of death: tried to freeload an underground bridge loan with a $100-starter mindset; bagged overnight and shipped to international waters."
+1959|Health
+1960|"Cause of death: too busy making money to visit the royal anti-ageing clinic; every body part wore out, and the fortune went to the next tenant."
+1961|Cash
+1962|Bankrupt
+1963|"Cause of death: blindly believed the 'bicycle to rocket' wealth myth and left the world unable to afford a sausage at a street stall."
+1964|FINANCIAL AFTERLIFE
+1965|Capital leaves; bills are forever.
+1966|Good news: the reincarnation office has approved you.
+1967|Next life, your starting fund is still a hefty
+1968|Skip the grief · reincarnate now (SKIP) →
+1969|See the risk, then place a bet.
+1970|Check odds and returns first, pick a stake, then tap "Invest". If a normal deal fails, you lose only this stake.
+1971|E.g. stake $25 at ×1.80: success gets you $45 back; failure loses $25.
+1972|Tap or swipe right to meet the next stop.
+1973|You have 200 energy, upgradeable to 400. Moving costs 5, investing 3. The less energy, the later the day; when it's gone, rest.
+1974|About 40 moves drain your energy. Holidays recover slowly, or spend game coins to recover instantly.
+1975|More money, bigger world.
+1976|As money grows, more mechanics unlock. Maps, auto-filter, interest and advanced UI can all be bought in roadside shops.
+1977|No need to remember every rule at the start. Just make this one choice well.
+1978|Got it, let's go!
+1979|Next
+1980|Back
+1981|Quick start
+1982|Skip tutorial
+1983|You are always the hero of this journey.
+1984|Pocket ledger
+1985|Review your gains and losses any time
+1986|Risk compass
+1987|See the current deal's full terms
+1988|Private security
+1989|Hire and adjust stance as needed
+1990|Honour collection
+1991|See unique pieces and medals
+1992|Capital seal
+1993|See net worth and living bills
+1994|· reclaimed for now
+1995|A NEW CHAPTER
+1996|KEEP YOUR STORY
+1997|Life begins!
+1998|Decorations being reclaimed
+1999|New permissions, decorations and street chances are ready.
+2000|Features below the threshold pause; bought items are kept and return when wealth recovers.
+2001|Immersive street
+2002|Continue ch.
+2003|Start game · $100
+2004|STREET STORIES
+2005|From one street to the whole world.
+2006|Nothing to your name.
+2007|The road ahead
+2008|has light.
+2009|A hundred bucks in your pocket is the first line of the story.
+2010|Street deals, strangers' eyes, and a city slowly opening up to you.
+2011|First time? See how to play →
+2012|Fully offline · autosave · virtual coins only
+2013|{}, see you on the next street.
+2014|The world doesn't need to be big at the start.
+2015|Energy
+2016|Rest
+2017|Net worth
+2018|Settings
+2019|{} class · {}
+2020|Paid this period
+2021|Threshold {} · keep-tier cash {}
+2022|Class
+2023|Next threshold · {}
+2024|All thresholds reached
+2025|Tap to view mechanic map
+2026|Travel to another city
+2027|Lend a hand under the lights
+2028|A night-market vendor's cart broke just before the dinner rush.
+2029|Lift the cart
+2030|Arcade joint market
+2031|Old-street shopkeepers want to co-host a weekend market and invite you, now that you've made something of yourself.
+2032|Coordinate the opening
+2033|Riverside culture commission
+2034|The community invites you to fund its culture season. You're no longer just a passing guest.
+2035|Co-curate
+2036|Bento before the last train
+2037|A shop by the station needs a hand; the last batch of bento hasn't been delivered.
+2038|Help deliver
+2039|Workshop sample night
+2040|An indie workshop brings prototypes and hopes you'll set up a real market test.
+2041|Join the testing
+2042|Craft fund jury
+2043|You receive an embossed invitation: decide which traditional craft deserves long-term support.
+2044|Chair the jury
+2045|The street stage lost its lights
+2046|A small band's lights broke, but the first ticket is already sold.
+2047|Help set the stage
+2048|Neon residency trial
+2049|A producer hands you a residency plan that needs a trial show with a real audience.
+2050|Run the trial
+2051|Strip festival naming night
+2052|The neon strip invites you into a public celebration. Every beam of light comes with responsibility.
+2053|Plan the festival
+2054|The last crate by the harbour
+2055|A community co-op near the docks is moving supplies before the rain.
+2056|Help count
+2057|Orchid garden circular market
+2058|A local startup is piloting reusable packaging and wants you as its first partner.
+2059|Help the pilot
