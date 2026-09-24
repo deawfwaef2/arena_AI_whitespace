@@ -421,3 +421,8 @@ Standing constraints unchanged (commit+push per small step, root index.html alwa
 - Media queries while scaled: build.mjs `guardMedia` now emits each size-@media rule twice: original (unscaled page) + a copy behind `html[data-mq~="qN"]`; src/vscale-boot.js evaluates `window.__MQ` against the virtual canvas. So existing responsive rules keep working at virtual sizes.
 - 155 ✅ Ambience (src/sound.js): 6 class beds (night market → Singapore street → café → restaurant → harbor → garden fountain) + street one-shots (cars, scooters, horn, bicycle bell, supercar, champagne, coins, seagulls, helicopter), random pan/pitch, palette per wealth class (`classIndex`). All real Freesound CC0 field recordings; per-file credits in `assets/sfx/SFX-CREDITS.json` (also appended to LICENSES). Toggle: Music menu → "Street ambience". Ducked in modals, off in rest/menu.
 - QA: qa/r15audio.mjs [mobile], qa/r15layout.mjs W H [phone|desk] tag, qa/r15load.mjs, qa/r15prof.mjs. Debug hooks: window.__r14music.status(), window.__r15sound.status().
+
+# 第十六轮用户反馈 / Round 16 (2026-09-25, append-only; items 157–159)
+- [x] 157 Sound effects too loud → reduce ALL SFX/ambience by 70% (done in 7c8135c: Sound bus .8→.24, synth tones ×0.3).
+- [ ] 158 Prepare upload packages for other money-making web-game platforms (Poki, GameDistribution, others such as GameMonetize, GamePix, itch.io, Newgrounds, Y8…) with each platform's ad SDK wired (pause+mute during ads, rewarded where supported).
+- [ ] 159 Submit the game to all those platforms EXCEPT CrazyGames, using the email 3298336285@qq.com; ask the user whenever blocked (verification codes, passwords, captchas, legal/tax/payment agreements).
