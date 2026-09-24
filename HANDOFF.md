@@ -376,3 +376,12 @@ NOTE: sandbox /tmp can be wiped (it happened once) — re-clone, never lose work
 - [ ] 140 NEW MENU DESIGN: no opening animation for new players → straight to main menu. Menu has a drag handle mid-left; player drags it along a "Z/2-shaped" track (not straight) to the finish; while dragging, the poor→rich progress UI transforms per stage (text + UI changes), final stage stays mysterious; reaching the right end starts the game. Keep the run-count unlock mechanics (3 runs / 7 runs variants).
 - [ ] 141 Main menu: START big, centred, title visible, animated background text/motion (user disliked previous style).
 - [ ] 142 NEW TRAILERS 1920x1080 + 1080x1920: show the THRILL — tap-work button rapidly → money flies, camera follows the money to the top-left counter; levelling up; smooth transition to investing (drag stake slider %, huge win); finally ALL-IN and lose everything; end with a call to click/play. Smooth, no hard cuts.
+
+### Round 13 — progress log (append)
+- 135 ✅ `.r13-limits` chips (MIN / MAX / YOU CAN or "Not enough cash") on every project card (v7.enhanceDeal).
+- 136 ✅ `src/r13.js` first-time guidance: DOCK_GUIDE per offer type + rest (tip + spotlight arrow on the button), MODAL_GUIDE ribbon inside modals; seen keys in meta.r13seen.
+- 137 ✅ Settings → "Delete all save data…" (confirm) → platform.remove(SAVE_KEY) + related localStorage keys, `wiping` flag blocks re-save, reload.
+- 138 ✅ offer `v14-sponsor` (v12-core SPONSOR_DEALS, sponsorOffer/settleSponsor/sponsorTick; drawn instead of promo/ad/stroll cards from page 10, ≥14 pages apart, 45 %). Accept → signing bonus + draggable window `#r13-sp` (CrazyGames banner id r13-sp-banner 320x100, house poster offline); each paid rest pays 1 % of liquid cash; × ends the deal. Window pos meta.r13win. platform.clearBanner(id) added — never clearAllBanners for one slot.
+- 139 ✅ WOFF2 font, minified CSS, late art (`LATE` set in build.mjs) streamed in a script AFTER the game JS + `upshift-art` event refresh → boot bytes 4.1 MB→2.9 MB, gzip 2.1 MB→1.2 MB. Removed old promo mp4s, qa/*.png, unused city-lofi/level-one mp3, district-ui-atlas.
+- 140/141 ✅ runs 0–2: no intro → menu with drag-the-coin Z track (onboarding.js bindZ + ZSTAGES; stage skins; ??? top tiers; end starts the game; small "or tap to play" fallback + keyboard). 3–6 tap+story intro, ≥7 logo cinematic + studio menu kept.
+- 142 in progress: qa/capture-r13.mjs (scripted real gameplay, rigged win/lose via crypto override) + tools/trailer-r13.py (camera follows tap → money → counter; captions; zoom-crossfades; end card).
