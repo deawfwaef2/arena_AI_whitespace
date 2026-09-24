@@ -328,3 +328,21 @@ Standing constraints unchanged. Work clone in /tmp/repo. Checkpoint → commit �
 ## Round 11 progress (session 2, 2026-09-24)
 - Verified previous-session R11 commits by screenshots (qa/r11-*.png): phone virtual desktop canvas matches user reference; Restart at far left; stroll billboard (Display Ad slot) + promoter ambush (midgame / pay to slip past / push through); original CG restored. 112–118 ticked.
 - 119 in progress: real gameplay recordings via Playwright recordVideo → sped up + crossfades (tools/gameplay-trailer.py).
+
+---
+# 第十二轮用户反馈 / Round 12 feedback (2026-09-24, append-only; items 120–134)
+Standing constraints unchanged. Work clone in /tmp/repo. Checkpoint → commit → push after each small group.
+- [ ] 120 QUICK FIX: when the hero turns a street corner, nearby pedestrians rotate/turn with him (weird). NPCs must stay in world space at corners too.
+- [ ] 121 SUPER BUG: after reincarnation (new life/run) the shop repeat-purchase counters (famBuys / lvBuys / hospUses …) are NOT reset. Must reset per run.
+- [ ] 122 Large-scale bug sweep.
+- [ ] 123 DEFAULT LANGUAGE = ENGLISH. No Chinese anywhere in English mode. Chinese only via Settings.
+- [ ] 124 Display (static) ads blended perfectly into the scene or into projects — no UX harm, more revenue.
+- [ ] 125 BALANCE: energy recovery must NOT be easy/cheap.
+- [ ] 126 CrazyGames "Play First, Story Later": first 10 s = get the finger moving + positive feedback; story only after ~1 min of play. Guide the player at the start.
+- [ ] 127 FIRST-RUN intro (runs < 3): black screen "Tap to start" → tap → one story image → then main menu. NO Deawfwaef Games logo on first runs. Fast.
+- [ ] 128 Keep the old cinematic intro + Deawfwaef logo, but only after the player has completed 3 runs. Skip button much bigger.
+- [ ] 129 First-run main menu: animated text "Complete 3 runs to unlock a new main menu!".
+- [ ] 130 Main menu colour palette: player picks a colour; ALL characters in the game use that colour.
+- [ ] 131 First-run main menu redesign: bigger START button in a prominent spot, menu centred, background uses the user's image (uploads/image-1.jpeg → assets/art/menu-bg.webp), animated background text / motion.
+- [ ] 132 After first completed run (≥3 runs per 129?) → switch back to the current main menu. (User: first-contact menu until they have finished; afterwards the current one. Implemented: new menu while completedRuns < 3, old menu after; consistent with 129.)
+- Carry-over: 119 gameplay-recording trailer unfinished (qa/capture-frames.mjs + tools/gameplay-trailer.py; swiftshader capture is ~2–7 s/frame).
