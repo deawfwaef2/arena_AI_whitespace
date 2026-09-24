@@ -385,3 +385,12 @@ NOTE: sandbox /tmp can be wiped (it happened once) — re-clone, never lose work
 - 139 ✅ WOFF2 font, minified CSS, late art (`LATE` set in build.mjs) streamed in a script AFTER the game JS + `upshift-art` event refresh → boot bytes 4.1 MB→2.9 MB, gzip 2.1 MB→1.2 MB. Removed old promo mp4s, qa/*.png, unused city-lofi/level-one mp3, district-ui-atlas.
 - 140/141 ✅ runs 0–2: no intro → menu with drag-the-coin Z track (onboarding.js bindZ + ZSTAGES; stage skins; ??? top tiers; end starts the game; small "or tap to play" fallback + keyboard). 3–6 tap+story intro, ≥7 logo cinematic + studio menu kept.
 - 142 in progress: qa/capture-r13.mjs (scripted real gameplay, rigged win/lose via crypto override) + tools/trailer-r13.py (camera follows tap → money → counter; captions; zoom-crossfades; end card).
+
+# 第十四轮用户反馈 / Round 14 (2026-09-24, append-only; items 144–150)
+Standing constraints unchanged (commit+push per small step, root index.html always playable, workspace <128MB, never write token to files). NEW: always verify the token can push at session start (`git push --dry-run`); if it can't, ASK the user.
+- [ ] 144 Phone gets stuck on "loading" for a long time again → find and fix the cause.
+- [ ] 145 Phone UI too big / crowded. User's reference screenshot (uploads/image-1.png, ~1568×1066 landscape): compact desktop-like proportions — money card top-left, status strip top-centre, threshold card top-right, event panel bottom-right, dock bottom-left, lots of visible 3D street. Nothing should fill the screen or overlap.
+- [ ] 146 Main-story dialogue must appear right at the START again (user dislikes R12 moving it to page 6+).
+- [ ] 147 Settings must have an obvious Language option (中文 / English).
+- [ ] 148 Root ZIP package for CrazyGames upload, compressed as much as possible without hurting the game.
+- [ ] 149 Street corner: camera orbits around the hero to a NEW viewpoint (circle around him), 90° per corner, so 4 corners return to the original angle.
