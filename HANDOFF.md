@@ -315,12 +315,16 @@ Standing constraints unchanged (see top). Work clone in /tmp/repo (NOT /home/use
 ---
 # 第十一轮用户反馈 / Round 11 feedback (2026-09-24, append-only; items 112–120)
 Standing constraints unchanged. Work clone in /tmp/repo. Checkpoint → commit → push after each small group.
-- [ ] 112 Mobile UI still wrong. User's reference screenshot (desktop-style layout at ~1327×719: big money card top-left, status strip top-centre, next-threshold card top-right, event panel bottom-right, Rest/Settings bottom-left) = the proportions they want on phones.
-- [ ] 113 Bottom-left UI group: add a 【Restart / 重新开始】 button at the far LEFT.
-- [ ] 114 CrazyGames ads: rewarded ad in a prominent rest-phase spot (skip rest) — keep; roadside ad locations blended into the world — keep/improve.
-- [ ] 115 Display Ads (static banners, CrazyGames SDK banner) inside special street events such as a "walk / stroll" event (billboards, banner-walk) — immersive.
-- [ ] 116 Interstitial (midgame) ads on some other event types.
-- [ ] 117 Story-driven ad nodes: e.g. "street promoters ambush you" — you can PAY in-game money to skip the ad node; masterful immersion.
-- [ ] 118 User DISLIKES the R10 3D-chibi CG → restore the ORIGINAL cg-poor/cg-rich art.
+- [x] 112 Mobile UI still wrong. User's reference screenshot (desktop-style layout at ~1327×719: big money card top-left, status strip top-centre, next-threshold card top-right, event panel bottom-right, Rest/Settings bottom-left) = the proportions they want on phones.
+- [x] 113 Bottom-left UI group: add a 【Restart / 重新开始】 button at the far LEFT.
+- [x] 114 CrazyGames ads: rewarded ad in a prominent rest-phase spot (skip rest) — keep; roadside ad locations blended into the world — keep/improve.
+- [x] 115 Display Ads (static banners, CrazyGames SDK banner) inside special street events such as a "walk / stroll" event (billboards, banner-walk) — immersive.
+- [x] 116 Interstitial (midgame) ads on some other event types.
+- [x] 117 Story-driven ad nodes: e.g. "street promoters ambush you" — you can PAY in-game money to skip the ad node; masterful immersion.
+- [x] 118 User DISLIKES the R10 3D-chibi CG → restore the ORIGINAL cg-poor/cg-rich art.
 - [ ] 119 User DISLIKES the R10 fast-cut trailers → want REAL gameplay screen recording, sped up, keeping the thrills, smooth (crossfades, no abrupt jumps).
 - Preference noted: user prefers the original painterly CG art; avoid replacing established art without asking.
+
+## Round 11 progress (session 2, 2026-09-24)
+- Verified previous-session R11 commits by screenshots (qa/r11-*.png): phone virtual desktop canvas matches user reference; Restart at far left; stroll billboard (Display Ad slot) + promoter ambush (midgame / pay to slip past / push through); original CG restored. 112–118 ticked.
+- 119 in progress: real gameplay recordings via Playwright recordVideo → sped up + crossfades (tools/gameplay-trailer.py).
