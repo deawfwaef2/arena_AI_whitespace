@@ -150,7 +150,7 @@ export function playDeathSound(){
         osc.frequency.linearRampToValueAtTime(207.65, start + dur);
       }
       gain.gain.setValueAtTime(0, start);
-      gain.gain.linearRampToValueAtTime(0.08, start + 0.04);
+      gain.gain.linearRampToValueAtTime(0.024, start + 0.04); // R16: -70%
       gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
       osc.connect(gain);
       gain.connect(ctx.destination);

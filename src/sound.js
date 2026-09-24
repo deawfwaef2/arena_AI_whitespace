@@ -21,7 +21,7 @@ const SHOTS=[
  [['gull',4,.4],['super',2,.4],['cork',2,.4],['heli',1,.35]],
  [['gull',3,.35],['heli',2,.38],['cork',2,.38],['super',1,.35]]];
 export class Sound{
- constructor(){this.ctx=null;this.sfxOn=true;this.ambOn=true;this.volume=.8;this.muted=false;this.hidden=false;this.buffers=new Map();this.tier=-1;this.bed=null;this.inStreet=false;this.duck=1;this.nextShot=0;this.lastHover=0;this.error='';
+ constructor(){this.ctx=null;this.sfxOn=true;this.ambOn=true;this.volume=.24;/*R16: user asked -70% (was .8)*/this.muted=false;this.hidden=false;this.buffers=new Map();this.tier=-1;this.bed=null;this.inStreet=false;this.duck=1;this.nextShot=0;this.lastHover=0;this.error='';
   try{if(navigator.audioSession)navigator.audioSession.type='playback';}catch{}
   setInterval(()=>this.tick(),500);}
  ensure(){if(this.ctx)return this.ctx;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;this.ctx=new C();this.master=this.ctx.createGain();this.master.connect(this.ctx.destination);this.uiBus=this.ctx.createGain();this.uiBus.connect(this.master);this.ambBus=this.ctx.createGain();this.ambBus.gain.value=0;this.ambBus.connect(this.master);this.apply();}catch(e){this.error=e.message;}return this.ctx;}
