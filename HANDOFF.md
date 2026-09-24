@@ -288,3 +288,15 @@ Standing constraints unchanged (see top). Work clone in /tmp/repo (NOT /home/use
 ### Round 9 loading architecture (item 99)
 - Music is NO LONGER inlined in index.html. `build.mjs` writes `music-pack/<id>.js` (base64 wrapped as a script) and `src/music.js` injects a `<script src="music-pack/<id>.js">` on demand (works on file:// and on GitHub Pages / CrazyGames). If the folder is missing the game still runs silently.
 - So the playable download = `index.html` + `music-pack/` folder (downloading the repo zip gives both). index.html alone still plays (no music).
+
+---
+# 第十轮用户反馈 / Round 10 feedback (2026-09-24, append-only; items 105–112)
+Standing constraints unchanged (see top). Work clone in /tmp/repo (NOT /home/user). Checkpoint → commit → push after each small group.
+- [ ] 105 Decline-rate reduction and health goods must be MUCH more expensive (they extend run length).
+- [ ] 106 Hospital treatment = pay money for a CHANCE of success (show odds; failure still costs).
+- [ ] 107 LV (luxury) goods also escalate in price per purchase; LV/luxury goods must NOT appear early — only after the LV mechanism is unlocked.
+- [ ] 108 Cheap corner-shop decline reducers should change decline by only ~0.0x (tiny) amounts.
+- [ ] 109 Add more partners related to health / decline rate, probabilistic outcomes.
+- [ ] 110 Two 15 s fast-cut promo videos in repo root: 1920x1080 and 1080x1920, with effects, showing mechanics/thrills.
+- [ ] 111 CrazyGames submission texts (English): title, short/long description, controls, tags, category etc. → CRAZYGAMES-LISTING.md.
+- Note: don't commit large video files over ~20 MB; keep workspace under 128 MB.
