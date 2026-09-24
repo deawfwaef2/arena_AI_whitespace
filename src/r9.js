@@ -16,6 +16,7 @@ export class R9{
   const html=`<span class="r9-ra-tv"><i></i></span><span class="r9-ra-t"><b>${busy?this.T('广告播放中…','Ad playing…'):this.T('看广告 · 跳过休息','Watch an ad · skip the rest')}</b><small>${this.T('剩余 ','Time left ')}${mmss(r.remaining/1000)} → 0:00 · ${this.T('体力回满','full energy')}</small></span><em>AD</em>`;
   if(el._h!==html){el.innerHTML=html;el._h=html;}}
  /* ---- item 96: minimal first-run coach — one short hint at a time, anchored to the thing to press ---- */
+ hideSpot(){const sp=$('r12-spot');if(sp)sp.hidden=true;}
  coach(){const m=this.c.meta(),s=this.s;if(!this.c.started()||this.c.modal()||m.r9coachDone||!s||s.ended||s.life?.rest||s.life?.travel){this.hideCoach();if(s?.life?.rest&&!m.r9coachDone&&(m.r9coach||0)>=3){m.r9coach=4;m.r9coachDone=true;this.c.save();}return;}
   const cash=s.cash/100,o=s.offer||{};let step=null;
   if(o.type==='v9-work'&&!o.settled&&(m.r9coach||0)<1)step={n:1,sel:'[data-action="v9-tap"]',t:this.T('① 点这里打工！点满进度条就拿到钱。','① Tap here to work! Fill the bar to get paid.')};
@@ -29,8 +30,9 @@ export class R9{
   const g=(document.getElementById('game')||document.body).getBoundingClientRect();
   if(target){const r=target.getBoundingClientRect();const w=Math.min(320,g.width*.42);let x=r.left-g.left+r.width/2-w/2;x=Math.max(8,Math.min(g.width-w-8,x));let y=r.top-g.top-12;const below=y<140;el.style.width=w+'px';el.style.left=x+'px';el.style.top=(below?r.bottom-g.top+12:y)+'px';el.classList.toggle('below',below);}
   else{el.style.left='50%';el.style.top='22%';el.style.width='';el.classList.remove('below');}
+  {let sp=$('r12-spot');const want=target&&(step.n===1||step.n===3);if(want){if(!sp){sp=document.createElement('div');sp.id='r12-spot';sp.setAttribute('aria-hidden','true');sp.innerHTML='<i class="r12-spot-ring"></i><i class="r12-spot-ring b"></i><svg class="r12-spot-arrow" viewBox="0 0 48 60"><path d="M24 58 4 32h13V2h14v30h13z" fill="#ffd54a" stroke="#3a2600" stroke-width="3" stroke-linejoin="round"/></svg>';(document.getElementById('game')||document.body).append(sp);}const r=target.getBoundingClientRect();sp.style.cssText=`left:${r.left-g.left-6}px;top:${r.top-g.top-6}px;width:${r.width+12}px;height:${r.height+12}px`;sp.hidden=false;}else if(sp)sp.hidden=true;}
   if(step.n===1&&o.taps>0||step.n===3&&o.settled){const m=this.c.meta();m.r9coach=Math.max(m.r9coach||0,step.n);this.c.save();}
   if(step.n===2&&(m.r9coach||0)<2&&!this.c2){this.c2=setTimeout(()=>{const m=this.c.meta();m.r9coach=Math.max(m.r9coach||0,2);this.c.save();this.c2=null;},9000);}
   if(step.n===4){const m=this.c.meta();if(s.life.rest){m.r9coach=4;m.r9coachDone=true;this.c.save();}}}
- hideCoach(){const el=$('r9-coach');if(el)el.hidden=true;}
+ hideCoach(){const el=$('r9-coach');if(el)el.hidden=true;this.hideSpot();}
 }

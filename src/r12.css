@@ -101,3 +101,13 @@
 @media (max-width:760px),(max-height:520px){.r12-ad{transform:scale(.72);transform-origin:right bottom;right:8px;bottom:8px}.r12-center{top:60%}}
 @media (max-width:980px){.r12-center{top:58%}}
 @media (prefers-reduced-motion:reduce){.r12-bg,.r12-drift-row span,.r12-coins i,.r12-start,.r12-start::after,.r12-notice,.r12-notice p{animation:none!important}}
+
+/* ---- 126b: first-play spotlight on the button to press ---- */
+#r12-spot{position:absolute;z-index:60;pointer-events:none;border-radius:18px}
+#r12-spot[hidden]{display:none}
+.r12-spot-ring{position:absolute;inset:0;border:3px solid #ffd54a;border-radius:inherit;box-shadow:0 0 18px #ffd54a,inset 0 0 12px #ffd54a88;animation:r12spot 1.3s ease-out infinite}
+.r12-spot-ring.b{animation-delay:.65s}
+@keyframes r12spot{0%{transform:scale(1);opacity:1}100%{transform:scale(1.25);opacity:0}}
+.r12-spot-arrow{position:absolute;right:100%;top:50%;width:44px;height:56px;margin-top:-28px;margin-right:14px;transform:rotate(-90deg);filter:drop-shadow(0 4px 8px #000a);animation:r12bob .7s ease-in-out infinite alternate}
+@keyframes r12bob{from{transform:translateX(-12px) rotate(-90deg)}to{transform:translateX(0) rotate(-90deg)}}
+@media (prefers-reduced-motion:reduce){.r12-spot-ring,.r12-spot-arrow{animation:none}}
