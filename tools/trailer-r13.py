@@ -7,6 +7,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
 import imageio_ffmpeg
 FF = imageio_ffmpeg.get_ffmpeg_exe(); FPS = 30; XF = 10
 FONT = 'assets/space-grotesk.woff2' if False else '/tmp/sg.ttf'
+FR = os.environ.get('FRAMES', '/home/user/frames')
 SRC_W, SRC_H = 1280, 720
 MONEY = (170, 52)   # top-left money counter in the 1280x720 game view
 
@@ -19,8 +20,8 @@ def font(sz, w='Bold'):
 def ease(k): return k*k*(3-2*k)
 
 def load(seg):
-    fs = sorted(glob.glob(f'/tmp/frames/{seg}/*.jpg'))
-    try: hints = json.load(open(f'/tmp/frames/{seg}.json'))
+    fs = sorted(glob.glob(f'{FR}/{seg}/*.jpg'))
+    try: hints = json.load(open(f'{FR}/{seg}.json'))
     except Exception: hints = [{}]*len(fs)
     return fs, hints
 
@@ -83,7 +84,7 @@ def smooth(tr, a=0.18):
     return out
 
 # caption schedule per scene: list of (start_frac, end_frac, text, sub, colour)
-TRIM = {'tap': 80}
+TRIM = {'tap': 80, 'bigwin': 46}
 SCENES = [
     ('tap',    cam_tap,    1, [(0.02, .45, 'TAP TAP TAP!', 'work the street for your first dollars', '#ffd54a'), (.45, .98, 'CASH IN!', 'every coin flies into your pocket', '#7dffa0')]),
     ('level',  cam_level,  1, [(0.05, .95, 'LEVEL UP!', 'new classes · new cities · new toys', '#ffd54a')]),
