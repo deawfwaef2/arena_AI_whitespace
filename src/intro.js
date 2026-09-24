@@ -10,7 +10,7 @@ export function runIntro({meta,save,done,motion=true}){
  const finish=()=>{if(finished)return;finished=true;timers.forEach(clearTimeout);el.classList.add('out');setTimeout(()=>{el.remove();done();},motion?600:0);};
  // 1) language
  el.innerHTML=`<div class="v8i-lang"><p>選擇語言 · SELECT LANGUAGE</p><div><button data-l="zh"><b>中文</b><small>简体中文</small></button><button data-l="en"><b>English</b><small>English</small></button></div></div>`;
- el.querySelectorAll('[data-l]').forEach(b=>b.addEventListener('click',()=>{meta.lang=b.dataset.l;meta.introLang=true;save();document.documentElement.lang=zh()?'zh-CN':'en';logo();}));
+ el.querySelectorAll('[data-l]').forEach(b=>b.addEventListener('click',()=>{meta.lang=b.dataset.l;meta.introLang=true;save();document.documentElement.lang=zh()?'zh-CN':'en';globalThis.__i18nSync?.();logo();}));
  el.querySelector(`[data-l="${meta.lang==='en'?'en':'zh'}"]`)?.focus();
  function logo(){el.innerHTML=`<div class="v8i-logo"><img src="${ART().logo||''}" alt=""><h1>Deawfwaef Games</h1><small>${T('presents','出品')}</small></div><button class="v8i-skip">${T('Skip','跳过')} ›</button>`;el.querySelector('.v8i-skip').onclick=finish;later(cg,2600);}
  function cg(){

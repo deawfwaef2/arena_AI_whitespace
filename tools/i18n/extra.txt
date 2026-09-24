@@ -1,0 +1,43 @@
+第 {} 站|Stop {}
+第{}站|Stop {}
+第 {} 次休息|Rest #{}
+第 {} 局|Run {}
+
+已经历的休息阶段|Rest stages so far
+一次性花掉现金的 30%|Spend 30% of your cash at once
+点击缩放界面大小|Tap to resize the interface
+缩放界面大小|Resize interface
+查看下次休息账单|View next rest bill
+已解锁的街头功能|Unlocked street features
+休息与恢复|Rest & recovery
+暂停与存档设置|Pause & save settings
+下一级财富门槛|Next wealth threshold
+当前阶级解锁的小机制|Small mechanics unlocked at your class
+黑色幽默：资本家被巨额账单砸倒，钱包的灵魂升天，西装死神手拿零元公文包|Dark humour: a capitalist crushed by giant bills, his wallet's soul rising, a suited reaper holding a zero-dollar briefcase
+查看机制解锁图|View mechanic unlock map
+向上拉出旅行地图|Pull up the travel map
+预览{}姿势，不扣款|Preview the {} pose, free
+休息恢复进度|Rest recovery progress
+收起地图|Close map
+缩小界面|Shrink interface
+放大界面|Enlarge interface
+字体与界面设置|Font & interface settings
+选择{}|Choose {}
+关闭世界地图|Close world map
+世界大陆地图与六座可探索城市|World map with six explorable cities
+机制解锁进度|Mechanic unlock progress
+查看完整身家与账单|View full net worth & bills
+休息进度|Rest progress
+正在打开城市、音乐和你的下一条街。|Opening the city, the music and your next street.
+{}城市全景插画|{} city panorama illustration
+点我！|Tap me!
+点我!|Tap me!
+打工|Work
+搬纸箱|Haul boxes
+攒到 {} 解锁投资项目|Save {} to unlock investing
+不干了|Quit
+易拉罐|Cans
+纸箱|Boxes
+泡面|Instant noodles
+车票|Ticket
+健康|Health

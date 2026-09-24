@@ -3,6 +3,7 @@ import {V7} from './v7.js';
 import {V9} from './v9.js';
 import {finalLV,liquidTier,liquid,SKINS} from './v9-core.js';
 import {runIntro} from './intro.js';
+import {installI18n,syncLanguage} from './i18n.js';
 import {CashFlow} from './cashflow.js';
 import {StreetUI} from './street-ui.js';
 import {installRedesign,applyLayout} from './redesign.js';
@@ -36,7 +37,7 @@ let stake=Math.max(1,Math.floor(run.cash*.25)),stakeRatio=.25,selectedOutfit=0;
 let busy=false,modalType=null,adPlaying=false,boardTab='local',returnFocus=null,confirmCallback=null,visit=null;
 let lastClock=performance.now(),lastSave=lastClock,lastClockPaint='',pendingChallenge=[],lastWheel=0,swipe=null,discoveryTimer=null;
 const dev={force:null,...DEFAULT_RATES,speed:1};
-const L=(en,zh)=>meta.lang==='zh'?zh:en;
+const L=(en,zh)=>meta.lang==='zh'?zh:en;installI18n(()=>meta.lang);
 const text=o=>o?.[meta.lang]||o?.en||'';
 const playerName=()=>platform.user?.username||meta.name||L('YOU','你');
 function money(cents,compact=false){const n=(Number(cents)||0)/100;if(compact&&meta.lang==='zh'&&Math.abs(n)>=10000){const [d,u]=Math.abs(n)>=1e12?[1e12,'万亿']:Math.abs(n)>=1e8?[1e8,'亿']:[1e4,'万'];return(n<0?'−':'')+'$'+(Math.abs(n)/d).toFixed(2).replace(/\.?0+$/,'')+u;}if(compact&&Math.abs(n)>=1000000){const [d,s]=Math.abs(n)>=1e12?[1e12,'T']:Math.abs(n)>=1e9?[1e9,'B']:[1e6,'M'];return(n<0?'−':'')+'$'+(Math.abs(n)/d).toFixed(2).replace(/\.00$/,'')+s;}return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:Number.isInteger(n)?0:2,maximumFractionDigits:2}).format(n);}
@@ -381,7 +382,7 @@ function showDeveloper(){
  </div><pre class="dev-output" id="dev-output">${safe(devOutput||L('Ready. All timer edits and economic changes make this a TEST run.','就绪。计时与经济修改会将本局标记为 TEST。'))}</pre>`,{wide:true});
 }
 function settingsChanged(){preferences();save();renderHud();if(modalType==='settings')showSettings();if(modalType==='music')showMusic();}
-let sessionLang=false;function setLanguage(){sessionLang=true;meta.lang=meta.lang==='en'?'zh':'en';world.setLanguage(meta.lang);save();renderHud();renderDock();const type=modalType;if(type==='menu')showMenu();else if(type==='settings')showSettings();else if(type==='help')showHelp();else if(type==='music')showMusic();else if(type==='wardrobe')showWardrobe();else if(type==='collection')showCollection();else if(type==='leaderboard')showLeaderboard();else if(type==='developer')showDeveloper();}
+let sessionLang=false;function setLanguage(){sessionLang=true;meta.lang=meta.lang==='en'?'zh':'en';document.documentElement.lang=meta.lang==='zh'?'zh-CN':'en';world.setLanguage(meta.lang);save();syncLanguage();renderHud();renderDock();const type=modalType;if(type==='menu')showMenu();else if(type==='settings')showSettings();else if(type==='help')showHelp();else if(type==='music')showMusic();else if(type==='wardrobe')showWardrobe();else if(type==='collection')showCollection();else if(type==='leaderboard')showLeaderboard();else if(type==='developer')showDeveloper();}
 async function submitScore(){const result=await platform.submit(run),messages={sent:L('Score sent. CrazyGames validates it independently. Acceptance is not confirmed by the SDK.','分数已发送，由 CrazyGames 独立校验；SDK 不确认是否验分成功。'),unranked:L('TEST runs cannot submit scores.','测试局不能提交分数。'),offline:L('Open on CrazyGames to submit.','请在 CrazyGames 中提交。'),unconfigured:L('The publisher must enable and configure its leaderboard.','发布者需开通并配置排行榜。'),login:L('Sign in with CrazyGames first.','请先登录 CrazyGames。'),cooldown:L('Wait a few seconds before submitting again.','请稍等数秒后再提交。'),range:L('Score is outside the configured range.','分数超出配置范围。'),error:L('Could not send. Check platform configuration.','无法发送，请检查平台配置。')};toast(messages[result.code]||messages.error);}
 function renderTour(){const a=visit;if(!a)return;const d=$('game-dock');d.dataset.kind='asset';d.style.setProperty('--rarity',a.color);d.innerHTML=header(L('YOUR ESTATE · TOUR','我的资产 · 参观'),text(a.name),'estate')+`<div class="asset-feature">${icon('sparkle')}${safe(text(EFFECTS[a.effect]))}</div><p class="small-rule">${L('Timer paused while touring your property.','参观资产期间，挑战计时暂停。')}</p>`+actions(L('BACK TO MY STOP','返回当前站'),'exit-visit',{solo:true,gold:true});fitDock();}
 

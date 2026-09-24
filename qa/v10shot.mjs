@@ -2,9 +2,9 @@
 import {chromium} from '@playwright/test';
 import {newRun,markPeak} from '../src/engine.js';
 const browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
-const errors=[];const only=process.argv.slice(2);
+const errors=[];const missing=new Set();const only=process.argv.slice(2);
 export async function shot(name,{cash=100,energy=200,width=1280,height=800,mobile=false,lang='zh',seed,after,storyDone=true}={}){
- if(only.length&&!only.includes(name))return;
+ if(only.length&&!only.includes(name))return;if(process.env.SHOT_LANG)lang=process.env.SHOT_LANG;
  const c=await browser.newContext({viewport:{width,height},hasTouch:mobile,isMobile:mobile,deviceScaleFactor:1});
  const run=newRun();run.cash=cash*100;run.life.energy=energy;if(storyDone){run.life.v9=run.life.v9||{};}
  if(seed)seed(run);markPeak(run);
@@ -15,6 +15,7 @@ export async function shot(name,{cash=100,energy=200,width=1280,height=800,mobil
   const l=p.locator(`#v8-intro [data-l="${lang}"]`);if(await l.count())await l.click({timeout:60000});const sk=p.locator('.v8i-skip');if(await sk.count())await sk.click();await p.waitForTimeout(900);
   await p.locator('[data-action="onboard-play"]').click({timeout:20000});await p.waitForTimeout(2200);
   if(after)await after(p);
+  const miss=await p.evaluate(()=>[...(globalThis.__i18nMissing||[])]);for(const m of miss)missing.add(name+'\t'+m);
  }catch(e){errors.push(name+' STEP: '+e.message.split('\n')[0]);}
  try{await p.screenshot({path:'qa/v10-'+name+'.png',timeout:60000});}catch(e){errors.push(name+' SHOT: '+e.message.split('\n')[0]);}
  await c.close();console.log('shot',name);
@@ -25,4 +26,9 @@ await shot('hospital',{cash:80000,seed:r=>{r.estate&&(r.estate.health=1);r.offer
 await shot('medical',{cash:80000,seed:r=>{r.estate&&(r.estate.health=1);r.offer={id:'h1',type:'v9-place',place:'hospital',opts:['clinic','specialist','ward','checkup'],settled:false,city:'taipei',rarity:'rare'};},after:async p=>{await clickA(p,'v9-place-go','1');await p.waitForTimeout(6000);}});
 await shot('partners',{cash:8000000,energy:60,seed:r=>{r.life.v9={partners:{grandma:{bond:2,met:1,last:1},doctor:{bond:0,met:1,last:1}},lux:['goldwatch','handbag','champagne'],luxSeen:[],story:{seen:[],picks:{}}};r.offer={id:'p1',type:'v9-partner',partner:'trader',fee:640000,settled:false,city:'taipei',rarity:'epic'};}});
 await shot('en',{cash:3000,lang:'en'});
+await shot('rest',{cash:4000,energy:0,after:async p=>{await clickA(p,'next');await p.waitForTimeout(1500);}});
+await shot('deal',{cash:5000,after:async p=>{for(let i=0;i<3;i++){await clickA(p,'next');}}});
+await shot('rich',{cash:50000000,after:async p=>{for(let i=0;i<3;i++){await clickA(p,'next');}}});
+await shot('richmenu',{cash:50000000,after:async p=>{await clickA(p,'menu');}});
+(await import('fs')).writeFileSync('qa/v10-missing.txt',[...missing].join('\n'));
 console.log('ERRORS',JSON.stringify(errors,null,1));await browser.close();

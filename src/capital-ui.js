@@ -8,7 +8,7 @@ import {getAuctionLot,getNobleItem,getDecoration,AUCTION_LOTS,NOBLE_ITEMS,DECORA
 import {worth,lateTier,TIERS_LATE,FACTIONS,ensureEstate,reconcile,billQuote,restDue,pendingEvent,eventView,resolveEvent,acknowledgeEvent,securityOdds,hireGuards,activeGuards,healthRisk,medicalOptions,buyMedical,regions,currentRegion,enterRegion,luxuries,consumeLuxury,PERKS,initLegacy,buyPerk,collectLegacy,buyDecoration} from './endgame-core.js';
 const $=id=>document.getElementById(id);
 const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n/100);
-const short=n=>n>=1e10?'$'+(n/1e10).toFixed(2)+'亿':n>=1e6?'$'+(n/1e6).toFixed(1)+'万':money(n);
+const short=n=>document.documentElement.lang!=='zh-CN'?(n>=1e14?'$'+(n/1e14).toFixed(2)+'T':n>=1e11?'$'+(n/1e11).toFixed(2)+'B':n>=1e8?'$'+(n/1e8).toFixed(2)+'M':money(n)):n>=1e10?'$'+(n/1e10).toFixed(2)+'亿':n>=1e6?'$'+(n/1e6).toFixed(1)+'万':money(n);
 const clock=n=>{const total=Math.max(0,Math.ceil(n/1000));return Math.floor(total/60).toString().padStart(2,'0')+':'+(total%60).toString().padStart(2,'0');};
 const btn=(id,text,v='',disabled=false,cls='')=>`<button class="life-button ${cls}" data-action="life-${id}" data-value="${v}" ${disabled?'disabled':''}>${text}</button>`;
 

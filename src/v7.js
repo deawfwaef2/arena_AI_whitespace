@@ -8,7 +8,7 @@ import {liquid,liquidTier,tierLabel} from './v9-core.js';
 import {owns} from './life-core.js';
 
 const $=id=>document.getElementById(id);
-const fmt=(c,compact=true)=>{const d=c/100;if(compact&&Math.abs(d)>=1e6){const u=[[1e12,'万亿'],[1e8,'亿'],[1e4,'万']].find(([v])=>Math.abs(d)>=v);const n=d/u[0];return '$'+(n>=100?Math.round(n).toString():n.toFixed(2).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1'))+u[1];}return '$'+d.toLocaleString('en-US',{minimumFractionDigits:Math.abs(d)<1000&&d%1?2:0,maximumFractionDigits:Math.abs(d)<1000?2:0});};
+const fmt=(c,compact=true)=>{const d=c/100;if(compact&&Math.abs(d)>=1e6){const u=(document.documentElement.lang!=='zh-CN'?[[1e12,'T'],[1e9,'B'],[1e6,'M']]:[[1e12,'万亿'],[1e8,'亿'],[1e4,'万']]).find(([v])=>Math.abs(d)>=v);const n=d/u[0];return '$'+(n>=100?Math.round(n).toString():n.toFixed(2).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1'))+u[1];}return '$'+d.toLocaleString('en-US',{minimumFractionDigits:Math.abs(d)<1000&&d%1?2:0,maximumFractionDigits:Math.abs(d)<1000?2:0});};
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 
 /* ---------- icon art (24x24 line glyphs, drawn inside tier-shaped frames) ---------- */
@@ -98,7 +98,7 @@ export const MECHS=[
  {id:'crown',at:1000000000,slot:'top',kind:'toggle',g:'crown',name:'无形王冠',desc:'开：金钱牌上戴一顶王冠。装饰。',fx:'crown',deco:true}
 ];
 const ITEM_REQ={travel:'passport',radio:'radio',filter:'car',music:'music',atlas:'hex'};
-const EN_NAMES={rest:'Rest',settings:'Settings',bill:'Bills',talent:'Contacts',headphones:'Headphones',travel:'Travel',status:'Net worth',ledger:'Ledger',radio:'Radio',chain:'Gold chain',atlas:'Atlas',showdown:'Showdowns',neon:'Neon sign',advanced:'Elite deals',champagne:'Champagne',filter:'Car filter',music:'Music butler',driver:'Chauffeur',security:'Security',factions:'Factions',painting:'Paintings',cigar:'Cigar lounge',regions:'Private zones',medals:'Honours',yacht:'Yacht badge',jet:'Private jet',vault:'Family vault',crown:'Crown'};
+const EN_NAMES={rest:'Rest',settings:'Settings',bill:'Bills',talent:'Contacts',headphones:'Headphones',travel:'Travel',status:'Net worth',ledger:'Ledger',radio:'Radio',chain:'Gold chain',atlas:'Atlas',showdown:'Showdowns',neon:'Neon sign',advanced:'Elite deals',champagne:'Champagne',filter:'Filter',music:'Music',driver:'Chauffeur',security:'Security',factions:'Factions',painting:'Paintings',cigar:'Cigars',regions:'VIP zones',medals:'Honours',yacht:'Yacht badge',jet:'Private jet',vault:'Family vault',crown:'Crown'};
 for(const m of MECHS){if(ITEM_REQ[m.id])m.item=ITEM_REQ[m.id];m.quiet=!!m.deco||m.kind==='hover';m.slot=m.quiet?'top':'bottom';}
 const GATES=[...new Set(MECHS.map(m=>m.at))].sort((a,b)=>a-b);
 
