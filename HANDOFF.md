@@ -308,3 +308,6 @@ Standing constraints unchanged (see top). Work clone in /tmp/repo (NOT /home/use
 - ✅ 109 new partners in v9-core PARTNERS: herbalist ($300), coach ($3k), monk ($50k), biotech ($1M) + doctor portrait (p-doctor.webp was missing). Heal/riskCut partner deals share the 'risk' family ×3 escalation. Partner result screen shows health outcome. partnerFee now scales with partner threshold.
 - ✅ 111 CRAZYGAMES-LISTING.md.
 - Visual check: qa/r10shot.mjs → qa/r10-*.png (kiosk, dept, hosp, herbal, coachdeal, biotech) checked by eye, no page errors.
+- ✅ 110 promo trailers: `promo-1920x1080.mp4`, `promo-1080x1920.mp4` (15 s, 30 fps, music from assets/music/class5.mp3). Regenerate: start http.server 8080 → `LOW=1 node qa/promo-capture.mjs` (frames to /tmp/promo; also copy v-poor.png/v-rich.png = assets/art/cg-*.webp source) → `pip install imageio-ffmpeg` → `python3 tools/promo-video.py h v`.
+- ✅ R9 item 95: intro CG replaced by 3D chibi-figure art (assets/art/cg-poor.webp / cg-rich.webp); money panel moved left so it doesn't cover the hero (intro.css tail).
+- Note: Playwright at 1600x900 with low:false times out in swiftshader; use 1280x720 @1.5 DPR and low graphics for capture.

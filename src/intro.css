@@ -53,3 +53,6 @@
 .v8i-title button{justify-self:center;padding:16px 46px;border-radius:99px;border:2px solid #f0cf73;background:radial-gradient(circle at 35% 30%,#ffe9a6,#c8931f 60%,#7a5510);color:#1b1206;font:inherit;font-size:20px;font-weight:800;cursor:pointer;box-shadow:0 0 30px #f0cf7366;animation:v8pulse 1.6s infinite}
 @keyframes v8pulse{50%{box-shadow:0 0 50px #f0cf73aa}}
 @media(prefers-reduced-motion:reduce){.v8i-shot,.v8i-title button,.v8i-logo{animation:none!important}}
+/* R10: 3D chibi CG — keep the money panel off the hero (character is centred) */
+.v8i-panel{left:25%!important;top:34%!important}
+@media (max-width:760px){.v8i-panel{left:27%!important;top:30%!important}}
