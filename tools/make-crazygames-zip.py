@@ -1,0 +1,26 @@
+"""R14 #148: build the CrazyGames upload ZIP (index.html + art-pack.js + music-pack/) with zopfli deflate (max compression,
+standard ZIP readers can open it). Usage: python3 tools/make-crazygames-zip.py  -> broke-to-billionaire-crazygames.zip"""
+import os, zipfile, zlib, sys
+try:
+    import zopfli.zlib as zz
+    def deflate(b): return zz.compress(b, numiterations=15)[2:-4]  # strip zlib header/adler -> raw deflate
+except ImportError:
+    def deflate(b): c = zlib.compressobj(9, zlib.DEFLATED, -15, 9); return c.compress(b) + c.flush()
+root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+out = os.path.join(root, 'broke-to-billionaire-crazygames.zip')
+files = ['index.html', 'art-pack.js'] + sorted('music-pack/' + f for f in os.listdir(os.path.join(root, 'music-pack')))
+tmp = out + '.tmp'
+with zipfile.ZipFile(tmp, 'w', zipfile.ZIP_STORED) as z:
+    for name in files:
+        data = open(os.path.join(root, name), 'rb').read()
+        comp = deflate(data)
+        zi = zipfile.ZipInfo(name, (2026, 1, 1, 0, 0, 0)); zi.compress_type = zipfile.ZIP_DEFLATED; zi.external_attr = 0o644 << 16
+        # write pre-deflated data: use low-level API
+        zi.file_size = len(data); zi.CRC = zlib.crc32(data) & 0xffffffff; zi.compress_size = len(comp)
+        z.fp.seek(z.start_dir); zi.header_offset = z.start_dir
+        zi.flag_bits = 0; z.fp.write(zi.FileHeader(False)); z.fp.write(comp); z.start_dir = z.fp.tell()
+        z.filelist.append(zi); z.NameToInfo[name] = zi; z._didModify = True
+        print(f'{name}: {len(data)} -> {len(comp)}', file=sys.stderr)
+os.replace(tmp, out)
+with zipfile.ZipFile(out) as z: assert z.testzip() is None
+print(out, os.path.getsize(out))

@@ -394,3 +394,11 @@ Standing constraints unchanged (commit+push per small step, root index.html alwa
 - [ ] 147 Settings must have an obvious Language option (中文 / English).
 - [ ] 148 Root ZIP package for CrazyGames upload, compressed as much as possible without hurting the game.
 - [ ] 149 Street corner: camera orbits around the hero to a NEW viewpoint (circle around him), 90° per corner, so 4 corners return to the original angle.
+
+## R14 progress log (2026-09-24, append-only)
+- 144 ✅ Phone loading: late art split out of index.html into root `art-pack.js` (loaded async, fires `upshift-art`). index.html 7.1MB → ~2.9MB. **Deliverable is now index.html + art-pack.js + music-pack/** (index.html alone still plays; late art just stays on fallbacks).
+- 145 ✅ Phone UI: body transform scaling (`src/vscale-boot.js`, virtual canvas 920px tall, min width 1360). build.mjs `guardMedia()` neutralises media queries under `html[data-vscale]` and `vUnits()` rewrites every vh/vw/vmin/vmax to `calc(N*var(--u-vh,1vh))` etc. Don't reintroduce meta-viewport hacks.
+- 146 ✅ Main-story chat (Chapter 1) now opens right after Play (`src/v9.js` t0 trigger `s.page<=40`).
+- 147 ✅ Big "Language · 语言" row (English / 中文) at the top of BOTH the pause menu (dock "Settings" button) and Display & saves. `langRow()` in app.js; inline !important styles because modal button CSS overrides everything; `data-notr` makes i18n skip the subtree (new generic hook in i18n.js).
+- 148 ✅ `broke-to-billionaire-crazygames.zip` in repo root (index.html + art-pack.js + music-pack/, zopfli deflate, ~26MB). Rebuild after every checkpoint with `python3 tools/make-crazygames-zip.py` (pip install zopfli; falls back to zlib -9).
+- 149 ✅ Corner camera: world.js `viewTurns`/`viewOff` — each corner the camera orbits +90° around the hero relative to the street (sweep during the 3s corner), 4 corners = original view. `r14Occlude()` hides building pieces between camera and hero on the rotated views. QA: `qa/r14corner.mjs`.
