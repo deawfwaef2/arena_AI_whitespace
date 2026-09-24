@@ -1,12 +1,12 @@
 // All money values in this module are integer cents. No engine imports (avoid cycles).
 export const TALENTS=[
- {id:'guide',name:'阿禾',role:'街区向导',city:'any',origin:'台北',at:25000,fee:8000,wage:600,color:0x78a187,effect:'每次前进只消耗 4 体力（原为 5）。',motto:'这条街的近路，我熟。'},
- {id:'merchant',name:'林姐',role:'市集经纪',city:'taipei',origin:'台北',at:50000,fee:18000,wage:1400,color:0xc09969,effect:'后续普通街头项目返还倍率 +0.10。',motto:'人情归人情，账目要分明。'},
- {id:'analyst',name:'凛',role:'尽调分析师',city:'tokyo',origin:'东京',at:150000,fee:35000,wage:2400,color:0x969fc0,effect:'后续普通项目成功率 +3 个百分点，计入显示概率。',motto:'先核对数据，再谈直觉。'},
- {id:'producer',name:'米娅',role:'演出制作人',city:'vegas',origin:'拉斯维加斯',at:150000,fee:40000,wage:2800,color:0xb894bd,effect:'后续普通项目返还倍率 +0.15，不影响特殊对赌。',motto:'灯光熄灭之前，把预算说清楚。'},
- {id:'steward',name:'许安',role:'生活管家',city:'singapore',origin:'新加坡',at:500000,fee:100000,wage:5000,color:0x6aa9a4,effect:'每次休息的基础生活维护费减免 15%；不减税费和工资。',motto:'生活有条理，才有时间看世界。'},
- {id:'diplomat',name:'乔',role:'社群联络员',city:'newyork',origin:'纽约',at:500000,fee:90000,wage:4200,color:0xa88871,effect:'与路人打招呼的阵营好感 +4（原为 +2）。',motto:'别只交换名片，记住一个名字。'},
- {id:'medic',name:'伊莲',role:'私人康复师',city:'monaco',origin:'摩纳哥',at:1000000,fee:200000,wage:10000,color:0x78a7b9,effect:'后续休息健康衰退风险降低 3 个百分点，不低于 0%。',motto:'再忙，也给自己留一次深呼吸。'}
+ {id:'guide',name:'阿禾',role:'街区向导',city:'any',origin:'台北',at:25000,fee:64000,wage:3000,color:0x78a187,effect:'每次前进只消耗 4 体力（原为 5）。',motto:'这条街的近路，我熟。'},
+ {id:'merchant',name:'林姐',role:'市集经纪',city:'taipei',origin:'台北',at:50000,fee:144000,wage:7000,color:0xc09969,effect:'后续普通街头项目返还倍率 +0.10。',motto:'人情归人情，账目要分明。'},
+ {id:'analyst',name:'凛',role:'尽调分析师',city:'tokyo',origin:'东京',at:150000,fee:280000,wage:12000,color:0x969fc0,effect:'后续普通项目成功率 +3 个百分点，计入显示概率。',motto:'先核对数据，再谈直觉。'},
+ {id:'producer',name:'米娅',role:'演出制作人',city:'vegas',origin:'拉斯维加斯',at:150000,fee:320000,wage:14000,color:0xb894bd,effect:'后续普通项目返还倍率 +0.15，不影响特殊对赌。',motto:'灯光熄灭之前，把预算说清楚。'},
+ {id:'steward',name:'许安',role:'生活管家',city:'singapore',origin:'新加坡',at:500000,fee:800000,wage:25000,color:0x6aa9a4,effect:'每次休息的基础生活维护费减免 15%；不减税费和工资。',motto:'生活有条理，才有时间看世界。'},
+ {id:'diplomat',name:'乔',role:'社群联络员',city:'newyork',origin:'纽约',at:500000,fee:720000,wage:21000,color:0xa88871,effect:'与路人打招呼的阵营好感 +4（原为 +2）。',motto:'别只交换名片，记住一个名字。'},
+ {id:'medic',name:'伊莲',role:'私人康复师',city:'monaco',origin:'摩纳哥',at:1000000,fee:1600000,wage:50000,color:0x78a7b9,effect:'后续休息健康衰退风险降低 3 个百分点，不低于 0%。',motto:'再忙，也给自己留一次深呼吸。'}
 ];
 export function crew(s){const ids=Array.isArray(s.life?.companions)?s.life.companions:[];return TALENTS.filter(t=>ids.includes(t.id)).slice(0,3);}
 export const hasCrew=(s,id)=>crew(s).some(t=>t.id===id);

@@ -247,6 +247,7 @@ function openModal(type,title,subtitle,body,{wide=false,noClose=false,custom=fal
  card.getAnimations().forEach(a=>a.cancel());if(meta.motion)card.animate([{opacity:0,transform:type==='milestone-celebrate'?'translateY(50px) scale(.78)':'translateY(25px) scale(.97)'},{opacity:1,transform:'translateY(0) scale(1)'}],{duration:type==='milestone-celebrate'?850:400,easing:'cubic-bezier(.18,.85,.25,1)',fill:'backwards'});pause();requestAnimationFrame(()=>card.querySelector('button:not(:disabled),input,select')?.focus());
 }
 // Ceremony dialogs must be dismissed with their own button, never by a stray tap on the backdrop or Escape.
+const CASUAL_MODALS=new Set(['atlas','factions','legacy','life-guide','life-status','mechanisms','mechanisms-blueprint','medals-showcase','regions','decorations-modal','theme-picker','ui-settings','street-manager','street-panorama','v9-lvboard','rules','music','history','challenge-details','life-menu','life-atlas','life-wardrobe','menu','settings','leaderboard','developer','v9-lv','atlas','map','records','help','collection','wardrobe','ledger','status']);
 const DELIBERATE_ONLY=new Set(['milestone-celebrate','auction-win','challenge-result','rank-ceremony','v9-reclaim','v9-story']);
 function nudgeModal(){const card=$('modal-card');card.classList.remove('modal-shake');void card.offsetWidth;if(meta.motion)card.classList.add('modal-shake');const cta=card.querySelector('.unlock-continue,.primary');if(cta&&!card.querySelector('.modal-locked-hint'))cta.insertAdjacentHTML('afterend','<p class="modal-locked-hint">请点上面的按钮确认，这一页不会被误触关掉。</p>');cta?.focus?.();}
 function closeModal(force=false){if(adPlaying&&!force)return;if(!modalType&&!force)return;if((modalType==='gameover'||modalType==='world-event'||modalType==='legacy'&&!started)&&!force)return;const serial=modalSerial;const finish=()=>{if(serial!==modalSerial)return;modalClosing=false;modalType=null;confirmCallback=null;$('modal').hidden=true;$('game').inert=!started;pause();returnFocus?.focus?.();};if(force||!meta.motion){clearTimeout(modalCloseTimer);finish();return;}if(modalClosing)return;modalClosing=true;$('modal-card').animate([{opacity:1,transform:'translateY(0) scale(1)'},{opacity:0,transform:'translateY(30px) scale(.95)'}],{duration:320,easing:'ease-in',fill:'forwards'});modalCloseTimer=setTimeout(finish,330);}
@@ -500,12 +501,12 @@ $('game').addEventListener('pointermove',e=>{if(!swipe||e.pointerId!==swipe.id)r
 $('game').addEventListener('pointerup',e=>{if(!swipe||e.pointerId!==swipe.id)return;const s=swipe;swipe=null;world.setDrag(0);if(s.dx>52||(s.dx>24&&s.dx/(performance.now()-s.start)>.5))nextOffer();});
 $('game').addEventListener('pointercancel',()=>{swipe=null;world.setDrag(0);});
 $('swipe-surface').addEventListener('wheel',e=>{if(e.ctrlKey||modalType||busy)return;if(e.deltaX>25||e.deltaY>40){e.preventDefault();if(performance.now()-lastWheel>800){lastWheel=performance.now();nextOffer();}}},{passive:false});
-$('modal').addEventListener('click',e=>{if(e.target!==$('modal'))return;if(DELIBERATE_ONLY.has(modalType)){nudgeModal();return;}closeModal();});
+$('modal').addEventListener('click',e=>{if(e.target!==$('modal'))return;if(!CASUAL_MODALS.has(modalType)){nudgeModal();return;}closeModal();});
 document.addEventListener('keydown',e=>{
  if(adPlaying||!started)return;
  if(!e.ctrlKey&&!e.metaKey&&!e.altKey){music.unlock();effects.unlock();}
  if(e.key==='Tab'&&modalType){const list=[...$('modal-card').querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled)')].filter(x=>x.offsetParent!==null&&!x.hidden);if(list.length){if(e.shiftKey&&document.activeElement===list[0]){e.preventDefault();list.at(-1).focus();}else if(!e.shiftKey&&document.activeElement===list.at(-1)){e.preventDefault();list[0].focus();}}return;}
- if(e.key==='Escape'){e.preventDefault();if(DELIBERATE_ONLY.has(modalType)){nudgeModal();return;}closeModal();return;}
+ if(e.key==='Escape'){e.preventDefault();if(!CASUAL_MODALS.has(modalType)){nudgeModal();return;}closeModal();return;}
  if(e.ctrlKey||e.metaKey||e.altKey||e.target.closest('input,select,textarea'))return;
  if(e.key==='`'&&CONFIG.allowDeveloperMode){e.preventDefault();if(modalType==='developer')closeModal();else showDeveloper();return;}
  if(modalType||busy||e.repeat)return;

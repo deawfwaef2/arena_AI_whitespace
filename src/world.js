@@ -359,7 +359,7 @@ export class World{
  setSkin(color){this.skinColor=color??null;if(this.actor&&color!=null)this.actor.clothes.color.set(color);}
  setBeauty(rank){if(this.fallback||!this.renderer)return;this.beauty=rank;const r=Math.max(0,Math.min(5,rank));this.scene.fog.density=.026-r*.0035;if(this.ground)this.ground.material.color.lerp(new T.Color(r>=3?0x9fcf9a:0xaabca3),.5);if(this.dayRatio!=null)this.setDaylight(this.dayRatio*200,200);const sky=document.querySelector('.sky-backdrop');if(sky)sky.style.filter=`saturate(${.55+r*.18}) brightness(${.94+r*.03})`;}
  setOffer(offer){if(this.fallback)return;if(this.travelResolve){this.travelResolve();this.travelResolve=null;}if(this.plot)dispose(this.plot);if(this.incoming)dispose(this.incoming);this.incoming=null;this.plot=makePlot(offer,this.lang);this.plot.rotation.y=this.blockAngle||0;this.scene.add(this.plot);this.travelTime=null;this.drag=0;this.justTurned=false;this.actor.root.position.copy(this.streetPoint(-1.65,2.2));this.resize();}
- travel(offer,duration=850){if(this.fallback)return Promise.resolve();if(this.incoming)dispose(this.incoming);this.incoming=makePlot(offer,this.lang);this.incoming.rotation.y=this.blockAngle||0;this.justTurned=false;this.incoming.position.copy(this.streetPoint(16,0));this.scene.add(this.incoming);this.travelTime=0;this.travelStarted=performance.now();this.duration=this.motion?duration/this.speed:80;this.drag=0;return new Promise(r=>{this.travelResolve=r;});}
+ travel(offer,duration=850){if(this.fallback)return Promise.resolve();if(this.incoming)dispose(this.incoming);this.incoming=makePlot(offer,this.lang);this.incoming.rotation.y=this.blockAngle||0;this.justTurned=false;this.incoming.position.set(0,0,0);this.incoming.scale.set(1,.001,1);this.incoming.visible=false;this.scene.add(this.incoming);this.travelTime=0;this.travelStarted=performance.now();this.duration=this.motion?duration/this.speed:80;this.drag=0;return new Promise(r=>{this.travelResolve=r;});}
  setDrag(n){this.drag=n;}
  updateStyle(s){
   if(this.fallback)return;const o=getOutfit(s.equipped);if(this.heroIdentity)this.heroIdentity.visible=o.kind!=='royal'&&o.kind!=='gold';this.actor.clothes.color.set(o.color);this.actor.trousers.color.set(['suit','gold','cyber','royal'].includes(o.kind)?o.color:0xf0f4f0);this.actor.dress.children.slice().forEach(dispose);const d=this.actor.dress;
@@ -467,15 +467,17 @@ export class World{
   if(this.travelTime!==null){
     this.travelTime=now-this.travelStarted;
     const p=Math.min(1,this.travelTime/this.duration),e=p*p*(3-2*p);
-    this.plot.position.copy(this.streetPoint(-16*e,0));
-    this.incoming.position.copy(this.streetPoint(16*(1-e),0));
-    this.actor.root.position.copy(this.streetPoint(-1.65+Math.sin(p*Math.PI)*0.35,2.2));
+    /* v10: the street stays still — old buildings sink, new ones rise in place (no whole-screen slide) */
+    const out=Math.min(1,p*2),inn=Math.max(0,p*2-1),bo=inn<1?1-Math.pow(1-inn,3)+Math.sin(inn*Math.PI)*.08:1;
+    this.plot.position.set(0,0,0);this.plot.scale.set(1,Math.max(.001,1-out*out),1);this.plot.visible=out<1;
+    this.incoming.position.set(0,0,0);this.incoming.scale.set(1,Math.max(.001,bo),1);this.incoming.visible=inn>0;
+    this.actor.root.position.copy(this.streetPoint(-1.65+Math.sin(p*Math.PI)*0.22,2.2));
     walking=true;
     if(p>=1){
       dispose(this.plot);
       this.plot=this.incoming;
       this.incoming=null;
-      this.plot.position.set(0,0,0);
+      this.plot.position.set(0,0,0);this.plot.scale.set(1,1,1);this.plot.visible=true;
       this.travelTime=null;
       this.travelResolve?.();
       this.travelResolve=null;
@@ -483,7 +485,7 @@ export class World{
     }
   }
   else if(this.corner||this.justTurned){walking=!!this.corner;}
-  else if(this.plot){this.plot.position.copy(this.streetPoint(-this.drag*.85,0));this.actor.root.position.copy(this.streetPoint(-1.65+this.drag*.36,2.2));walking=Math.abs(this.drag)>.03;}
+  else if(this.plot){this.plot.position.set(0,0,0);this.actor.root.position.copy(this.streetPoint(-1.65+this.drag*.36,2.2));walking=Math.abs(this.drag)>.03;}
   this.heroMarker.position.x=this.actor.root.position.x;this.heroMarker.position.z=this.actor.root.position.z;
   this.actor.root.rotation.y=T.MathUtils.lerp(this.actor.root.rotation.y,this.corner?this.cornerFacing:(this.blockAngle||0)+(walking?1.57:.59),.12);
   for(let i=0;i<4;i++)this.actor.limbs[i].rotation.x=this.motion?(walking?Math.sin(t*12+(i%2?Math.PI:0)+(i<2?Math.PI:0))*.64:Math.sin(t*1.7+i)*.045):0;
