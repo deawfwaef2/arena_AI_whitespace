@@ -11,7 +11,7 @@ export function runIntro({meta,save,done,motion=true}){
  const finish=()=>{if(finished)return;finished=true;timers.forEach(clearTimeout);el.classList.add('out');setTimeout(()=>{el.remove();done();},motion?600:0);};
  // R12: opening depends on completed runs — 0-2: fast "poor → rich" loading bar · 3-6: tap-to-start + one story frame · 7+: logo cinematic.
  const c=runsDone(meta);
- if(c>=7)logo();else if(c>=3)tapIntro();else loadIntro();
+ if(c>=7)logo();else if(c>=3)tapIntro();else{finished=true;el.remove();done();return;} // R13: new players go straight to the menu (the poor→rich bar lives in the menu's drag track)
  function loadIntro(){
   const ST=[
    {r:['Survival','生存'],m:'$100',t:['Scraping coins off the pavement…','在人行道上捡硬币……']},
