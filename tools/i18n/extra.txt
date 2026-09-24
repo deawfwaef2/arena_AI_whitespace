@@ -256,3 +256,4 @@
 跟投一轮“只对朋友开放”的基金|Join a fund round "open to friends only"
 Loading… 正在加载|Loading…
 继续第 {} 站|Continue at stop {}
+↓ 「{}」被收回了|↓ "{}" was taken back

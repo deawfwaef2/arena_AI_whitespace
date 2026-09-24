@@ -234,7 +234,35 @@ function landmark(g,city){
  L.traverse(o=>{o.castShadow=false;o.receiveShadow=false;});
 }
 
+/* R9: roadside sponsor stop — a real billboard + promo tent + a walking banner crew, blended into the street. */
+const SPONSOR_LOOK={cola:{bg:['#e8332f','#ff9a3c'],fg:'#fff',en:'GLACIER COLA',zh:'极冰可乐',tag:['Taste the cold','冰爽一夏']},phone:{bg:['#2b2f8f','#6b5bff'],fg:'#fff',en:'NOVA PHONE X',zh:'NOVA 手机 X',tag:['See the future','看见未来']},car:{bg:['#111','#4a4a4a'],fg:'#ffd65c',en:'AURORA MOTORS',zh:'极光汽车',tag:['Drive the dream','驾驭梦想']},bank:{bg:['#0f3d2e','#1f7a5a'],fg:'#f5d77a',en:'MERIDIAN PRIVATE',zh:'子午线私人银行',tag:['Wealth, quietly','财富，安静地']}};
+function adTexture(look,zh,w=1024,h=440){const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');const g=x.createLinearGradient(0,0,w,h);g.addColorStop(0,look.bg[0]);g.addColorStop(1,look.bg[1]);x.fillStyle=g;x.fillRect(0,0,w,h);
+ x.globalAlpha=.12;x.fillStyle='#fff';for(let i=-h;i<w;i+=70){x.beginPath();x.moveTo(i,0);x.lineTo(i+35,0);x.lineTo(i+35+h,h);x.lineTo(i+h,h);x.fill();}x.globalAlpha=1;
+ x.fillStyle=look.fg;x.textAlign='left';x.textBaseline='middle';x.font='900 96px sans-serif';x.fillText(zh?look.zh:look.en,60,150,700);x.font='600 54px sans-serif';x.globalAlpha=.9;x.fillText(zh?look.tag[1]:look.tag[0],64,250,640);x.globalAlpha=1;
+ x.fillStyle='#ffd400';x.fillRect(60,320,300,70);x.fillStyle='#111';x.font='900 44px sans-serif';x.fillText('SPONSORED',78,357);
+ x.beginPath();x.arc(860,220,120,0,Math.PI*2);x.fillStyle='#ffffffee';x.fill();x.beginPath();x.moveTo(825,160);x.lineTo(825,280);x.lineTo(925,220);x.closePath();x.fillStyle=look.bg[0];x.fill();
+ x.font='800 40px sans-serif';x.fillStyle=look.fg;x.textAlign='center';x.fillText('▶ AD · 30s',860,390);
+ const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;return t;}
+function sponsorPlot(offer,lang){const root=new T.Group();const look=SPONSOR_LOOK[offer.sponsor]||SPONSOR_LOOK.cola;const zh=lang==='zh';
+ box(root,16,.2,18,0xa9bea6,0,-.18,-1.7);box(root,16,.13,5.1,0xdbe0d6,0,-.01,.38);box(root,16,.06,1.65,0xc8d3c9,0,.11,2.25);box(root,16,.045,2.25,0x78939e,0,.012,4.5);
+ // billboard on two steel posts
+ const bb=new T.Group();bb.position.set(.6,0,-2.2);root.add(bb);for(const x of [-2.6,2.6])box(bb,.28,4.2,.28,0x5d6670,x,2.1,0);box(bb,7.6,.18,.9,0x5d6670,0,3.95,.25);
+ box(bb,7.4,3.3,.25,0x222831,0,5.6,0);const face=new T.Mesh(new T.PlaneGeometry(7.0,3.0),new T.MeshBasicMaterial({map:adTexture(look,zh)}));face.position.set(0,5.6,.14);bb.add(face);
+ for(let i=0;i<14;i++){const b=sphere(bb,.09,0xfff2a8,-3.4+i*(6.8/13),7.35,.18);b.material=new T.MeshBasicMaterial({color:0xfff2a8});b.userData.blink=i;}
+ for(const x of [-2.2,0,2.2]){const l=box(bb,.35,.12,.35,0x333a44,x,4.15,.55);}
+ // promo tent with striped roof + counter
+ const tent=new T.Group();tent.position.set(-4.3,0,.1);root.add(tent);for(const [x,z] of [[-1,-.7],[1,-.7],[-1,.7],[1,.7]])box(tent,.08,1.9,.08,0xdddddd,x,.95,z);
+ for(let i=0;i<6;i++)box(tent,.36,.14,1.7,i%2?0xffffff:new T.Color(look.bg[0]).getHex(),-.9+i*.36,2.0,0);box(tent,1.9,.8,.6,new T.Color(look.bg[1]).getHex(),0,.4,.45);label(tent,zh?look.zh:look.en,1.6,.34,0,.55,.76,look.bg[0],'#ffffff');
+ for(let i=0;i<3;i++){box(tent,.3,.42,.3,new T.Color(look.bg[0]).getHex(),-.5+i*.5,1.02,.4);}
+ // walking banner crew (the "street walk" ad)
+ const crew=new T.Group();crew.position.set(3.2,0,1.25);crew.userData.march={base:3.2,range:2.2,phase:0};root.add(crew);
+ const a=person({color:new T.Color(look.bg[0]).getHex(),scale:.92});a.root.position.set(-.9,0,0);crew.add(a.root);a.root.userData.projectPerson=a;
+ const b2=person({color:new T.Color(look.bg[0]).getHex(),scale:.92});b2.root.position.set(.9,0,0);crew.add(b2.root);b2.root.userData.projectPerson=b2;
+ for(const x of [-.9,.9])box(crew,.05,2.4,.05,0x8a6a44,x,1.3,.25);const ban=new T.Mesh(new T.PlaneGeometry(1.9,.62),new T.MeshBasicMaterial({map:adTexture(look,zh,768,250),side:T.DoubleSide}));ban.position.set(0,2.15,.26);crew.add(ban);
+ return root;}
+
 function makePlot(offer,lang='en'){PLOT_CITY=offer?.city||PLOT_CITY;
+ if(offer.type==='v12-ad')return sponsorPlot(offer,lang);
  if(offer.type==='regional-story')return eventPlot({type:'interlude',scene:['park','waterfront','alley'][offer.story?.band||0],city:offer.city});
  if(offer.type==='world-event')return eventPlot({type:'interlude',scene:'alley',city:offer.city});
  if(['district-gate','district-task','interlude'].includes(offer.type))return eventPlot(offer);
@@ -602,7 +630,7 @@ export class World{
    }
    for(const root of [this.plot,this.incoming,this.cosmetics,this.sky])root?.traverse(o=>{
     const u=o.userData;if(u.projectPerson)animatePerson(u.projectPerson,t,this.motion);if(u.float!==undefined)o.position.y=u.float+Math.sin(t*1.65+o.id)*.075;
-    if(u.spin)o.rotation.y+=dt*u.spin;if(u.windmill)o.rotation.z+=dt*.38;if(u.clockHand)o.rotation.z-=dt*.6;if(u.cloudBase!==undefined)o.position.x=((u.cloudBase+t*.45+40)%80)-40;
+    if(u.march){const ph=t*.45+u.march.phase;o.position.x=u.march.base+Math.sin(ph)*u.march.range;o.rotation.y=Math.cos(ph)>0?0:Math.PI;}if(u.blink!==undefined&&o.material?.color)o.material.color.setHex(((Math.floor(t*4)+u.blink)%3)?0xfff2a8:0xff8a3c);if(u.spin)o.rotation.y+=dt*u.spin;if(u.windmill)o.rotation.z+=dt*.38;if(u.clockHand)o.rotation.z-=dt*.6;if(u.cloudBase!==undefined)o.position.x=((u.cloudBase+t*.45+40)%80)-40;
     if(u.followAvatar){o.position.x=this.actor.root.position.x;o.position.z=this.actor.root.position.z;if(u.baseY!==undefined)o.position.y=u.baseY+(this.actor.body.position.y||0);}
     if(u.orbit){o.position.x=this.actor.root.position.x+Math.cos(t*.7+u.orbit.phase)*u.orbit.radius;o.position.z=this.actor.root.position.z+Math.sin(t*.7+u.orbit.phase)*u.orbit.radius;if(u.baseY!==undefined)o.position.y=u.baseY+(this.actor.body.position.y||0);}
     if(u.drive)o.position.x=u.drive.baseX+Math.sin(t*.23)*u.drive.span;
