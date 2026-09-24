@@ -21,14 +21,15 @@ const SHOTS=[
  [['gull',4,.4],['super',2,.4],['cork',2,.4],['heli',1,.35]],
  [['gull',3,.35],['heli',2,.38],['cork',2,.38],['super',1,.35]]];
 export class Sound{
- constructor(){this.ctx=null;this.sfxOn=true;this.ambOn=true;this.volume=.24;/*R16: user asked -70% (was .8)*/this.muted=false;this.hidden=false;this.buffers=new Map();this.tier=-1;this.bed=null;this.inStreet=false;this.duck=1;this.nextShot=0;this.lastHover=0;this.error='';
+ constructor(){this.ctx=null;this.sfxOn=true;this.ambOn=true;this.volume=.8;this.sfxVol=1;this.ambVol=.5;/*R16b: SFX restored (user: -70% was too quiet); ambience kept at the quieter R16 level = .54*.5*/this.muted=false;this.hidden=false;this.buffers=new Map();this.tier=-1;this.bed=null;this.inStreet=false;this.duck=1;this.nextShot=0;this.lastHover=0;this.error='';
   try{if(navigator.audioSession)navigator.audioSession.type='playback';}catch{}
   setInterval(()=>this.tick(),500);}
  ensure(){if(this.ctx)return this.ctx;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;this.ctx=new C();this.master=this.ctx.createGain();this.master.connect(this.ctx.destination);this.uiBus=this.ctx.createGain();this.uiBus.connect(this.master);this.ambBus=this.ctx.createGain();this.ambBus.gain.value=0;this.ambBus.connect(this.master);this.apply();}catch(e){this.error=e.message;}return this.ctx;}
  /* must be called inside a user gesture */
  unlock(){const c=this.ensure();if(!c)return;if(c.state!=='running'){c.resume().catch(()=>{});try{const b=c.createBuffer(1,1,22050),s=c.createBufferSource();s.buffer=b;s.connect(c.destination);s.start(0);}catch{}}this.decodeUI();}
  level(){return this.muted||this.hidden?0:this.volume;}
- apply(){if(!this.ctx)return;const t=this.ctx.currentTime;this.master.gain.setTargetAtTime(this.level(),t,.08);this.uiBus.gain.setTargetAtTime(this.sfxOn?1:0,t,.05);this.ambBus.gain.setTargetAtTime(this.ambOn&&this.inStreet?.9*this.duck:0,t,.6);}
+ apply(){if(!this.ctx)return;const t=this.ctx.currentTime;this.master.gain.setTargetAtTime(this.level(),t,.08);this.uiBus.gain.setTargetAtTime(this.sfxOn?this.sfxVol:0,t,.05);this.ambBus.gain.setTargetAtTime(this.ambOn&&this.inStreet?.54*this.ambVol*this.duck:0,t,.6);}
+ setVolumes(sfx,amb){this.sfxVol=Math.max(0,Math.min(1,+sfx||0));this.ambVol=Math.max(0,Math.min(1,+amb||0));this.apply();}
  setSfx(on){this.sfxOn=!!on;this.apply();}
  setAmbience(on){this.ambOn=!!on;this.apply();}
  setMuted(v){this.muted=!!v;this.apply();}
