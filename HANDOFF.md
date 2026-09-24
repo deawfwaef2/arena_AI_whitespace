@@ -257,3 +257,8 @@ Note: v11 phases 1–3 (commits 744fddf, 1c5cf17, 04cc10f) already did 51/52/53/
 - [ ] 77 Opening animation master-level trailer (= 54); residual Chinese in English mode incl. 3D scene (= 55).
 - [ ] 78 **CrazyGames ads SDK** (v3): rewarded ad in a prominent spot in the rest phase → **watch ad to skip rest**; plus roadside **ad locations** blended into the environment as a project (e.g. billboard sponsor stop → rewarded ad for a bonus). Must degrade gracefully offline / outside CrazyGames (no SDK → hide or fallback).
 - [ ] 79 Buttons: generated images (not emoji), big image+text buttons, panoramic backgrounds.
+
+## Round 8 progress log (appended 2026-09-24, next session)
+- v11 phases 1–3 + v12 phase 1 (c8c34a8) cover: 51, 52, 53, 59, 63 (3 hearts), 64, 65, 56/71 (class up popup + fall text), 66 (min/max on cards, zones), 72, 73, 74, 78 (CrazyGames SDK rewarded: rest skip + sponsor billboard; `?adtest=1` demo).
+- Still open at session start: 54/77 master intro trailer, 55 residual Chinese (esp. English mode 3D/canvas), 57/79 generated-image big buttons, 58/76 shabby poor-stage unlock UI, 61 black-market details in words, 62/75 more animation feedback, 67 per-type styles, 68 more zones, 69 estates → LV, 70 stronger city identity.
+- Workflow reminder: re-clone to /tmp/game each session; `npm ci && npx playwright install --with-deps chromium`; `npm run checkpoint` then commit+push after every small group.
