@@ -215,7 +215,37 @@ export const NEW_ZONES={
 /* ---------- wire into the v9 deck engine ---------- */
 import {HOOKS,ZONES} from './v9-core.js';
 Object.assign(ZONES,NEW_ZONES);
-HOOKS.shop=(s,rng)=>shopOffer(s,rng);HOOKS.ad=adOffer;HOOKS.city=cityOffer;HOOKS.adsOK=()=>!!globalThis.__adsOK;
+
+/* ---------- R11: ad nodes woven into the street ----------
+   v13-stroll : a calm walk past a real display-ad billboard (CrazyGames banner; off-platform a house poster fills the frame)
+   v13-promo  : street promoters ambush you — sit through their pitch (midgame interstitial) or PAY to slip past */
+export const STROLLS=[
+ {id:'river',icon:'compass',sponsor:'cola',zh:'河滨步道',en:'Riverside promenade',line:['风从河面吹过来，慢跑的人从你身边经过。步道尽头立着一块巨大的广告牌，灯箱在暮色里亮着。','A breeze rolls off the river; joggers pass you. At the end of the path a giant billboard glows in the dusk.']},
+ {id:'park',icon:'heart',sponsor:'phone',zh:'城市公园环道',en:'City park loop',line:['老人在下棋，小孩追着鸽子跑。公园门口的电子屏正在轮播广告。','Old men play chess, kids chase pigeons. The screen at the park gate is cycling through ads.']},
+ {id:'arcade',icon:'ticket',sponsor:'car',zh:'骑楼商店街',en:'Covered arcade street',line:['骑楼下很凉快，店招一块挨着一块，正中间是一面整幅的广告墙。','It is cool under the arcade; shop signs crowd each other, and in the middle hangs a full-width ad wall.']},
+ {id:'harbour',icon:'yacht',sponsor:'bank',zh:'海港木栈道',en:'Harbour boardwalk',line:['海鸥在桅杆上叫，栈道边的广告灯箱映在水里，一晃一晃。','Gulls cry on the masts; the ad light-boxes along the boardwalk ripple in the water.']}
+];
+export function strollOffer(s,rng=Math.random){const x=pick(STROLLS,rng);return {id:uid(),type:'v13-stroll',spot:x.id,sponsor:x.sponsor,settled:false,city:s.life.city,rarity:'common'};}
+export const strollDrink=s=>Math.max(300,Math.floor(liquid(s)*.004));
+export function takeStroll(s,mode){const o=s.offer;if(o?.type!=='v13-stroll'||o.settled)throw Error('done');const cap=s.life.energyCap||200;let energy=10,cost=0;
+ if(mode==='drink'){cost=strollDrink(s);if(s.cash<=cost)throw Error('cash');s.cash-=cost;energy=24;}
+ s.life.energy=Math.min(cap,s.life.energy+energy);o.settled=true;o.result={energy,cost,mode};return o.result;}
+export const PROMO_CREWS=[
+ {id:'flash',icon:'can',sponsor:'cola',zh:'快闪推广队',en:'Flash-mob promo crew',line:['一群穿荧光马甲的推广员突然围成一圈，把你堵在中间：“帅哥/美女，一分钟！就一分钟！”巨型屏幕已经推到你面前。','A ring of promoters in neon vests suddenly closes around you: "One minute! Just one minute!" A giant screen is already rolled up in your face.']},
+ {id:'phone',icon:'briefcase',sponsor:'phone',zh:'新机发布路演',en:'Phone launch roadshow',line:['主持人把话筒塞到你面前，镜头对准你：“这位路人，看完我们的发布短片，送你一份试用礼包！”后面排队的人都在看你。','The host shoves a mic at you, camera rolling: "You there — watch our launch film and take a free sample kit!" The whole queue is watching you.']},
+ {id:'car',icon:'carkey',sponsor:'car',zh:'汽车品牌拦街',en:'Car brand street blockade',line:['一辆概念车横在人行道上，礼宾拉起了丝带：“先看一段宣传片再通过哦。”','A concept car is parked across the sidewalk; ushers pull a ribbon tight: "Please watch a short film before passing."']},
+ {id:'bank',icon:'goldkey',sponsor:'bank',zh:'私人银行品牌沙龙',en:'Private-bank brand salon',line:['穿燕尾服的门童拦住你：“先生/女士，我们的品牌影片只要片刻。”身后是红毯和香槟塔。','A doorman in tails steps in front of you: "Our brand film takes only a moment." Behind him: a red carpet and a champagne tower.']}
+];
+export function promoOffer(s,rng=Math.random){const L=liquid(s);const list=L>=5000000?PROMO_CREWS:PROMO_CREWS.slice(0,3);const x=pick(list,rng);st(s).lastPromoPage=s.page;return {id:uid(),type:'v13-promo',crew:x.id,sponsor:x.sponsor,settled:false,city:s.life.city,rarity:'rare'};}
+export const promoFee=s=>Math.max(500,Math.floor(liquid(s)*.015));
+export const promoGift=s=>({cash:Math.max(200,Math.floor(liquid(s)*.004)),energy:6});
+export function settlePromo(s,how){const o=s.offer;if(o?.type!=='v13-promo'||o.settled)throw Error('done');const out={how};
+ if(how==='pay'){const f=promoFee(s);if(s.cash<=f)throw Error('cash');s.cash-=f;out.cost=f;}
+ else if(how==='watched'){const g=promoGift(s);s.cash=Math.min(CAP,s.cash+g.cash);s.life.energy=Math.min(s.life.energyCap||200,s.life.energy+g.energy);Object.assign(out,g);}
+ else if(how==='dodge'){s.life.energy=Math.max(0,s.life.energy-8);out.energy=-8;}
+ o.settled=true;o.result=out;return out;}
+
+HOOKS.shop=(s,rng)=>shopOffer(s,rng);HOOKS.stroll=strollOffer;HOOKS.promo=promoOffer;HOOKS.promoOK=s=>!!globalThis.__adsOK&&(s.page-(st(s).lastPromoPage||-99))>=8;HOOKS.ad=adOffer;HOOKS.city=cityOffer;HOOKS.adsOK=()=>!!globalThis.__adsOK;
 
 /* ---------- v12.1: descriptive black market (pawn) + casino text ---------- */
 export const PLACE_TEXT={

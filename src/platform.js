@@ -69,7 +69,19 @@ export class Platform {
  async login(){if(!this.sdk?.user?.isUserAccountAvailable)return false;try{this.user=await this.sdk.user.showAuthPrompt();return !!this.user;}catch{return false;}}
  canReward(){return !!(this.config.crazygames?.ads&&this.sdk?.ad?.requestAd)||this.demo;}
  // local test mode (?adtest=1): a fake 3-second ad so the reward flow can be tested outside CrazyGames
- demoAd(){return new Promise(resolve=>{const el=document.createElement('div');el.id='demo-ad';el.innerHTML='<div><b>AD</b><p>CrazyGames rewarded ad (test mode)</p><i></i></div>';document.body.append(el);setTimeout(()=>{el.remove();resolve(true);},3000);});}
+ demoAd(kind='rewarded'){return new Promise(resolve=>{const el=document.createElement('div');el.id='demo-ad';el.innerHTML='<div><b>AD</b><p>CrazyGames '+kind+' ad (test mode)</p><i></i></div>';document.body.append(el);setTimeout(()=>{el.remove();resolve(true);},3000);});}
+ // R11: midgame interstitial (player-initiated story node or natural break). Resolves true if an ad actually played.
+ async midgame(){
+  if(!this.canReward()||this.rewardBusy)return false;
+  if(!this.sdk&&this.demo){this.rewardBusy=true;this.onAdState(true);const ok=await this.demoAd('midgame');this.rewardBusy=false;this.onAdState(false);return ok;}
+  this.rewardBusy=true;const was=this.active;this.play(false);this.onAdState(true);
+  return new Promise(resolve=>{let done=false;const finish=ok=>{if(done)return;done=true;clearTimeout(timer);this.rewardBusy=false;this.onAdState(false);if(was)this.play(true);resolve(ok);};
+   const timer=setTimeout(()=>finish(false),120000);
+   try{this.sdk.ad.requestAd('midgame',{adStarted:()=>this.onAdState(true),adFinished:()=>finish(true),adError:()=>finish(false)});}catch{finish(false);}});
+ }
+ // R11: static display banner inside an in-world frame. Returns true when CrazyGames filled it.
+ async banner(id,w,h){if(!this.sdk?.banner?.requestBanner||!this.config.crazygames?.ads)return false;try{await this.sdk.banner.requestBanner({id,width:w,height:h});return true;}catch(e){this.error=e?.message||String(e);return false;}}
+ clearBanners(){try{this.sdk?.banner?.clearAllBanners?.();}catch{}}
  async rewarded(){
   if(!this.canReward()||this.rewardBusy)return false;
   if(!this.sdk&&this.demo){this.rewardBusy=true;this.onAdState(true);const ok=await this.demoAd();this.rewardBusy=false;this.onAdState(false);return ok;}
@@ -78,14 +90,6 @@ export class Platform {
    let done=false;const finish=success=>{if(done)return;done=true;clearTimeout(timer);this.rewardBusy=false;this.onAdState(false);resolve(success);};
    const timer=setTimeout(()=>finish(false),180000);
    try{this.sdk.ad.requestAd('rewarded',{adStarted:()=>this.onAdState(true),adFinished:()=>finish(true),adError:()=>finish(false)});}catch{finish(false);}
-  });
- }
- async midgame(){
-  if(!this.config.crazygames?.ads||!this.sdk?.ad)return;
-  this.play(false);
-  await new Promise(resolve=>{
-   let done=false;const finish=()=>{if(done)return;done=true;this.onAdState(false);resolve();};
-   try{this.sdk.ad.requestAd('midgame',{adStarted:()=>this.onAdState(true),adFinished:finish,adError:finish});}catch{finish();}
   });
  }
  context(run){this.call('setGameContext',{page:run.page,run:run.runNumber,offer:run.offer.type,unranked:run.unranked});}

@@ -262,7 +262,7 @@ function sponsorPlot(offer,lang){const root=new T.Group();const look=SPONSOR_LOO
  return root;}
 
 function makePlot(offer,lang='en'){PLOT_CITY=offer?.city||PLOT_CITY;
- if(offer.type==='v12-ad')return sponsorPlot(offer,lang);
+ if(offer.type==='v12-ad'||offer.type==='v13-stroll'||offer.type==='v13-promo')return sponsorPlot(offer,lang);
  if(offer.type==='regional-story')return eventPlot({type:'interlude',scene:['park','waterfront','alley'][offer.story?.band||0],city:offer.city});
  if(offer.type==='world-event')return eventPlot({type:'interlude',scene:'alley',city:offer.city});
  if(['district-gate','district-task','interlude'].includes(offer.type))return eventPlot(offer);

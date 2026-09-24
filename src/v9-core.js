@@ -37,8 +37,8 @@ export const ZONES={
 };
 export const HOOKS={};
 function buildDeck(s,zone,rng){const L=liquid(s),poor=L<PROJECT_UNLOCK;let c=[];
- if(zone==='work'){c=Array(poor?6:5).fill('work');c.push('event');if(!poor)c.push('project');if(L>=30000&&rng()<.5)c.push('shop');if(HOOKS.adsOK?.()&&rng()<.4)c.push('ad');}
- else if(zone==='market'){c=['project','project','project','project','project','work','event','event'];if(L>=500000)c.push('partner');if(L>=2000000&&rng()<.25)c.push('luxury');c.push('city');if(rng()<.5)c.push('shop');if(HOOKS.adsOK?.()&&rng()<.6)c.push('ad');}
+ if(zone==='work'){c=Array(poor?6:5).fill('work');c.push('event');if(!poor)c.push('project');if(L>=30000&&rng()<.5)c.push('shop');if(HOOKS.adsOK?.()&&rng()<.4)c.push('ad');if(rng()<.45)c.push('stroll');if(rng()<.35)c.push('promo');}
+ else if(zone==='market'){c=['project','project','project','project','project','work','event','event'];if(L>=500000)c.push('partner');if(L>=2000000&&rng()<.25)c.push('luxury');c.push('city');if(rng()<.5)c.push('shop');if(rng()<.4)c.push('stroll');if(rng()<.35)c.push('promo');if(HOOKS.adsOK?.()&&rng()<.6)c.push('ad');}
  else if(zone==='elite'){c=['elite','elite','elite','elite','project','event','partner','city'];if(rng()<.55)c.push('luxury');if(HOOKS.adsOK?.())c.push('ad');}
  else if(zone==='mall'){c=['shop','shop','shop','shop','event'];if(HOOKS.adsOK?.())c.push('ad');if(L>=PROJECT_UNLOCK)c.push('project');}
  else if(zone==='city'){c=['city','city','city','city','project','event'];if(L>=500000)c.push('partner');}
@@ -213,10 +213,12 @@ export function draw(s,rng=Math.random){const v=st(s),L=liquid(s);
  if(card==='luxury'){const o=luxOffer(s,rng);if(o)return {offer:o};card='project';}
  if(card==='shop'&&HOOKS.shop)return {offer:HOOKS.shop(s,rng)};
  if(card==='ad'){if(HOOKS.ad&&HOOKS.adsOK?.())return {offer:HOOKS.ad(s,rng)};card=L>=PROJECT_UNLOCK?'project':'work';}
+ if(card==='stroll'&&HOOKS.stroll)return {offer:HOOKS.stroll(s,rng)};
+ if(card==='promo'){if(HOOKS.promo&&HOOKS.promoOK?.(s))return {offer:HOOKS.promo(s,rng)};card=L>=PROJECT_UNLOCK?'project':'work';}
  if(card==='city'&&HOOKS.city){const o=HOOKS.city(s,rng);if(o)return {offer:o};card=L>=PROJECT_UNLOCK?'project':'work';}
  if((card==='project'||card==='elite')&&L<PROJECT_UNLOCK)return {offer:workOffer(s,rng)};
  return {hint:card,elite:card==='elite'};}
-export const V9_TYPES=['v9-work','v9-fork','v9-partner','v9-pdeal','v9-lux','v9-place','v12-shop','v12-ad','v12-city'];
+export const V9_TYPES=['v9-work','v9-fork','v9-partner','v9-pdeal','v9-lux','v9-place','v12-shop','v12-ad','v12-city','v13-stroll','v13-promo'];
 
 /* ---------- main story: one chapter per social class, player picks mood / motive ---------- */
 export const MOODS={
