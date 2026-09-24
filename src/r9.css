@@ -3,3 +3,20 @@
 .v12-g-x2.unl{background:#138a7c}
 .v12-good.is-unlock{background:linear-gradient(180deg,#f2fffb,#dff4ee);outline:2px dashed #1f9e8f;outline-offset:-5px}
 .v12-good.is-unlock .v12-g-img{filter:drop-shadow(0 0 6px #37d2bd88)}
+/* R9 item 90: story dialogue — guaranteed contrast on every wealth skin */
+html body #app #modal[data-kind='v9-story'] #modal-card{background:#0d1220!important}
+html body #app #modal[data-kind='v9-story'] #modal-card .v9-s-stage{background-color:#0d1220!important;position:relative}
+html body #app #modal[data-kind='v9-story'] #modal-card .v9-s-stage::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#0d1220e6 0%,#0d122099 45%,#0d1220f0 100%);pointer-events:none}
+html body #app #modal[data-kind='v9-story'] #modal-card .v9-s-stage>*{position:relative}
+html body #app #modal[data-kind='v9-story'] #modal-card .v9-s-chap h2{color:#fff!important;text-shadow:0 2px 0 #000,0 0 18px #000c!important;font-size:30px!important}
+html body #app #modal[data-kind='v9-story'] #modal-card .v9-s-chap small{color:#ffd65c!important;opacity:1!important;font-weight:800!important;letter-spacing:.16em!important;text-shadow:0 1px 0 #000}
+html body #app #modal[data-kind='v9-story'] #modal-card .v9-beat.nar,html body #app #modal[data-kind='v9-story'] #modal-card .v9-beat.echo{background:#05080fe8!important;border:1px solid #ffffff2a!important}
+html body #app #modal[data-kind='v9-story'] #modal-card .v9-beat.nar b,html body #app #modal[data-kind='v9-story'] #modal-card .v9-beat.echo b{color:#ffd65c!important;opacity:1!important}
+html body #app #modal[data-kind='v9-story'] #modal-card .v9-beat.nar p,html body #app #modal[data-kind='v9-story'] #modal-card .v9-beat.echo p{color:#f4f6fb!important;opacity:1!important;font-size:17px!important}
+html body #app #modal[data-kind='v9-story'] #modal-card .v9-beat:not(.nar):not(.echo){background:#ffe38a!important}
+html body #app #modal[data-kind='v9-story'] #modal-card .v9-beat:not(.nar):not(.echo) b{color:#5a3b00!important}
+html body #app #modal[data-kind='v9-story'] #modal-card .v9-beat:not(.nar):not(.echo) p{color:#141414!important;font-size:17px!important}
+html body #app #modal[data-kind='v9-story'] #modal-card .v9-s-ask{color:#ffd65c!important;font-size:18px!important;font-weight:800!important;opacity:1!important}
+html body #app #modal[data-kind='v9-story'] #modal-card .v9-s-note{color:#c9d0de!important;opacity:1!important}
+html body #app #modal[data-kind='v9-story'] #modal-card .v9-s-tile b{color:#121620!important}
+html body #app #modal[data-kind='v9-story'] #modal-card .v9-mood-trail small{color:#fff!important}
