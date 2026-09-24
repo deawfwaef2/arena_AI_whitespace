@@ -7,5 +7,13 @@
     "cooldownSeconds": 15,
     "maxScore": 9000000000000,
     "ads": true
+  },
+  "platforms": {
+    "gamedistribution": {
+      "gameId": ""
+    },
+    "gamemonetize": {
+      "gameId": ""
+    }
   }
 }

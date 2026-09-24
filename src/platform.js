@@ -9,9 +9,46 @@ export async function encryptScore(score,keyBase64){
  const joined=new Uint8Array(12+encrypted.byteLength);joined.set(iv);joined.set(new Uint8Array(encrypted),12);
  return btoa(String.fromCharCode(...joined));
 }
+/* R16: build target (esbuild define __TARGET__): web (GitHub Pages / CrazyGames auto-detect), crazygames, poki,
+   gamedistribution, gamemonetize, gamepix, itch, newgrounds, y8 (plain = no ad SDK). */
+// eslint-disable-next-line no-undef
+export const TARGET=typeof __TARGET__!=='undefined'?__TARGET__:'web';
+const CG_SDK=(typeof __TARGET__==='undefined'||__TARGET__==='web'||__TARGET__==='crazygames')?'https://sdk.crazygames.com/crazygames-sdk-v3.js':''; // eslint-disable-line no-undef
+function loadScript(src,ms=8000){return new Promise((resolve,reject)=>{const s=document.createElement('script');let done=false;const t=setTimeout(()=>{if(!done){done=true;reject(Error('SDK load timeout'));}},ms);s.src=src;s.async=true;s.onload=()=>{if(!done){done=true;clearTimeout(t);resolve();}};s.onerror=()=>{if(!done){done=true;clearTimeout(t);reject(Error('SDK unavailable'));}};document.head.appendChild(s);});}
+/* Each ad adapter: init(), loaded(), start(), stop(), interstitial()->Promise<bool>, rewarded()->Promise<bool>, canReward, preroll */
+function makeAds(target,cfg,adState){
+ if(target==='poki')return {canReward:true,preroll:false,
+  async init(){await loadScript('https://game-cdn.poki.com/scripts/v2/poki-sdk.js');try{await window.PokiSDK.init();}catch{}},
+  loaded(){try{window.PokiSDK?.gameLoadingFinished();}catch{}},start(){try{window.PokiSDK?.gameplayStart();}catch{}},stop(){try{window.PokiSDK?.gameplayStop();}catch{}},
+  async interstitial(){if(!window.PokiSDK)return false;try{await window.PokiSDK.commercialBreak(()=>adState(true));return true;}catch{return false;}},
+  async rewarded(){if(!window.PokiSDK)return false;try{return !!(await window.PokiSDK.rewardedBreak(()=>adState(true)));}catch{return false;}}};
+ if(target==='gamedistribution'){let reward=false;return {canReward:true,preroll:true,
+  async init(){window.GD_OPTIONS={gameId:cfg.gameId||'',onEvent:e=>{switch(e.name){case 'SDK_GAME_PAUSE':adState(true);break;case 'SDK_GAME_START':adState(false);break;case 'SDK_REWARDED_WATCH_COMPLETE':reward=true;break;case 'SDK_READY':try{window.gdsdk?.preloadAd?.('rewarded');}catch{}break;}}};await loadScript('https://html5.api.gamedistribution.com/main.min.js');},
+  loaded(){},start(){},stop(){},
+  async interstitial(){if(!window.gdsdk?.showAd)return false;try{await window.gdsdk.showAd();return true;}catch{return false;}},
+  async rewarded(){if(!window.gdsdk?.showAd)return false;reward=false;try{await window.gdsdk.showAd('rewarded');try{window.gdsdk.preloadAd?.('rewarded');}catch{}return reward||true;}catch{return false;}}};}
+ if(target==='gamemonetize'){let resume=null;return {canReward:false,preroll:true,
+  async init(){window.SDK_OPTIONS={gameId:cfg.gameId||'',onEvent:a=>{switch(a.name){case 'SDK_GAME_PAUSE':adState(true);break;case 'SDK_GAME_START':adState(false);if(resume){resume(true);resume=null;}break;}}};await loadScript('https://api.gamemonetize.com/sdk.js');},
+  loaded(){},start(){},stop(){},
+  interstitial(){if(!window.sdk?.showBanner)return Promise.resolve(false);return new Promise(r=>{resume=r;setTimeout(()=>{if(resume){resume(false);resume=null;}},60000);try{window.sdk.showBanner();}catch{resume=null;r(false);}});},
+  async rewarded(){return false;}};}
+ if(target==='gamepix')return {canReward:true,preroll:true,
+  async init(){await loadScript('https://integration.gamepix.com/sdk/v3/gamepix.sdk.js');},
+  loaded(){try{window.GamePix?.loaded?.();}catch{}},start(){},stop(){},
+  async interstitial(){if(!window.GamePix?.interstitialAd)return false;adState(true);try{await window.GamePix.interstitialAd();return true;}catch{return false;}finally{adState(false);}},
+  async rewarded(){if(!window.GamePix?.rewardAd)return false;adState(true);try{const r=await window.GamePix.rewardAd();return !!(r&&r.success);}catch{return false;}finally{adState(false);}}};
+ return null;
+}
 export class Platform {
  constructor(config={}){this.config=config;this.sdk=null;this.user=null;this.status='offline';this.error='';this.memory=new Map();this.storageMode='local';this.lastSubmit=0;this.active=false;this.muted=false;this.onSettings=()=>{};this.onAuth=()=>{};this.onAdState=()=>{};try{this.demo=new URLSearchParams(location.search).has('adtest');}catch{this.demo=false;}}
  async init(){
+  this.target=TARGET;
+  if(TARGET==='poki'||TARGET==='gamedistribution'||TARGET==='gamemonetize'||TARGET==='gamepix'){
+   const ads=makeAds(TARGET,(this.config.platforms||{})[TARGET]||{},v=>this.onAdState(v));this.status='connecting';
+   try{await Promise.race([ads.init(),new Promise((_,r)=>setTimeout(()=>r(Error('SDK timeout')),9000))]);this.ads=ads;this.status='connected';}catch(e){this.ads=ads;this.status='unavailable';this.error=e.message;}
+   return;
+  }
+  if(TARGET!=='web'&&TARGET!=='crazygames')return;
   const c=this.config.crazygames||{};
   const host=location.hostname+' '+document.referrer;
   const wanted=c.enabled===true||(c.enabled!=='off'&&c.enabled!==false&&(/crazygames\.|crazygamesgamefiles\./i.test(host)||new URLSearchParams(location.search).get('isCrazyGames')==='true'));
@@ -21,7 +58,7 @@ export class Platform {
    if(!window.CrazyGames?.SDK)await new Promise((resolve,reject)=>{
     const script=document.createElement('script');let settled=false;
     const timer=setTimeout(()=>{if(!settled){settled=true;reject(Error('SDK load timeout'));}},7000);
-    script.src='https://sdk.crazygames.com/crazygames-sdk-v3.js';script.async=true;
+    script.src=CG_SDK;script.async=true;
     script.onload=()=>{if(!settled){settled=true;clearTimeout(timer);resolve();}};
     script.onerror=()=>{if(!settled){settled=true;clearTimeout(timer);reject(Error('SDK unavailable'));}};document.head.appendChild(script);
    });
@@ -39,8 +76,8 @@ export class Platform {
   }catch(e){this.status='unavailable';this.error=e.message;this.sdk=null;}
  }
  call(name,...args){try{return this.sdk?.game?.[name]?.(...args);}catch(e){this.error=e.message;}}
- ready(){this.call('loadingStop');}
- play(value){if(value===this.active)return;this.active=value;this.call(value?'gameplayStart':'gameplayStop');}
+ ready(){this.call('loadingStop');this.ads?.loaded();}
+ play(value){if(value===this.active)return;this.active=value;this.call(value?'gameplayStart':'gameplayStop');if(this.ads){try{value?this.ads.start():this.ads.stop();}catch{}}}
  load(key){
   try{if(this.sdk)return this.sdk.data.getItem(key);return localStorage.getItem(key);}catch(e){this.storageMode='session';this.error=e.message;return this.memory.get(key)||null;}
  }
@@ -68,11 +105,15 @@ export class Platform {
   }catch(e){this.error=e.message;return {code:'error',error:e.message};}
  }
  async login(){if(!this.sdk?.user?.isUserAccountAvailable)return false;try{this.user=await this.sdk.user.showAuthPrompt();return !!this.user;}catch{return false;}}
- canReward(){return !!(this.config.crazygames?.ads&&this.sdk?.ad?.requestAd)||this.demo;}
+ canReward(){return !!(this.config.crazygames?.ads&&this.sdk?.ad?.requestAd)||!!(this.ads?.canReward&&this.status==='connected')||this.demo;}
+ // R16: platform pre-roll on the first Play press (GameDistribution / GameMonetize / GamePix ask for it; Poki forbids it).
+ async preroll(){if(this.prerolled||!this.ads?.preroll||this.status!=='connected')return false;this.prerolled=true;return this.adRun(()=>this.ads.interstitial());}
+ async adRun(fn){if(this.rewardBusy)return false;this.rewardBusy=true;const was=this.active;this.play(false);this.onAdState(true);let ok=false;try{ok=await Promise.race([fn(),new Promise(r=>setTimeout(()=>r(false),120000))]);}catch{ok=false;}this.rewardBusy=false;this.onAdState(false);if(was)this.play(true);return !!ok;}
  // local test mode (?adtest=1): a fake 3-second ad so the reward flow can be tested outside CrazyGames
  demoAd(kind='rewarded'){return new Promise(resolve=>{const el=document.createElement('div');el.id='demo-ad';el.innerHTML='<div><b>AD</b><p>CrazyGames '+kind+' ad (test mode)</p><i></i></div>';document.body.append(el);setTimeout(()=>{el.remove();resolve(true);},3000);});}
  // R11: midgame interstitial (player-initiated story node or natural break). Resolves true if an ad actually played.
  async midgame(){
+  if(this.ads){if(this.status!=='connected'||this.rewardBusy)return false;return this.adRun(()=>this.ads.interstitial());}
   if(!this.canReward()||this.rewardBusy)return false;
   if(!this.sdk&&this.demo){this.rewardBusy=true;this.onAdState(true);const ok=await this.demoAd('midgame');this.rewardBusy=false;this.onAdState(false);return ok;}
   this.rewardBusy=true;const was=this.active;this.play(false);this.onAdState(true);
@@ -86,6 +127,7 @@ export class Platform {
  clearBanners(){try{this.sdk?.banner?.clearAllBanners?.();}catch{}}
  async rewarded(){
   if(!this.canReward()||this.rewardBusy)return false;
+  if(this.ads)return this.adRun(()=>this.ads.rewarded());
   if(!this.sdk&&this.demo){this.rewardBusy=true;this.onAdState(true);const ok=await this.demoAd();this.rewardBusy=false;this.onAdState(false);return ok;}
   this.rewardBusy=true;this.play(false);this.onAdState(true);
   return new Promise(resolve=>{

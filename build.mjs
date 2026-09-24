@@ -3,7 +3,12 @@ import {build,transform} from 'esbuild';
 const cfg=JSON.parse(await fs.readFile('config.json','utf8'));
 const production=process.argv.includes('--production');
 if(production)cfg.allowDeveloperMode=false;
-const folder=production?'build/production':'build/development';
+// R16: platform target (web = GitHub Pages + CrazyGames auto-detect). Other targets wire their own ad SDK (src/platform.js).
+const argv=Object.fromEntries(process.argv.slice(2).filter(x=>x.startsWith('--')&&x.includes('=')).map(x=>x.slice(2).split('=')));
+const target=argv.target||'web';cfg.target=target;cfg.platforms=cfg.platforms||{};
+if(argv.gameid){cfg.platforms[target]={...(cfg.platforms[target]||{}),gameId:argv.gameid};}
+if(target!=='web'&&target!=='crazygames'){cfg.crazygames={...cfg.crazygames,enabled:'off',ads:false,encryptionKey:''};}
+const folder=target!=='web'?'build/'+target:production?'build/production':'build/development';
 const audio={}; // Round 9: music is written as lazy script packs (music-pack/<id>.js), NOT inlined, so index.html loads fast on phones.
 const musicIds=[];for(const score of JSON.parse(await fs.readFile('assets/music/CITY-CREDITS.json','utf8')))musicIds.push(score.id);
 const art={};for(const city of ['taipei','tokyo','vegas','singapore','newyork','monaco','luxury-texture','ivory-texture','ui-taipei','ui-tokyo','ui-vegas','ui-singapore','ui-newyork','ui-monaco','logo','cg-poor','cg-rich','menu-bg'])art[city]='data:image/webp;base64,'+(await fs.readFile('assets/art/'+city+'.webp')).toString('base64');
@@ -20,7 +25,7 @@ for(const id of musicIds){const src=await fs.readFile('assets/music/'+id+'.mp3')
  await fs.mkdir('sfx-pack',{recursive:true});const put=async(id,val)=>{const body='(window.UPSHIFT_SFX=window.UPSHIFT_SFX||{})['+JSON.stringify(id)+']='+JSON.stringify(val)+';';let old='';try{old=await fs.readFile('sfx-pack/'+id+'.js','utf8');}catch{}if(old!==body)await fs.writeFile('sfx-pack/'+id+'.js',body);};
  for(let i=0;i<6;i++)await put('bed'+i,await uri('bed'+i+'.mp3'));const shots={};for(const f of await fs.readdir('assets/sfx'))if(!f.startsWith('ui-')&&!f.startsWith('bed')&&f.endsWith('.mp3'))shots[f.slice(0,-4)]=await uri(f);await put('shots',shots);}
 const licenses='RECORDED MUSIC\n'+await fs.readFile('assets/music/MUSIC-LICENSES.md','utf8')+'\nSOUND EFFECTS (CC0)\n'+JSON.parse(await fs.readFile('assets/sfx/SFX-CREDITS.json','utf8')).map(c=>`${c.id}: "${c.title}" by ${c.author} — ${c.license} — ${c.source}`).join('\n')+'\n'+'\nTHREE.JS\n'+await fs.readFile('assets/THREE-LICENSE.txt','utf8')+'\nSPACE GROTESK\n'+await fs.readFile('assets/SPACE-GROTESK-LICENSE.txt','utf8');
-const result=await build({entryPoints:['src/app.js'],bundle:true,minify:true,format:'iife',target:['es2020'],write:false,charset:'utf8',legalComments:'eof'});
+const result=await build({entryPoints:['src/app.js'],bundle:true,minify:true,format:'iife',target:['es2020'],write:false,charset:'utf8',legalComments:'eof',define:{__TARGET__:JSON.stringify(target)}});
 const js=result.outputFiles[0].text.replaceAll('</script','<\\/script');
 const font=await fs.readFile('assets/space-grotesk.woff2'); // R13: lossless WOFF2 (was 137 KB TTF)
 const format=font.subarray(0,4).toString()==='wOF2'?'woff2':font.subarray(0,4).toString()==='wOFF'?'woff':'truetype';
