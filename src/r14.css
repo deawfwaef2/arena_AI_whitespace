@@ -11,3 +11,15 @@ html body #modal .r14-lang button[data-action].on{background:linear-gradient(180
 #r15-gate .r15-gate-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:18px 44px;border-radius:999px;background:linear-gradient(180deg,#ffe9a6,#d9a441);color:#2b1c02;box-shadow:0 10px 40px rgba(0,0,0,.45),0 0 0 4px rgba(255,243,196,.5);animation:r15pulse 1.6s ease-in-out infinite}
 #r15-gate b{font-size:30px;letter-spacing:.06em}#r15-gate small{font-size:14px;opacity:.8}
 @keyframes r15pulse{50%{transform:scale(1.05)}}@keyframes r15in{from{opacity:0}}
+/* ===== R15 phone scheme (landscape phones: 560px-tall virtual canvas, ~0.7 scale → readable text) ===== */
+html[data-vscale="phone"] #v7-money{padding:8px 14px!important;min-height:0!important;width:auto!important;min-width:220px}
+html[data-vscale="phone"] #v7-money-value{font-size:54px!important;line-height:1!important}
+html[data-vscale="phone"] #v7-reward{min-height:0!important;padding:8px 12px!important}
+html[data-vscale="phone"] #v7-reward .v7-reward-icons,html[data-vscale="phone"] #v7-reward .v7-reward-later{display:none!important}
+html[data-vscale="phone"] #game-dock{top:112px!important;max-height:calc(var(--vh) - 124px)!important}
+html[data-vscale="phone"] #modal-card{max-height:calc(var(--vh) - 16px)!important;top:8px!important;overflow:auto!important}
+html[data-vscale="phone"] .v9-pop.story2{max-height:calc(var(--vh) - 20px);overflow:auto}
+html[data-vscale="phone"] .v9-pop.story2 .v9-s-stage{min-height:0!important;padding-top:10px!important;padding-bottom:8px!important}
+html[data-vscale="phone"] .v9-pop.story2 .v9-s-mood{height:100px!important;min-height:0!important;flex:none!important}html[data-vscale="phone"] .v9-pop.story2 .v9-s-mood img{max-height:44px!important}html[data-vscale="phone"] .v9-pop.story2 .v9-beat{padding-top:6px!important;padding-bottom:6px!important}
+html[data-vscale="phone"] .v9-pop.story2 .v9-s-tile{min-height:0!important;padding:10px!important}
+html[data-vscale="phone"] .v9-pop.story2 .v9-s-tiles{padding-top:8px!important;padding-bottom:10px!important}
