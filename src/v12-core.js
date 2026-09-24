@@ -1,7 +1,7 @@
 // v12 core rules (pure state, integer cents): class intros, hospital price doubling, shops (small/big,
 // categories, random stock), roadside sponsor billboards (rewarded ads), city-signature deals with visible
 // min/max stakes, choose-your-stake partners and special partners.
-import {PARTNERS,liquid,liquidTier,st} from './v9-core.js';
+import {PARTNERS,liquid,liquidTier,st,lvOpen} from './v9-core.js';
 import {worth} from './endgame-core.js';
 import {ITEMS,eligible} from './life-core.js';
 
@@ -45,7 +45,7 @@ export const HOSP_DETAIL={
  specialist:{zh:'专科门诊：排队两小时，面诊八分钟。专家会开一套完整疗程，一半的人会好转。',en:'Specialist: two hours in line, eight minutes with the expert. A full treatment course; about half of patients improve.'},
  ward:{zh:'私立医院住院：独立病房、落地窗、营养师配餐。一周后你大概率能站着走出去。',en:'Private ward: single room, floor-to-ceiling window, a dietitian plans your meals. After a week you\u2019ll most likely walk out on your own.'},
  elite:{zh:'顶级医疗团队：三国专家连夜飞来，手术室为你一人开放。几乎一定有效——价格也几乎不讲道理。',en:'World-class team: specialists fly in overnight from three countries; an operating theatre opens just for you. Almost certain — and almost unreasonable in price.'},
- checkup:{zh:'年度体检：抽血、CT、心电图。报告很厚，结论很短：注意休息。以后每次休息衰退率 −1%。',en:'Annual check-up: blood work, CT, ECG. A thick report with a short conclusion: rest more. Future decline risk −1% per rest.'},
+ checkup:{zh:'年度体检：抽血、CT、心电图。报告很厚，结论很短：注意休息。60% 概率衰退率永久 −0.3%，没效果也照样收费。',en:'Annual check-up: blood work, CT, ECG. A thick report with a short conclusion: rest more. 60% chance: decline risk −0.3% for good — billed either way.'},
  pharmacy:{zh:'药房能量补给：维生素、电解质和一杯很苦的中药。体力 +40。',en:'Pharmacy boost: vitamins, electrolytes and a very bitter herbal tea. +40 energy.'},
  trial:{zh:'临床试验志愿者：签一份十页的同意书，换一笔报酬。副作用写在第九页的小字里。',en:'Clinical trial: sign a ten-page consent form for a payout. Side effects are in the small print on page nine.'}
 };
@@ -60,7 +60,7 @@ export const GOODS=[
  {id:'coffee2',cat:'food',icon:'coffee',size:'s',price:900,energy:22,zh:'手冲咖啡',en:'Pour-over coffee',d:['体力 +30','+30 energy']},
  {id:'charm',cat:'gear',icon:'medal',size:'s',price:4000,intel:2,zh:'幸运御守',en:'Lucky charm',d:['接下来 2 个项目成功率 +6%','Next 2 projects +6% odds']},
  {id:'umbrella',cat:'gear',icon:'ticket',size:'s',price:1500,energy:10,zh:'折叠伞',en:'Folding umbrella',d:['雨天不淋湿：体力 +15','Stay dry: +15 energy']},
- {id:'vitamins',cat:'health',icon:'heart',size:'s',price:9000,riskCut:1,zh:'复合维生素',en:'Multivitamins',d:['衰退率永久 −1%','Decline risk −1% for good']},
+ {id:'vitamins',cat:'health',icon:'heart',size:'s',price:12000,pct:.04,riskCut:.05,zh:'复合维生素',en:'Multivitamins',d:['衰退率永久 −0.05%','Decline risk −0.05% for good']},
  {id:'lotto',cat:'collect',icon:'ticket',size:'s',price:200,lotto:true,zh:'刮刮乐',en:'Scratch card',d:['10% 概率赢 $20，1% 概率赢 $500','10%: win $20 · 1%: win $500']},
  {id:'postcard',cat:'collect',icon:'story',size:'s',price:600,lv:1,zh:'城市明信片',en:'City postcard',d:['LV +1','LV +1']},
  // big-shop goods (scale with wealth)
@@ -68,7 +68,7 @@ export const GOODS=[
  {id:'feast',cat:'food',icon:'champagne',size:'b',pct:.006,min:25000,energy:45,tb:2,zh:'主厨晚宴',en:'Chef\u2019s tasting menu',d:['体力 +70','+70 energy']},
  {id:'advisor',cat:'gear',icon:'briefcase',size:'b',pct:.015,min:40000,intel:4,tb:2,zh:'投资顾问月卡',en:'Advisor retainer',d:['接下来 4 个项目成功率 +6%','Next 4 projects +6% odds']},
  {id:'suitcase',cat:'collect',icon:'suit',size:'b',pct:.006,min:50000,lv:3,zh:'定制西装',en:'Tailored suit',d:['体面的行头 · LV +3','Looks the part · LV +3']},
- {id:'checkup2',cat:'health',icon:'hospital',size:'b',pct:.03,min:300000,riskCut:2,tb:1,zh:'高端体检套餐',en:'Executive health screen',d:['衰退率永久 −3%','Decline risk −3% for good']},
+ {id:'checkup2',cat:'health',icon:'hospital',size:'b',pct:.08,min:1500000,riskCut:.6,tb:1,zh:'高端体检套餐',en:'Executive health screen',d:['衰退率永久 −0.6%','Decline risk −0.6% for good']},
  {id:'watch2',cat:'collect',icon:'steelwatch',size:'b',pct:.02,min:80000,lv:4,zh:'机械腕表',en:'Mechanical watch',d:['LV +4','LV +4']},
  {id:'painting',cat:'collect',icon:'goldkey',size:'b',pct:.05,min:500000,lv:10,zh:'青年艺术家原作',en:'Young artist original',d:['LV +10','LV +10']},
  {id:'condo',cat:'estate',icon:'briefcase',size:'b',pct:.15,min:3000000,lv:15,zh:'市中心公寓地契',en:'Downtown condo deed',d:['建筑资产 · LV +15','Property · LV +15']},
@@ -89,20 +89,22 @@ export const FAM_LOOK={
  energy:[{icon:'can',zh:'能量饮料',en:'Energy drink'},{icon:'coffee',zh:'三倍浓缩咖啡',en:'Triple espresso'},{icon:'noodle',zh:'加料能量套餐',en:'Loaded power meal'},{icon:'heart',zh:'维生素点滴',en:'Vitamin IV drip'},{icon:'hospital',zh:'高压氧舱疗程',en:'Hyperbaric oxygen session'},{icon:'champagne',zh:'私人恢复理疗师',en:'Private recovery therapist'},{icon:'crown',zh:'时间银行兑换券',en:'Time-bank voucher'}],
  risk:[{icon:'heart',zh:'复合维生素',en:'Multivitamins'},{icon:'check',zh:'全面体检',en:'Full health screening'},{icon:'bolt',zh:'私人健康教练',en:'Personal health coach'},{icon:'hospital',zh:'长寿门诊会员',en:'Longevity clinic membership'},{icon:'diamond',zh:'细胞修复疗法',en:'Cellular repair therapy'},{icon:'crown',zh:'基因延寿计划',en:'Gene longevity programme'}],
  intel:[{icon:'medal',zh:'幸运御守',en:'Lucky charm'},{icon:'story',zh:'内部简报订阅',en:'Insider newsletter'},{icon:'briefcase',zh:'投资顾问月卡',en:'Advisor retainer'},{icon:'invest',zh:'量化交易终端',en:'Quant trading terminal'},{icon:'handshake',zh:'对冲基金耳语',en:'Hedge-fund whisper'}]};
-export const famEffect=(s,g)=>{const n=famCount(s,famOf(g));return {energy:g.energy?Math.max(4,Math.round(g.energy*.8**n)):0,riskCut:g.riskCut||0,intel:g.intel?Math.max(1,g.intel-Math.floor(n/2)):0};};
+export const fmtPct=x=>String(Math.round(x*100)/100);
+export const famEffect=(s,g)=>{const n=famCount(s,famOf(g));return {energy:g.energy?Math.max(4,Math.round(g.energy*.8**n)):0,riskCut:g.riskCut?Math.max(.01,Math.round(g.riskCut*.75**n*100)/100):0,intel:g.intel?Math.max(1,g.intel-Math.floor(n/2)):0};};
 export function goodLook(s,g){const f=famOf(g);if(!f)return {icon:g.icon,zh:g.zh,en:g.en,d:g.d,n:0};const n=famCount(s,f),L=FAM_LOOK[f],t=L[Math.min(L.length-1,n+(g.tb||0))],e=famEffect(s,g);
- const d=f==='energy'?[`体力 +${e.energy}`,`+${e.energy} energy`]:f==='risk'?[`衰退率永久 −${e.riskCut}%`,`Decline risk −${e.riskCut}% for good`]:[`接下来 ${e.intel} 个项目成功率 +6%`,`Next ${e.intel} projects +6% odds`];
+ const d=f==='energy'?[`体力 +${e.energy}`,`+${e.energy} energy`]:f==='risk'?[`衰退率永久 −${fmtPct(e.riskCut)}%`,`Decline risk −${fmtPct(e.riskCut)}% for good`]:[`接下来 ${e.intel} 个项目成功率 +6%`,`Next ${e.intel} projects +6% odds`];
  return {icon:t.icon,zh:t.zh,en:t.en,d,n};}
 export const UNLOCK_LOOK={passport:{icon:'compass',d:['解锁「旅行」：前往其他城市','Unlocks Travel to other cities']},radio:{icon:'story',d:['解锁「电台」：地点事件与提示','Unlocks Radio: local events & tips']},ui:{icon:'frame2',d:['解锁现代界面皮肤','Unlocks the Atelier interface']},hex:{icon:'compass2',d:['解锁「机制图谱」','Unlocks the Mechanism atlas']},deposit:{icon:'invest',d:['离线现金每天 +1%','Offline cash +1% per day']},car:{icon:'carkey',d:['解锁「过滤」：自动跳过低级项目','Unlocks Filter: skip low-tier deals']},music:{icon:'ticket',d:['解锁「音乐管家」','Unlocks the Music concierge']},fund:{icon:'invest',d:['离线利率提高到 1.5%','Offline interest up to 1.5%']}};
 const unlockGood=i=>({id:'u-'+i.id,item:i.id,cat:'unlock',icon:UNLOCK_LOOK[i.id]?.icon||'goldkey',size:'s',price:i.price*100,zh:i.name,en:i.en,d:UNLOCK_LOOK[i.id]?.d||['解锁新机制','Unlocks a mechanism']});
 export const unlockGoods=s=>ITEMS.filter(i=>UNLOCK_LOOK[i.id]&&!s.life?.items?.includes(i.id)&&eligible(s,i)&&(!i.city||i.city===s.life?.city)).map(unlockGood);
 export const findGood=(s,id)=>GOODS.find(x=>x.id===id)||(String(id).startsWith('u-')?(()=>{const i=ITEMS.find(x=>'u-'+x.id===id);return i?unlockGood(i):null;})():null);
-export const goodPrice=(s,g)=>{const base=g.price?g.price:Math.max(g.min||0,Math.floor(liquid(s)*g.pct));return Math.min(CAP,base*2**Math.min(30,famCount(s,famOf(g))));};
+export const goodPrice=(s,g)=>{const base=g.price?Math.max(g.price,g.pct?Math.floor(liquid(s)*g.pct):0):Math.max(g.min||0,Math.floor(liquid(s)*g.pct));const f=famOf(g);let m=(f==='risk'?3:2)**Math.min(18,famCount(s,f));if(g.lv)m*=2**Math.min(20,st(s).lvBuys||0);return Math.min(CAP,base*m);};
+export const isLvGood=g=>!!g?.lv;
 
 export function shopOffer(s,rng=Math.random,kind){const L=liquid(s);
  if(!kind){const ok=Object.entries(SHOP_KINDS).filter(([,k])=>L>=k.at);kind=ok[ok.length-1-(ok.length>1&&rng()<.35?1:0)][0];}
  const K=SHOP_KINDS[kind];let pool=GOODS.filter(g=>K.size==='b'?(g.size==='b'||rng()<.25):g.size==='s');
- pool=pool.filter(g=>goodPrice(s,g)<L*.9||g.size==='s');
+ pool=pool.filter(g=>goodPrice(s,g)<L*.9||g.size==='s');if(!lvOpen(s))pool=pool.filter(g=>!g.lv);
  {const seen=new Set();pool=shuffle(pool,rng).filter(g=>{const f=famOf(g);if(!f)return true;if(seen.has(f))return false;seen.add(f);return true;});}
  const unl=shuffle(unlockGoods(s),rng).slice(0,K.size==='b'?2:1);
  const byCat={};for(const g of shuffle(pool,rng)){(byCat[g.cat]||(byCat[g.cat]=[])).push(g);}
@@ -111,15 +113,15 @@ export function shopOffer(s,rng=Math.random,kind){const L=liquid(s);
  out.sort((a,b)=>cats.indexOf(a.cat)-cats.indexOf(b.cat));
  return {id:uid(),type:'v12-shop',kind,goods:out.map(g=>({id:g.id,price:goodPrice(s,g),sold:false,...(g.item?{item:g.item}:{})})),settled:false,city:s.life.city,rarity:'rare'};}
 export function buyGood(s,idx,rng=Math.random){const o=s.offer;if(o.type!=='v12-shop')throw Error('no shop');const it=o.goods[idx];const g=findGood(s,it?.id);if(!g||it.sold)throw Error('sold');
- const f=famOf(g),price=f?goodPrice(s,g):it.price; // re-quoted: buying one good of a family doubles the rest of that family
+ const f=famOf(g),price=(f||g.lv)?goodPrice(s,g):it.price; // re-quoted: buying one good of a family doubles the rest of that family
  if(s.cash<=price)throw Error('cash');
  const v=st(s),e=s.estate,out={spent:price,good:g.id,look:goodLook(s,g)},fx=famEffect(s,g);s.cash-=price;it.sold=true;
  if(g.item){s.life.items=s.life.items||[];if(!s.life.items.includes(g.item))s.life.items.push(g.item);if(g.item==='deposit')s.life.lastSeen=Date.now();out.item=g.item;}
  if(g.energy){s.life.energy=Math.min(s.life.energyCap||200,s.life.energy+fx.energy);out.energy=fx.energy;}
  if(g.intel){v.intel=(v.intel||0)+fx.intel;out.intel=fx.intel;}
- if(g.riskCut&&e){e.riskReduction=(e.riskReduction||0)+fx.riskCut;out.riskCut=fx.riskCut;}
+ if(g.riskCut&&e){e.riskReduction=Math.round(((e.riskReduction||0)+fx.riskCut)*100)/100;out.riskCut=fx.riskCut;}
  if(f){v.famBuys=v.famBuys||{};v.famBuys[f]=(v.famBuys[f]||0)+1;for(const x of o.goods){const gx=findGood(s,x.id);if(!x.sold&&famOf(gx)===f)x.price=goodPrice(s,gx);}}
- if(g.lv){v.lvBonus=(v.lvBonus||0)+g.lv;out.lv=g.lv;}
+ if(g.lv){v.lvBonus=(v.lvBonus||0)+g.lv;out.lv=g.lv;v.lvBuys=(v.lvBuys||0)+1;for(const x of o.goods){const gx=findGood(s,x.id);if(!x.sold&&gx?.lv)x.price=goodPrice(s,gx);}}
  if(g.lotto){const r=rng();const win=r<.01?50000:r<.11?2000:0;s.cash+=win;out.win=win;}
  v.shopBuys=(v.shopBuys||0)+1;return out;}
 

@@ -257,3 +257,8 @@
 Loading… 正在加载|Loading…
 继续第 {} 站|Continue at stop {}
 ↓ 「{}」被收回了|↓ "{}" was taken back
+55% 概率恢复 1 格健康；失败也照样收费。|55% chance to restore 1 heart; billed even if it fails.
+45% 概率：衰退概率降低 4 个百分点；失败也照样收费。|45% chance: decline risk −4 points; billed even if it fails.
+60% 概率：健康恢复至上限，衰退概率降低 8 个百分点；失败也照样收费。|60% chance: full health and decline risk −8 points; billed even if it fails.
+疗程成功！|Treatment worked!
+疗程没有效果，费用已扣除。|The treatment had no effect. You were still billed.

@@ -74,12 +74,12 @@ export function finishWork(s){const o=s.offer;if(o.type!=='v9-work'||o.settled)t
 /* ---------- special places ---------- */
 export const PLACE_OPTS={
  hospital:[
-  {id:'clinic',icon:'heart',zh:'社区诊所',en:'Community clinic',heal:1,hosp:1,price:15000,healP:20,desc:['挂号+开药，便宜但不一定有用。','Cheap visit. Might not help.']},
-  {id:'specialist',icon:'hospital',zh:'专科门诊',en:'Specialist',heal:1,hosp:1,price:200000,healP:45,desc:['专家会诊，一半机会好转。','Expert consult. Coin-flip recovery.']},
-  {id:'ward',icon:'hospital',zh:'私立医院住院',en:'Private ward stay',heal:1,hosp:1,price:2500000,healP:75,at:3000000,desc:['一周住院疗养，大概率康复。','A week in hospital. Good odds.']},
-  {id:'elite',icon:'crown',zh:'顶级医疗团队',en:'World-class medical team',heal:1,hosp:1,price:40000000,healP:92,at:50000000,desc:['全球专家飞来会诊。','Top specialists fly in.']},
-  {id:'checkup',icon:'check',zh:'年度体检',en:'Annual check-up',hosp:1,price:80000,riskCut:1,desc:['以后每次休息衰退率 −1%。','Future decline risk −1% per rest.']},
-  {id:'pharmacy',icon:'bolt',zh:'药房能量补给',en:'Pharmacy energy boost',energy:25,hosp:1,price:3000,desc:['体力 +25。','+25 energy.']},
+  {id:'clinic',icon:'heart',zh:'社区诊所',en:'Community clinic',heal:1,hosp:1,price:40000,hospPct:.06,healP:20,desc:['挂号+开药，便宜但不一定有用。','Cheap visit. Might not help.']},
+  {id:'specialist',icon:'hospital',zh:'专科门诊',en:'Specialist',heal:1,hosp:1,price:600000,hospPct:.12,healP:45,desc:['专家会诊，一半机会好转。','Expert consult. Coin-flip recovery.']},
+  {id:'ward',icon:'hospital',zh:'私立医院住院',en:'Private ward stay',heal:1,hosp:1,price:6000000,hospPct:.2,healP:70,at:3000000,desc:['一周住院疗养，大概率康复。','A week in hospital. Good odds.']},
+  {id:'elite',icon:'crown',zh:'顶级医疗团队',en:'World-class medical team',heal:1,hosp:1,price:90000000,hospPct:.3,healP:90,at:50000000,desc:['全球专家飞来会诊。','Top specialists fly in.']},
+  {id:'checkup',icon:'check',zh:'年度体检',en:'Annual check-up',hosp:1,price:250000,hospPct:.05,riskCut:.3,riskP:60,desc:['60% 概率：衰退率永久 −0.3%。','60% chance: decline risk −0.3% for good.']},
+  {id:'pharmacy',icon:'bolt',zh:'药房能量补给',en:'Pharmacy energy boost',energy:25,hosp:1,price:3000,hospPct:.01,desc:['体力 +25。','+25 energy.']},
   {id:'trial',icon:'story',zh:'临床试验志愿者',en:'Clinical trial volunteer',gain:120000,risk:40,desc:['拿 $1,200 报酬，但 40% 概率健康 −1。','Paid $1,200. 40% chance to lose a heart.']}],
  casino:[
   {id:'roulette',icon:'chips',zh:'轮盘押红',en:'Roulette: red',stakePct:.2,p:47,up:2,casino:true,desc:['投入 20% 现金。','Stake 20% of cash.']},
@@ -118,14 +118,30 @@ export const PARTNERS=[
  {id:'doctor',img:'p-doctor',at:10000000,spec:['私人医疗 · 花钱概率降低衰退率','Private medicine · pay for a chance to cut decline risk'],risk:1,zh:'Dr. 周 · 私人医生',en:'Dr. Zhou · private physician',
   meet:['钱能买很多东西。健康，只能买一部分概率。','Money buys many things. Health, only some odds.'],
   lines:[['最近睡得好吗？做个评估吧。','Sleeping well? Let us run an assessment.'],['你的指标比上次好多了。','Your numbers look much better.'],['我把最新的疗法名额留给你。','I saved you a slot in the newest therapy.']],
-  deals:[{icon:'hospital',zh:'私人健康计划',en:'Private health plan',costPct:.03,min:300000,riskCut:2,riskP:65,desc:['65% 概率：衰退率永久 −2%','65% chance: decline risk −2% for good']},{icon:'heart',zh:'抗衰老疗程',en:'Longevity therapy',costPct:.08,min:1000000,riskCut:5,riskP:40,desc:['40% 概率：衰退率永久 −5%','40% chance: decline risk −5% for good']}]},
+  deals:[{icon:'hospital',zh:'私人健康计划',en:'Private health plan',costPct:.06,min:800000,riskCut:1.2,riskP:60,desc:['60% 概率：衰退率永久 −1.2%','60% chance: decline risk −1.2% for good']},{icon:'heart',zh:'抗衰老疗程',en:'Longevity therapy',costPct:.15,min:3000000,riskCut:3,riskP:35,desc:['35% 概率：衰退率永久 −3%','35% chance: decline risk −3% for good']}]},
+ {id:'herbalist',img:'p-herbalist',at:30000,spec:['草药调理 · 小钱赌一点健康','Herbal remedies · small money, small health odds'],risk:1,zh:'吴师傅 · 老字号药铺',en:'Master Wu · old herbal pharmacy',
+  meet:['年轻人，脸色发青，是熬夜熬的。先把诊金付了，我给你把个脉。','Young one, you look grey from late nights. Pay the consult fee and I will read your pulse.'],
+  lines:[['又来了？舌头伸出来我看看。','Back again? Show me your tongue.'],['气色比上次好一点点。','Your colour is a little better.'],['这张祖传方子，只给你一个人。','This family recipe is for you alone.']],
+  deals:[{icon:'coffee',zh:'一帖苦药',en:'One bitter tonic',costPct:.08,min:3000,riskCut:.08,riskP:55,desc:['55% 概率：衰退率 −0.08%','55% chance: decline risk −0.08%']},{icon:'heart',zh:'针灸推拿',en:'Acupuncture session',costPct:.18,min:8000,heal:1,healP:25,desc:['25% 概率：健康 +1','25% chance: +1 heart']}]},
+ {id:'coach',img:'p-coach',at:300000,spec:['体能训练 · 概率减缓衰退','Fitness training · a chance to slow decline'],risk:1,zh:'Maya · 私人健身教练',en:'Maya · personal trainer',
+  meet:['我不收懒人。先付定金，明早六点，操场见。','I don\u2019t train quitters. Deposit first; 6 a.m., the track.'],
+  lines:[['今天练腿，别想逃。','Leg day. Don\u2019t even think about it.'],['你的心率曲线漂亮多了！','Your heart-rate curve looks great!'],['下届马拉松，我们一起跑。','Next marathon, we run it together.']],
+  deals:[{icon:'bolt',zh:'八周训练营',en:'Eight-week bootcamp',costPct:.06,min:40000,riskCut:.4,riskP:55,desc:['55% 概率：衰退率 −0.4%','55% chance: decline risk −0.4%']},{icon:'heart',zh:'康复训练',en:'Rehab programme',costPct:.12,min:80000,heal:1,healP:40,desc:['40% 概率：健康 +1','40% chance: +1 heart']}]},
+ {id:'monk',img:'p-monk',at:5000000,spec:['山中静修 · 心静则寿长','Mountain retreat · a calm mind lives long'],risk:1,zh:'慧明法师 · 山寺住持',en:'Abbot Huiming · mountain temple',
+  meet:['施主心太急。捐一点香火钱，在寺里住几晚吧。','You are in too much of a hurry. A small offering, and stay a few nights.'],
+  lines:[['山里的雾，今天特别厚。','The mountain fog is thick today.'],['你呼吸慢下来了。','Your breathing has slowed.'],['这串念珠陪了我三十年，送你。','These beads were mine for thirty years. Take them.']],
+  deals:[{icon:'story',zh:'十日禅修',en:'Ten-day meditation retreat',costPct:.05,min:500000,riskCut:.9,riskP:50,desc:['50% 概率：衰退率 −0.9%','50% chance: decline risk −0.9%']},{icon:'medal',zh:'捐建禅堂',en:'Fund a meditation hall',costPct:.1,min:1500000,heal:1,healP:55,desc:['55% 概率：健康 +1（心安）','55% chance: +1 heart (peace of mind)']}]},
+ {id:'biotech',img:'p-biotech',at:100000000,spec:['长寿生物科技 · 高价低概率','Longevity biotech · pricey long shots'],risk:3,zh:'Dr. Nova · 长寿科技创始人',en:'Dr. Nova · longevity biotech founder',
+  meet:['死亡只是一个还没被解决的工程问题。入场费？当然很贵。','Death is just an unsolved engineering problem. The entry fee? Expensive, of course.'],
+  lines:[['第三期临床数据出来了。','Phase-three data just came in.'],['你的生物年龄比实际年轻了。','Your biological age is younger than your real one.'],['第一针量产疗法，留给你。','The first mass-produced dose is yours.']],
+  deals:[{icon:'diamond',zh:'基因编辑疗程',en:'Gene-editing therapy',costPct:.1,min:20000000,riskCut:4,riskP:30,desc:['30% 概率：衰退率 −4%','30% chance: decline risk −4%']},{icon:'hospital',zh:'干细胞修复',en:'Stem-cell repair',costPct:.12,min:30000000,heal:1,healP:65,desc:['65% 概率：健康 +1','65% chance: +1 heart']},{icon:'invest',zh:'投资长寿初创',en:'Invest in the start-up',stakePct:.2,p:38,up:3.2}]},
  {id:'captain',img:'p-captain',at:50000000,spec:['远洋航运 · 大仓位长线','Shipping · big stakes, long voyages'],risk:2,zh:'Magnus · 船王',en:'Magnus · shipping tycoon',
   meet:['海上的钱，只和不晕船的人分。','Money at sea is shared only with those who don\u2019t get seasick.'],
   lines:[['新航线开了，风浪大。','A new route opened. Rough seas.'],['你的名字已经刷在我的一条船上。','Your name is painted on one of my ships.'],['舰队的一半，以后听你的。','Half the fleet answers to you now.']],
   deals:[{icon:'yacht',zh:'包一条新航线',en:'Charter a new route',stakePct:.35,p:66,up:1.9},{icon:'compass',zh:'远洋探险',en:'Deep-sea expedition',stakePct:.2,p:28,up:5}]}
 ];
 export const getPartner=id=>PARTNERS.find(p=>p.id===id);
-export const partnerFee=s=>Math.max(100000,Math.floor(s.cash*.08));
+export const partnerFee=(s,p)=>Math.max(p?Math.min(100000,Math.floor(p.at*.3)):100000,Math.floor(s.cash*.08));
 export function dissolvePartner(s,id){const v=st(s);if(!v.partners[id])throw Error('no partner');delete v.partners[id];return true;}
 export function meetPartner(s){const o=s.offer,p=getPartner(o.partner),v=st(s);if(o.type!=='v9-partner'||o.settled||!p)throw Error('no partner');const fee=o.fee;if(s.cash<=fee)throw Error('cash');s.cash-=fee;v.partners[p.id]={bond:0,met:s.page,last:s.page};o.settled=true;o.result={fee};return fee;}
 
@@ -143,9 +159,11 @@ export const LUXURY=[
  {id:'goldkey',at:1000000000000,price:300000000000,lv:25000,zh:'城市金钥匙',en:'Golden key to the city'}
 ];
 export const getLux=id=>LUXURY.find(x=>x.id===id);
-function luxOffer(s,rng){const v=st(s),L=liquid(s);const list=LUXURY.filter(x=>L>=x.at&&!v.luxSeen.includes(x.id));if(!list.length)return null;const x=list[list.length-1-Math.floor(rng()*Math.min(2,list.length))];v.luxSeen.push(x.id);return {id:uid(),type:'v9-lux',lux:x.id,settled:false,city:s.life.city,rarity:'legendary'};}
+export const lvOpen=s=>{const v=st(s);if(liquidTier(s)>=4)v.lvOpen=true;return !!v.lvOpen;};
+export const luxPrice=(s,x)=>Math.min(CAP,x.price*2**Math.min(20,(st(s).lux||[]).length));
+function luxOffer(s,rng){const v=st(s),L=liquid(s);if(!lvOpen(s))return null;const list=LUXURY.filter(x=>L>=x.at&&!v.luxSeen.includes(x.id));if(!list.length)return null;const x=list[list.length-1-Math.floor(rng()*Math.min(2,list.length))];v.luxSeen.push(x.id);return {id:uid(),type:'v9-lux',lux:x.id,settled:false,city:s.life.city,rarity:'legendary'};}
 export const luxLV=(s,x)=>Math.round(x.lv*(origin(s)==='heir'?1.25:1));
-export function buyLux(s){const o=s.offer,x=getLux(o.lux),v=st(s);if(o.type!=='v9-lux'||o.settled||!x)throw Error('no lux');if(s.cash<=x.price)throw Error('cash');s.cash-=x.price;v.lux.push(x.id);o.settled=true;o.bought=true;return luxLV(s,x);}
+export function buyLux(s){const o=s.offer,x=getLux(o.lux),v=st(s);if(o.type!=='v9-lux'||o.settled||!x)throw Error('no lux');const pr=luxPrice(s,x);if(s.cash<=pr)throw Error('cash');s.cash-=pr;v.lux.push(x.id);o.settled=true;o.bought=true;return luxLV(s,x);}
 
 /* ---------- LV points ---------- */
 export function runLV(s,getAsset){const v=st(s);let lv=v.lux.reduce((n,id)=>{const x=getLux(id);return n+(x?luxLV(s,x):0);},0);
@@ -157,12 +175,12 @@ export const SKINS=[{id:'default',lv:0,color:null,zh:'素色',en:'Plain'},{id:'m
 /* ---------- generic choice resolution (partner deals, place options) ---------- */
 export function quoteOpt(s,opt){const stake=opt.stakePct?Math.max(1,Math.floor(s.cash*opt.stakePct)):0;let p=opt.p||0,up=opt.up||1;const m=mood(s).m;
  if(opt.moodBet)p=clamp(50+opt.moodBet*m*6,8,92);if(opt.casino&&origin(s)==='gambler')up+=.3;
- const cost=opt.price?Math.min(CAP,opt.price*(opt.hosp?2**Math.min(20,st(s).hospUses||0):1)):(opt.costPct?Math.max(opt.min||0,Math.floor(s.cash*opt.costPct)):0)*(!opt.hosp&&(opt.riskCut||opt.energy)?2**Math.min(20,st(s).famBuys?.[opt.riskCut?'risk':'energy']||0):1);
+ const cost=opt.price?Math.min(CAP,Math.max(opt.price,Math.floor(s.cash*(opt.hospPct||0)))*(opt.hosp?2**Math.min(20,st(s).hospUses||0):1)):Math.min(CAP,(opt.costPct?Math.max(opt.min||0,Math.floor(s.cash*opt.costPct)):0)*(!opt.hosp&&(opt.riskCut||opt.energy||opt.heal)?(opt.riskCut||opt.heal?3:2)**Math.min(18,st(s).famBuys?.[opt.riskCut||opt.heal?'risk':'energy']||0):1));
  return {stake,p:Math.round(p),up:+up.toFixed(2),win:Math.floor(stake*up)-stake,cost,gain:opt.gain||(opt.gainPct?Math.max(opt.gainMin||0,Math.floor(s.cash*opt.gainPct)):opt.loanPct?Math.floor(s.cash*opt.loanPct):0),healP:opt.healP||0,riskP:opt.riskP||0};}
 export function resolveOpt(s,opt,rng=Math.random){const q=quoteOpt(s,opt),v=st(s),e=s.estate,out={won:true,delta:0,heal:0,hurt:0,energy:0,lv:0};
- if(q.cost){if(s.cash<=q.cost)throw Error('cash');s.cash-=q.cost;out.delta-=q.cost;if(opt.hosp)v.hospUses=(v.hospUses||0)+1;else if(opt.riskCut||opt.energy){v.famBuys=v.famBuys||{};const f=opt.riskCut?'risk':'energy';v.famBuys[f]=(v.famBuys[f]||0)+1;}}
+ if(q.cost){if(s.cash<=q.cost)throw Error('cash');s.cash-=q.cost;out.delta-=q.cost;if(opt.hosp)v.hospUses=(v.hospUses||0)+1;else if(opt.riskCut||opt.energy||opt.heal){v.famBuys=v.famBuys||{};const f=opt.riskCut||opt.heal?'risk':'energy';v.famBuys[f]=(v.famBuys[f]||0)+1;}}
  if(opt.heal){if(e.health>=e.maxHealth)throw Error('full');const roll=rng()*100;out.roll=roll;out.healP=opt.healP??100;if(roll<(opt.healP??100)){e.health=Math.min(e.maxHealth,e.health+1);v.heals++;out.heal=1;}else out.healFail=1;}
- if(opt.riskCut){const ok=!opt.riskP||rng()*100<opt.riskP;out.riskCut=ok?opt.riskCut:0;out.riskFail=!ok;if(ok)e.riskReduction=(e.riskReduction||0)+opt.riskCut;}
+ if(opt.riskCut){const ok=!opt.riskP||rng()*100<opt.riskP;out.riskCut=ok?opt.riskCut:0;out.riskFail=!ok;if(ok)e.riskReduction=Math.round(((e.riskReduction||0)+opt.riskCut)*100)/100;}
  if(opt.energy){s.life.energy=Math.min(s.life.energyCap,s.life.energy+opt.energy);out.energy=opt.energy;}
  if(opt.intel)v.intel=opt.intel;
  if(opt.gainPct||opt.gain){s.cash+=q.gain;out.delta+=q.gain;if(rng()*100<opt.risk){e.health=Math.max(0,e.health-1);out.hurt=1;}}
@@ -191,7 +209,7 @@ export function draw(s,rng=Math.random){const v=st(s),L=liquid(s);
  if((card==='project'||card==='elite')&&L<PROJECT_UNLOCK)card='work';
  if(card==='work')return {offer:workOffer(s,rng)};
  if(ZONES[card]?.place)return {offer:placeOffer(s,card,rng)};
- if(card==='partner'){const cand=PARTNERS.filter(p=>L>=p.at&&!v.partners[p.id]);if(cand.length){const p=cand[Math.floor(rng()*cand.length)];return {offer:{id:uid(),type:'v9-partner',partner:p.id,fee:partnerFee(s),settled:false,city:s.life.city,rarity:'epic'}};}card='project';}
+ if(card==='partner'){const cand=PARTNERS.filter(p=>L>=p.at&&!v.partners[p.id]);if(cand.length){const p=cand[Math.floor(rng()*cand.length)];return {offer:{id:uid(),type:'v9-partner',partner:p.id,fee:partnerFee(s,p),settled:false,city:s.life.city,rarity:'epic'}};}card='project';}
  if(card==='luxury'){const o=luxOffer(s,rng);if(o)return {offer:o};card='project';}
  if(card==='shop'&&HOOKS.shop)return {offer:HOOKS.shop(s,rng)};
  if(card==='ad'){if(HOOKS.ad&&HOOKS.adsOK?.())return {offer:HOOKS.ad(s,rng)};card=L>=PROJECT_UNLOCK?'project':'work';}

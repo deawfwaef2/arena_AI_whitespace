@@ -447,7 +447,7 @@ document.addEventListener('click',async e=>{
  case 'exit-visit':visit=null;world.setOffer(run.offer);renderHud();renderDock();pause();break;
  case 'bid-auction':bidAuction();break;
  case 'pass-auction':passAuction();break;
- case 'clinic-buy':{try{buyMedical(run,v);save();effects.tone('buy');renderDock();toast('购买疗程成功，健康已恢复！');}catch(err){toast(err.message);}break;}
+ case 'clinic-buy':{try{const r=buyMedical(run,v);save();effects.tone('buy');renderDock();toast(r.ok?'疗程成功！':'疗程没有效果，费用已扣除。');}catch(err){toast(err.message);}break;}
  case 'set-theme':meta.theme=v;preferences();save();showSettings();break;
  case 'scale-preset':meta.scale=Number(v);preferences();fitDock();world.resize();save();showSettings();break;
  case 'submit-score':submitScore();break;
