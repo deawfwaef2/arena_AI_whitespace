@@ -311,3 +311,16 @@ Standing constraints unchanged (see top). Work clone in /tmp/repo (NOT /home/use
 - ✅ 110 promo trailers: `promo-1920x1080.mp4`, `promo-1080x1920.mp4` (15 s, 30 fps, music from assets/music/class5.mp3). Regenerate: start http.server 8080 → `LOW=1 node qa/promo-capture.mjs` (frames to /tmp/promo; also copy v-poor.png/v-rich.png = assets/art/cg-*.webp source) → `pip install imageio-ffmpeg` → `python3 tools/promo-video.py h v`.
 - ✅ R9 item 95: intro CG replaced by 3D chibi-figure art (assets/art/cg-poor.webp / cg-rich.webp); money panel moved left so it doesn't cover the hero (intro.css tail).
 - Note: Playwright at 1600x900 with low:false times out in swiftshader; use 1280x720 @1.5 DPR and low graphics for capture.
+
+---
+# 第十一轮用户反馈 / Round 11 feedback (2026-09-24, append-only; items 112–120)
+Standing constraints unchanged. Work clone in /tmp/repo. Checkpoint → commit → push after each small group.
+- [ ] 112 Mobile UI still wrong. User's reference screenshot (desktop-style layout at ~1327×719: big money card top-left, status strip top-centre, next-threshold card top-right, event panel bottom-right, Rest/Settings bottom-left) = the proportions they want on phones.
+- [ ] 113 Bottom-left UI group: add a 【Restart / 重新开始】 button at the far LEFT.
+- [ ] 114 CrazyGames ads: rewarded ad in a prominent rest-phase spot (skip rest) — keep; roadside ad locations blended into the world — keep/improve.
+- [ ] 115 Display Ads (static banners, CrazyGames SDK banner) inside special street events such as a "walk / stroll" event (billboards, banner-walk) — immersive.
+- [ ] 116 Interstitial (midgame) ads on some other event types.
+- [ ] 117 Story-driven ad nodes: e.g. "street promoters ambush you" — you can PAY in-game money to skip the ad node; masterful immersion.
+- [ ] 118 User DISLIKES the R10 3D-chibi CG → restore the ORIGINAL cg-poor/cg-rich art.
+- [ ] 119 User DISLIKES the R10 fast-cut trailers → want REAL gameplay screen recording, sped up, keeping the thrills, smooth (crossfades, no abrupt jumps).
+- Preference noted: user prefers the original painterly CG art; avoid replacing established art without asking.
