@@ -23,3 +23,9 @@ html[data-vscale="phone"] .v9-pop.story2 .v9-s-stage{min-height:0!important;padd
 html[data-vscale="phone"] .v9-pop.story2 .v9-s-mood{height:100px!important;min-height:0!important;flex:none!important}html[data-vscale="phone"] .v9-pop.story2 .v9-s-mood img{max-height:44px!important}html[data-vscale="phone"] .v9-pop.story2 .v9-beat{padding-top:6px!important;padding-bottom:6px!important}
 html[data-vscale="phone"] .v9-pop.story2 .v9-s-tile{min-height:0!important;padding:10px!important}
 html[data-vscale="phone"] .v9-pop.story2 .v9-s-tiles{padding-top:8px!important;padding-bottom:10px!important}
+
+/* R17 ghost-window fix: no transparent entry/exit state on the modal owner.
+   Keep this after all historical layers. Content/ceremony child effects remain. */
+html body #app #modal,html body #app #modal-card{opacity:1!important;visibility:visible!important;animation:none!important;transition:none!important}
+html body #app #modal[hidden]{display:none!important;pointer-events:none!important}
+.v7-handle{touch-action:none;user-select:none}

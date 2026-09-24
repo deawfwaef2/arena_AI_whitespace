@@ -1,5 +1,6 @@
 import {ProsperityUI} from './prosperity.js';
 import {V7} from './v7.js';
+import {resetWindowPosition} from './window-drag.js';
 import {V9} from './v9.js';
 import {V12} from './v12.js';
 import {finalLV,liquidTier,liquid,SKINS} from './v9-core.js';
@@ -243,20 +244,39 @@ function buyAsset(){if(busy||modalType||!validAction()||run.offer.type!=='asset'
 function buyOutfit(id){if(busy||!validAction())return;if(!run.outfits.includes(id)&&!lifeUI.beforeNext())return;const o=getOutfit(id);const apply=()=>{try{purchaseOutfit(run,id);save();refreshStyle();renderHud();renderDock();effects.tone('buy');if(run.ended){forceClose();showGameOver();}else if(modalType==='wardrobe')showWardrobe();else sceneMessage(L('NEW LOOK. SAME ODDS.','新外观，不改胜率。'));}catch{toast(L('Buy new outfits only at a roadside shop.','新服装只能在路边遇到的商店购买。'));}};if(!run.outfits.includes(id)&&run.cash===o.price*100)confirmDialog(L('Spend your last dollar?','要花光最后的现金吗？'),L('Zero cash means bankruptcy and all outfits are cleared.','现金归零就会破产，所有服装也会清空。'),apply);else apply();}
 function startChallenge(){if(busy||modalType||!validAction()||!lifeUI.beforeNext())return;try{acceptChallenge(run);save();renderHud();renderDock();effects.tone('rare');sceneMessage(L('CLOCK IS TICKING. LET’S GO!','倒计时开始，出发！'));musicMode();}catch{toast(L('Finish the active challenge before accepting another.','请先完成当前挑战，再接受新挑战。'));}}
 
-let modalSerial=0,modalClosing=false,modalCloseTimer=null;
+// One synchronous owner for modal visibility. Never leave an opacity:0 overlay
+// waiting for a compositor animation or an old close timeout.
+let modalSerial=0;
+function resetModalCard(){
+ const card=$('modal-card');
+ document.dispatchEvent(new Event('upshift-modal-reset'));
+ card.getAnimations().forEach(a=>a.cancel());
+ resetWindowPosition(card);
+ card.style.removeProperty('opacity');card.style.removeProperty('visibility');
+ card.scrollTop=0;return card;
+}
 function openModal(type,title,subtitle,body,{wide=false,noClose=false,custom=false}={}){
- if(busy)return;clearTimeout(modalCloseTimer);modalClosing=false;modalSerial++;$('modal').dataset.kind=type;clock();if(!modalType)returnFocus=document.activeElement;modalType=type;$('modal').hidden=false;$('game').inert=true;
- const card=$('modal-card');card.className='modal-card'+(type==='gameover'?' dead-card':'');card.style.maxWidth=wide?'870px':'';
+ if(busy)return;const serial=++modalSerial;const card=resetModalCard();$('modal').dataset.kind=type;clock();if(!modalType)returnFocus=document.activeElement;modalType=type;confirmCallback=null;$('modal').hidden=false;$('game').inert=true;
+ card.className='modal-card'+(type==='gameover'?' dead-card':'');card.style.maxWidth=wide?'870px':'';
  if(type==='menu')body+=`<div class="onboard-menu-actions"><button class="small-button" data-action="onboard-tour">重看快速教程</button><button class="small-button" data-action="onboard-home">返回开始界面</button></div>`;if(type==='developer')body+=`<div class="life-dev-tools"><button class="small-button" data-action="life-dev-rest">测试：进入假期</button><button class="small-button" data-action="life-dev-ready">测试：完成计时</button><button class="small-button" data-action="life-dev-goods">测试：获得全部机制商品</button></div>`;
  card.innerHTML=custom?body:`<div class="modal-head"><div><span class="modal-eyebrow">${L('Broke to Billionaire · PAUSED','Broke to Billionaire · 已暂停')}</span><h2 id="modal-title">${safe(title)}</h2><p>${safe(subtitle)}</p></div>${noClose?'':`<button class="modal-close" data-action="close" aria-label="${L('Close','关闭')}">${icon('close')}</button>`}</div>${body}`;
  if(type==='rules'&&run.offer.type==='project'){const o=run.offer;card.querySelector('.modal-head')?.insertAdjacentHTML('afterend',`<div class="panel-notice">项目下限 ${money(o.minStake||1)}；${o.maxStake>=MAX_CENTS?'不设玩法上限（系统上限 9 万亿美元）':'上限 '+money(o.maxStake||50000)}。${o.stages?'必须连续通过两轮审核：'+o.stages.join('% × ')+'%，综合 '+o.p+'%。':''}${o.delay?'投入后锁定 20 秒，刷新不会重抽结果。':''}</div>`);}
- card.getAnimations().forEach(a=>a.cancel());if(meta.motion)card.animate([{opacity:0,transform:type==='milestone-celebrate'?'translateY(50px) scale(.78)':'translateY(25px) scale(.97)'},{opacity:1,transform:'translateY(0) scale(1)'}],{duration:type==='milestone-celebrate'?850:400,easing:'cubic-bezier(.18,.85,.25,1)',fill:'backwards'});pause();requestAnimationFrame(()=>card.querySelector('button:not(:disabled),input,select')?.focus());
+ // Content is visible from the first frame, even if animation scheduling stalls.
+ if(meta.motion)card.animate([{transform:'translateY(12px)'},{transform:'translateY(0)'}],{duration:220,easing:'ease-out'});
+ pause();requestAnimationFrame(()=>{if(serial===modalSerial&&modalType)card.querySelector('button:not(:disabled),input,select')?.focus({preventScroll:true});});
 }
 // Ceremony dialogs must be dismissed with their own button, never by a stray tap on the backdrop or Escape.
 const CASUAL_MODALS=new Set(['atlas','factions','legacy','life-guide','life-status','mechanisms','mechanisms-blueprint','medals-showcase','regions','decorations-modal','theme-picker','ui-settings','street-manager','street-panorama','v9-lvboard','rules','music','history','challenge-details','life-menu','life-atlas','life-wardrobe','menu','settings','leaderboard','developer','v9-lv','atlas','map','records','help','collection','wardrobe','ledger','status']);
 const DELIBERATE_ONLY=new Set(['milestone-celebrate','auction-win','challenge-result','rank-ceremony','v9-reclaim','v9-story']);
-function nudgeModal(){const card=$('modal-card');card.classList.remove('modal-shake');void card.offsetWidth;if(meta.motion)card.classList.add('modal-shake');const cta=card.querySelector('.unlock-continue,.primary');if(cta&&!card.querySelector('.modal-locked-hint'))cta.insertAdjacentHTML('afterend','<p class="modal-locked-hint">请点上面的按钮确认，这一页不会被误触关掉。</p>');cta?.focus?.();}
-function closeModal(force=false){if(adPlaying&&!force)return;if(!modalType&&!force)return;if((modalType==='gameover'||modalType==='world-event'||modalType==='legacy'&&!started)&&!force)return;const serial=modalSerial;const finish=()=>{if(serial!==modalSerial)return;modalClosing=false;modalType=null;confirmCallback=null;$('modal').hidden=true;$('game').inert=!started;pause();returnFocus?.focus?.();};if(force||!meta.motion){clearTimeout(modalCloseTimer);finish();return;}if(modalClosing)return;modalClosing=true;$('modal-card').animate([{opacity:1,transform:'translateY(0) scale(1)'},{opacity:0,transform:'translateY(30px) scale(.95)'}],{duration:320,easing:'ease-in',fill:'forwards'});modalCloseTimer=setTimeout(finish,330);}
+function nudgeModal(){if(!modalType)return;const card=$('modal-card');card.classList.remove('modal-shake');void card.offsetWidth;if(meta.motion)card.classList.add('modal-shake');const cta=card.querySelector('.unlock-continue,.primary');if(cta&&!card.querySelector('.modal-locked-hint'))cta.insertAdjacentHTML('afterend','<p class="modal-locked-hint">请点上面的按钮确认，这一页不会被误触关掉。</p>');cta?.focus?.();}
+function closeModal(force=false){
+ if(adPlaying&&!force)return;if(!modalType)return;
+ if((modalType==='gameover'||modalType==='world-event'||modalType==='legacy'&&!started)&&!force)return;
+ ++modalSerial;$('modal').hidden=true;modalType=null;confirmCallback=null;
+ resetModalCard();delete $('modal').dataset.kind;$('game').inert=!started;pause();
+ if(returnFocus?.isConnected&&!returnFocus.closest('[hidden],[inert]'))returnFocus.focus({preventScroll:true});
+ returnFocus=null;
+}
 
 const forceClose=()=>closeModal(true);
 function confirmDialog(title,message,callback){openModal('confirm',title,message,`<div class="button-row"><button class="small-button" data-action="close">${L('CANCEL','取消')}</button><button class="small-button danger" data-action="confirm">${L('YES, CONTINUE','确认继续')}</button></div>`);confirmCallback=callback;}
@@ -523,7 +543,8 @@ $('game').addEventListener('pointermove',e=>{if(!swipe||e.pointerId!==swipe.id)r
 $('game').addEventListener('pointerup',e=>{if(!swipe||e.pointerId!==swipe.id)return;const s=swipe;swipe=null;world.setDrag(0);if(s.dx>52||(s.dx>24&&s.dx/(performance.now()-s.start)>.5))nextOffer();});
 $('game').addEventListener('pointercancel',()=>{swipe=null;world.setDrag(0);});
 $('swipe-surface').addEventListener('wheel',e=>{if(e.ctrlKey||modalType||busy)return;if(e.deltaX>25||e.deltaY>40){e.preventDefault();if(performance.now()-lastWheel>800){lastWheel=performance.now();nextOffer();}}},{passive:false});
-$('modal').addEventListener('click',e=>{if(e.target!==$('modal'))return;if(!CASUAL_MODALS.has(modalType)){nudgeModal();return;}closeModal();});
+// A click/drag ending on the backdrop must never dismiss a live dialog.
+$('modal').addEventListener('click',e=>{if(e.target===$('modal'))e.stopPropagation();});
 document.addEventListener('keydown',e=>{
  if(adPlaying||!started)return;
  if(!e.ctrlKey&&!e.metaKey&&!e.altKey){music.unlock();effects.unlock();}

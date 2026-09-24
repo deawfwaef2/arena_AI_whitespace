@@ -434,3 +434,13 @@ Standing constraints unchanged (commit+push per small step, root index.html alwa
 - Portal packages: `tools/make-platform-zips.py` → GitHub Release `portals-r16` (ZIPs not committed, ~31 MB each). Submission copy + images: `PORTALS-SUBMISSION.md`, `store-kit/`. Build: `node build.mjs --production --target=<t> [--gameid=<id>]`.
 - [x] 161 (R16c) BUG: rest phase had cheap paid ways to end the rest instantly → REMOVED both: the dock "立即恢复 / Instant recovery · $X" button (instant rest activity; core now rejects instant activities) and the mini-game window "包场跳过 / Book it out · 30% cash". Only the ad skip (platform rewarded ad), mini-games and normal time-reducing activities remain. Do NOT re-add paid instant rest skips.
 - [x] 162 (R16d) Correction: user wants "包场跳过 · 30% 现金 / Book it out" KEPT (restored). Only the dock "立即恢复 / Instant recovery" stays removed.
+
+# R17 / 2026-09-25 — 紧急「幽灵窗口」修复（追加，不覆盖旧交接）
+- 本轮用户只要求：修复点击/游玩时窗口消失、幽灵遮罩，并交付 CrazyGames ZIP；不改经济数值，不删存档。
+- 实测旧版：打开菜单后 modal.hidden=false，但 card opacity=0，WAAPI 入场动画 currentTime=0/startTime=null 持续数秒；标题拖动约 5px 后卡片横跳约 165 虚拟像素并出屏。
+- 阶段 A：弹窗开关同步执行，不再靠退场计时器/透明动画收尾；根弹窗始终不透明；关闭清理动画、拖动状态、inert 和焦点。遮罩不再点击即关；普通窗口 Esc 和明确关闭按钮保留。
+- 拖动统一在 src/window-drag.js：6px 阈值；相对 flex 弹窗切换绝对定位后以实际矩形校准；整个窗口限制在视口；pointercancel/lost capture/blur/隐藏时释放；resize 重置。vscale-boot 已虚拟化坐标，禁止再除以 __vscale。
+- 不要在 decorateModal 的每次 DOM 更新中 resetPos；提示/资源载入不是打开新窗口。重置归 openModal 所有。
+- 本沙箱 workspace /home/user/game，保持 <128MB；大型 git 元数据、浏览器、依赖、构建临时目录在 /tmp（不持久）。本地 sparse checkout 排除视频、旧 QA 图片、启动器二进制、store-kit，**不是从 GitHub 删除**。重建会话从 GitHub 恢复这些文件及 git 元数据。
+- 包必须分阶段更新：npm run checkpoint → CRAZYGAMES_TMPDIR=/tmp python3 tools/make-crazygames-zip.py → commit/push；ZIP 验证后才原子替换。预留旧+新 ZIP 空间。
+- 阶段 A 测试：56/56 规则测试通过；真实 Chromium 复现并确认修复后菜单 opacity=1。完整浏览器压力回归仍在后续阶段进行，不能提前声称全通过。

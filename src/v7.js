@@ -1,3 +1,4 @@
+import {bindWindowDrag,resetWindowPosition} from './window-drag.js';
 // v7 layer: wealth-tiered in-world HUD, mechanism icon bars, seasons/weather,
 // shaped city panorama, vertical unlock rail, draggable windows, delayed projects, rest mini-games.
 // Everything reads the live run through ctx; money stays in integer cents.
@@ -248,12 +249,8 @@ export class V7{
   document.addEventListener('click',e=>{const el=e.target.closest?.('.v7-mech.k-hover');if(el){show(el);setTimeout(()=>{tip.hidden=true;},2600);}});}
 
  /* ---------- draggable windows (dock windows, modals, delayed contracts, games) ---------- */
- bindDrag(){
-  document.addEventListener('pointerdown',e=>{const h=e.target.closest?.('.v7-handle');if(!h||e.target.closest('button,input,select'))return;const win=h.closest('.v7-draggable');if(!win)return;const r=win.getBoundingClientRect();this.drag={win,id:e.pointerId,dx:e.clientX-r.left,dy:e.clientY-r.top};win.classList.add('dragging');try{h.setPointerCapture(e.pointerId)}catch{};e.preventDefault();e.stopPropagation();},true);
-  document.addEventListener('pointermove',e=>{const d=this.drag;if(!d||e.pointerId!==d.id)return;const w=d.win,host=w.offsetParent?.getBoundingClientRect()||{left:0,top:0};const x=clamp(e.clientX-d.dx,4-w.offsetWidth+80,innerWidth-80),y=clamp(e.clientY-d.dy,4,innerHeight-50);for(const [k,val] of [['left',x-host.left+'px'],['top',y-host.top+'px'],['right','auto'],['bottom','auto'],['translate','none'],['transform','none'],['margin','0']])w.style.setProperty(k,val,'important');w.dataset.moved='1';});
-  const end=e=>{if(this.drag&&e.pointerId===this.drag.id){this.drag.win.classList.remove('dragging');this.drag=null;}};document.addEventListener('pointerup',end);document.addEventListener('pointercancel',end);
- }
- resetPos(el){for(const k of ['left','top','right','bottom','translate','transform','margin'])el.style.removeProperty(k);delete el.dataset.moved;}
+ bindDrag(){bindWindowDrag();}
+ resetPos(el){resetWindowPosition(el);}
  decorateDock(){
   const d=$('game-dock'),s=this.s;if(!d||!s)return;const kind=s.life.rest?'rest':d.dataset.kind||'';const isWindow=!['project','special','asset','shop','challenge','auction','clinic',''].includes(kind);
   if(kind!==this.dockKind){this.resetPos(d);this.dockKind=kind;}
@@ -263,7 +260,7 @@ export class V7{
   if(!d.querySelector(':scope>.v8-deal'))d.classList.remove('v8-wide');
   if(!isWindow)this.enhanceDeal(d);
  }
- decorateModal(){const card=$('modal-card');if(!card)return;this.resetPos(card);card.classList.add('v7-draggable');const head=card.querySelector('.modal-head');if(head&&!head.classList.contains('v7-handle'))head.classList.add('v7-handle');else if(!head&&!card.querySelector(':scope>.v7-handle'))card.insertAdjacentHTML('afterbegin','<div class="v7-handle v7-handle-thin"><em>拖动移动 ⠿</em></div>');}
+ decorateModal(){const card=$('modal-card');if(!card)return;card.classList.add('v7-draggable');const head=card.querySelector('.modal-head');if(head&&!head.classList.contains('v7-handle'))head.classList.add('v7-handle');else if(!head&&!card.querySelector(':scope>.v7-handle'))card.insertAdjacentHTML('afterbegin','<div class="v7-handle v7-handle-thin"><em>拖动移动 ⠿</em></div>');}
 
  /* ---------- deal window: horizontal card, knob stake dial, round invest button, asset progress ---------- */
  delayOf(o){return o?.type==='project'&&o.v7delay?o.v7delay:null;}
