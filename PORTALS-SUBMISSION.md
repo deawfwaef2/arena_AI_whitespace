@@ -69,3 +69,22 @@ Features:
 - Saves to localStorage
 - Languages: EN and ZH
 - Size: about 31 MB, mostly music, which streams after the first screen
+
+---
+## Submission status and steps (R16)
+Developer details for every form:
+- **Name:** Eric Smith
+- **Studio:** Deawfwaef Games
+- **Country:** China
+- **Email:** 3298336285@qq.com
+- **Website:** https://deawfwaef2.github.io/arena_AI_whitespace/
+
+| Portal | Status | What the user does |
+|---|---|---|
+| Poki | **Access request SUBMITTED 2026-09-25** (form at developers.poki.com/guide/share; answered: Indie Studio, Web, "Releasing new titles, Using our developer tools") | Wait for Poki's email in the QQ inbox (usually a few days). Once access is granted, upload `broke-to-billionaire-poki.zip` in the Poki for Developers dashboard |
+| GameDistribution | Form filled automatically, but it stopped at a Google image CAPTCHA, which must be solved by a human | Register at https://gamedistribution.com/developers/partnership/ → confirm the QQ email → **Add Game** → copy the **Game ID** → send it to the assistant, who rebuilds the ZIP with it → upload the ZIP plus images from `store-kit/` and the text above |
+| GameMonetize | Needs an account (CAPTCHA and email verification) | Sign up on gamemonetize.com as a developer → **Upload game** → copy the **Game ID** → send it to the assistant for a rebuild → upload |
+| GamePix | Needs an account | https://partners.gamepix.com/ → Developers → join → submit `broke-to-billionaire-gamepix.zip` |
+| itch.io | Needs an account (CAPTCHA) | https://itch.io/register → https://itch.io/game/new → Kind of project: HTML → upload `broke-to-billionaire-itch.zip` → tick "played in the browser" → viewport 1280×720 → Mobile friendly (landscape) → pricing "No payments" or "Donate" |
+| Newgrounds | Needs an account (CAPTCHA) | https://www.newgrounds.com/passport/signup → Upload → Game (HTML5) → `broke-to-billionaire-newgrounds.zip` |
+| Y8 | Needs an account | y8.com → sign in → Upload → `broke-to-billionaire-y8.zip` |
