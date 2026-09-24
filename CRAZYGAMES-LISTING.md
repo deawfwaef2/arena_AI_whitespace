@@ -31,7 +31,7 @@ Can you turn $100 into a dynasty before time runs out?
 
 ## Controls
 - **Mouse / Touch:** tap cards and buttons to choose, drag the stake slider, tap INVEST
-- **Space / Enter:** confirm or continue
+- **Enter / Space / →:** confirm or continue
 - **Esc:** menu / pause
 - Walk forward with the big ➜ / NEXT button; tap people and places on the street to interact
 
