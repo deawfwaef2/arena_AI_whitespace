@@ -346,3 +346,13 @@ Standing constraints unchanged. Work clone in /tmp/repo. Checkpoint → commit �
 - [ ] 131 First-run main menu redesign: bigger START button in a prominent spot, menu centred, background uses the user's image (uploads/image-1.jpeg → assets/art/menu-bg.webp), animated background text / motion.
 - [ ] 132 After first completed run (≥3 runs per 129?) → switch back to the current main menu. (User: first-contact menu until they have finished; afterwards the current one. Implemented: new menu while completedRuns < 3, old menu after; consistent with 129.)
 - Carry-over: 119 gameplay-recording trailer unfinished (qa/capture-frames.mjs + tools/gameplay-trailer.py; swiftshader capture is ~2–7 s/frame).
+
+## Round 12 — user RE-SENT a refined version (this supersedes 127–132 above)
+- 123b: NO language picker at start. Default English. Chinese only in Settings.
+- 126b: opening guide = point at the bottom-right button (event panel action) — "tap here".
+- 127b Runs 0–2 opening: FAST, no Deawfwaef logo; a smooth LOADING-BAR feel that simulates poor → rich stages with immersive text + UI changes per stage; the TOP few classes shown as mystery (no spoilers). Then the NEW main menu.
+- 131b NEW main menu (runs 0–6): big START button in a prominent place, menu centred, background = user's image (assets/art/menu-bg.webp from uploads/image-1.jpeg), animated background text / motion. Animated notice: runs 0–2 "Complete 3 runs to unlock a new opening animation!"; runs 3–6 "Complete 7 runs to unlock a new main menu and opening!".
+- 128b Runs 3–6 opening: black screen "Tap to start" (gentle tap hint) → tap → one story image → then main menu. No logo.
+- 132b Runs ≥7: the ORIGINAL cinematic (with Deawfwaef Games logo) + ORIGINAL main menu (do not delete them). Bigger Skip button.
+- 133 Every main menu variant has a static display-ad slot somewhere unobtrusive.
+- 134 Be creative; never annoy the player; pull them into playing.
