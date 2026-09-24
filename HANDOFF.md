@@ -300,3 +300,11 @@ Standing constraints unchanged (see top). Work clone in /tmp/repo (NOT /home/use
 - [ ] 110 Two 15 s fast-cut promo videos in repo root: 1920x1080 and 1080x1920, with effects, showing mechanics/thrills.
 - [ ] 111 CrazyGames submission texts (English): title, short/long description, controls, tags, category etc. → CRAZYGAMES-LISTING.md.
 - Note: don't commit large video files over ~20 MB; keep workspace under 128 MB.
+
+## Round 10 progress log (2026-09-24)
+- ✅ 105/108 shop decline goods: kiosk Multivitamins −0.05% (then ×0.75 effect, ×3 price per buy, price also scales 4% of cash); Executive screen −0.6%; `riskReduction` now supports decimals (rounded to 0.01), `healthRisk` returns 2-decimal %.
+- ✅ 106 hospital: price = max(base, cash×hospPct) × 2^visits; heal odds 20/45/70/90%; check-up 60% for −0.3%; old estate medicalOptions now probabilistic (55/45/60%) and 3× pricier; failure still bills. Tests in qa/r10.test.mjs.
+- ✅ 107 LV: `lvOpen(s)` (sticky once liquidTier≥4 Magnate). LV shop goods and luxury offers hidden before it; LV goods ×2 per LV purchase (`v9.lvBuys`), luxuries ×2 per owned luxury (`luxPrice`).
+- ✅ 109 new partners in v9-core PARTNERS: herbalist ($300), coach ($3k), monk ($50k), biotech ($1M) + doctor portrait (p-doctor.webp was missing). Heal/riskCut partner deals share the 'risk' family ×3 escalation. Partner result screen shows health outcome. partnerFee now scales with partner threshold.
+- ✅ 111 CRAZYGAMES-LISTING.md.
+- Visual check: qa/r10shot.mjs → qa/r10-*.png (kiosk, dept, hosp, herbal, coachdeal, biotech) checked by eye, no page errors.
