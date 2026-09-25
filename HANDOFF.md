@@ -454,3 +454,12 @@ Standing constraints unchanged (commit+push per small step, root index.html alwa
 - 证据和局限：R17-TEST-REPORT.md、qa/r17-evidence；源码 qa/r17-windows.mjs。未做实体 Safari 或 CrazyGames 后台真实广告/审核，不应称已上线 CrazyGames。
 - 本沙箱 /tmp 是内存型空间；安装 Playwright 时保留 headless shell 即可，另一个完整 Chromium 占约 393MB，曾导致 2GB 环境 WebGL context loss / screenshot timeout。清理未使用浏览器后重新验证通过。该环境问题不应伪记为游戏测试通过。
 - 工具依赖和 .git 元数据不会跨本平台快照保留；源码/可玩包在 /home/user/game，GitHub main 已阶段推送。后续先读本交接，再重新获取 Git 元数据，禁止把 sparse checkout 排除的视频/旧图误提交为删除。
+
+## R18 (2026-09-25) — "广撒网赚钱" distribution
+- NEW build target `playgama` (Playgama Bridge v2, CDN `bridge.playgama.com/v2/stable`): ads interstitial/rewarded via state events (reward only on `rewarded`), `game_ready` on platform.ready(), host AUDIO/PAUSE events → mute/pause, saves go through `bridge.storage` (cache prefetched at init, debounced set, flush on hide). Offline/unsupported → falls back to plain localStorage, game still playable.
+- `playgama-bridge-config.json` (root, copied into playgama ZIP): interstitial min gap 90 s, initial delay 60 s, placements `break`/`reward`, GD gameId.
+- Smoke test: `qa/playgama-bridge-smoke.mjs` (serve unzipped ZIP on :8123). Verified: bridge init (mock platform), no page errors, save persists across reload.
+- Fixed Chinese text on EN tap-to-start gate (src/sound.js).
+- Release **portals-r18** has all 9 ZIPs (playgama, poki, gamedistribution, gamemonetize, gamepix, itch, newgrounds, y8, html5); GD/GM gameIds verified baked in.
+- Playgama developer account created with 3298336285@qq.com (email verification pending; password given to user in chat only).
+- Plan + status table: MONETIZATION-PLAN.md.
