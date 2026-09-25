@@ -74,7 +74,7 @@ export function audioGate(music,sound,{zh=true,enabled=true}={}){
  if(!enabled)return;
  const tryPlay=music.tryAutoplay();let done=false;
  const show=()=>{if(done||music.unlocked||document.getElementById('r15-gate'))return;const g=document.createElement('div');g.id='r15-gate';g.setAttribute('role','button');g.tabIndex=0;
-  g.innerHTML=`<div class="r15-gate-card"><b>${zh?'点击开始':'Tap to start'}</b><small>${zh?'Tap to start · 开启音乐与音效':'点击开始 · music & sound on'}</small></div>`;
+  g.innerHTML=`<div class="r15-gate-card"><b>${zh?'点击开始':'Tap to start'}</b><small>${zh?'开启音乐与音效':'Music & sound on'}</small></div>`;
   const go=e=>{e.preventDefault();e.stopPropagation();music.unlock();sound.unlock();setTimeout(()=>sound.ui('confirm'),60);g.classList.add('out');setTimeout(()=>g.remove(),380);};
   g.addEventListener('click',go);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')go(e);});document.body.append(g);};
  Promise.race([tryPlay,new Promise(r=>setTimeout(()=>r('pending'),900))]).then(ok=>{done=ok===true||ok==='pending'&&!music.blocked;if(!done)show();});

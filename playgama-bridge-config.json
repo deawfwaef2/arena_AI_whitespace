@@ -1,0 +1,11 @@
+{
+  "advertisement": {
+    "minimumDelayBetweenInterstitial": 90,
+    "initialInterstitialDelay": 60,
+    "interstitial": { "placementFallback": "break", "placements": [ { "id": "break" } ] },
+    "rewarded": { "placementFallback": "reward", "placements": [ { "id": "reward" } ] }
+  },
+  "platforms": {
+    "game_distribution": { "gameId": "ebb28e96834742828fff00280bdf02e0" }
+  }
+}

@@ -37,15 +37,29 @@ function makeAds(target,cfg,adState){
   loaded(){try{window.GamePix?.loaded?.();}catch{}},start(){},stop(){},
   async interstitial(){if(!window.GamePix?.interstitialAd)return false;adState(true);try{await window.GamePix.interstitialAd();return true;}catch{return false;}finally{adState(false);}},
   async rewarded(){if(!window.GamePix?.rewardAd)return false;adState(true);try{const r=await window.GamePix.rewardAd();return !!(r&&r.success);}catch{return false;}finally{adState(false);}}};
+ /* R18: Playgama Bridge v2 — one build for Playgama + the 25 hosts Bridge auto-detects (Yandex, MSN, YouTube Playables, Lagged, Y8, Telegram…). */
+ if(target==='playgama'){let B=null;
+  const watch=(evt,show,okState)=>new Promise(resolve=>{const A=B?.advertisement;if(!A){resolve(false);return;}let opened=false,good=false,done=false,wait=null;
+   const fin=v=>{if(done)return;done=true;clearTimeout(wait);try{A.off?.(evt,h);}catch{}resolve(v);};
+   const arm=ms=>{clearTimeout(wait);wait=setTimeout(()=>fin(false),ms);};
+   const h=st=>{if(st==='loading')arm(12000);else if(st==='opened'){opened=true;clearTimeout(wait);adState(true);}else if(st===okState)good=true;else if(st==='closed')fin(opened&&(okState==='closed'||good));else if(st==='failed')fin(false);};
+   try{A.on(evt,h);arm(2500);show();}catch{fin(false);}});
+  return {canReward:true,preroll:false,
+  async init(){if(!window.bridge)await loadScript('https://bridge.playgama.com/v2/stable/playgama-bridge.js',10000);B=window.bridge;await B.initialize();this.bridge=B;},
+  loaded(){try{B?.platform.sendMessage('game_ready');}catch{}},
+  start(){try{B?.platform.sendMessage('level_resumed');}catch{}},stop(){try{B?.platform.sendMessage('level_paused');}catch{}},
+  interstitial(){if(!B?.advertisement?.isInterstitialSupported)return Promise.resolve(false);return watch(B.EVENT_NAME.INTERSTITIAL_STATE_CHANGED,()=>B.advertisement.showInterstitial('break'),'closed');},
+  rewarded(){if(!B?.advertisement?.isRewardedSupported)return Promise.resolve(false);return watch(B.EVENT_NAME.REWARDED_STATE_CHANGED,()=>B.advertisement.showRewarded('reward'),'rewarded');}};}
  return null;
 }
 export class Platform {
  constructor(config={}){this.config=config;this.sdk=null;this.user=null;this.status='offline';this.error='';this.memory=new Map();this.storageMode='local';this.lastSubmit=0;this.active=false;this.muted=false;this.onSettings=()=>{};this.onAuth=()=>{};this.onAdState=()=>{};try{this.demo=new URLSearchParams(location.search).has('adtest');}catch{this.demo=false;}}
  async init(){
   this.target=TARGET;
-  if(TARGET==='poki'||TARGET==='gamedistribution'||TARGET==='gamemonetize'||TARGET==='gamepix'){
+  if(TARGET==='poki'||TARGET==='gamedistribution'||TARGET==='gamemonetize'||TARGET==='gamepix'||TARGET==='playgama'){
    const ads=makeAds(TARGET,(this.config.platforms||{})[TARGET]||{},v=>this.onAdState(v));this.status='connecting';
    try{await Promise.race([ads.init(),new Promise((_,r)=>setTimeout(()=>r(Error('SDK timeout')),9000))]);this.ads=ads;this.status='connected';}catch(e){this.ads=ads;this.status='unavailable';this.error=e.message;}
+   if(TARGET==='playgama'&&this.status==='connected')await this.bridgeSetup(ads.bridge);
    return;
   }
   if(TARGET!=='web'&&TARGET!=='crazygames')return;
@@ -75,15 +89,29 @@ export class Platform {
    this.locale=sdk.user?.systemInfo?.locale;
   }catch(e){this.status='unavailable';this.error=e.message;this.sdk=null;}
  }
+ // R18: Playgama Bridge — host mute/pause + storage (cloud saves on Yandex/MSN etc.; Bridge forbids direct localStorage).
+ async bridgeSetup(B){this.bridge=B;
+  try{this.muted=B.platform.isAudioEnabled===false;B.platform.on(B.EVENT_NAME.AUDIO_STATE_CHANGED,on=>{this.muted=!on;this.onSettings({muteAudio:!on});});}catch{}
+  try{B.platform.on(B.EVENT_NAME.PAUSE_STATE_CHANGED,p=>{if(!this.rewardBusy)this.onAdState(!!p);});}catch{}
+  try{B.advertisement.on(B.EVENT_NAME.INTERSTITIAL_STATE_CHANGED,st=>{if(!this.rewardBusy&&st==='opened')this.onAdState(true);if(!this.rewardBusy&&(st==='closed'||st==='failed'))this.onAdState(false);});}catch{}
+  try{const keys=['upshift-save-v3','upshift-save-v2'];const d=await Promise.race([B.storage.get(keys),new Promise((_,r)=>setTimeout(()=>r(Error('storage timeout')),6000))]);
+   this.bs=new Map();keys.forEach((k,i)=>{const v=Array.isArray(d)?d[i]:d?.[k];if(v!=null)this.bs.set(k,typeof v==='string'?v:JSON.stringify(v));});
+   this.dirty=new Set();this.storageMode='bridge:'+(B.storage.defaultType||'default');
+   const flush=()=>this.flush();addEventListener('pagehide',flush);document.addEventListener('visibilitychange',()=>{if(document.hidden)flush();});
+  }catch(e){this.bs=null;this.error=e.message;}
+ }
+ flush(){if(!this.bs||!this.dirty?.size)return;const k=[...this.dirty];this.dirty.clear();try{this.bridge.storage.set(k,k.map(x=>this.bs.get(x)));}catch(e){this.error=e.message;}}
  call(name,...args){try{return this.sdk?.game?.[name]?.(...args);}catch(e){this.error=e.message;}}
  ready(){this.call('loadingStop');this.ads?.loaded();}
  play(value){if(value===this.active)return;this.active=value;this.call(value?'gameplayStart':'gameplayStop');if(this.ads){try{value?this.ads.start():this.ads.stop();}catch{}}}
  load(key){
+  if(this.bs){const v=this.bs.get(key);return v==null?null:String(v);}
   try{if(this.sdk)return this.sdk.data.getItem(key);return localStorage.getItem(key);}catch(e){this.storageMode='session';this.error=e.message;return this.memory.get(key)||null;}
  }
- remove(key){this.memory.delete(key);try{if(this.sdk){this.sdk.data.removeItem?.(key);this.sdk.data.setItem?.(key,'null');}localStorage.removeItem(key);}catch(e){this.error=e.message;}}
+ remove(key){this.memory.delete(key);if(this.bs){this.bs.delete(key);try{this.bridge.storage.delete([key]);}catch{}return;}try{if(this.sdk){this.sdk.data.removeItem?.(key);this.sdk.data.setItem?.(key,'null');}localStorage.removeItem(key);}catch(e){this.error=e.message;}}
  save(key,value){
   this.memory.set(key,value);
+  if(this.bs){this.bs.set(key,value);this.dirty.add(key);clearTimeout(this.flushT);this.flushT=setTimeout(()=>this.flush(),2500);return true;}
   try{if(this.sdk){this.sdk.data.setItem(key,value);return true;}localStorage.setItem(key,value);return true;}catch(e){this.storageMode='session';this.error=e.message;return false;}
  }
  async submit(run){

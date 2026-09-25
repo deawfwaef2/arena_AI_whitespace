@@ -6,7 +6,7 @@ Game IDs (GameDistribution / GameMonetize) come from config.json platforms.<targ
 The ZIPs are large (~31 MB) so they are NOT committed; they are uploaded as GitHub Release assets."""
 import os, sys, subprocess, zipfile
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ALL = ['poki', 'gamedistribution', 'gamemonetize', 'gamepix', 'itch', 'newgrounds', 'y8', 'html5']
+ALL = ['poki', 'gamedistribution', 'gamemonetize', 'gamepix', 'itch', 'newgrounds', 'y8', 'html5', 'playgama']
 targets = sys.argv[1:] or ALL
 outdir = os.path.join(root, 'release', 'platforms'); os.makedirs(outdir, exist_ok=True)
 shared = ['art-pack.js', 'art-cities.js'] + sorted('music-pack/' + f for f in os.listdir(os.path.join(root, 'music-pack'))) + sorted('sfx-pack/' + f for f in os.listdir(os.path.join(root, 'sfx-pack')))
@@ -17,7 +17,7 @@ for t in targets:
     subprocess.run(cmd, cwd=root, check=True, stdout=subprocess.DEVNULL)
     out = os.path.join(outdir, f'broke-to-billionaire-{t}.zip')
     with zipfile.ZipFile(out + '.tmp', 'w') as z:
-        for name, path in [('index.html', os.path.join(root, 'build', t, 'index.html'))] + [(n, os.path.join(root, n)) for n in shared]:
+        for name, path in [('index.html', os.path.join(root, 'build', t, 'index.html'))] + [(n, os.path.join(root, n)) for n in shared + (['playgama-bridge-config.json'] if t == 'playgama' else [])]:
             zi = zipfile.ZipInfo(name, (2026, 1, 1, 0, 0, 0)); zi.external_attr = 0o644 << 16
             data = open(path, 'rb').read()
             if name.endswith('.mp3'): z.writestr(zi, data, compress_type=zipfile.ZIP_STORED)
